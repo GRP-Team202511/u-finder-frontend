@@ -2,8 +2,14 @@
 import LanguageSelector from '@/components/LanguageSelector.vue';
 import { useI18n } from 'vue-i18n'
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
+const router = useRouter()
+
+function goLogin() {
+  router.push({ name: 'Login' })
+}
 </script>
 
 <template>
@@ -20,7 +26,7 @@ const { t } = useI18n()
           {{ t('cover.description') }}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button variant="default" size="lg">
+          <Button variant="default" size="lg" @click="goLogin">
             {{ t('cover.login') }}
           </Button>
           <Button variant="outline" size="lg">
