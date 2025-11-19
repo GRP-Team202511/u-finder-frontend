@@ -69,7 +69,7 @@ const props = defineProps<{
               </Button>
               <FieldDescription class="text-center">
                 Don't have an account?
-                <router-link to="/signuppage" class="text-primary underline hover:text-primary/80">Sign Up</router-link>
+                <router-link to="/signup" class="text-primary underline hover:text-primary/80">Sign Up</router-link>
               </FieldDescription>
             </Field>
           </FieldGroup>
