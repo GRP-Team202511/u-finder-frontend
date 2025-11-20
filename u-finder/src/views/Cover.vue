@@ -2,11 +2,15 @@
 import LanguageSelector from '@/components/LanguageSelector.vue';
 import { useI18n } from 'vue-i18n'
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
+
 
 const { t } = useI18n()
 const router = useRouter()
 
+function goSignup() {
+  router.push({ name: 'Signup' })
+}
 function goLogin() {
   router.push({ name: 'Login' })
 }
@@ -29,7 +33,7 @@ function goLogin() {
           <Button variant="default" size="lg" @click="goLogin">
             {{ t('cover.login') }}
           </Button>
-          <Button variant="outline" size="lg">
+          <Button variant="outline" size="lg" @click="goSignup">
             {{ t('cover.signup') }}
           </Button>
         </div>
