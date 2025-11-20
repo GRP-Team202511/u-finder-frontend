@@ -30,3 +30,5 @@ logs/
 
 # Coverage
 coverage/
+
+!.env.example
