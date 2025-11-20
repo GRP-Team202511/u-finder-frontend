@@ -20,6 +20,16 @@ const routes: RouteRecordRaw[] = [
     name: 'Cover',
     component: () => import('../views/Cover.vue'),
     meta: { requiresAuth: false }
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: () => import('../views/auth/Signup.vue')
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/auth/Login.vue')
   }
 ]
 
