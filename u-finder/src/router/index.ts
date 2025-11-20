@@ -24,12 +24,14 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/signup',
     name: 'Signup',
-    component: () => import('../views/auth/Signup.vue')
+    component: () => import('../views/auth/Signup.vue'),
+    meta: { requiresAuth: false }
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../views/auth/Login.vue')
+    component: () => import('../views/auth/Login.vue'),
+    meta: { requiresAuth: false }
   }
 ]
 
@@ -46,7 +48,7 @@ router.beforeEach((to, _from, next) => {
   if (requiresAuth && !userStore.isLoggedIn) {
     // Redirect to cover page if not authenticated
     next({ name: 'Cover' })
-  } else if ((to.name === 'Cover') && userStore.isLoggedIn) {
+  } else if (!requiresAuth && userStore.isLoggedIn) {
     // Redirect to home if already logged in and trying to access login/signup
     next({ name: 'Home' })
   } else {
