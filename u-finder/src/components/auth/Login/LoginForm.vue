@@ -2,6 +2,7 @@
 import type { HTMLAttributes } from "vue"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useI18n } from 'vue-i18n'
 import {
   Card,
   CardContent,
@@ -18,6 +19,8 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 
+const { t } = useI18n()
+
 const props = defineProps<{
   class?: HTMLAttributes["class"]
 }>()
@@ -28,10 +31,10 @@ const props = defineProps<{
     <Card>
       <CardHeader class="text-center">
         <CardTitle class="text-3xl font-bold">
-          Log in
+          {{ t("login.title") }}
         </CardTitle>
         <CardDescription>
-          Welcome back! Please enter your details.
+          {{ t("login.welcome") }}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -39,7 +42,7 @@ const props = defineProps<{
           <FieldGroup>
             <Field>
               <FieldLabel for="email">
-                Email
+                {{ t("login.email")}}
               </FieldLabel>
               <Input
                 id="email"
@@ -51,13 +54,13 @@ const props = defineProps<{
             <Field>
               <div class="flex items-center">
                 <FieldLabel for="password">
-                  Password
+                  {{ t("login.password") }}
                 </FieldLabel>
                 <a
                   href="#"
                   class="ml-auto text-sm underline-offset-4 hover:underline text-muted-foreground"
                 >
-                  Forgot your password?
+                  {{ t("login.forgot") }}
                 </a>
               </div>
               <Input id="password" type="password" required />
@@ -65,11 +68,11 @@ const props = defineProps<{
             <FieldSeparator />
             <Field>
               <Button type="submit">
-                Login
+                {{ t("login.submit") }}
               </Button>
               <FieldDescription class="text-center">
-                Don't have an account?
-                <router-link to="/signup" class="text-primary underline hover:text-primary/80">Sign Up</router-link>
+                {{ t("login.no account") }}
+                <router-link to="/signup" class="text-primary underline hover:text-primary/80">{{ t("login.signup") }}</router-link>
               </FieldDescription>
             </Field>
           </FieldGroup>

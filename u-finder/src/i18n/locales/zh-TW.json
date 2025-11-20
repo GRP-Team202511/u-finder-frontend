@@ -4,5 +4,27 @@
         "description": "使用我們的智慧尋找工具，發現您完美的大学匹配。",
         "login": "登入",
         "signup": "註冊"
+    },
+    "login": {
+        "title": "登入",
+        "welcome": "歡迎回來！請輸入你的電子郵箱。",
+        "email": "電子郵箱",
+        "password": "密碼",
+        "forgot": "忘記密碼？",
+        "submit": "登入",
+        "no account": "沒有帳號？", 
+        "signup": "註冊帳戶"      
+    },
+    "signup":{
+        "title": "註冊帳戶",
+        "description": "請填寫以下資料以建立您的帳戶。",
+        "username": "使用者名稱",
+        "email": "電子郵箱",
+        "password": "密碼",
+        "confirmPassword": "確認密碼",
+        "button": "註冊",
+        "haveAccount": "已有帳戶？",
+        "login": "登入"
     }
+
 }

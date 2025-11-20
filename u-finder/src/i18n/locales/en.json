@@ -4,5 +4,27 @@
         "description": "Discover your perfect university match with our intelligent finder tool.",
         "login": "Log In",
         "signup": "Sign Up"
+    },
+    "login": {
+        "title": "Log In",
+        "welcome": "Welcome back! Please enter your email.",
+        "email": "Email",
+        "password": "Password",
+        "forgot": "Forgot your password?",
+        "submit": "Log In",
+        "no account": "Don't have an account?",
+        "signup": "Sign up"       
+    },
+    "signup":{
+        "title": "Sign Up",
+        "description": "Fill in the form to create your account.",
+        "username": "Username",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "button": "Sign Up",
+        "haveAccount": "Already have an account?",
+        "login": "Log In"
     }
+
 }
