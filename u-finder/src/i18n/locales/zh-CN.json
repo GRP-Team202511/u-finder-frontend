@@ -11,14 +11,14 @@
         "email": "电子邮箱",
         "password": "密码",
         "forgot": "忘记密码？",
-        "submit": "登入",
+        "submit": "登录",
         "no account": "没有帐号？",
         "signup": "注册账户"       
     },
     "signup":{
         "title": "注册账户",
-        "description": "请填写以下资料以建立您的账户",
-        "username": "使用者名称",
+        "description": "请填写以下资料以创建您的账户",
+        "username": "用户名",
         "email": "电子邮箱",
         "password": "密码",
         "confirmPassword": "确认密码",
