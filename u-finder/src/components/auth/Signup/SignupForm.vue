@@ -74,8 +74,7 @@ const props = defineProps<{
       </CardContent>
     </Card>
     <FieldDescription class="px-6 text-center">
-      By clicking continue, you agree to our <a href="#">Terms of Service</a>
-      and <a href="#">Privacy Policy</a>.
+      {{ t("signup.continue") }}<a href="#">{{ t("signup.termOfUse") }}</a>{{ t("signup.and") }}<a href="#">{{ t("signup.privacy") }}</a>.
     </FieldDescription>
   </div>
 </template>
