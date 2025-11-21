@@ -24,7 +24,11 @@
         "confirmPassword": "確認密碼",
         "button": "註冊",
         "haveAccount": "已有帳戶？",
-        "login": "登入"
+        "login": "登入",
+        "continue": "點擊「註冊」即代表您同意本服務的",
+        "termOfUse": "使用條款",
+        "and": "與",
+        "privacy": "隱私權政策"
     }
 
 }

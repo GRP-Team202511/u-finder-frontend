@@ -24,7 +24,11 @@
         "confirmPassword": "Confirm Password",
         "button": "Sign Up",
         "haveAccount": "Already have an account?",
-        "login": "Log In"
+        "login": "Log In",
+        "continue": "By clicking \"Sing Up\", you agree to our ",
+        "termOfUse": "Term of Service",
+        "and": " and ",
+        "privacy": "Privacy Policy"
     }
 
 }
