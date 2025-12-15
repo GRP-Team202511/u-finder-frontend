@@ -29,6 +29,22 @@
         "termOfUse": "Term of Service",
         "and": " and ",
         "privacy": "Privacy Policy"
+    },
+    "edu": {
+        "title": "Education Background",
+        "type": "Type",
+        "institution": "Institution",
+        "time": {
+            "start": "Start Date",
+            "end": "End Date"
+        },
+        "major": "Major",
+        "ranking": "Ranking",
+        "GPA": "GPA",
+        "GPA-base": "GPA Base",
+        "save": "Save"
+    },
+    "profile": {
+        "title": "Profile"
     }
-
 }
