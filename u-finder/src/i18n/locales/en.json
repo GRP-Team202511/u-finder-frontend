@@ -29,6 +29,19 @@
         "termOfUse": "Term of Service",
         "and": " and ",
         "privacy": "Privacy Policy"
+    },
+    "sidebar": {
+        "aiChat": "AI Chat",
+        "favourite": "Favourite",
+        "history": "History",
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Log out",
+        "history": {
+            "title": "Chat History",
+            "session1": "Session 1",
+            "session2": "Session 2",
+            "session3": "Session 3"
+        }
     }
-
 }
