@@ -34,6 +34,7 @@ const props = defineProps<{
 
 const logging = ref(false)
 const unauth = ref(false)
+const notFound = ref(false)
 
 const form = ref({
   email: '',
@@ -43,6 +44,7 @@ const form = ref({
 const handleLogin = async() => {
   logging.value = true
   unauth.value = false
+  notFound.value = false
 
   try {
     const response = await http.post('/auth/login', form.value)
@@ -50,12 +52,15 @@ const handleLogin = async() => {
     if (response.status == 200) {
       // Save info to userStore
       userStore.setUser(response.data)
-      router.push('/')
+      // TODO: jump to the main page when it is ready
     }
   } catch (error: any) {
     if (error.response?.status === 401) {
       console.log("Wrong password")
       unauth.value = true
+    } else if(error.response?.status === 409) {
+      console.log("User not found")
+      notFound.value = true
     } else {
       console.error("Login error:", error)
     }
@@ -87,6 +92,8 @@ const handleLogin = async() => {
                 v-model="form.email"
                 id="email"
                 type="email"
+                :class="{ 'border-red-500 ': notFound }"
+                @focus="notFound = false"
                 required
               />
             </Field>
@@ -112,6 +119,9 @@ const handleLogin = async() => {
               />
               <div v-if="unauth" class="text-sm text-red-500 mt-1 flex">
                 {{ t("login.unauth") }}
+              </div>
+              <div v-if="notFound" class="text-sm text-red-500 mt-1 flex">
+                {{ t("login.not_found") }}
               </div>
             </Field>
             <FieldSeparator />

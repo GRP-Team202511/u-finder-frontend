@@ -14,7 +14,8 @@
         "submit": "Log In",
         "no account": "Not have an account?",
         "signup": "Sign up",
-        "unauth": "The password is incorrect"
+        "unauth": "The password is incorrect",
+        "not_found": "The account doesn't exist"
     },
     "signup":{
         "title": "Sign Up",
