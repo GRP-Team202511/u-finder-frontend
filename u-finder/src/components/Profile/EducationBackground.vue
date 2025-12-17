@@ -309,21 +309,51 @@ onMounted(() => {
         </div>
         <div v-else>
           <div v-if="education && education.length">
-            <template v-for="(edu, idx) in education" :key="idx">
-              <div class="mb-4">
-                <div class="text-sm text-muted-foreground">{{ t('edu.type') || 'Type' }}</div>
-                <div class="font-medium">{{ edu.type || '-' }}</div>
+            <FieldGroup>
+              <template v-for="(edu, idx) in education" :key="idx">
+                <Field>
+                  <FieldLabel>{{ t('edu.type') || 'Type' }}</FieldLabel>
+                  <div class="text-sm text-left">{{ edu.type || '-' }}</div>
+                </Field>
 
-                <div class="text-sm text-muted-foreground mt-1">{{ t('edu.institution') || 'Institution' }}</div>
-                <div class="font-medium">{{ edu.name || '-' }}</div>
+                <Field>
+                  <FieldLabel>{{ t('edu.institution') || 'Institution' }}</FieldLabel>
+                  <div class="text-sm text-left">{{ edu.name || '-' }}</div>
+                </Field>
 
-                <div class="text-sm text-muted-foreground mt-1">{{ t('edu.time.title') || 'Time' }}</div>
-                <div class="font-medium">{{ edu.time.start || '-' }} — {{ edu.time.end || '-' }}</div>
+                <div class="grid grid-cols-2 gap-4">
+                  <Field>
+                    <FieldLabel>{{ t('edu.time.start') || 'Start' }}</FieldLabel>
+                    <div class="text-sm text-left">{{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.start || '-') }}</div>
+                  </Field>
+                  <Field>
+                    <FieldLabel>{{ t('edu.time.end') || 'End' }}</FieldLabel>
+                    <div class="text-sm text-left">{{ endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.end || '-') }}</div>
+                  </Field>
+                </div>
 
-                <div class="text-sm text-muted-foreground mt-1">{{ t('edu.major') || 'Major' }}</div>
-                <div class="font-medium">{{ edu.major || '-' }}</div>
-              </div>
-            </template>
+                <Field>
+                  <FieldLabel>{{ t('edu.major') || 'Major' }}</FieldLabel>
+                  <div class="text-sm text-left">{{ edu.major || '-' }}</div>
+                </Field>
+
+                <div class="grid grid-cols-3 gap-4">
+                  <Field>
+                    <FieldLabel>{{ t('edu.ranking') || 'Ranking' }}</FieldLabel>
+                    <div class="text-sm text-left">{{ edu.ranking || '-' }}</div>
+                  </Field>
+                  <Field>
+                    <FieldLabel>{{ t('edu.GPA') || 'GPA' }}</FieldLabel>
+                    <div class="text-sm text-left">{{ edu.GPA || '-' }}</div>
+                  </Field>
+                  <Field>
+                    <FieldLabel>{{ t('edu.GPA-base') || 'GPA Base' }}</FieldLabel>
+                    <div class="text-sm text-left">{{ edu.GPA_base || '-' }}</div>
+                  </Field>
+                </div>
+
+              </template>
+            </FieldGroup>
           </div>
           <div v-else class="text-center text-muted-foreground">
             <div class="mb-2">{{ t('edu.empty') || 'No education records' }}</div>
