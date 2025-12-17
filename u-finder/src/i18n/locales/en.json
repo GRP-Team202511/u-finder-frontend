@@ -30,7 +30,15 @@
         "continue": "By clicking \"Sing Up\", you agree to our ",
         "termOfUse": "Term of Service",
         "and": " and ",
-        "privacy": "Privacy Policy"
+        "privacy": "Privacy Policy",
+        "verification": {
+            "enter": "Enter verification code",
+            "sent": "We sent a 6-digit code to your email.",
+            "enter2": "Enter the 6-digit code sent to your email.",
+            "receive": "Didn't receive the code?",
+            "verify": "Verify",
+            "resend": "Resend"
+        }
     }
 
 }
