@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 
 const { t } = useI18n()
 
-const editing = ref(true)
+const editing = ref(false)
 const educationData = ref<any[] | undefined>(undefined)
 
 // simple registration API for child components to participate in global save/cancel
