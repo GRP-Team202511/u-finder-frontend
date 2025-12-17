@@ -23,7 +23,7 @@ http.interceptors.request.use(
 
 // response interceptor
 http.interceptors.response.use(
-  (resp) => resp.data,
+  (resp) => resp,
   (error) => {
     // token expired
     if (error.response?.status === 401) {

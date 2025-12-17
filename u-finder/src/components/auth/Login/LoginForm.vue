@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
+import { ref } from 'vue'
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
 import { useI18n } from 'vue-i18n'
 import {
   Card,
@@ -18,12 +20,49 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import http from "@/api/http"
+import { useUserStore } from "@/stores/userStore"
+import { useRouter } from "vue-router"
 
 const { t } = useI18n()
+const userStore = useUserStore()
+const router = useRouter()
 
 const props = defineProps<{
   class?: HTMLAttributes["class"]
 }>()
+
+const logging = ref(false)
+const unauth = ref(false)
+
+const form = ref({
+  email: '',
+  password: '',
+})
+
+const handleLogin = async() => {
+  logging.value = true
+  unauth.value = false
+
+  try {
+    const response = await http.post('/auth/login', form.value)
+    console.log(response.status)
+    if (response.status == 200) {
+      // Save info to userStore
+      userStore.setUser(response.data)
+      router.push('/')
+    }
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      console.log("Wrong password")
+      unauth.value = true
+    } else {
+      console.error("Login error:", error)
+    }
+  } finally {
+    logging.value = false
+  }
+}
 </script>
 
 <template>
@@ -38,16 +77,16 @@ const props = defineProps<{
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form @submit.prevent="handleLogin">
           <FieldGroup>
             <Field>
               <FieldLabel for="email">
                 {{ t("login.email")}}
               </FieldLabel>
               <Input
+                v-model="form.email"
                 id="email"
                 type="email"
-                placeholder="m@example.com"
                 required
               />
             </Field>
@@ -63,11 +102,25 @@ const props = defineProps<{
                   {{ t("login.forgot") }}
                 </a>
               </div>
-              <Input id="password" type="password" required />
+              <Input 
+                v-model="form.password" 
+                id="password" 
+                type="password" 
+                required 
+                :class="{ 'border-red-500 ': unauth }"
+                @focus="unauth = false"
+              />
+              <div v-if="unauth" class="text-sm text-red-500 mt-1 flex">
+                {{ t("login.unauth") }}
+              </div>
             </Field>
             <FieldSeparator />
             <Field>
-              <Button type="submit">
+              <Button type="submit" v-if="!logging">
+                {{ t("login.submit") }}
+              </Button>
+              <Button varient="outline" v-if="logging" disabled>
+                <Spinner class="animate-spin" />
                 {{ t("login.submit") }}
               </Button>
               <FieldDescription class="text-center">

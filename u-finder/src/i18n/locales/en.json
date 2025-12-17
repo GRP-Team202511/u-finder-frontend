@@ -13,7 +13,8 @@
         "forgot": "Forgot your password?",
         "submit": "Log In",
         "no account": "Not have an account?",
-        "signup": "Sign up"       
+        "signup": "Sign up",
+        "unauth": "The password is incorrect"
     },
     "signup":{
         "title": "Sign Up",
