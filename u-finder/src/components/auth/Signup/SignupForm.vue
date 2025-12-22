@@ -20,11 +20,11 @@ import {
 } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
 import { Input } from "@/components/ui/input"
+import { Toaster, toast } from 'vue-sonner'
 import http from "@/api/http"
 
 
 const { t } = useI18n()
-const codeSent = ref(false)
 
 const signing = ref(false)
 
@@ -60,6 +60,7 @@ const handleSignup = async() => {
   } catch (error: any) {
     if (error.response?.status === 409) {
       console.log('Account already exists')
+      toast.error(t('signup.occupied'))
       occupied.value = true
     } else {
       console.error('Sign up error:', error)
@@ -71,6 +72,7 @@ const handleSignup = async() => {
 </script>
 
 <template>
+  <Toaster />
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card  >
       <CardHeader class="text-center">
@@ -91,7 +93,7 @@ const handleSignup = async() => {
 
             <Field>
               <FieldLabel for="email">{{ t("signup.email") }}</FieldLabel>
-              <Input v-model="formData.email" id="email" type="email" @focus="occupied=false" required />
+              <Input v-model="formData.email" id="email" type="email" :class="{'border-red-500': occupied}" @focus="occupied=false" required />
             </Field>
 
             <Field>
@@ -105,9 +107,6 @@ const handleSignup = async() => {
             </Field>
 
             <Field>
-              <div v-if="occupied" class="text-sm text-red-500 mt-1 flex">
-                {{ t("signup.occupied") }}
-              </div>
               <Button type="submit" v-if="!signing">{{ t("signup.button") }}</Button>
               <Button varient="outline" v-if="signing" disabled>
                 <Spinner class="animate-spin" />
