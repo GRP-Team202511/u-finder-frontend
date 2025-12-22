@@ -49,7 +49,7 @@ const handleOTP = async() => {
       }
     )
     
-    if (response.status === 200) {
+    if (response.status === 201) {
       console.log('Verification successful')
       userStore.setUser(response.data)
       // TODO: jump to the main page
@@ -71,7 +71,7 @@ const handleOTP = async() => {
   <Card>
     <CardHeader>
       <CardTitle>{{ t("signup.verification.enter") }}</CardTitle>
-      <CardDescription>{{ t("signip.verification.sent") }}</CardDescription>
+      <CardDescription>{{ t("signup.verification.sent") }}</CardDescription>
     </CardHeader>
     <CardContent>
       <form @submit.prevent="handleOTP">
