@@ -23,12 +23,14 @@ import { ref } from "vue";
 import http from "@/api/http";
 import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "vue-router";
+import { Toaster, toast } from 'vue-sonner'
 
 const userStore = useUserStore()
 const router = useRouter()
 const { t } = useI18n()
 
 const verifying = ref(false)
+const incorrect = ref(false)
 
 const props = defineProps<{
   tempToken: string
@@ -58,6 +60,8 @@ const handleOTP = async() => {
     if (error.response?.status === 401) {
       console.log("Wrong OTP code")
       otpValue.value = ""
+      incorrect.value = true
+      toast.error(t("signup.verification.incorrect"))
     } else {
       console.error('Verification error:', error)
     }
@@ -68,6 +72,7 @@ const handleOTP = async() => {
 </script>
 
 <template>
+  <Toaster />
   <Card>
     <CardHeader>
       <CardTitle>{{ t("signup.verification.enter") }}</CardTitle>
@@ -82,7 +87,7 @@ const handleOTP = async() => {
             </FieldLabel>
             <div class="flex justify-center">
               <InputOTP id="otp" v-model="otpValue" :maxlength="6" required>
-                <InputOTPGroup class="gap-2.5 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border">
+                <InputOTPGroup class="gap-2.5 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border" :class="{'border-red-500': incorrect}" @focus="incorrect=false">
                   <InputOTPSlot :index="0" />
                   <InputOTPSlot :index="1" />
                   <InputOTPSlot :index="2" />

@@ -38,7 +38,8 @@
             "enter2": "Enter the 6-digit code sent to your email.",
             "receive": "Didn't receive the code?",
             "verify": "Verify",
-            "resend": "Resend"
+            "resend": "Resend",
+            "incorrect": "The OTP code is incorrect."
         }
     }
 
