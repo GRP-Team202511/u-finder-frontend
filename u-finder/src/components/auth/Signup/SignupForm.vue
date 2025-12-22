@@ -49,6 +49,7 @@ const repeatPassword = ref("")
 
 const handleSignup = async() => {
   signing.value = true
+  occupied.value = false
 
   try {
     const response = await http.post('/auth/signup', formData.value)
@@ -57,6 +58,7 @@ const handleSignup = async() => {
       const tempToken = response.data.temp_token
       emit("signup-success", tempToken)
       formData.value.password = ""
+      repeatPassword.value = ""
     }
   } catch (error: any) {
     if (error.response?.status === 409) {
