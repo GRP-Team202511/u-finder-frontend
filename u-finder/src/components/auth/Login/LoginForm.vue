@@ -20,6 +20,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Toaster, toast } from 'vue-sonner'
 import http from "@/api/http"
 import { useUserStore } from "@/stores/userStore"
 import { useRouter } from "vue-router"
@@ -58,9 +59,11 @@ const handleLogin = async() => {
     if (error.response?.status === 401) {
       console.log("Wrong password")
       unauth.value = true
+      toast.error(t("login.unauth"))
     } else if(error.response?.status === 409) {
       console.log("User not found")
       notFound.value = true
+      toast.error(t("login.not_found"))
     } else {
       console.error("Login error:", error)
     }
@@ -71,6 +74,7 @@ const handleLogin = async() => {
 </script>
 
 <template>
+  <Toaster />
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-center">
@@ -117,12 +121,6 @@ const handleLogin = async() => {
                 :class="{ 'border-red-500 ': unauth }"
                 @focus="unauth = false"
               />
-              <div v-if="unauth" class="text-sm text-red-500 mt-1 flex">
-                {{ t("login.unauth") }}
-              </div>
-              <div v-if="notFound" class="text-sm text-red-500 mt-1 flex">
-                {{ t("login.not_found") }}
-              </div>
             </Field>
             <FieldSeparator />
             <Field>
