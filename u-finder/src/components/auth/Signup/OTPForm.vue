@@ -109,7 +109,7 @@ const handleOTP = async() => {
               {{ t("signup.verification.verify") }}
             </Button>
             <FieldDescription class="text-center">
-              {{ t("signup.verification.receive") }} <a href="#">{{ t("signup.verification.receive") }}</a>
+              {{ t("signup.verification.receive") }} <a href="#">{{ t("signup.verification.resend") }}</a>
             </FieldDescription>
           </FieldGroup>
         </FieldGroup>
