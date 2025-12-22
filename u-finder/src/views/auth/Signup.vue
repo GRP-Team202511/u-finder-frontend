@@ -2,29 +2,33 @@
 import OTPForm from "@/components/auth/Signup/OTPForm.vue";
 import SignupForm from "@/components/auth/Signup/SignupForm.vue"
 import LanguageSelector from "@/components/LanguageSelector.vue"
+import { Toaster, toast } from 'vue-sonner'
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n()
 const codeSent = ref(false)
 
 const signupInfo = ref({
   email: '',
   name: '',
-  password: '',
 })
 
 const tempToken = ref('')
 
-const handleSignupSubmit = (payload: { email: string; name: string; password: string }) => {
+const handleSignupSubmit = (payload: { email: string; name: string }) => {
   signupInfo.value = payload
 }
 
 const handleSignupSuccess = (token: string) => {
+  toast.success(t("signup.codeSent"))
   tempToken.value = token
   codeSent.value = true
 }
 </script>
 
 <template>
+  <Toaster />
   <div class='flex p-4 md:px-8 flex justify-end'>
     <header>
       <LanguageSelector />

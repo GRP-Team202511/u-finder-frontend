@@ -35,7 +35,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: "signup", payload: { name: string; email: string; password: string }): void
+  (e: "signup", payload: { name: string; email: string }): void
   (e: "signup-success", tempToken: string): void
 }>()
 
@@ -53,9 +53,10 @@ const handleSignup = async() => {
   try {
     const response = await http.post('/auth/signup', formData.value)
     if (response.status == 200) {
-      emit("signup", { ...formData.value })
+      emit("signup", { name: formData.value.name, email: formData.value.email })
       const tempToken = response.data.temp_token
       emit("signup-success", tempToken)
+      formData.value.password = ""
     }
   } catch (error: any) {
     if (error.response?.status === 409) {

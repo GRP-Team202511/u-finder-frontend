@@ -32,6 +32,7 @@
         "and": " and ",
         "privacy": "Privacy Policy",
         "occupied": "This email has been registered.",
+        "codeSent": "The verification code has been sent",
         "verification": {
             "enter": "Enter verification code",
             "sent": "We sent a 6-digit code to your email.",
