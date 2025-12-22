@@ -28,6 +28,8 @@ const codeSent = ref(false)
 
 const signing = ref(false)
 
+const occupied = ref(false)
+
 const props = defineProps<{
   class?: HTMLAttributes["class"]
 }>()
@@ -58,6 +60,7 @@ const handleSignup = async() => {
   } catch (error: any) {
     if (error.response?.status === 409) {
       console.log('Account already exists')
+      occupied.value = true
     } else {
       console.error('Sign up error:', error)
     }
@@ -88,7 +91,7 @@ const handleSignup = async() => {
 
             <Field>
               <FieldLabel for="email">{{ t("signup.email") }}</FieldLabel>
-              <Input v-model="formData.email" id="email" type="email" required />
+              <Input v-model="formData.email" id="email" type="email" @focus="occupied=false" required />
             </Field>
 
             <Field>
@@ -102,6 +105,9 @@ const handleSignup = async() => {
             </Field>
 
             <Field>
+              <div v-if="occupied" class="text-sm text-red-500 mt-1 flex">
+                {{ t("signup.occupied") }}
+              </div>
               <Button type="submit" v-if="!signing">{{ t("signup.button") }}</Button>
               <Button varient="outline" v-if="signing" disabled>
                 <Spinner class="animate-spin" />
