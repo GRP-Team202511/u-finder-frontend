@@ -87,7 +87,7 @@ const handleOTP = async() => {
             </FieldLabel>
             <div class="flex justify-center">
               <InputOTP id="otp" v-model="otpValue" :maxlength="6" required>
-                <InputOTPGroup class="gap-2.5 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border" :class="{'border-red-500': incorrect}" @focus="incorrect=false">
+                <InputOTPGroup class="gap-2.5 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border">
                   <InputOTPSlot :index="0" />
                   <InputOTPSlot :index="1" />
                   <InputOTPSlot :index="2" />
