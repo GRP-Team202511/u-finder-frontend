@@ -62,5 +62,15 @@
         "ranking": "Ranking",
         "GPA": "GPA",
         "GPA-base": "GPA Base"
+    },
+    "internship": {
+        "title": "Internship",
+        "company": "Company",
+        "role": "Role",
+        "time": {
+            "start": "Start Date",
+            "end": "End Date",
+            "till now": "Till now"
+        }
     }
 }
