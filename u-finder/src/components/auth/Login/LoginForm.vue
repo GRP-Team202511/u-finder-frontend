@@ -106,12 +106,12 @@ const handleLogin = async() => {
                 <FieldLabel for="password">
                   {{ t("login.password") }}
                 </FieldLabel>
-                <a
-                  href="#"
+                <router-link
+                  to="/login/reset"
                   class="ml-auto text-sm underline-offset-4 hover:underline text-muted-foreground"
                 >
                   {{ t("login.forgot") }}
-                </a>
+                </router-link>
               </div>
               <Input 
                 v-model="form.password" 
