@@ -22,7 +22,7 @@
 1. **Clone the Project**
 
    ```bash
-   git clone https://github.com/your-org/u-finder.git
+   git clone https://github.com/GRP-Team202511/u-finder.git
    cd u-finder/frontend
    ```
 
