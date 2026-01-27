@@ -1,4 +1,5 @@
 # 贡献指南
+🌍 [English](../../CONTRIBUTING.md) | **简体中文** | [繁體中文](../zh-tw/CONTRIBUTING.md)
 
 ## 目录
 
