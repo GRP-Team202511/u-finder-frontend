@@ -34,7 +34,7 @@ const props = defineProps<{
 }>()
 
 const sendOTP = async() => {
-
+  
 }
 </script>
 
@@ -65,7 +65,7 @@ const sendOTP = async() => {
               </Field>
               <Field>
                 <FieldLabel for="password">
-                  {{ t("login.password") }}
+                  {{ t("login.reset.newPassword") }}
                 </FieldLabel>
                 <Input
                   id="password"

@@ -21,7 +21,8 @@
             "description": "Reset password with your email",
             "sendCode": "Send Code",
             "send": "Reset Password",
-            "otp": "Verification Code"
+            "otp": "Verification Code",
+            "newPassword": "New Password"
         }
     },
     "signup":{
