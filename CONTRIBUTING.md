@@ -1,4 +1,5 @@
 # Contributing Guide
+🌍 **English** | [简体中文](./docs/zh-cn/CONTRIBUTING.md) | [繁體中文](./docs/zh-tw/CONTRIBUTING.md)
 
 ## Table of Contents
 
