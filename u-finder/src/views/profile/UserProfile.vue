@@ -6,6 +6,7 @@ import EducationBackground from '@/components/profile/EducationBackground.vue'
 import Internship from '@/components/profile/UserProfile/Internship.vue'
 import Project from '@/components/profile/UserProfile/Project.vue'
 import CampusExperience from '@/components/profile/UserProfile/CampusExperience.vue'
+import Award from '@/components/profile/UserProfile/Award.vue'
 import { Button } from '@/components/ui/button'
 
 const { t } = useI18n()
@@ -15,6 +16,7 @@ const educationData = ref<any[] | undefined>(undefined)
 const internshipData = ref<any[] | undefined>(undefined)
 const projectData = ref<any[] | undefined>(undefined)
 const campusExpData = ref<any[] | undefined>(undefined)
+const awardData = ref<any[] | undefined>(undefined)
 
 // simple registration API for child components to participate in global save/cancel
 const registry = new Set<{ save: () => void; cancel?: () => void }>()
@@ -65,6 +67,15 @@ function onCampusExpSave(payload: any) {
 }
 
 function onCampusExpCancel() {
+	editing.value = false
+}
+
+function onAwardSave(payload: any) {
+	awardData.value = payload
+	editing.value = false
+}
+
+function onAwardCancel() {
 	editing.value = false
 }
 
@@ -121,6 +132,15 @@ function onCampusExpCancel() {
 				@update:modelValue="campusExpData = $event"
 				@save="onCampusExpSave"
 				@cancel="onCampusExpCancel"
+				@request-edit="editing = true"
+			/>
+
+			<Award
+				:modelValue="awardData"
+				:editable="editing"
+				@update:modelValue="awardData = $event"
+				@save="onAwardSave"
+				@cancel="onAwardCancel"
 				@request-edit="editing = true"
 			/>
 		</div>
