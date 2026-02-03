@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import SidebarPage from '../Sidebar.vue'
 import EducationBackground from '@/components/profile/EducationBackground.vue'
 import Internship from '@/components/profile/UserProfile/Internship.vue'
+import Project from '@/components/profile/UserProfile/Project.vue'
 import { Button } from '@/components/ui/button'
 
 const { t } = useI18n()
@@ -11,6 +12,7 @@ const { t } = useI18n()
 const editing = ref(false)
 const educationData = ref<any[] | undefined>(undefined)
 const internshipData = ref<any[] | undefined>(undefined)
+const projectData = ref<any[] | undefined>(undefined)
 
 // simple registration API for child components to participate in global save/cancel
 const registry = new Set<{ save: () => void; cancel?: () => void }>()
@@ -45,6 +47,16 @@ function onInternshipSave(payload: any) {
 function onInternshipCancel() {
 	editing.value = false
 }
+
+function onProjectSave(payload: any) {
+	internshipData.value = payload
+	editing.value = false
+}
+
+function onProjectCancel() {
+	editing.value = false
+}
+
 </script>
 
 <template>
@@ -80,6 +92,15 @@ function onInternshipCancel() {
 				@update:modelValue="educationData = $event"
 				@save="onInternshipSave"
 				@cancel="onInternshipCancel"
+				@request-edit="editing = true"
+			/>
+
+			<Project
+				:modelValue="projectData"
+				:editable="editing"
+				@update:modelValue="projectData = $event"
+				@save="onProjectSave"
+				@cancel="onProjectCancel"
 				@request-edit="editing = true"
 			/>
 		</div>
