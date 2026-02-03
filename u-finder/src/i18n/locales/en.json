@@ -83,5 +83,10 @@
             "till now": "Till now"
         },
         "description": "Description"
+    },
+    "campusExp": {
+    "title": "Campus Experience",
+    "name": "Name",
+    "description": "Description"
     }
 }
