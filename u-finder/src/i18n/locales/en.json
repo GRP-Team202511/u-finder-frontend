@@ -72,5 +72,16 @@
             "end": "End Date",
             "till now": "Till now"
         }
+    },
+    "project": {
+        "title": "Project",
+        "name": "Name",
+        "role": "Role",
+        "time": {
+            "start": "Start Date",
+            "end": "End Date",
+            "till now": "Till now"
+        },
+        "description": "Description"
     }
 }
