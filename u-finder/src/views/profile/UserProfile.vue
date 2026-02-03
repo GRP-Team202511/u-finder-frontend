@@ -40,7 +40,7 @@ function onEducationCancel() {
 }
 
 function onInternshipSave(payload: any) {
-	educationData.value = payload
+	internshipData.value = payload
 	editing.value = false
 }
 
@@ -89,7 +89,7 @@ function onProjectCancel() {
 			<Internship
 				:modelValue="internshipData"
 				:editable="editing"
-				@update:modelValue="educationData = $event"
+				@update:modelValue="internshipData = $event"
 				@save="onInternshipSave"
 				@cancel="onInternshipCancel"
 				@request-edit="editing = true"
