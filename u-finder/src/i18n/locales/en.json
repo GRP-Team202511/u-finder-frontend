@@ -85,8 +85,13 @@
         "description": "Description"
     },
     "campusExp": {
-    "title": "Campus Experience",
-    "name": "Name",
-    "description": "Description"
+        "title": "Campus Experience",
+        "name": "Name",
+        "description": "Description"
+    },
+    "award": {
+        "title": "Award",
+        "name": "Name",
+        "description": "Description"
     }
 }
