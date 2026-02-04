@@ -38,24 +38,10 @@ const data = {
       icon: Star,
     },
     {
-      titleKey: "sidebar.history.title",
+      titleKey: "sidebar.history",
       url: "#",
       icon: Clock,
       isActive: true,
-      items: [
-        {
-          titleKey: "sidebar.history.session1",
-          url: "#",
-        },
-        {
-          titleKey: "sidebar.history.session2",
-          url: "#",
-        },
-        {
-          titleKey: "sidebar.history.session3",
-          url: "#",
-        },
-      ],
     },
     {
       titleKey: "sidebar.profile",
