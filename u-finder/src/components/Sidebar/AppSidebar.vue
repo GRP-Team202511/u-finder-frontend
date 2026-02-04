@@ -16,6 +16,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarTrigger,
 } from "@/components/ui/sidebar"
 
 const props = defineProps<SidebarProps>()
@@ -53,9 +54,15 @@ const data = {
 </script>
 
 <template>
-  <Sidebar v-bind="props">
-    <SidebarContent class="pt-2, pl-2">
-      <div class="pt-20">
+  <Sidebar v-bind="props" collapsible="icon">
+    <SidebarHeader class="px-3 py-2 flex items-right justify-between">
+      <div class="flex items-center">
+        <SidebarTrigger />
+      </div>
+    </SidebarHeader>
+
+    <SidebarContent>
+      <div class="pt-20 pl-1">
         <NavMain :items="data.navMain" />
       </div>
     </SidebarContent>
