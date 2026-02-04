@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
 
 const routes: RouteRecordRaw[] = [
-  /* {
+  {
     path: '/',
     name: 'Home',
     component: () => import('../views/Home.vue'),
@@ -15,7 +15,6 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../views/Home.vue'),
     meta: { requiresAuth: true }
   },
-  */
   {
     path: '/cover',
     name: 'Cover',
@@ -35,11 +34,11 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/',
+    path: '/app',
     component: () => import('../views/SidebarLayout.vue'),
     children: [
       {
-        path: '/userprofile',
+        path: 'userprofile',
         name: 'UserProfile',
         component: () => import('../views/profile/UserProfile.vue'),
         meta: { requiresAuth: false }
