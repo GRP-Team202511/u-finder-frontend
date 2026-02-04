@@ -37,7 +37,6 @@ function onEducationCancel() {
 </script>
 
 <template>
-	<SidebarPage>
 	<div class="p-4">
 		<div class="flex items-center justify-between mb-6">
 			<h1 class="text-3xl font-bold">{{ t('profile.title') || 'Profile' }}</h1>
@@ -63,5 +62,4 @@ function onEducationCancel() {
 			@request-edit="editing = true"
 		/>
 	</div>
-	</SidebarPage>
 </template>
