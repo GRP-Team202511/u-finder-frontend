@@ -48,8 +48,8 @@ defineProps<{
           <SidebarMenuItem>
             <CollapsibleTrigger as-child>
               <SidebarMenuButton :tooltip="item.title">
-                <component :is="item.icon" v-if="item.icon" />
-                <span>{{ item.titleKey ? t(item.titleKey) : item.title }}</span>
+                <component :is="item.icon" v-if="item.icon" class="menu-icon" />
+                <span class="menu-label">{{ item.titleKey ? t(item.titleKey) : item.title }}</span>
               </SidebarMenuButton>
             </CollapsibleTrigger>
             <CollapsibleContent>
@@ -69,8 +69,8 @@ defineProps<{
         <SidebarMenuItem v-else>
           <SidebarMenuButton as-child :tooltip="item.title">
             <a :href="item.url" class="flex items-center w-full">
-              <component :is="item.icon" v-if="item.icon" />
-              <span>{{ item.titleKey ? t(item.titleKey) : item.title }}</span>
+              <component :is="item.icon" v-if="item.icon" class="menu-icon" />
+              <span class="menu-label">{{ item.titleKey ? t(item.titleKey) : item.title }}</span>
             </a>
           </SidebarMenuButton>
         </SidebarMenuItem>

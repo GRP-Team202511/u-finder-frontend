@@ -94,3 +94,48 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
     </div>
   </div>
 </template>
+
+<style>
+/* Animate hiding labels when sidebar is collapsed and keep icons centered.*/
+[data-slot="sidebar"] .menu-label {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  vertical-align: middle;
+  transition: opacity .18s ease, max-width .18s ease, margin .18s ease, padding .18s ease;
+  opacity: 1;
+}
+
+[data-slot="sidebar"][data-state="collapsed"] .menu-label {
+  opacity: 0;
+  max-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Center icons in the slim rail when collapsed */
+[data-slot="sidebar"] .menu-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+[data-slot="sidebar"][data-state="collapsed"] .menu-icon {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Hide sidebar header title with transition */
+[data-slot="sidebar"] .sidebar-header-title {
+  display: inline-block;
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity .18s ease, max-width .18s ease;
+  opacity: 1;
+}
+[data-slot="sidebar"][data-state="collapsed"] .sidebar-header-title {
+  opacity: 0;
+  max-width: 0;
+}
+</style>

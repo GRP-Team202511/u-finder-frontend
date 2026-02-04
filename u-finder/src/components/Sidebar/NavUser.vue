@@ -44,17 +44,17 @@ const { t } = useI18n()
     <SidebarMenuItem>
       <DropdownMenu>
         <DropdownMenuTrigger as-child>
-          <SidebarMenuButton
+            <SidebarMenuButton
             size="lg"
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
-            <Avatar class="h-8 w-8 rounded-lg">
+            <Avatar class="h-8 w-8 rounded-lg menu-icon">
               <AvatarImage :src="user.avatar" :alt="user.name" />
               <AvatarFallback class="rounded-lg">
                 CN
               </AvatarFallback>
             </Avatar>
-            <div class="grid flex-1 text-left text-sm leading-tight">
+            <div class="grid flex-1 text-left text-sm leading-tight menu-label">
               <span class="truncate font-medium">{{ user.name }}</span>
               <span class="truncate text-xs">{{ user.email }}</span>
             </div>
