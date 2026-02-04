@@ -7,8 +7,8 @@ import {
   Clock,
   User,
 } from "lucide-vue-next"
-import NavMain from "@/components/sidebar/NavMain.vue"
-import NavUser from "@/components/sidebar/NavUser.vue"
+import NavMain from "@/components/Sidebar/NavMain.vue"
+import NavUser from "@/components/Sidebar/NavUser.vue"
 
 import {
   Sidebar,

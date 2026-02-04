@@ -6,7 +6,7 @@ export const containerClass = "w-full h-full"
 </script>
 
 <script setup lang="ts">
-import AppSidebar from "@/components/sidebar/AppSidebar.vue"
+import AppSidebar from "@/components/Sidebar/AppSidebar.vue"
 import {
   SidebarInset,
   SidebarProvider,
