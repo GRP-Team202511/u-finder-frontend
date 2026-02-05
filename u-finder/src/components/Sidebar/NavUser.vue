@@ -21,6 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useRouter, RouterLink } from 'vue-router'
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -36,6 +37,7 @@ const props = defineProps<{
   }
 }>()
 const { isMobile } = useSidebar()
+const router = useRouter()
 const { t } = useI18n()
 </script>
 
@@ -61,7 +63,7 @@ const { t } = useI18n()
             <ChevronsUpDown class="ml-auto size-4" />
           </SidebarMenuButton>
         </DropdownMenuTrigger>
-        <DropdownMenuContent
+          <DropdownMenuContent
           class="w-[--reka-dropdown-menu-trigger-width] min-w-56 rounded-lg"
           :side="isMobile ? 'bottom' : 'right'"
           align="end"
@@ -75,20 +77,22 @@ const { t } = useI18n()
                   CN
                 </AvatarFallback>
               </Avatar>
-              <div class="grid flex-1 text-left text-sm leading-tight">
+              <div class="grid flex-1 text-left text-sm leading-tight menu-label">
                 <span class="truncate font-semibold">{{ user.name }}</span>
                 <span class="truncate text-xs">{{ user.email }}</span>
               </div>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Settings />
-              {{ t('sidebar.settings') }}
+            <DropdownMenuItem as-child>
+              <RouterLink :to="{ name: '' }"> 
+                <Settings />
+                {{ t('sidebar.settings') }} 
+              </RouterLink>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem @click="() => router.push({ name: 'Cover' })">
             <LogOut />
             {{ t('sidebar.logout') }}
           </DropdownMenuItem>

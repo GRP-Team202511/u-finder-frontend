@@ -27,26 +27,25 @@ const data = {
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
-  navMain: [
+    navMain: [
     {
       titleKey: "sidebar.aiChat",
-      url: "#",
+      to: { name: '' }, // to be updated when the page is being developed
       icon: MessageCircle,
     },
     {
       titleKey: "sidebar.favourite",
-      url: "#",
+      to: { name: '' }, // to be updated when the page is being developed
       icon: Star,
     },
     {
       titleKey: "sidebar.history",
-      url: "#",
+      to: { name: '' }, // to be updated when the page is being developed
       icon: Clock,
-      isActive: true,
     },
     {
       titleKey: "sidebar.profile",
-      url: "#",
+      to: { name: 'UserProfile' },
       icon: User,
     },
   ],
