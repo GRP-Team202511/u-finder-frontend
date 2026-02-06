@@ -22,7 +22,30 @@
             "sendCode": "Send Code",
             "send": "Reset Password",
             "otp": "Verification Code",
-            "newPassword": "New Password"
+            "newPassword": "New Password",
+            "codeDescription": "Code sent to your email.",
+            "resendCode": "Resend",
+            "errors": {
+                "emailRequired": "Email is required",
+                "emailNotFound": "No account found with this email",
+                "invalidEmail": "Invalid email format",
+                "sendFailed": "Failed to send verification code",
+                "tokenMissing": "Please request a verification code first",
+                "tokenExpired": "Verification token expired. Please request a new code.",
+                "rateLimited": "Too many requests. Please wait {seconds} seconds.",
+                "resendFailed": "Failed to resend verification code",
+                "sendCodeFirst": "Please send verification code first",
+                "fieldsRequired": "All fields are required",
+                "wrongCode": "Incorrect verification code",
+                "unauthorized": "Unauthorized request",
+                "invalidInput": "Invalid input provided",
+                "resetFailed": "Failed to reset password. Please try again."
+            },
+            "success": {
+                "codeSent": "Verification code sent to your email",
+                "codeResent": "Verification code resent successfully",
+                "passwordReset": "Password reset successfully! Redirecting to login..."
+            }
         }
     },
     "signup":{

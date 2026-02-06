@@ -65,3 +65,52 @@ export const resendSignupCode = (tempToken: string) => {
     }
   })
 }
+
+// Reset password request payload structure
+export interface ResetPasswordRequest {
+  email: string
+}
+
+// Reset password response payload structure
+export interface ResetPasswordResponse {
+  temp_token: string
+}
+
+// Verify reset password request payload structure
+export interface VerifyResetPasswordRequest {
+  code: string
+  newPassword: string
+}
+
+// Verify reset password response payload structure
+export interface VerifyResetPasswordResponse {
+  message: string
+}
+
+// Resend reset password code response structure
+export interface ResendResetPasswordResponse {
+  message: string
+}
+
+// Sends a password reset request to the server
+export const resetPassword = (data: ResetPasswordRequest) => {
+  return http.post<ResetPasswordResponse>('/auth/reset', data)
+}
+
+// Verifies the password reset with OTP code and sets new password
+export const verifyResetPassword = (data: VerifyResetPasswordRequest, tempToken: string) => {
+  return http.post<VerifyResetPasswordResponse>('/auth/reset/verify', data, {
+    headers: {
+      'Temp-Token': tempToken
+    }
+  })
+}
+
+// Resends the verification code during password reset
+export const resendResetPasswordCode = (tempToken: string) => {
+  return http.post<ResendResetPasswordResponse>('/auth/reset/resend', {}, {
+    headers: {
+      'Temp-Token': tempToken
+    }
+  })
+}

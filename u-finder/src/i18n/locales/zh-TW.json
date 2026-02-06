@@ -13,7 +13,40 @@
         "forgot": "忘記密碼？",
         "submit": "登入",
         "no account": "沒有帳號？", 
-        "signup": "註冊帳戶"      
+        "signup": "註冊帳戶",
+        "unauth": "密碼不正確",
+        "not_found": "該帳戶不存在",
+        "reset": {
+            "title": "重置密碼",
+            "description": "使用您的電子郵箱重置密碼",
+            "sendCode": "發送驗證碼",
+            "send": "重置密碼",
+            "otp": "驗證碼",
+            "newPassword": "新密碼",
+            "codeDescription": "驗證碼已發送至您的郵箱。",
+            "resendCode": "重發",
+            "errors": {
+                "emailRequired": "請輸入電子郵箱",
+                "emailNotFound": "未找到該郵箱對應的帳戶",
+                "invalidEmail": "郵箱格式不正確",
+                "sendFailed": "發送驗證碼失敗",
+                "tokenMissing": "請先請求驗證碼",
+                "tokenExpired": "驗證令牌已過期，請重新請求驗證碼。",
+                "rateLimited": "請求過於頻繁，請等待 {seconds} 秒。",
+                "resendFailed": "重新發送驗證碼失敗",
+                "sendCodeFirst": "請先發送驗證碼",
+                "fieldsRequired": "所有欄位都是必填的",
+                "wrongCode": "驗證碼不正確",
+                "unauthorized": "未授權的請求",
+                "invalidInput": "輸入的資料無效",
+                "resetFailed": "重置密碼失敗，請重試。"
+            },
+            "success": {
+                "codeSent": "驗證碼已發送至您的郵箱",
+                "codeResent": "驗證碼已重新發送",
+                "passwordReset": "密碼重置成功！正在跳轉到登入頁面..."
+            }
+        }
     },
     "signup":{
         "title": "註冊帳戶",

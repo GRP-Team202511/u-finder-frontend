@@ -13,7 +13,40 @@
         "forgot": "忘记密码？",
         "submit": "登录",
         "no account": "没有帐号？",
-        "signup": "注册账户"       
+        "signup": "注册账户",
+        "unauth": "密码不正确",
+        "not_found": "该账户不存在",
+        "reset": {
+            "title": "重置密码",
+            "description": "使用您的电子邮箱重置密码",
+            "sendCode": "发送验证码",
+            "send": "重置密码",
+            "otp": "验证码",
+            "newPassword": "新密码",
+            "codeDescription": "验证码已发送至您的邮箱。",
+            "resendCode": "重发",
+            "errors": {
+                "emailRequired": "请输入电子邮箱",
+                "emailNotFound": "未找到该邮箱对应的账户",
+                "invalidEmail": "邮箱格式不正确",
+                "sendFailed": "发送验证码失败",
+                "tokenMissing": "请先请求验证码",
+                "tokenExpired": "验证令牌已过期，请重新请求验证码。",
+                "rateLimited": "请求过于频繁，请等待 {seconds} 秒。",
+                "resendFailed": "重新发送验证码失败",
+                "sendCodeFirst": "请先发送验证码",
+                "fieldsRequired": "所有字段都是必填的",
+                "wrongCode": "验证码不正确",
+                "unauthorized": "未授权的请求",
+                "invalidInput": "输入的数据无效",
+                "resetFailed": "重置密码失败，请重试。"
+            },
+            "success": {
+                "codeSent": "验证码已发送至您的邮箱",
+                "codeResent": "验证码已重新发送",
+                "passwordReset": "密码重置成功！正在跳转到登录页面..."
+            }
+        }
     },
     "signup":{
         "title": "注册账户",
