@@ -82,6 +82,38 @@
             "tooMany": "Too many requests. Please wait {seconds} seconds before trying again.",
             "resendError": "Failed to resend code. Please try again."
         }
+    },
+    "sidebar": {
+        "aiChat": "AI Chat",
+        "favourite": "Favourite",
+        "history": "History",
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Log out",
+        "history": {
+            "title": "Chat History",
+            "session1": "Session 1",
+            "session2": "Session 2",
+            "session3": "Session 3"
+        }
+    },
+    "profile": {
+        "title": "Profile",
+        "edit": "Edit Profile",
+        "save": "Save",
+        "cancel": "Cancel"
+    },
+    "edu": {
+        "title": "Education Background",
+        "type": "Type",
+        "institution": "Institution",
+        "time": {
+            "start": "Start Date",
+            "end": "End Date"
+        },
+        "major": "Major",
+        "ranking": "Ranking",
+        "GPA": "GPA",
+        "GPA-base": "GPA Base"
     }
-
 }
