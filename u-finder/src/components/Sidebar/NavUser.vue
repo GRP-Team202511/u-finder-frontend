@@ -46,7 +46,7 @@ const { t } = useI18n()
     <SidebarMenuItem>
       <DropdownMenu>
         <DropdownMenuTrigger as-child>
-            <SidebarMenuButton
+          <SidebarMenuButton
             size="lg"
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
@@ -85,9 +85,9 @@ const { t } = useI18n()
           </DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuItem as-child>
-              <RouterLink :to="{ name: '' }"> 
+              <RouterLink :to="{ name: 'Cover' }"> <!--to be updated when the page is being developed-->
                 <Settings />
-                {{ t('sidebar.settings') }} 
+                {{ t('sidebar.settings') }}
               </RouterLink>
             </DropdownMenuItem>
           </DropdownMenuGroup>

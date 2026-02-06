@@ -30,17 +30,17 @@ const data = {
     navMain: [
     {
       titleKey: "sidebar.aiChat",
-      to: { name: '' }, // to be updated when the page is being developed
+      to: { name: 'Cover' }, // to be updated when the page is being developed
       icon: MessageCircle,
     },
     {
       titleKey: "sidebar.favourite",
-      to: { name: '' }, // to be updated when the page is being developed
+      to: { name: 'Cover' }, // to be updated when the page is being developed
       icon: Star,
     },
     {
       titleKey: "sidebar.history",
-      to: { name: '' }, // to be updated when the page is being developed
+      to: { name: 'Cover' }, // to be updated when the page is being developed
       icon: Clock,
     },
     {
@@ -54,7 +54,7 @@ const data = {
 
 <template>
   <Sidebar v-bind="props" collapsible="icon">
-    <SidebarHeader class="px-3 py-2 flex items-right justify-between">
+    <SidebarHeader class="px-3 py-2 flex items-start justify-between">
       <div class="flex items-center">
         <SidebarTrigger />
       </div>
