@@ -16,7 +16,6 @@ http.interceptors.request.use(
     if (userStore.user?.token) {
       config.headers.Authorization = `Bearer ${userStore.user.token}`
     }
-    config.headers['User-Agent'] = window?.navigator?.userAgent ?? 'unknown'
     return config
   },
   (error) => Promise.reject(error)
