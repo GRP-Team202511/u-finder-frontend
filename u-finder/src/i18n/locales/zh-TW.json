@@ -28,7 +28,27 @@
         "continue": "點擊「註冊」即代表您同意本服務的",
         "termOfUse": "使用條款",
         "and": "與",
-        "privacy": "隱私權政策"
+        "privacy": "隱私權政策",
+        "occupied": "該電子郵件已被註冊。",
+        "error": "註冊過程中發生錯誤，請重試。",
+        "codeSent": "驗證碼已發送",
+        "verification": {
+            "enter": "輸入驗證碼",
+            "sent": "我們已將 6 位驗證碼發送至您的電子郵件。",
+            "enter2": "請輸入發送至您電子郵件的 6 位驗證碼。",
+            "receive": "沒有收到驗證碼？",
+            "verify": "驗證",
+            "resend": "重新發送",
+            "resending": "發送中...",
+            "incorrect": "驗證碼不正確。",
+            "success": "驗證成功！",
+            "error": "驗證失敗，請重試。",
+            "notFound": "驗證工作階段未找到。",
+            "resent": "驗證碼已重新發送！",
+            "tokenExpired": "驗證工作階段已過期，請重新註冊。",
+            "tooMany": "請求過於頻繁，請等待 {seconds} 秒後再試。",
+            "resendError": "重發驗證碼失敗，請重試。"
+        }
     }
 
 }

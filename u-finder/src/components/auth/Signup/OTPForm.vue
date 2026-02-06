@@ -20,10 +20,11 @@ import {
 } from "@/components/ui/input-otp"
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
-import http from "@/api/http";
+import { verifySignup, resendSignupCode } from "@/api/userApi";
 import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "vue-router";
 import { Toaster, toast } from 'vue-sonner'
+import { Spinner } from "@/components/ui/spinner"
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -31,6 +32,7 @@ const { t } = useI18n()
 
 const verifying = ref(false)
 const incorrect = ref(false)
+const resending = ref(false)
 
 const props = defineProps<{
   tempToken: string
@@ -42,31 +44,47 @@ const handleOTP = async() => {
   verifying.value = true
 
   try {
-    const response = await http.post('/auth/verify', 
-      { code: otpValue.value },
-      {
-        headers: {
-          'temp_token': props.tempToken
-        }
-      }
-    )
-    
-    if (response.status === 201) {
-      console.log('Verification successful')
-      userStore.setUser(response.data)
-      // TODO: jump to the main page
-    }
+    // console.log(props.tempToken)
+    const response = await verifySignup({ code: otpValue.value }, props.tempToken)
+    console.log('Verification successful')
+    userStore.setUser(response.data)
+    toast.success(t("signup.verification.success"))
+    router.push('/')
   } catch (error: any) {
     if (error.response?.status === 401) {
       console.log("Wrong OTP code")
       otpValue.value = ""
       incorrect.value = true
       toast.error(t("signup.verification.incorrect"))
+    } else if (error.response?.status === 404) {
+      toast.error(t("signup.verification.notFound"))
     } else {
       console.error('Verification error:', error)
+      toast.error(t("signup.verification.error"))
     }
   } finally {
     verifying.value = false
+  }
+}
+
+const handleResend = async() => {
+  resending.value = true
+
+  try {
+    await resendSignupCode(props.tempToken)
+    toast.success(t("signup.verification.resent"))
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      toast.error(t("signup.verification.tokenExpired"))
+    } else if (error.response?.status === 429) {
+      const retryAfter = error.response.data?.retryAfter || 60
+      toast.error(t("signup.verification.tooMany", { seconds: retryAfter }))
+    } else {
+      console.error('Resend error:', error)
+      toast.error(t("signup.verification.resendError"))
+    }
+  } finally {
+    resending.value = false
   }
 }
 </script>
@@ -102,14 +120,15 @@ const handleOTP = async() => {
             </FieldDescription>
           </Field>
           <FieldGroup>
-            <Button type="submit" v-if="!verifying">
-              {{ t("signup.verification.verify") }}
-            </Button>
-            <Button varient="outline" v-if="verifying">
+            <Button type="submit" :disabled="verifying">
+              <Spinner v-if="verifying" class="animate-spin mr-2" />
               {{ t("signup.verification.verify") }}
             </Button>
             <FieldDescription class="text-center">
-              {{ t("signup.verification.receive") }} <a href="#">{{ t("signup.verification.resend") }}</a>
+              {{ t("signup.verification.receive") }}
+              <a href="#" @click.prevent="handleResend" :class="{ 'pointer-events-none opacity-50': resending }">
+                {{ resending ? t("signup.verification.resending") : t("signup.verification.resend") }}
+              </a>
             </FieldDescription>
           </FieldGroup>
         </FieldGroup>

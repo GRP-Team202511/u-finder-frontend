@@ -40,6 +40,7 @@
         "and": " and ",
         "privacy": "Privacy Policy",
         "occupied": "This email has been registered.",
+        "error": "An error occurred during signup. Please try again.",
         "codeSent": "The verification code has been sent",
         "verification": {
             "enter": "Enter verification code",
@@ -48,7 +49,15 @@
             "receive": "Didn't receive the code?",
             "verify": "Verify",
             "resend": "Resend",
-            "incorrect": "The OTP code is incorrect."
+            "resending": "Resending...",
+            "incorrect": "The OTP code is incorrect.",
+            "success": "Verification successful!",
+            "error": "Verification failed. Please try again.",
+            "notFound": "Verification session not found.",
+            "resent": "Verification code has been resent!",
+            "tokenExpired": "Verification session expired. Please sign up again.",
+            "tooMany": "Too many requests. Please wait {seconds} seconds before trying again.",
+            "resendError": "Failed to resend code. Please try again."
         }
     }
 

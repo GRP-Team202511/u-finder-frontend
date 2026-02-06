@@ -13,6 +13,11 @@ http.interceptors.request.use(
   (config) => {
     const userStore = useUserStore()
 
+    // Ensure headers object exists
+    if (!config.headers) {
+      config.headers = {} as any
+    }
+
     if (userStore.user?.token) {
       config.headers.Authorization = `Bearer ${userStore.user.token}`
     }

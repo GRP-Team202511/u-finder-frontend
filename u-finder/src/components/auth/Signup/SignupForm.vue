@@ -21,7 +21,7 @@ import {
 import { Spinner } from "@/components/ui/spinner"
 import { Input } from "@/components/ui/input"
 import { Toaster, toast } from 'vue-sonner'
-import http from "@/api/http"
+import { signup } from "@/api/userApi"
 
 
 const { t } = useI18n()
@@ -52,14 +52,11 @@ const handleSignup = async() => {
   occupied.value = false
 
   try {
-    const response = await http.post('/auth/signup', formData.value)
-    if (response.status == 200) {
-      emit("signup", { name: formData.value.name, email: formData.value.email })
-      const tempToken = response.data.temp_token
-      emit("signup-success", tempToken)
-      formData.value.password = ""
-      repeatPassword.value = ""
-    }
+    const response = await signup(formData.value)
+    emit("signup", { name: formData.value.name, email: formData.value.email })
+    emit("signup-success", response.data.temp_token)
+    formData.value.password = ""
+    repeatPassword.value = ""
   } catch (error: any) {
     if (error.response?.status === 409) {
       console.log('Account already exists')
@@ -67,6 +64,7 @@ const handleSignup = async() => {
       occupied.value = true
     } else {
       console.error('Sign up error:', error)
+      toast.error(t('signup.error'))
     }
   } finally {
     signing.value = false

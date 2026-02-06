@@ -28,7 +28,27 @@
         "continue": "点击“注册”即表示您同意我们的",
         "termOfUse": "服务条款",
         "and": "和",
-        "privacy": "隐私政策"
+        "privacy": "隐私政策",
+        "occupied": "该邮箱已被注册。",
+        "error": "注册过程中发生错误，请重试。",
+        "codeSent": "验证码已发送",
+        "verification": {
+            "enter": "输入验证码",
+            "sent": "我们已将 6 位验证码发送至您的邮箱。",
+            "enter2": "请输入发送至您邮箱的 6 位验证码。",
+            "receive": "没有收到验证码？",
+            "verify": "验证",
+            "resend": "重新发送",
+            "resending": "发送中...",
+            "incorrect": "验证码不正确。",
+            "success": "验证成功！",
+            "error": "验证失败，请重试。",
+            "notFound": "验证会话未找到。",
+            "resent": "验证码已重新发送！",
+            "tokenExpired": "验证会话已过期，请重新注册。",
+            "tooMany": "请求过于频繁，请等待 {seconds} 秒后再试。",
+            "resendError": "重发验证码失败，请重试。"
+        }
     }
 
 }
