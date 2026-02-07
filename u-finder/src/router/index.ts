@@ -33,6 +33,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../views/auth/Login.vue'),
     meta: { requiresAuth: false }
   },
+    path: '/login/reset',
+    name: 'ResetPassword',
+    component: () => import('../views/auth/Reset.vue'),
+    meta: { requiresAuth: false }
+  },
   {
     path: '/app',
     component: () => import('../views/SidebarLayout.vue'),

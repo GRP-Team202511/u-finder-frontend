@@ -13,7 +13,40 @@
         "forgot": "忘记密码？",
         "submit": "登录",
         "no account": "没有帐号？",
-        "signup": "注册账户"       
+        "signup": "注册账户",
+        "unauth": "密码不正确",
+        "not_found": "该账户不存在",
+        "reset": {
+            "title": "重置密码",
+            "description": "使用您的电子邮箱重置密码",
+            "sendCode": "发送验证码",
+            "send": "重置密码",
+            "otp": "验证码",
+            "newPassword": "新密码",
+            "codeDescription": "验证码已发送至您的邮箱。",
+            "resendCode": "重发",
+            "errors": {
+                "emailRequired": "请输入电子邮箱",
+                "emailNotFound": "未找到该邮箱对应的账户",
+                "invalidEmail": "邮箱格式不正确",
+                "sendFailed": "发送验证码失败",
+                "tokenMissing": "请先请求验证码",
+                "tokenExpired": "验证令牌已过期，请重新请求验证码。",
+                "rateLimited": "请求过于频繁，请等待 {seconds} 秒。",
+                "resendFailed": "重新发送验证码失败",
+                "sendCodeFirst": "请先发送验证码",
+                "fieldsRequired": "所有字段都是必填的",
+                "wrongCode": "验证码不正确",
+                "unauthorized": "未授权的请求",
+                "invalidInput": "输入的数据无效",
+                "resetFailed": "重置密码失败，请重试。"
+            },
+            "success": {
+                "codeSent": "验证码已发送至您的邮箱",
+                "codeResent": "验证码已重新发送",
+                "passwordReset": "密码重置成功！正在跳转到登录页面..."
+            }
+        }
     },
     "signup":{
         "title": "注册账户",
@@ -28,7 +61,27 @@
         "continue": "点击“注册”即表示您同意我们的",
         "termOfUse": "服务条款",
         "and": "和",
-        "privacy": "隐私政策"
+        "privacy": "隐私政策",
+        "occupied": "该邮箱已被注册。",
+        "error": "注册过程中发生错误，请重试。",
+        "codeSent": "验证码已发送",
+        "verification": {
+            "enter": "输入验证码",
+            "sent": "我们已将 6 位验证码发送至您的邮箱。",
+            "enter2": "请输入发送至您邮箱的 6 位验证码。",
+            "receive": "没有收到验证码？",
+            "verify": "验证",
+            "resend": "重新发送",
+            "resending": "发送中...",
+            "incorrect": "验证码不正确。",
+            "success": "验证成功！",
+            "error": "验证失败，请重试。",
+            "notFound": "验证会话未找到。",
+            "resent": "验证码已重新发送！",
+            "tokenExpired": "验证会话已过期，请重新注册。",
+            "tooMany": "请求过于频繁，请等待 {seconds} 秒后再试。",
+            "resendError": "重发验证码失败，请重试。"
+        }
     }
 
 }

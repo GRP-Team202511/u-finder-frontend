@@ -13,9 +13,15 @@ http.interceptors.request.use(
   (config) => {
     const userStore = useUserStore()
 
+    // Ensure headers object exists
+    if (!config.headers) {
+      config.headers = {} as any
+    }
+
     if (userStore.user?.token) {
       config.headers.Authorization = `Bearer ${userStore.user.token}`
     }
+    config.headers['User-Agent'] = window?.navigator?.userAgent ?? 'unknown'
     return config
   },
   (error) => Promise.reject(error)
@@ -23,7 +29,7 @@ http.interceptors.request.use(
 
 // response interceptor
 http.interceptors.response.use(
-  (resp) => resp.data,
+  (resp) => resp,
   (error) => {
     // token expired
     if (error.response?.status === 401) {

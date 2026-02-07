@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
+import { ref } from "vue"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useI18n } from 'vue-i18n'
@@ -17,16 +18,62 @@ import {
   FieldLabel,
   FieldSeparator,
 } from "@/components/ui/field"
+import { Spinner } from "@/components/ui/spinner"
 import { Input } from "@/components/ui/input"
+import { Toaster, toast } from 'vue-sonner'
+import { signup } from "@/api/userApi"
+
 
 const { t } = useI18n()
+
+const signing = ref(false)
+
+const occupied = ref(false)
 
 const props = defineProps<{
   class?: HTMLAttributes["class"]
 }>()
+
+const emit = defineEmits<{
+  (e: "signup", payload: { name: string; email: string }): void
+  (e: "signup-success", tempToken: string): void
+}>()
+
+const formData = ref({
+  name: "",
+  email: "",
+  password: "",
+})
+
+const repeatPassword = ref("")
+
+const handleSignup = async() => {
+  signing.value = true
+  occupied.value = false
+
+  try {
+    const response = await signup(formData.value)
+    emit("signup", { name: formData.value.name, email: formData.value.email })
+    emit("signup-success", response.data.temp_token)
+    formData.value.password = ""
+    repeatPassword.value = ""
+  } catch (error: any) {
+    if (error.response?.status === 409) {
+      console.log('Account already exists')
+      toast.error(t('signup.occupied'))
+      occupied.value = true
+    } else {
+      console.error('Sign up error:', error)
+      toast.error(t('signup.error'))
+    }
+  } finally {
+    signing.value = false
+  }
+}
 </script>
 
 <template>
+  <Toaster />
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card  >
       <CardHeader class="text-center">
@@ -38,30 +85,34 @@ const props = defineProps<{
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+          <form @submit.prevent="handleSignup">
           <FieldGroup>
             <Field>
               <FieldLabel for="username">{{ t("signup.username") }}</FieldLabel>
-              <Input id="username" type="text" placeholder="John Doe" required />
+              <Input v-model="formData.name" id="username" type="text" required />
             </Field>
 
             <Field>
               <FieldLabel for="email">{{ t("signup.email") }}</FieldLabel>
-              <Input id="email" type="email" placeholder="m@example.com" required />
+              <Input v-model="formData.email" id="email" type="email" :class="{'border-red-500': occupied}" @focus="occupied=false" required />
             </Field>
 
             <Field>
               <FieldLabel for="password">{{ t("signup.password") }}</FieldLabel>
-              <Input id="password" type="password" required />
+              <Input v-model="formData.password" id="password" type="password" :class="{ 'border-red-500 ': formData.password != repeatPassword }" required/>
             </Field>
 
             <Field>
               <FieldLabel for="confirm-password">{{ t("signup.confirmPassword") }}</FieldLabel>
-              <Input id="confirm-password" type="password" required />
+              <Input v-model="repeatPassword" id="confirm-password" type="password" :class="{ 'border-red-500 ': formData.password != repeatPassword }" required />
             </Field>
 
             <Field>
-              <Button type="submit">{{ t("signup.button") }}</Button>
+              <Button type="submit" v-if="!signing">{{ t("signup.button") }}</Button>
+              <Button varient="outline" v-if="signing" disabled>
+                <Spinner class="animate-spin" />
+                {{ t("signup.button") }}
+              </Button>
             </Field>
             <Field>
               <FieldDescription class="px-6 text-center">
