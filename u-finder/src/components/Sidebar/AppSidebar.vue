@@ -7,8 +7,8 @@ import {
   Clock,
   User,
 } from "lucide-vue-next"
-import NavMain from "@/components/sidebar/NavMain.vue"
-import NavUser from "@/components/sidebar/NavUser.vue"
+import NavMain from "@/components/Sidebar/NavMain.vue"
+import NavUser from "@/components/Sidebar/NavUser.vue"
 
 import {
   Sidebar,
@@ -16,6 +16,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarTrigger,
 } from "@/components/ui/sidebar"
 
 const props = defineProps<SidebarProps>()
@@ -26,40 +27,25 @@ const data = {
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
-  navMain: [
+    navMain: [
     {
       titleKey: "sidebar.aiChat",
-      url: "#",
+      to: { name: 'Cover' }, // to be updated when the page is being developed
       icon: MessageCircle,
     },
     {
       titleKey: "sidebar.favourite",
-      url: "#",
+      to: { name: 'Cover' }, // to be updated when the page is being developed
       icon: Star,
     },
     {
-      titleKey: "sidebar.history.title",
-      url: "#",
+      titleKey: "sidebar.history",
+      to: { name: 'Cover' }, // to be updated when the page is being developed
       icon: Clock,
-      isActive: true,
-      items: [
-        {
-          titleKey: "sidebar.history.session1",
-          url: "#",
-        },
-        {
-          titleKey: "sidebar.history.session2",
-          url: "#",
-        },
-        {
-          titleKey: "sidebar.history.session3",
-          url: "#",
-        },
-      ],
     },
     {
       titleKey: "sidebar.profile",
-      url: "#",
+      to: { name: 'UserProfile' },
       icon: User,
     },
   ],
@@ -67,9 +53,15 @@ const data = {
 </script>
 
 <template>
-  <Sidebar v-bind="props">
-    <SidebarContent class="pt-2, pl-2">
-      <div class="pt-20">
+  <Sidebar v-bind="props" collapsible="icon">
+    <SidebarHeader class="px-3 py-2 flex items-start justify-between">
+      <div class="flex items-center">
+        <SidebarTrigger />
+      </div>
+    </SidebarHeader>
+
+    <SidebarContent>
+      <div class="pt-20 pl-1">
         <NavMain :items="data.navMain" />
       </div>
     </SidebarContent>

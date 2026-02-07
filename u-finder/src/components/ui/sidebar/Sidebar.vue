@@ -30,7 +30,7 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
     <slot />
   </div>
 
-  <Sheet v-else-if="isMobile" :open="openMobile" v-bind="$attrs" @update:open="setOpenMobile">
+  <Sheet v-else-if="isMobile && (collapsible === 'offcanvas' || openMobile)" :open="openMobile" v-bind="$attrs" @update:open="setOpenMobile">
     <SheetContent
       data-sidebar="sidebar"
       data-slot="sidebar"
@@ -53,7 +53,7 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
   <div
     v-else
-    class="group peer text-sidebar-foreground hidden md:block"
+    :class="cn('group peer text-sidebar-foreground', collapsible === 'offcanvas' ? 'hidden md:block' : 'block')"
     data-slot="sidebar"
     :data-state="state"
     :data-collapsible="state === 'collapsed' ? collapsible : ''"
@@ -63,17 +63,19 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
     <!-- This is what handles the sidebar gap on desktop  -->
     <div
       :class="cn(
-        'relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear',
+        'relative w-[var(--sidebar-width)] bg-transparent transition-[width] duration-200 ease-linear',
         'group-data-[collapsible=offcanvas]:w-0',
         'group-data-[side=right]:rotate-180',
         variant === 'floating' || variant === 'inset'
           ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]'
-          : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
+          : 'group-data-[collapsible=icon]:w-[var(--sidebar-width-icon)]',
       )"
     />
     <div
       :class="cn(
-        'fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex',
+        collapsible === 'offcanvas' 
+          ? 'fixed inset-y-0 z-10 hidden h-svh w-[var(--sidebar-width)] transition-[left,right,width] duration-200 ease-linear md:flex' 
+          : 'fixed inset-y-0 z-10 flex h-svh w-[var(--sidebar-width)] transition-[left,right,width] duration-200 ease-linear',
         side === 'left'
           ? 'left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
           : 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
@@ -94,3 +96,48 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
     </div>
   </div>
 </template>
+
+<style>
+/* Animate hiding labels when sidebar is collapsed and keep icons centered.*/
+[data-slot="sidebar"] .menu-label {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  vertical-align: middle;
+  transition: opacity .18s ease, max-width .18s ease, margin .18s ease, padding .18s ease;
+  opacity: 1;
+}
+
+[data-slot="sidebar"][data-state="collapsed"] .menu-label {
+  opacity: 0;
+  max-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Center icons in the slim rail when collapsed */
+[data-slot="sidebar"] .menu-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+[data-slot="sidebar"][data-state="collapsed"] .menu-icon {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Hide sidebar header title with transition */
+[data-slot="sidebar"] .sidebar-header-title {
+  display: inline-block;
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity .18s ease, max-width .18s ease;
+  opacity: 1;
+}
+[data-slot="sidebar"][data-state="collapsed"] .sidebar-header-title {
+  opacity: 0;
+  max-width: 0;
+}
+</style>

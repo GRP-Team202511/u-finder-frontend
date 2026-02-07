@@ -89,13 +89,7 @@
         "history": "History",
         "profile": "Profile",
         "settings": "Settings",
-        "logout": "Log out",
-        "history": {
-            "title": "Chat History",
-            "session1": "Session 1",
-            "session2": "Session 2",
-            "session3": "Session 3"
-        }
+        "logout": "Log out"
     },
     "profile": {
         "title": "Profile",
