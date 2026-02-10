@@ -2,6 +2,7 @@
 import { ref, provide } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SidebarPage from '../Sidebar.vue'
+import BasicInformation from '@/components/Profile/BasicInformation.vue'
 import EducationBackground from '@/components/Profile/EducationBackground.vue'
 import { Button } from '@/components/ui/button'
 
@@ -9,6 +10,7 @@ const { t } = useI18n()
 
 const editing = ref(false)
 const educationData = ref<any[] | undefined>(undefined)
+const informationData = ref<any[] | undefined>(undefined)
 
 // simple registration API for child components to participate in global save/cancel
 const registry = new Set<{ save: () => void; cancel?: () => void }>()
@@ -25,6 +27,15 @@ const profileEditor = {
 	}
 }
 provide('profileEditor', profileEditor)
+
+function onInformationSave(payload: any) {
+	informationData.value = payload
+	editing.value = false
+}
+
+function onInformationCancel() {
+	editing.value = false
+}
 
 function onEducationSave(payload: any) {
 	educationData.value = payload
@@ -53,15 +64,26 @@ function onEducationCancel() {
 					</template>
 				</div>
 			</div>
+			
+			<div class="space-y-8">
+				<BasicInformation
+					:modelValue="informationData"
+					:editable="editing"
+					@update:modelValue="informationData = $event"
+					@save="onInformationSave"
+					@cancel="onInformationCancel"
+					@request-edit="editing = true"
+				/>
 
-			<EducationBackground
-				:modelValue="educationData"
-				:editable="editing"
-				@update:modelValue="educationData = $event"
-				@save="onEducationSave"
-				@cancel="onEducationCancel"
-				@request-edit="editing = true"
-			/>
+				<EducationBackground
+					:modelValue="educationData"
+					:editable="editing"
+					@update:modelValue="educationData = $event"
+					@save="onEducationSave"
+					@cancel="onEducationCancel"
+					@request-edit="editing = true"
+				/>
+			</div>
 		</div>
 	</SidebarPage>
 </template>

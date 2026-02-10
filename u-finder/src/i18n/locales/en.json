@@ -50,6 +50,17 @@
         "save": "Save",
         "cancel": "Cancel"
     },
+    "info": {
+        "title": "Personal Information",
+        "name": "Name",
+        "gender": {
+            "title": "Gender",
+            "male": "Male",
+            "female": "Female",
+            "other": "Other"
+        },
+        "birthday": "Birthday" 
+    },
     "edu": {
         "title": "Education Background",
         "type": "Type",
