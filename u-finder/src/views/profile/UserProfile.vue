@@ -29,7 +29,7 @@ const profileEditor = {
 provide('profileEditor', profileEditor)
 
 function onInformationSave(payload: any) {
-	educationData.value = payload
+	informationData.value = payload
 	editing.value = false
 }
 
@@ -67,7 +67,7 @@ function onEducationCancel() {
 			
 			<div class="space-y-8">
 				<BasicInformation
-					:modelValue="educationData"
+					:modelValue="informationData"
 					:editable="editing"
 					@update:modelValue="informationData = $event"
 					@save="onInformationSave"
