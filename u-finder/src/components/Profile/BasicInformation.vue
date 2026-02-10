@@ -237,6 +237,7 @@ onMounted(async () => {
                       <Calendar
                         v-model="birthday[idx]"
                         :default-placeholder="defaultPlaceholder"
+                        :max-value="defaultPlaceholder"
                         layout="month-and-year"
                         initial-focus
                         @update:model-value="close"
