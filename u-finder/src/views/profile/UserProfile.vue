@@ -2,7 +2,7 @@
 import { ref, provide } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SidebarPage from '../Sidebar.vue'
-import EducationBackground from '@/components/profile/EducationBackground.vue'
+import EducationBackground from '@/components/Profile/EducationBackground.vue'
 import { Button } from '@/components/ui/button'
 
 const { t } = useI18n()
