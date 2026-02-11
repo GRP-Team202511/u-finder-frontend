@@ -13,7 +13,40 @@
         "forgot": "Forgot your password?",
         "submit": "Log In",
         "no account": "Not have an account?",
-        "signup": "Sign up"       
+        "signup": "Sign up",
+        "unauth": "The password is incorrect",
+        "not_found": "The account doesn't exist",
+        "reset": {
+            "title": "Reset Password",
+            "description": "Reset password with your email",
+            "sendCode": "Send Code",
+            "send": "Reset Password",
+            "otp": "Verification Code",
+            "newPassword": "New Password",
+            "codeDescription": "Code sent to your email.",
+            "resendCode": "Resend",
+            "errors": {
+                "emailRequired": "Email is required",
+                "emailNotFound": "No account found with this email",
+                "invalidEmail": "Invalid email format",
+                "sendFailed": "Failed to send verification code",
+                "tokenMissing": "Please request a verification code first",
+                "tokenExpired": "Verification token expired. Please request a new code.",
+                "rateLimited": "Too many requests. Please wait {seconds} seconds.",
+                "resendFailed": "Failed to resend verification code",
+                "sendCodeFirst": "Please send verification code first",
+                "fieldsRequired": "All fields are required",
+                "wrongCode": "Incorrect verification code",
+                "unauthorized": "Unauthorized request",
+                "invalidInput": "Invalid input provided",
+                "resetFailed": "Failed to reset password. Please try again."
+            },
+            "success": {
+                "codeSent": "Verification code sent to your email",
+                "codeResent": "Verification code resent successfully",
+                "passwordReset": "Password reset successfully! Redirecting to login..."
+            }
+        }
     },
     "signup":{
         "title": "Sign Up",
@@ -28,7 +61,27 @@
         "continue": "By clicking \"Sing Up\", you agree to our ",
         "termOfUse": "Term of Service",
         "and": " and ",
-        "privacy": "Privacy Policy"
+        "privacy": "Privacy Policy",
+        "occupied": "This email has been registered.",
+        "error": "An error occurred during signup. Please try again.",
+        "codeSent": "The verification code has been sent",
+        "verification": {
+            "enter": "Enter verification code",
+            "sent": "We sent a 6-digit code to your email.",
+            "enter2": "Enter the 6-digit code sent to your email.",
+            "receive": "Didn't receive the code?",
+            "verify": "Verify",
+            "resend": "Resend",
+            "resending": "Resending...",
+            "incorrect": "The OTP code is incorrect.",
+            "success": "Verification successful!",
+            "error": "Verification failed. Please try again.",
+            "notFound": "Verification session not found.",
+            "resent": "Verification code has been resent!",
+            "tokenExpired": "Verification session expired. Please sign up again.",
+            "tooMany": "Too many requests. Please wait {seconds} seconds before trying again.",
+            "resendError": "Failed to resend code. Please try again."
+        }
     },
     "sidebar": {
         "aiChat": "AI Chat",
@@ -36,19 +89,24 @@
         "history": "History",
         "profile": "Profile",
         "settings": "Settings",
-        "logout": "Log out",
-        "history": {
-            "title": "Chat History",
-            "session1": "Session 1",
-            "session2": "Session 2",
-            "session3": "Session 3"
-        }
+        "logout": "Log out"
     },
     "profile": {
         "title": "Profile",
         "edit": "Edit Profile",
         "save": "Save",
         "cancel": "Cancel"
+    },
+    "info": {
+        "title": "Personal Information",
+        "name": "Name",
+        "gender": {
+            "title": "Gender",
+            "male": "Male",
+            "female": "Female",
+            "other": "Other"
+        },
+        "birthday": "Birthday" 
     },
     "edu": {
         "title": "Education Background",

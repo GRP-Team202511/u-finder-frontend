@@ -21,6 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useRouter, RouterLink } from 'vue-router'
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -36,6 +37,7 @@ const props = defineProps<{
   }
 }>()
 const { isMobile } = useSidebar()
+const router = useRouter()
 const { t } = useI18n()
 </script>
 
@@ -48,13 +50,13 @@ const { t } = useI18n()
             size="lg"
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
-            <Avatar class="h-8 w-8 rounded-lg">
+            <Avatar class="h-8 w-8 rounded-lg menu-icon">
               <AvatarImage :src="user.avatar" :alt="user.name" />
               <AvatarFallback class="rounded-lg">
                 CN
               </AvatarFallback>
             </Avatar>
-            <div class="grid flex-1 text-left text-sm leading-tight">
+            <div class="grid flex-1 text-left text-sm leading-tight menu-label">
               <span class="truncate font-medium">{{ user.name }}</span>
               <span class="truncate text-xs">{{ user.email }}</span>
             </div>
@@ -67,31 +69,33 @@ const { t } = useI18n()
           align="end"
           :side-offset="4"
         >
-          <DropdownMenuLabel class="p-0 font-normal">
-            <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-              <Avatar class="h-8 w-8 rounded-lg">
-                <AvatarImage :src="user.avatar" :alt="user.name" />
-                <AvatarFallback class="rounded-lg">
-                  CN
-                </AvatarFallback>
-              </Avatar>
-              <div class="grid flex-1 text-left text-sm leading-tight">
-                <span class="truncate font-semibold">{{ user.name }}</span>
-                <span class="truncate text-xs">{{ user.email }}</span>
-              </div>
+        <DropdownMenuLabel class="p-0 font-normal">
+          <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+            <Avatar class="h-8 w-8 rounded-lg">
+              <AvatarImage :src="user.avatar" :alt="user.name" />
+              <AvatarFallback class="rounded-lg">
+                CN
+              </AvatarFallback>
+            </Avatar>
+            <div class="grid flex-1 text-left text-sm leading-tight menu-label">
+              <span class="truncate font-semibold">{{ user.name }}</span>
+              <span class="truncate text-xs">{{ user.email }}</span>
             </div>
-          </DropdownMenuLabel>
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuItem as-child>
+            <RouterLink :to="{ name: 'Cover' }"> <!--to be updated when the page is being developed-->
               <Settings />
               {{ t('sidebar.settings') }}
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <LogOut />
-            {{ t('sidebar.logout') }}
+            </RouterLink>
           </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem @click="() => router.push({ name: 'Cover' })">
+          <LogOut />
+          {{ t('sidebar.logout') }}
+        </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </SidebarMenuItem>

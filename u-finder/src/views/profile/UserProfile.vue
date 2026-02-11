@@ -2,16 +2,18 @@
 import { ref, provide } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SidebarPage from '../Sidebar.vue'
-import EducationBackground from '@/components/profile/EducationBackground.vue'
-import Internship from '@/components/profile/UserProfile/Internship.vue'
-import Project from '@/components/profile/UserProfile/Project.vue'
-import CampusExperience from '@/components/profile/UserProfile/CampusExperience.vue'
-import Award from '@/components/profile/UserProfile/Award.vue'
+import BasicInformation from '@/components/Profile/BasicInformation.vue'
+import EducationBackground from '@/components/Profile/EducationBackground.vue'
+import Internship from '@/components/Profile/UserProfile/Internship.vue'
+import Project from '@/components/Profile/UserProfile/Project.vue'
+import CampusExperience from '@/components/Profile/UserProfile/CampusExperience.vue'
+import Award from '@/components/Profile/UserProfile/Award.vue'
 import { Button } from '@/components/ui/button'
 
 const { t } = useI18n()
 
 const editing = ref(false)
+const informationData = ref<any[] | undefined>(undefined)
 const educationData = ref<any[] | undefined>(undefined)
 const internshipData = ref<any[] | undefined>(undefined)
 const projectData = ref<any[] | undefined>(undefined)
@@ -33,6 +35,15 @@ const profileEditor = {
 	}
 }
 provide('profileEditor', profileEditor)
+
+function onInformationSave(payload: any) {
+	informationData.value = payload
+	editing.value = false
+}
+
+function onInformationCancel() {
+	editing.value = false
+}
 
 function onEducationSave(payload: any) {
 	educationData.value = payload
@@ -82,22 +93,31 @@ function onAwardCancel() {
 </script>
 
 <template>
-	<SidebarPage>
-		<div class="p-4 space-y-8">
-			<div class="flex items-center justify-between mb-6">
-				<h1 class="text-3xl font-bold">{{ t('profile.title') || 'Profile' }}</h1>
-				<div>
-					<template v-if="!editing">
-						<Button @click="editing = true">{{ t('profile.edit') || 'Edit' }}</Button>
-					</template>
-					<template v-else>
-						<div class="flex gap-2">
-							<Button variant="secondary" @click.prevent="(function(){ profileEditor.cancelAll(); editing = false })()">{{ t('profile.cancel') || 'Cancel' }}</Button>
-							<Button @click.prevent="(function(){ profileEditor.saveAll(); editing = false })()">{{ t('profile.save') || 'Save' }}</Button>
-						</div>
-					</template>
-				</div>
+	<div class="p-4">
+		<div class="flex items-center justify-between mb-6">
+			<h1 class="text-3xl font-bold">{{ t('profile.title') || 'Profile' }}</h1>
+			<div>
+				<template v-if="!editing">
+					<Button @click="editing = true">{{ t('profile.edit') || 'Edit' }}</Button>
+				</template>
+				<template v-else>
+					<div class="flex gap-2">
+						<Button variant="secondary" @click.prevent="(function(){ profileEditor.cancelAll(); editing = false })()">{{ t('profile.cancel') || 'Cancel' }}</Button>
+						<Button @click.prevent="(function(){ profileEditor.saveAll(); editing = false })()">{{ t('profile.save') || 'Save' }}</Button>
+					</div>
+				</template>
 			</div>
+		</div>
+			
+		<div class="space-y-8">
+			<BasicInformation
+				:modelValue="informationData"
+				:editable="editing"
+				@update:modelValue="informationData = $event"
+				@save="onInformationSave"
+				@cancel="onInformationCancel"
+				@request-edit="editing = true"
+			/>
 
 			<EducationBackground
 				:modelValue="educationData"
@@ -144,5 +164,5 @@ function onAwardCancel() {
 				@request-edit="editing = true"
 			/>
 		</div>
-	</SidebarPage>
+	</div>
 </template>

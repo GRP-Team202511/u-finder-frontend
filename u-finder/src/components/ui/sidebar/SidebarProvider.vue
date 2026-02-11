@@ -52,7 +52,12 @@ useEventListener("keydown", (event: KeyboardEvent) => {
 
 // We add a state so that we can do data-state="expanded" or "collapsed".
 // This makes it easier to style the sidebar with Tailwind classes.
-const state = computed(() => open.value ? "expanded" : "collapsed")
+// On mobile we expose a separate `openMobile` state so the sidebar can
+// remain collapsed (rail) by default but open as an overlay when requested.
+const state = computed(() => {
+  if (isMobile.value) return openMobile.value ? "expanded" : "collapsed"
+  return open.value ? "expanded" : "collapsed"
+})
 
 provideSidebarContext({
   state,
