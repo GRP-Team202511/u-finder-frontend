@@ -128,10 +128,7 @@ watch(
         for (const intern of internships.value) {
           if (intern?.time?.start) starts.push(await createDateValueFromYYYYMM(intern.time.start))
           else starts.push(undefined)
-          if (intern?.time?.end === 'till now') {
-            ends.push(undefined)
-            ongs.push(true)
-          } else if (intern?.time?.end) {
+          if (intern?.time?.end) {
             ends.push(await createDateValueFromYYYYMM(intern.time.end))
             ongs.push(false)
           } else {
@@ -184,7 +181,7 @@ function save(e?: Event) {
     time: {
       start: startDates[i] ? formatToMonth(startDates[i], tz) : intern.time.start,
       end: ongoing[i]
-        ? 'till now'
+        ? formatToMonth(today(tz), tz)
         : (endDates[i] ? formatToMonth(endDates[i], tz) : intern.time.end),
     }
   }))
@@ -198,7 +195,7 @@ function cancel() {
   if (props.modelValue) internships.value = JSON.parse(JSON.stringify(props.modelValue))
   startDates.splice(0, startDates.length, ...internships.value.map(() => undefined))
   endDates.splice(0, endDates.length, ...internships.value.map(() => undefined))
-  ongoing.splice(0, ongoing.length, ...internships.value.map(i => (i?.time?.end === 'till now')))
+  ongoing.splice(0, ongoing.length, ...internships.value.map(() => false))
   emit('cancel')
 }
 
@@ -261,7 +258,7 @@ onMounted(() => {
                       <PopoverTrigger as-child>
                         <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !intern.time.end && 'text-muted-foreground')">
                           <CalendarIcon class="mr-2 h-4 w-4" />
-                            {{ (ongoing[idx] || intern.time.end === 'till now') ? (t('internship.time.till now') || 'till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (intern.time.end || 'Pick end')) }}
+                            {{ ongoing[idx] ? (t('internship.time.till now') || 'Till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (intern.time.end || 'Pick end')) }}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent class="w-auto p-0" align="start">
@@ -270,11 +267,11 @@ onMounted(() => {
                             :default-placeholder="defaultPlaceholder"
                             layout="month-and-year"
                             initial-focus
-                            @update:model-value="(val) => (endDates[idx]=val, ongoing[idx]=false, close())"
+                            @update:model-value="(val) => (endDates[idx]=val, ongoing[idx]=false, (intern.time && (intern.time.end = formatToMonth(val, getLocalTimeZone()))), close())"
                           />
                           <div class="p-2 border-t">
-                            <Button type="button" variant="secondary" class="w-full" @click="(ongoing[idx]=true, endDates[idx]=undefined, (intern.time && (intern.time.end = 'till now')), close())">
-                              {{ t('internship.time.till now') || 'till now' }}
+                            <Button type="button" variant="secondary" class="w-full" @click="(ongoing[idx]=true, endDates[idx]=today(getLocalTimeZone()), (intern.time && (intern.time.end = formatToMonth(endDates[idx], getLocalTimeZone()))), close())">
+                              {{ t('internship.time.till now') || 'Till now' }}
                             </Button>
                           </div>
                       </PopoverContent>
@@ -311,7 +308,7 @@ onMounted(() => {
                   </Field>
                   <Field>
                     <FieldLabel>{{ t('internship.time.end') || 'End' }}</FieldLabel>
-                    <div class="text-sm text-left">{{ (ongoing[idx] || intern.time.end === 'till now') ? (t('internship.time.till now') || 'till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (intern.time.end || '-')) }}</div>
+                    <div class="text-sm text-left">{{ ongoing[idx] ? (t('internship.time.till now') || 'Till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (intern.time.end || '-')) }}</div>
                   </Field>
                 </div>
 

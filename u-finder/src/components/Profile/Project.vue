@@ -130,10 +130,7 @@ watch(
         for (const project of projects.value) {
           if (project?.time?.start) starts.push(await createDateValueFromYYYYMM(project.time.start))
           else starts.push(undefined)
-          if (project?.time?.end === 'till now') {
-            ends.push(undefined)
-            ongs.push(true)
-          } else if (project?.time?.end) {
+          if (project?.time?.end) {
             ends.push(await createDateValueFromYYYYMM(project.time.end))
             ongs.push(false)
           } else {
@@ -186,7 +183,7 @@ function save(e?: Event) {
     time: {
       start: startDates[i] ? formatToMonth(startDates[i], tz) : project.time.start,
       end: ongoing[i]
-        ? 'till now'
+        ? formatToMonth(today(tz), tz)
         : (endDates[i] ? formatToMonth(endDates[i], tz) : project.time.end),
     }
   }))
@@ -200,7 +197,7 @@ function cancel() {
   if (props.modelValue) projects.value = JSON.parse(JSON.stringify(props.modelValue))
   startDates.splice(0, startDates.length, ...projects.value.map(() => undefined))
   endDates.splice(0, endDates.length, ...projects.value.map(() => undefined))
-  ongoing.splice(0, ongoing.length, ...projects.value.map(i => (i?.time?.end === 'till now')))
+  ongoing.splice(0, ongoing.length, ...projects.value.map(() => false))
   emit('cancel')
 }
 
@@ -263,7 +260,7 @@ onMounted(() => {
                       <PopoverTrigger as-child>
                         <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !project.time.end && 'text-muted-foreground')">
                           <CalendarIcon class="mr-2 h-4 w-4" />
-                            {{ (ongoing[idx] || project.time.end === 'till now') ? (t('project.time.till now') || 'till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (project.time.end || 'Pick end')) }}
+                            {{ ongoing[idx] ? (t('project.time.till now') || 'Till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (project.time.end || 'Pick end')) }}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent class="w-auto p-0" align="start">
@@ -272,11 +269,11 @@ onMounted(() => {
                             :default-placeholder="defaultPlaceholder"
                             layout="month-and-year"
                             initial-focus
-                            @update:model-value="(val) => (endDates[idx]=val, ongoing[idx]=false, close())"
+                            @update:model-value="(val) => (endDates[idx]=val, ongoing[idx]=false, (project.time && (project.time.end = formatToMonth(val, getLocalTimeZone()))), close())"
                           />
                           <div class="p-2 border-t">
-                            <Button type="button" variant="secondary" class="w-full" @click="(ongoing[idx]=true, endDates[idx]=undefined, (project.time && (project.time.end = 'till now')), close())">
-                              {{ t('project.time.till now') || 'till now' }}
+                            <Button type="button" variant="secondary" class="w-full" @click="(ongoing[idx]=true, endDates[idx]=today(getLocalTimeZone()), (project.time && (project.time.end = formatToMonth(endDates[idx], getLocalTimeZone()))), close())">
+                              {{ t('project.time.till now') || 'Till now' }}
                             </Button>
                           </div>
                       </PopoverContent>
@@ -324,7 +321,7 @@ onMounted(() => {
                   </Field>
                   <Field>
                     <FieldLabel>{{ t('project.time.end') || 'End' }}</FieldLabel>
-                    <div class="text-sm text-left">{{ (ongoing[idx] || project.time.end === 'till now') ? (t('project.time.till now') || 'till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (project.time.end || '-')) }}</div>
+                    <div class="text-sm text-left">{{ ongoing[idx] ? (t('project.time.till now') || 'Till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (project.time.end || '-')) }}</div>
                   </Field>
                 </div>
 
