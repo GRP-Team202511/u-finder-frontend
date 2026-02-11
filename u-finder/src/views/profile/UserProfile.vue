@@ -64,7 +64,7 @@ function onInternshipCancel() {
 }
 
 function onProjectSave(payload: any) {
-	internshipData.value = payload
+	projectData.value = payload
 	editing.value = false
 }
 
