@@ -32,3 +32,5 @@ logs/
 coverage/
 
 !.env.example
+
+mock-backend/

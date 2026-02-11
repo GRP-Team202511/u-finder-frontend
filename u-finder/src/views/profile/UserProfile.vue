@@ -48,42 +48,40 @@ function onEducationCancel() {
 </script>
 
 <template>
-	<SidebarPage>
-		<div class="p-4">
-			<div class="flex items-center justify-between mb-6">
-				<h1 class="text-3xl font-bold">{{ t('profile.title') || 'Profile' }}</h1>
-				<div>
-					<template v-if="!editing">
-						<Button @click="editing = true">{{ t('profile.edit') || 'Edit' }}</Button>
-					</template>
-					<template v-else>
-						<div class="flex gap-2">
-							<Button variant="secondary" @click.prevent="(function(){ profileEditor.cancelAll(); editing = false })()">{{ t('profile.cancel') || 'Cancel' }}</Button>
-							<Button @click.prevent="(function(){ profileEditor.saveAll(); editing = false })()">{{ t('profile.save') || 'Save' }}</Button>
-						</div>
-					</template>
-				</div>
-			</div>
-			
-			<div class="space-y-8">
-				<BasicInformation
-					:modelValue="informationData"
-					:editable="editing"
-					@update:modelValue="informationData = $event"
-					@save="onInformationSave"
-					@cancel="onInformationCancel"
-					@request-edit="editing = true"
-				/>
-
-				<EducationBackground
-					:modelValue="educationData"
-					:editable="editing"
-					@update:modelValue="educationData = $event"
-					@save="onEducationSave"
-					@cancel="onEducationCancel"
-					@request-edit="editing = true"
-				/>
+	<div class="p-4">
+		<div class="flex items-center justify-between mb-6">
+			<h1 class="text-3xl font-bold">{{ t('profile.title') || 'Profile' }}</h1>
+			<div>
+				<template v-if="!editing">
+					<Button @click="editing = true">{{ t('profile.edit') || 'Edit' }}</Button>
+				</template>
+				<template v-else>
+					<div class="flex gap-2">
+						<Button variant="secondary" @click.prevent="(function(){ profileEditor.cancelAll(); editing = false })()">{{ t('profile.cancel') || 'Cancel' }}</Button>
+						<Button @click.prevent="(function(){ profileEditor.saveAll(); editing = false })()">{{ t('profile.save') || 'Save' }}</Button>
+					</div>
+				</template>
 			</div>
 		</div>
-	</SidebarPage>
+			
+		<div class="space-y-8">
+			<BasicInformation
+				:modelValue="informationData"
+				:editable="editing"
+				@update:modelValue="informationData = $event"
+				@save="onInformationSave"
+				@cancel="onInformationCancel"
+				@request-edit="editing = true"
+			/>
+
+			<EducationBackground
+				:modelValue="educationData"
+				:editable="editing"
+				@update:modelValue="educationData = $event"
+				@save="onEducationSave"
+				@cancel="onEducationCancel"
+				@request-edit="editing = true"
+			/>
+		</div>
+	</div>
 </template>
