@@ -16,7 +16,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { computed, ref, inject, onBeforeUnmount, onMounted } from 'vue'
+import { computed, ref, inject, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
 import type { Ref } from 'vue'
 
 type CampusExpEntry = {
@@ -47,7 +47,9 @@ const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
 // local edit state (used when parent does not control `editable`)
 const localEditing = ref(false)
-const isEditable = computed(() => (props.editable !== undefined ? props.editable : localEditing.value))
+const instance = getCurrentInstance()
+const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
+const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
 
 // local draft state used while editing
 const campusExperience: Ref<CampusExpEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
@@ -83,17 +85,17 @@ function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
   emit('update:modelValue', JSON.parse(JSON.stringify(campusExperience.value)))
   emit('save', JSON.parse(JSON.stringify(campusExperience.value)))
-  if (props.editable === undefined) localEditing.value = false
+  if (!hasEditableProp.value) localEditing.value = false
 }
 
 function cancel() {
   if (props.modelValue) campusExperience.value = JSON.parse(JSON.stringify(props.modelValue))
   emit('cancel')
-  if (props.editable === undefined) localEditing.value = false
+  if (!hasEditableProp.value) localEditing.value = false
 }
 
 function startEdit() {
-  if (props.editable === undefined) localEditing.value = true
+  if (!hasEditableProp.value) localEditing.value = true
   emit('request-edit')
 }
 

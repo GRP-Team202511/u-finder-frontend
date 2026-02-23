@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-vue-next'
-import { computed, ref, reactive, inject, onBeforeUnmount, onMounted } from 'vue'
+import { computed, ref, reactive, inject, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
 import type { Ref } from 'vue'
 import { Calendar } from '@/components/ui/calendar'
 // (calendar value type will be treated as any to match calendar implementation)
@@ -105,7 +105,9 @@ const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
 // local edit state (used when parent does not control `editable`)
 const localEditing = ref(false)
-const isEditable = computed(() => (props.editable !== undefined ? props.editable : localEditing.value))
+const instance = getCurrentInstance()
+const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
+const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
 
 // local draft state used while editing
 const education: Ref<EducationEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
@@ -188,7 +190,7 @@ function save(e?: Event) {
   // emit v-model update and save
   emit('update:modelValue', JSON.parse(JSON.stringify(formatted)))
   emit('save', JSON.parse(JSON.stringify(formatted)))
-  if (props.editable === undefined) localEditing.value = false
+  if (!hasEditableProp.value) localEditing.value = false
 }
 
 function cancel() {
@@ -197,11 +199,11 @@ function cancel() {
   startDates.splice(0, startDates.length, ...education.value.map(() => undefined))
   endDates.splice(0, endDates.length, ...education.value.map(() => undefined))
   emit('cancel')
-  if (props.editable === undefined) localEditing.value = false
+  if (!hasEditableProp.value) localEditing.value = false
 }
 
 function startEdit() {
-  if (props.editable === undefined) localEditing.value = true
+  if (!hasEditableProp.value) localEditing.value = true
   emit('request-edit')
 }
 
