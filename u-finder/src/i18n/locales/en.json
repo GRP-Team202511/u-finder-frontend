@@ -120,5 +120,36 @@
         "ranking": "Ranking",
         "GPA": "GPA",
         "GPA-base": "GPA Base"
+    },
+    "internship": {
+        "title": "Internship",
+        "company": "Company",
+        "role": "Role",
+        "time": {
+            "start": "Start Date",
+            "end": "End Date",
+            "till now": "Till now"
+        }
+    },
+    "project": {
+        "title": "Project",
+        "name": "Name",
+        "role": "Role",
+        "time": {
+            "start": "Start Date",
+            "end": "End Date",
+            "till now": "Till now"
+        },
+        "description": "Description"
+    },
+    "campusExp": {
+        "title": "Campus Experience",
+        "name": "Name",
+        "description": "Description"
+    },
+    "award": {
+        "title": "Award",
+        "name": "Name",
+        "description": "Description"
     }
 }

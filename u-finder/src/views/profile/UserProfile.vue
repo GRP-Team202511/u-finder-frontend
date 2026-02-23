@@ -4,13 +4,21 @@ import { useI18n } from 'vue-i18n'
 import SidebarPage from '../Sidebar.vue'
 import BasicInformation from '@/components/Profile/BasicInformation.vue'
 import EducationBackground from '@/components/Profile/EducationBackground.vue'
+import Internship from '@/components/Profile/Internship.vue'
+import Project from '@/components/Profile/Project.vue'
+import CampusExperience from '@/components/Profile/CampusExperience.vue'
+import Award from '@/components/Profile/Award.vue'
 import { Button } from '@/components/ui/button'
 
 const { t } = useI18n()
 
 const editing = ref(false)
-const educationData = ref<any[] | undefined>(undefined)
 const informationData = ref<any[] | undefined>(undefined)
+const educationData = ref<any[] | undefined>(undefined)
+const internshipData = ref<any[] | undefined>(undefined)
+const projectData = ref<any[] | undefined>(undefined)
+const campusExpData = ref<any[] | undefined>(undefined)
+const awardData = ref<any[] | undefined>(undefined)
 
 // simple registration API for child components to participate in global save/cancel
 const registry = new Set<{ save: () => void; cancel?: () => void }>()
@@ -45,6 +53,43 @@ function onEducationSave(payload: any) {
 function onEducationCancel() {
 	editing.value = false
 }
+
+function onInternshipSave(payload: any) {
+	internshipData.value = payload
+	editing.value = false
+}
+
+function onInternshipCancel() {
+	editing.value = false
+}
+
+function onProjectSave(payload: any) {
+	projectData.value = payload
+	editing.value = false
+}
+
+function onProjectCancel() {
+	editing.value = false
+}
+
+function onCampusExpSave(payload: any) {
+	campusExpData.value = payload
+	editing.value = false
+}
+
+function onCampusExpCancel() {
+	editing.value = false
+}
+
+function onAwardSave(payload: any) {
+	awardData.value = payload
+	editing.value = false
+}
+
+function onAwardCancel() {
+	editing.value = false
+}
+
 </script>
 
 <template>
@@ -80,6 +125,42 @@ function onEducationCancel() {
 				@update:modelValue="educationData = $event"
 				@save="onEducationSave"
 				@cancel="onEducationCancel"
+				@request-edit="editing = true"
+			/>
+			
+			<Internship
+				:modelValue="internshipData"
+				:editable="editing"
+				@update:modelValue="internshipData = $event"
+				@save="onInternshipSave"
+				@cancel="onInternshipCancel"
+				@request-edit="editing = true"
+			/>
+
+			<Project
+				:modelValue="projectData"
+				:editable="editing"
+				@update:modelValue="projectData = $event"
+				@save="onProjectSave"
+				@cancel="onProjectCancel"
+				@request-edit="editing = true"
+			/>
+
+			<CampusExperience
+				:modelValue="campusExpData"
+				:editable="editing"
+				@update:modelValue="campusExpData = $event"
+				@save="onCampusExpSave"
+				@cancel="onCampusExpCancel"
+				@request-edit="editing = true"
+			/>
+
+			<Award
+				:modelValue="awardData"
+				:editable="editing"
+				@update:modelValue="awardData = $event"
+				@save="onAwardSave"
+				@cancel="onAwardCancel"
 				@request-edit="editing = true"
 			/>
 		</div>
