@@ -24,30 +24,31 @@ import type { Ref } from 'vue'
 import { Calendar } from '@/components/ui/calendar'
 // (calendar value type will be treated as any to match calendar implementation)
 import { DateFormatter, getLocalTimeZone, today } from '@internationalized/date'
-// helper: create a DateValue-like object from YYYY-MM using the library if available,
+// helper: create a DateValue-like object from YYYY-MM or YYYY-MM-DD using the library if available,
 // otherwise return a shim with `toDate(tz)` so the calendar can consume it.
 async function createDateValueFromYYYYMM(yyyyMm: string) {
   if (!yyyyMm) return undefined
   const parts = yyyyMm.split('-')
   if (parts.length < 2) return undefined
-  const [p0 = '', p1 = ''] = parts
+  const [p0 = '', p1 = '', p2 = ''] = parts
   const y = parseInt(p0, 10)
   const m = parseInt(p1, 10)
-  if (!isFinite(y) || !isFinite(m)) return undefined
+  const d = p2 ? parseInt(p2, 10) : 1
+  if (!isFinite(y) || !isFinite(m) || !isFinite(d)) return undefined
   try {
     const mod = await import('@internationalized/date')
     const anyMod = mod as any
     // try common constructors in the library (access as any to avoid TS complaints)
     if (anyMod.CalendarDate) {
       try {
-        return new anyMod.CalendarDate(y, m, 1)
+        return new anyMod.CalendarDate(y, m, d)
       } catch (err) {
         // ignore and try other factories
       }
     }
     if (anyMod.createCalendarDate) {
       try {
-        return anyMod.createCalendarDate(y, m, 1)
+        return anyMod.createCalendarDate(y, m, d)
       } catch (err) {
         // ignore
       }
@@ -55,7 +56,7 @@ async function createDateValueFromYYYYMM(yyyyMm: string) {
     if (anyMod.createCalendar) {
       // fallback: try to create from ISO string if helper exists
       try {
-        const iso = `${String(y).padStart(4, '0')}-${String(m).padStart(2, '0')}-01T00:00:00`
+        const iso = `${String(y).padStart(4, '0')}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}T00:00:00`
         if (anyMod.ZonedDateTime && anyMod.ZonedDateTime.from) {
           return anyMod.ZonedDateTime.from(iso)
         }
@@ -68,7 +69,7 @@ async function createDateValueFromYYYYMM(yyyyMm: string) {
   }
   // fallback shim: object with toDate(tz)
   return {
-    toDate: (_tz?: string) => new Date(y, m - 1, 1),
+    toDate: (_tz?: string) => new Date(y, m - 1, d),
   }
 }
 
@@ -152,7 +153,7 @@ watch(
 )
 
 const defaultPlaceholder = today(getLocalTimeZone())
-const df = new DateFormatter('en-US', { dateStyle: 'long' })
+const df = new DateFormatter('en-US', { dateStyle: 'medium' })
 
 function addEntry() {
   education.value.push({ type: '', name: '', time: { start: '', end: '' }, major: '', ranking: '', GPA: '', GPA_base: '' })
@@ -166,14 +167,15 @@ function removeEntry(index: number) {
   if (endDates.length > index) endDates.splice(index, 1)
 }
 
-function formatToMonth(dv: any, tz: string) {
+function formatToDate(dv: any, tz: string) {
   if (!dv) return ''
   // dv may be a DateValue-like object with toDate(tz)
   let dt: Date
   if (typeof dv.toDate === 'function') dt = dv.toDate(tz)
   else dt = new Date(dv)
   const m = dt.getMonth() + 1
-  return `${dt.getFullYear()}-${m.toString().padStart(2, '0')}`
+  const d = dt.getDate()
+  return `${dt.getFullYear()}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`
 }
 
 function save(e?: Event) {
@@ -183,8 +185,8 @@ function save(e?: Event) {
   const formatted = education.value.map((edu, i) => ({
     ...edu,
     time: {
-      start: startDates[i] ? formatToMonth(startDates[i], tz) : edu.time.start,
-      end: endDates[i] ? formatToMonth(endDates[i], tz) : edu.time.end,
+      start: startDates[i] ? formatToDate(startDates[i], tz) : edu.time.start,
+      end: endDates[i] ? formatToDate(endDates[i], tz) : edu.time.end,
     }
   }))
   // emit v-model update and save
