@@ -16,7 +16,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { ref, inject, onBeforeUnmount, onMounted } from 'vue'
+import { computed, ref, inject, onBeforeUnmount, onMounted } from 'vue'
 import type { Ref } from 'vue'
 
 type CampusExpEntry = {
@@ -45,6 +45,10 @@ type ProfileEditor = {
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
+// local edit state (used when parent does not control `editable`)
+const localEditing = ref(false)
+const isEditable = computed(() => (props.editable !== undefined ? props.editable : localEditing.value))
+
 // local draft state used while editing
 const campusExperience: Ref<CampusExpEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
   {
@@ -59,7 +63,7 @@ import { watch } from 'vue'
 watch(
   () => props.modelValue,
   (nv) => {
-    if (!props.editable) {
+    if (!isEditable.value) {
       if (nv) campusExperience.value = JSON.parse(JSON.stringify(nv))
     }
   },
@@ -79,11 +83,18 @@ function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
   emit('update:modelValue', JSON.parse(JSON.stringify(campusExperience.value)))
   emit('save', JSON.parse(JSON.stringify(campusExperience.value)))
+  if (props.editable === undefined) localEditing.value = false
 }
 
 function cancel() {
   if (props.modelValue) campusExperience.value = JSON.parse(JSON.stringify(props.modelValue))
   emit('cancel')
+  if (props.editable === undefined) localEditing.value = false
+}
+
+function startEdit() {
+  if (props.editable === undefined) localEditing.value = true
+  emit('request-edit')
 }
 
 // register with parent profileEditor if available
@@ -99,12 +110,21 @@ onMounted(() => {
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-left">
-        <CardTitle class="text-3xl font-bold">
-          {{ t('campusExp.title') || 'campusExp' }}
-        </CardTitle>
+        <div class="flex items-center justify-between gap-4">
+          <CardTitle class="text-3xl font-bold">
+            {{ t('campusExp.title') || 'campusExp' }}
+          </CardTitle>
+          <div v-if="!isEditable">
+            <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
+          </div>
+          <div v-else class="flex gap-2">
+            <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') || 'Cancel' }}</Button>
+            <Button type="button" @click="save">{{ t('profile.save') || 'Save' }}</Button>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
-        <div v-if="props.editable">
+          <div v-if="isEditable">
           <form @submit="save">
             <FieldGroup>
               <template v-for="(campusExp, idx) in campusExperience" :key="idx">
