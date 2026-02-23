@@ -16,7 +16,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { ref, inject, onBeforeUnmount, onMounted } from 'vue'
+import { computed, ref, inject, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
 import type { Ref } from 'vue'
 
 type AwardEntry = {
@@ -45,6 +45,12 @@ type ProfileEditor = {
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
+// local edit state (used when parent does not control `editable`)
+const localEditing = ref(false)
+const instance = getCurrentInstance()
+const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
+const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
+
 // local draft state used while editing
 const awards: Ref<AwardEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
   {
@@ -59,7 +65,7 @@ import { watch } from 'vue'
 watch(
   () => props.modelValue,
   (nv) => {
-    if (!props.editable) {
+    if (!isEditable.value) {
       if (nv) awards.value = JSON.parse(JSON.stringify(nv))
     }
   },
@@ -79,11 +85,18 @@ function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
   emit('update:modelValue', JSON.parse(JSON.stringify(awards.value)))
   emit('save', JSON.parse(JSON.stringify(awards.value)))
+  if (!hasEditableProp.value) localEditing.value = false
 }
 
 function cancel() {
   if (props.modelValue) awards.value = JSON.parse(JSON.stringify(props.modelValue))
   emit('cancel')
+  if (!hasEditableProp.value) localEditing.value = false
+}
+
+function startEdit() {
+  if (!hasEditableProp.value) localEditing.value = true
+  emit('request-edit')
 }
 
 // register with parent profileEditor if available
@@ -99,12 +112,21 @@ onMounted(() => {
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-left">
-        <CardTitle class="text-3xl font-bold">
-          {{ t('award.title') || 'award' }}
-        </CardTitle>
+        <div class="flex items-center justify-between gap-4">
+          <CardTitle class="text-3xl font-bold">
+            {{ t('award.title') || 'award' }}
+          </CardTitle>
+          <div v-if="!isEditable">
+            <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
+          </div>
+          <div v-else class="flex gap-2">
+            <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') || 'Cancel' }}</Button>
+            <Button type="button" @click="save">{{ t('profile.save') || 'Save' }}</Button>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
-        <div v-if="props.editable">
+          <div v-if="isEditable">
           <form @submit="save">
             <FieldGroup>
               <template v-for="(award, idx) in awards" :key="idx">

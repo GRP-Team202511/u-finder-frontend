@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-vue-next'
-import { ref, reactive, inject, onBeforeUnmount, onMounted } from 'vue'
+import { computed, ref, reactive, inject, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
 import type { Ref } from 'vue'
 import { Calendar } from '@/components/ui/calendar'
 // (calendar value type will be treated as any to match calendar implementation)
@@ -99,6 +99,12 @@ type ProfileEditor = {
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
+// local edit state (used when parent does not control `editable`)
+const localEditing = ref(false)
+const instance = getCurrentInstance()
+const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
+const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
+
 // local draft state used while editing
 const information: Ref<BasicInfomationEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
   {
@@ -130,7 +136,7 @@ import { watch } from 'vue'
 watch(
   () => props.modelValue,
   async (nv) => {
-    if (!props.editable) {
+    if (!isEditable.value) {
       information.value = nv ? JSON.parse(JSON.stringify(nv)) : [ { name: '', gender: '', birthday: '' } ]
       await initBirthdays()
     }
@@ -172,6 +178,7 @@ function save(e?: Event) {
   // emit v-model update and save
   emit('update:modelValue', JSON.parse(JSON.stringify(formatted)))
   emit('save', JSON.parse(JSON.stringify(formatted)))
+  if (!hasEditableProp.value) localEditing.value = false
 }
 
 function cancel() {
@@ -180,6 +187,12 @@ function cancel() {
   // reinitialize birthday values from restored information
   initBirthdays()
   emit('cancel')
+  if (!hasEditableProp.value) localEditing.value = false
+}
+
+function startEdit() {
+  if (!hasEditableProp.value) localEditing.value = true
+  emit('request-edit')
 }
 
 // register with parent profileEditor if available
@@ -196,12 +209,21 @@ onMounted(async () => {
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-left">
-        <CardTitle class="text-3xl font-bold">
-          {{ t("info.title") }}
-        </CardTitle>
+        <div class="flex items-center justify-between gap-4">
+          <CardTitle class="text-3xl font-bold">
+            {{ t("info.title") }}
+          </CardTitle>
+          <div v-if="!isEditable">
+            <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
+          </div>
+          <div v-else class="flex gap-2">
+            <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') || 'Cancel' }}</Button>
+            <Button type="button" @click="save">{{ t('profile.save') || 'Save' }}</Button>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
-        <div v-if="props.editable">
+          <div v-if="isEditable">
           <form @submit="save">
             <FieldGroup>
               <template v-for="(info, idx) in information" :key="idx">
