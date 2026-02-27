@@ -15,7 +15,7 @@ const { t } = useI18n()
 const userStore = useUserStore()
 const token = userStore.user?.token || ''
 
-const informationData = ref<any[] | undefined>(undefined)
+const informationData = ref<any | undefined>(undefined)
 const educationData = ref<any[] | undefined>(undefined)
 const internshipData = ref<any[] | undefined>(undefined)
 const projectData = ref<any[] | undefined>(undefined)
@@ -26,7 +26,7 @@ onMounted(async () => {
 	if (!token) return
 	try {
 		const res = await getPersonalInfo(token)
-		informationData.value = [res.data]
+		informationData.value = res.data
 	} catch (e) {
 		// Let the card show its own error message on save;
 	}
