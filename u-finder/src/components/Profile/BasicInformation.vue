@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-vue-next'
-import { computed, ref, reactive, inject, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
+import { computed, ref, reactive, inject, onBeforeUnmount, onMounted } from 'vue'
 import type { Ref } from 'vue'
 import { Calendar } from '@/components/ui/calendar'
 // (calendar value type will be treated as any to match calendar implementation)
@@ -73,23 +73,22 @@ async function createDateValueFromYYYYMM(yyyyMm: string) {
   }
 }
 
-type BasicInfomationEntry = {
-  name: string
-  gender: string
-  birthday: string,
-}
+import { updatePersonalInfo } from '@/api/userApi'
+import type { PersonalInfo } from '@/api/userApi'
+import { useUserStore } from '@/stores/userStore'
+
+type BasicInfomationEntry = PersonalInfo
 
 const { t } = useI18n()
 
 const props = defineProps<{
   class?: HTMLAttributes["class"]
-  modelValue?: BasicInfomationEntry[]
-  editable?: boolean
+  modelValue?: BasicInfomationEntry
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', payload: BasicInfomationEntry[]): void
-  (e: 'save', payload: BasicInfomationEntry[]): void
+  (e: 'update:modelValue', payload: BasicInfomationEntry): void
+  (e: 'save', payload: BasicInfomationEntry): void
   (e: 'cancel'): void
   (e: 'request-edit'): void
 }>()
@@ -99,37 +98,38 @@ type ProfileEditor = {
   register: (h: { save: () => void; cancel?: () => void }) => () => void
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
+const userStore = useUserStore()
+const token = computed(() => userStore.user?.token || '')
+const isLoading = ref(false)
+const errorMessage = ref('')
+const fieldErrors = reactive({
+  name: '',
+  gender: '',
+  birthday: '',
+})
 
-// local edit state (used when parent does not control `editable`)
+// local edit state
 const localEditing = ref(false)
-const instance = getCurrentInstance()
-const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
-const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
+const isEditable = computed(() => localEditing.value)
 
 // local draft state used while editing
-const information: Ref<BasicInfomationEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
-  {
-    name: '',
-    gender: '',
-    birthday: '',
-  }
-])
+const information: Ref<BasicInfomationEntry> = ref(
+  props.modelValue
+    ? JSON.parse(JSON.stringify(props.modelValue))
+    : { name: '', gender: '', birthday: '' }
+)
+const committedInformation: Ref<BasicInfomationEntry> = ref(JSON.parse(JSON.stringify(information.value)))
 
 // per-entry calendar values for calendar v-models (use `any` to match calendar implementation)
-const birthday = reactive<any[]>([])
+const birthday = ref<any>(undefined)
 
 // initialize the `birthday` reactive array from `information` entries
 async function initBirthdays() {
-  const arr = await Promise.all(
-    information.value.map(async (info) => {
-      try {
-        return await createDateValueFromYYYYMM(info.birthday || '')
-      } catch (e) {
-        return undefined
-      }
-    })
-  )
-  birthday.splice(0, birthday.length, ...arr)
+  try {
+    birthday.value = await createDateValueFromYYYYMM(information.value.birthday || '')
+  } catch (e) {
+    birthday.value = undefined
+  }
 }
 
 // when parent provides new modelValue, sync into local draft when not editing
@@ -138,7 +138,9 @@ watch(
   () => props.modelValue,
   async (nv) => {
     if (!isEditable.value) {
-      information.value = nv ? JSON.parse(JSON.stringify(nv)) : [ { name: '', gender: '', birthday: '' } ]
+      const nextValue = nv ? JSON.parse(JSON.stringify(nv)) : { name: '', gender: '', birthday: '' }
+      information.value = nextValue
+      committedInformation.value = JSON.parse(JSON.stringify(nextValue))
       await initBirthdays()
     }
   },
@@ -148,14 +150,12 @@ watch(
 const defaultPlaceholder = today(getLocalTimeZone())
 const df = new DateFormatter('en-US', { dateStyle: 'medium' })
 
-function addEntry() {
-  information.value.push({ name: '', gender: '', birthday:'' })
-  birthday.push(undefined)
-}
-
-function removeEntry(index: number) {
-  if (information.value.length > 1) information.value.splice(index, 1)
-  if (birthday.length > index) birthday.splice(index, 1)
+function getHttpErrorMessage(err: any, fallbackKey: string) {
+  const status = err?.response?.status
+  if (status === 401) return t('info.errors.unauthorized') || 'Invalid or expired token.'
+  if (status === 404) return t('info.errors.notFound') || 'User not found.'
+  if (status === 500) return t('info.errors.serverError') || 'Internal server error.'
+  return t(fallbackKey) || ''
 }
 
 function formatToDate(dv: any, tz: string) {
@@ -169,31 +169,70 @@ function formatToDate(dv: any, tz: string) {
   return `${dt.getFullYear()}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`
 }
 
+function clearFieldErrors() {
+  fieldErrors.name = ''
+  fieldErrors.gender = ''
+  fieldErrors.birthday = ''
+}
+
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
-  // convert DateValue to YYYY-MM strings for storage
+  if (!token.value) {
+    errorMessage.value = t('info.errors.notLoggedIn') || 'You are not logged in.'
+    return
+  }
+  clearFieldErrors()
+  errorMessage.value = ''
+
+  const info = information.value || { name: '', gender: '', birthday: '' }
   const tz = getLocalTimeZone()
-  const formatted = information.value.map((info, i) => ({
+  const birthdayValue = birthday.value ? formatToMonth(birthday.value, tz) : info.birthday
+  const nameValue = (info.name || '').trim()
+  const genderValue = info.gender || ''
+
+  if (!nameValue) fieldErrors.name = t('info.errors.nameRequired') || 'Name is required.'
+  if (!genderValue) fieldErrors.gender = t('info.errors.genderRequired') || 'Gender is required.'
+  if (!birthdayValue) fieldErrors.birthday = t('info.errors.birthdayRequired') || 'Birthday is required.'
+  if (fieldErrors.name || fieldErrors.gender || fieldErrors.birthday) return
+
+  isLoading.value = true
+  const payload = {
     ...info,
-    birthday: birthday[i] ? formatToDate(birthday[i], tz) : info.birthday,
-  }))
-  // emit v-model update and save
-  emit('update:modelValue', JSON.parse(JSON.stringify(formatted)))
-  emit('save', JSON.parse(JSON.stringify(formatted)))
-  if (!hasEditableProp.value) localEditing.value = false
+    name: nameValue,
+    gender: genderValue,
+    birthday: birthdayValue,
+  }
+  updatePersonalInfo(payload, token.value)
+    .then((res) => {
+      const updated = res.data
+      information.value = JSON.parse(JSON.stringify(updated))
+      committedInformation.value = JSON.parse(JSON.stringify(updated))
+      emit('update:modelValue', JSON.parse(JSON.stringify(updated)))
+      emit('save', JSON.parse(JSON.stringify(updated)))
+      localEditing.value = false
+    })
+    .catch((err) => {
+      errorMessage.value = getHttpErrorMessage(err, 'info.errors.saveFailed') || 'Failed to save personal information.'
+    })
+    .finally(() => {
+      isLoading.value = false
+    })
 }
 
 function cancel() {
   // discard drafts and notify parent
-  if (props.modelValue) information.value = JSON.parse(JSON.stringify(props.modelValue))
+  information.value = JSON.parse(JSON.stringify(committedInformation.value))
   // reinitialize birthday values from restored information
   initBirthdays()
   emit('cancel')
-  if (!hasEditableProp.value) localEditing.value = false
+  errorMessage.value = ''
+  clearFieldErrors()
+  localEditing.value = false
 }
 
 function startEdit() {
-  if (!hasEditableProp.value) localEditing.value = true
+  localEditing.value = true
+  clearFieldErrors()
   emit('request-edit')
 }
 
@@ -216,82 +255,82 @@ onMounted(async () => {
             {{ t("info.title") }}
           </CardTitle>
           <div v-if="!isEditable">
-            <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
+            <Button type="button" :disabled="isLoading" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
           </div>
           <div v-else class="flex gap-2">
-            <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') || 'Cancel' }}</Button>
-            <Button type="button" @click="save">{{ t('profile.save') || 'Save' }}</Button>
+            <Button type="button" variant="secondary" :disabled="isLoading" @click="cancel">{{ t('profile.cancel') || 'Cancel' }}</Button>
+            <Button type="button" :disabled="isLoading" @click="save">{{ t('profile.save') || 'Save' }}</Button>
           </div>
         </div>
       </CardHeader>
       <CardContent>
+          <div v-if="errorMessage" class="text-sm text-destructive mb-2">{{ errorMessage }}</div>
           <div v-if="isEditable">
           <form @submit="save">
             <FieldGroup>
-              <template v-for="(info, idx) in information" :key="idx">
-                <Field>
-                  <FieldLabel :for="`name-${idx}`">{{ t('info.name') || 'Name' }}</FieldLabel>
-                  <Input :id="`name-${idx}`" v-model="info.name" placeholder="Name" />
-                </Field>
+              <Field>
+                <FieldLabel for="name">{{ t('info.name') || 'Name' }}</FieldLabel>
+                <Input id="name" v-model="information.name" placeholder="Name" />
+                <div v-if="fieldErrors.name" class="text-xs text-destructive mt-1">{{ fieldErrors.name }}</div>
+              </Field>
 
-                <Field>
-                  <FieldLabel :for="`gender-${idx}`">{{ t('info.gender.title') || 'Gender' }}</FieldLabel>
-                  <Select v-model="info.gender">
-                    <SelectTrigger :id="`gender-${idx}`" class="w-full">
-                      <SelectValue placeholder="Select gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="male">{{ t('info.gender.male') || 'Male' }}</SelectItem>
-                      <SelectItem value="female">{{ t('info.gender.female') || 'Female' }}</SelectItem>
-                      <SelectItem value="other">{{ t('info.gender.other') || 'Other' }}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </Field>
+              <Field>
+                <FieldLabel for="gender">{{ t('info.gender.title') || 'Gender' }}</FieldLabel>
+                <Select v-model="information.gender">
+                  <SelectTrigger id="gender" class="w-full">
+                    <SelectValue placeholder="Gender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male">{{ t('info.gender.male') || 'Male' }}</SelectItem>
+                    <SelectItem value="female">{{ t('info.gender.female') || 'Female' }}</SelectItem>
+                    <SelectItem value="other">{{ t('info.gender.other') || 'Other' }}</SelectItem>
+                  </SelectContent>
+                </Select>
+                <div v-if="fieldErrors.gender" class="text-xs text-destructive mt-1">{{ fieldErrors.gender }}</div>
+              </Field>
 
-                <Field>
-                  <FieldLabel :for="`birthday-${idx}`">{{ t('info.birthday') || 'Birthday' }}</FieldLabel>
-                  <Popover v-slot="{ close }">
-                    <PopoverTrigger as-child>
-                      <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !info.birthday && 'text-muted-foreground')">
-                        <CalendarIcon class="mr-2 h-4 w-4" />
-                        {{ birthday[idx] ? df.format(birthday[idx]!.toDate(getLocalTimeZone())) : (info.birthday || 'Pick date') }}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent class="w-auto p-0" align="start">
-                      <Calendar
-                        v-model="birthday[idx]"
-                        :default-placeholder="defaultPlaceholder"
-                        :max-value="defaultPlaceholder"
-                        layout="month-and-year"
-                        initial-focus
-                        @update:model-value="close"
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </Field>
-              </template>
+              <Field>
+                <FieldLabel for="birthday">{{ t('info.birthday') || 'Birthday' }}</FieldLabel>
+                <Popover v-slot="{ close }">
+                  <PopoverTrigger as-child>
+                    <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !information.birthday && 'text-muted-foreground')">
+                      <CalendarIcon class="mr-2 h-4 w-4" />
+                      {{ birthday ? df.format(birthday!.toDate(getLocalTimeZone())) : (information.birthday || 'Pick date') }}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent class="w-auto p-0" align="start">
+                    <Calendar
+                      v-model="birthday"
+                      :default-placeholder="defaultPlaceholder"
+                      :max-value="defaultPlaceholder"
+                      layout="month-and-year"
+                      initial-focus
+                      @update:model-value="close"
+                    />
+                  </PopoverContent>
+                </Popover>
+                <div v-if="fieldErrors.birthday" class="text-xs text-destructive mt-1">{{ fieldErrors.birthday }}</div>
+              </Field>
             </FieldGroup>
           </form>
         </div>
         <div v-else>
-          <div v-if="information && information.length">
+          <div v-if="information">
             <FieldGroup>
-              <template v-for="(info, idx) in information" :key="idx">
-                <Field>
-                  <FieldLabel>{{ t('info.name') || 'Name' }}</FieldLabel>
-                  <div class="text-sm text-left">{{ info.name || '-' }}</div>
-                </Field>
+              <Field>
+                <FieldLabel>{{ t('info.name') || 'Name' }}</FieldLabel>
+                <div class="text-sm text-left">{{ information.name || '-' }}</div>
+              </Field>
 
-                <Field>
-                  <FieldLabel>{{ t('info.gender.title') || 'Gender' }}</FieldLabel>
-                  <div class="text-sm text-left">{{ info.gender || '-' }}</div>
-                </Field>
+              <Field>
+                <FieldLabel>{{ t('info.gender.title') || 'Gender' }}</FieldLabel>
+                <div class="text-sm text-left">{{ information.gender || '-' }}</div>
+              </Field>
 
-                <Field>
-                  <FieldLabel>{{ t('info.birthday') || 'Birthday' }}</FieldLabel>
-                  <div class="text-sm text-left">{{ birthday[idx] ? df.format(birthday[idx]!.toDate(getLocalTimeZone())) : (info.birthday || '-') }}</div>
-                </Field>
-              </template>
+              <Field>
+                <FieldLabel>{{ t('info.birthday') || 'Birthday' }}</FieldLabel>
+                <div class="text-sm text-left">{{ birthday ? df.format(birthday!.toDate(getLocalTimeZone())) : (information.birthday || '-') }}</div>
+              </Field>
             </FieldGroup>
           </div>
           <div v-else class="text-center text-muted-foreground">

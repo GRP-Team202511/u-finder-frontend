@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SidebarPage from '../Sidebar.vue'
 import BasicInformation from '@/components/Profile/BasicInformation.vue'
@@ -8,56 +8,63 @@ import Internship from '@/components/Profile/Internship.vue'
 import Project from '@/components/Profile/Project.vue'
 import CampusExperience from '@/components/Profile/CampusExperience.vue'
 import Award from '@/components/Profile/Award.vue'
+import { getPersonalInfo } from '@/api/userApi'
+import { useUserStore } from '@/stores/userStore'
 
 const { t } = useI18n()
+const userStore = useUserStore()
+const token = computed(() => userStore.user?.token || '')
 
-const informationData = ref<any[] | undefined>(undefined)
+const informationData = ref<any | undefined>(undefined)
 const educationData = ref<any[] | undefined>(undefined)
 const internshipData = ref<any[] | undefined>(undefined)
 const projectData = ref<any[] | undefined>(undefined)
 const campusExpData = ref<any[] | undefined>(undefined)
 const awardData = ref<any[] | undefined>(undefined)
+const personalInfoLoadError = ref('')
+
+watch(
+	() => token.value,
+	async (nextToken) => {
+		if (!nextToken) {
+			informationData.value = undefined
+			personalInfoLoadError.value = ''
+			return
+		}
+		try {
+			const res = await getPersonalInfo(nextToken)
+			informationData.value = res.data
+			personalInfoLoadError.value = ''
+		} catch (e) {
+			personalInfoLoadError.value = t('info.errors.loadFailed') || 'Failed to load personal information.'
+			console.error('Failed to load personal information', e)
+		}
+	},
+	{ immediate: true }
+)
 
 function onInformationSave(payload: any) {
 	informationData.value = payload
-}
-
-function onInformationCancel() {
 }
 
 function onEducationSave(payload: any) {
 	educationData.value = payload
 }
 
-function onEducationCancel() {
-}
-
 function onInternshipSave(payload: any) {
 	internshipData.value = payload
-}
-
-function onInternshipCancel() {
 }
 
 function onProjectSave(payload: any) {
 	projectData.value = payload
 }
 
-function onProjectCancel() {
-}
-
 function onCampusExpSave(payload: any) {
 	campusExpData.value = payload
 }
 
-function onCampusExpCancel() {
-}
-
 function onAwardSave(payload: any) {
 	awardData.value = payload
-}
-
-function onAwardCancel() {
 }
 
 </script>
@@ -69,46 +76,43 @@ function onAwardCancel() {
 		</div>
 			
 		<div class="space-y-8">
+			<div v-if="personalInfoLoadError" class="text-sm text-destructive">
+				{{ personalInfoLoadError }}
+			</div>
 			<BasicInformation
 				:modelValue="informationData"
 				@update:modelValue="informationData = $event"
 				@save="onInformationSave"
-				@cancel="onInformationCancel"
 			/>
 
 			<EducationBackground
 				:modelValue="educationData"
 				@update:modelValue="educationData = $event"
 				@save="onEducationSave"
-				@cancel="onEducationCancel"
 			/>
 			
 			<Internship
 				:modelValue="internshipData"
 				@update:modelValue="internshipData = $event"
 				@save="onInternshipSave"
-				@cancel="onInternshipCancel"
 			/>
 
 			<Project
 				:modelValue="projectData"
 				@update:modelValue="projectData = $event"
 				@save="onProjectSave"
-				@cancel="onProjectCancel"
 			/>
 
 			<CampusExperience
 				:modelValue="campusExpData"
 				@update:modelValue="campusExpData = $event"
 				@save="onCampusExpSave"
-				@cancel="onCampusExpCancel"
 			/>
 
 			<Award
 				:modelValue="awardData"
 				@update:modelValue="awardData = $event"
 				@save="onAwardSave"
-				@cancel="onAwardCancel"
 			/>
 		</div>
 	</div>
