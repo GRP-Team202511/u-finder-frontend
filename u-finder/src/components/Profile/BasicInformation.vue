@@ -72,11 +72,11 @@ async function createDateValueFromYYYYMM(yyyyMm: string) {
   }
 }
 
-type BasicInfomationEntry = {
-  name: string
-  gender: string
-  birthday: string,
-}
+import { updatePersonalInfo } from '@/api/userApi'
+import type { PersonalInfo } from '@/api/userApi'
+import { useUserStore } from '@/stores/userStore'
+
+type BasicInfomationEntry = PersonalInfo
 
 const { t } = useI18n()
 
@@ -98,6 +98,15 @@ type ProfileEditor = {
   register: (h: { save: () => void; cancel?: () => void }) => () => void
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
+const userStore = useUserStore()
+const token = computed(() => userStore.user?.token || '')
+const isLoading = ref(false)
+const errorMessage = ref('')
+const fieldErrors = reactive({
+  name: '',
+  gender: '',
+  birthday: '',
+})
 
 // local edit state (used when parent does not control `editable`)
 const localEditing = ref(false)
@@ -113,6 +122,7 @@ const information: Ref<BasicInfomationEntry[]> = ref(props.modelValue ? JSON.par
     birthday: '',
   }
 ])
+const committedInformation: Ref<BasicInfomationEntry[]> = ref(JSON.parse(JSON.stringify(information.value)))
 
 // per-entry calendar values for calendar v-models (use `any` to match calendar implementation)
 const birthday = reactive<any[]>([])
@@ -137,7 +147,9 @@ watch(
   () => props.modelValue,
   async (nv) => {
     if (!isEditable.value) {
-      information.value = nv ? JSON.parse(JSON.stringify(nv)) : [ { name: '', gender: '', birthday: '' } ]
+      const nextValue = nv ? JSON.parse(JSON.stringify(nv)) : [ { name: '', gender: '', birthday: '' } ]
+      information.value = nextValue
+      committedInformation.value = JSON.parse(JSON.stringify(nextValue))
       await initBirthdays()
     }
   },
@@ -146,6 +158,14 @@ watch(
 
 const defaultPlaceholder = today(getLocalTimeZone())
 const df = new DateFormatter('en-US', { dateStyle: 'long' })
+
+function getHttpErrorMessage(err: any, fallbackKey: string) {
+  const status = err?.response?.status
+  if (status === 401) return t('info.errors.unauthorized') || 'Invalid or expired token.'
+  if (status === 404) return t('info.errors.notFound') || 'User not found.'
+  if (status === 500) return t('info.errors.serverError') || 'Internal server error.'
+  return t(fallbackKey) || ''
+}
 
 function addEntry() {
   information.value.push({ name: '', gender: '', birthday:'' })
@@ -167,31 +187,70 @@ function formatToMonth(dv: any, tz: string) {
   return `${dt.getFullYear()}-${m.toString().padStart(2, '0')}`
 }
 
+function clearFieldErrors() {
+  fieldErrors.name = ''
+  fieldErrors.gender = ''
+  fieldErrors.birthday = ''
+}
+
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
-  // convert DateValue to YYYY-MM strings for storage
+  if (!token.value) {
+    errorMessage.value = t('info.errors.notLoggedIn') || 'You are not logged in.'
+    return
+  }
+  clearFieldErrors()
+  errorMessage.value = ''
+
+  const info = information.value[0] || { name: '', gender: '', birthday: '' }
   const tz = getLocalTimeZone()
-  const formatted = information.value.map((info, i) => ({
+  const birthdayValue = birthday[0] ? formatToMonth(birthday[0], tz) : info.birthday
+  const nameValue = (info.name || '').trim()
+  const genderValue = info.gender || ''
+
+  if (!nameValue) fieldErrors.name = t('info.errors.nameRequired') || 'Name is required.'
+  if (!genderValue) fieldErrors.gender = t('info.errors.genderRequired') || 'Gender is required.'
+  if (!birthdayValue) fieldErrors.birthday = t('info.errors.birthdayRequired') || 'Birthday is required.'
+  if (fieldErrors.name || fieldErrors.gender || fieldErrors.birthday) return
+
+  isLoading.value = true
+  const payload = {
     ...info,
-    birthday: birthday[i] ? formatToMonth(birthday[i], tz) : info.birthday,
-  }))
-  // emit v-model update and save
-  emit('update:modelValue', JSON.parse(JSON.stringify(formatted)))
-  emit('save', JSON.parse(JSON.stringify(formatted)))
-  if (!hasEditableProp.value) localEditing.value = false
+    name: nameValue,
+    gender: genderValue,
+    birthday: birthdayValue,
+  }
+  updatePersonalInfo(payload, token.value)
+    .then((res) => {
+      const updated = [res.data]
+      information.value = JSON.parse(JSON.stringify(updated))
+      committedInformation.value = JSON.parse(JSON.stringify(updated))
+      emit('update:modelValue', JSON.parse(JSON.stringify(updated)))
+      emit('save', JSON.parse(JSON.stringify(updated)))
+      if (!hasEditableProp.value) localEditing.value = false
+    })
+    .catch((err) => {
+      errorMessage.value = getHttpErrorMessage(err, 'info.errors.saveFailed') || 'Failed to save personal information.'
+    })
+    .finally(() => {
+      isLoading.value = false
+    })
 }
 
 function cancel() {
   // discard drafts and notify parent
-  if (props.modelValue) information.value = JSON.parse(JSON.stringify(props.modelValue))
+  information.value = JSON.parse(JSON.stringify(committedInformation.value))
   // reinitialize birthday values from restored information
   initBirthdays()
   emit('cancel')
+  errorMessage.value = ''
+  clearFieldErrors()
   if (!hasEditableProp.value) localEditing.value = false
 }
 
 function startEdit() {
   if (!hasEditableProp.value) localEditing.value = true
+  clearFieldErrors()
   emit('request-edit')
 }
 
@@ -214,15 +273,16 @@ onMounted(async () => {
             {{ t("info.title") }}
           </CardTitle>
           <div v-if="!isEditable">
-            <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
+            <Button type="button" :disabled="isLoading" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
           </div>
           <div v-else class="flex gap-2">
-            <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') || 'Cancel' }}</Button>
-            <Button type="button" @click="save">{{ t('profile.save') || 'Save' }}</Button>
+            <Button type="button" variant="secondary" :disabled="isLoading" @click="cancel">{{ t('profile.cancel') || 'Cancel' }}</Button>
+            <Button type="button" :disabled="isLoading" @click="save">{{ t('profile.save') || 'Save' }}</Button>
           </div>
         </div>
       </CardHeader>
       <CardContent>
+          <div v-if="errorMessage" class="text-sm text-destructive mb-2">{{ errorMessage }}</div>
           <div v-if="isEditable">
           <form @submit="save">
             <FieldGroup>
@@ -230,6 +290,7 @@ onMounted(async () => {
                 <Field>
                   <FieldLabel :for="`name-${idx}`">{{ t('info.name') || 'Name' }}</FieldLabel>
                   <Input :id="`name-${idx}`" v-model="info.name" placeholder="Name" />
+                  <div v-if="fieldErrors.name" class="text-xs text-destructive mt-1">{{ fieldErrors.name }}</div>
                 </Field>
 
                 <Field>
@@ -244,6 +305,7 @@ onMounted(async () => {
                       <SelectItem value="other">{{ t('info.gender.other') || 'Other' }}</SelectItem>
                     </SelectContent>
                   </Select>
+                  <div v-if="fieldErrors.gender" class="text-xs text-destructive mt-1">{{ fieldErrors.gender }}</div>
                 </Field>
 
                 <Field>
@@ -266,6 +328,7 @@ onMounted(async () => {
                       />
                     </PopoverContent>
                   </Popover>
+                  <div v-if="fieldErrors.birthday" class="text-xs text-destructive mt-1">{{ fieldErrors.birthday }}</div>
                 </Field>
               </template>
             </FieldGroup>
