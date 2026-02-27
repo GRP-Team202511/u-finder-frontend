@@ -18,8 +18,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
-import { CalendarIcon, Info } from 'lucide-vue-next'
-import { computed, ref, reactive, inject, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
+import { CalendarIcon } from 'lucide-vue-next'
+import { computed, ref, reactive, inject, onBeforeUnmount, onMounted } from 'vue'
 import type { Ref } from 'vue'
 import { Calendar } from '@/components/ui/calendar'
 // (calendar value type will be treated as any to match calendar implementation)
@@ -83,7 +83,6 @@ const { t } = useI18n()
 const props = defineProps<{
   class?: HTMLAttributes["class"]
   modelValue?: BasicInfomationEntry
-  editable?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -108,11 +107,9 @@ const fieldErrors = reactive({
   birthday: '',
 })
 
-// local edit state (used when parent does not control `editable`)
+// local edit state
 const localEditing = ref(false)
-const instance = getCurrentInstance()
-const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
-const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
+const isEditable = computed(() => localEditing.value)
 
 // local draft state used while editing
 const information: Ref<BasicInfomationEntry> = ref(
@@ -210,7 +207,7 @@ function save(e?: Event) {
       committedInformation.value = JSON.parse(JSON.stringify(updated))
       emit('update:modelValue', JSON.parse(JSON.stringify(updated)))
       emit('save', JSON.parse(JSON.stringify(updated)))
-      if (!hasEditableProp.value) localEditing.value = false
+      localEditing.value = false
     })
     .catch((err) => {
       errorMessage.value = getHttpErrorMessage(err, 'info.errors.saveFailed') || 'Failed to save personal information.'
@@ -228,11 +225,11 @@ function cancel() {
   emit('cancel')
   errorMessage.value = ''
   clearFieldErrors()
-  if (!hasEditableProp.value) localEditing.value = false
+  localEditing.value = false
 }
 
 function startEdit() {
-  if (!hasEditableProp.value) localEditing.value = true
+  localEditing.value = true
   clearFieldErrors()
   emit('request-edit')
 }
@@ -271,7 +268,7 @@ onMounted(async () => {
             <FieldGroup>
               <Field>
                 <FieldLabel for="name">{{ t('info.name') || 'Name' }}</FieldLabel>
-                <Input id="name" v-model="information.name" :placeholder="t('info.namePlaceholder') || 'Name'" />
+                <Input id="name" v-model="information.name" placeholder="Name" />
                 <div v-if="fieldErrors.name" class="text-xs text-destructive mt-1">{{ fieldErrors.name }}</div>
               </Field>
 
@@ -279,7 +276,7 @@ onMounted(async () => {
                 <FieldLabel for="gender">{{ t('info.gender.title') || 'Gender' }}</FieldLabel>
                 <Select v-model="information.gender">
                   <SelectTrigger id="gender" class="w-full">
-                    <SelectValue :placeholder="t('info.gender.placeholder') || 'Select gender'" />
+                    <SelectValue placeholder="Gender" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="male">{{ t('info.gender.male') || 'Male' }}</SelectItem>
@@ -296,7 +293,7 @@ onMounted(async () => {
                   <PopoverTrigger as-child>
                     <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !information.birthday && 'text-muted-foreground')">
                       <CalendarIcon class="mr-2 h-4 w-4" />
-                      {{ birthday ? df.format(birthday!.toDate(getLocalTimeZone())) : (information.birthday || (t('info.birthdayPlaceholder') || 'Pick date')) }}
+                      {{ birthday ? df.format(birthday!.toDate(getLocalTimeZone())) : (information.birthday || 'Pick date') }}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent class="w-auto p-0" align="start">
