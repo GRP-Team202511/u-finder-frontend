@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SidebarPage from '../Sidebar.vue'
 import BasicInformation from '@/components/Profile/BasicInformation.vue'
@@ -13,7 +13,7 @@ import { useUserStore } from '@/stores/userStore'
 
 const { t } = useI18n()
 const userStore = useUserStore()
-const token = userStore.user?.token || ''
+const token = computed(() => userStore.user?.token || '')
 
 const informationData = ref<any | undefined>(undefined)
 const educationData = ref<any[] | undefined>(undefined)
@@ -22,15 +22,22 @@ const projectData = ref<any[] | undefined>(undefined)
 const campusExpData = ref<any[] | undefined>(undefined)
 const awardData = ref<any[] | undefined>(undefined)
 
-onMounted(async () => {
-	if (!token) return
-	try {
-		const res = await getPersonalInfo(token)
-		informationData.value = res.data
-	} catch (e) {
-		// Let the card show its own error message on save;
-	}
-})
+watch(
+	() => token.value,
+	async (nextToken) => {
+		if (!nextToken) {
+			informationData.value = undefined
+			return
+		}
+		try {
+			const res = await getPersonalInfo(nextToken)
+			informationData.value = res.data
+		} catch (e) {
+			// Let the card show its own error message on save;
+		}
+	},
+	{ immediate: true }
+)
 
 function onInformationSave(payload: any) {
 	informationData.value = payload
