@@ -106,7 +106,20 @@
             "female": "Female",
             "other": "Other"
         },
-        "birthday": "Birthday" 
+        "birthday": "Birthday",
+        "empty": "No information records",
+        "add": "Add information",
+        "errors": {
+            "notLoggedIn": "You are not logged in.",
+            "saveFailed": "Failed to save personal information.",
+            "loadFailed": "Failed to load personal information.",
+            "unauthorized": "Invalid or expired token.",
+            "notFound": "User not found.",
+            "serverError": "Internal server error.",
+            "nameRequired": "Name is required.",
+            "genderRequired": "Gender is required.",
+            "birthdayRequired": "Birthday is required."
+        }
     },
     "edu": {
         "title": "Education Background",
