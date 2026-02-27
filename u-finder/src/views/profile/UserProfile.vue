@@ -21,19 +21,23 @@ const internshipData = ref<any[] | undefined>(undefined)
 const projectData = ref<any[] | undefined>(undefined)
 const campusExpData = ref<any[] | undefined>(undefined)
 const awardData = ref<any[] | undefined>(undefined)
+const personalInfoLoadError = ref('')
 
 watch(
 	() => token.value,
 	async (nextToken) => {
 		if (!nextToken) {
 			informationData.value = undefined
+			personalInfoLoadError.value = ''
 			return
 		}
 		try {
 			const res = await getPersonalInfo(nextToken)
 			informationData.value = res.data
+			personalInfoLoadError.value = ''
 		} catch (e) {
-			// Let the card show its own error message on save;
+			personalInfoLoadError.value = t('info.errors.loadFailed') || 'Failed to load personal information.'
+			console.error('Failed to load personal information', e)
 		}
 	},
 	{ immediate: true }
@@ -72,6 +76,9 @@ function onAwardSave(payload: any) {
 		</div>
 			
 		<div class="space-y-8">
+			<div v-if="personalInfoLoadError" class="text-sm text-destructive">
+				{{ personalInfoLoadError }}
+			</div>
 			<BasicInformation
 				:modelValue="informationData"
 				@update:modelValue="informationData = $event"
