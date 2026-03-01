@@ -186,7 +186,7 @@ function save(e?: Event) {
 
   const info = information.value || { name: '', gender: '', birthday: '' }
   const tz = getLocalTimeZone()
-  const birthdayValue = birthday.value ? formatToMonth(birthday.value, tz) : info.birthday
+  const birthdayValue = birthday.value ? formatToDate(birthday.value, tz) : info.birthday
   const nameValue = (info.name || '').trim()
   const genderValue = info.gender || ''
 
