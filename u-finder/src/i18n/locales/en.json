@@ -134,6 +134,36 @@
         "GPA": "GPA",
         "GPA-base": "GPA Base"
     },
+    "academic": {
+        "title": "Academic Outcome",
+        "selectType": "Select type",
+        "selectTypeHint": "Select a type to enter details.",
+        "empty": "No academic outcomes",
+        "add": "Add academic outcome",
+        "type": {
+            "title": "Type",
+            "researchPaper": "Research paper",
+            "patent": "Patent"
+        },
+        "researchPaper": {
+            "title": "Title",
+            "titlePlaceholder": "Paper title",
+            "doi": "DOI",
+            "doiPlaceholder": "DOI",
+            "abstract": "Abstract",
+            "abstractPlaceholder": "Abstract"
+        },
+        "patent": {
+            "title": "Title",
+            "titlePlaceholder": "Patent title",
+            "number": "Patent number",
+            "numberPlaceholder": "Patent number",
+            "region": "Region",
+            "regionPlaceholder": "Region",
+            "description": "Description",
+            "descriptionPlaceholder": "Description"
+        }
+    },
     "internship": {
         "title": "Internship",
         "company": "Company",
