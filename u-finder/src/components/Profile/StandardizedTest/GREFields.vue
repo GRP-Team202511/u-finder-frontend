@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import TestDateField from "./TestDateField.vue"
 
 type GREntry = {
 	test_date?: string
@@ -28,11 +29,13 @@ if (!props.entry.scores) {
 
 <template>
 	<div class="grid gap-4">
-		<Field>
-			<FieldLabel :for="`gre-date-${props.index}`">{{ t('test.testDate') || 'Test date' }}</FieldLabel>
-			<Input v-if="props.editable" :id="`gre-date-${props.index}`" type="date" v-model="props.entry.test_date" />
-			<div v-else class="text-sm text-left">{{ props.entry.test_date || '-' }}</div>
-		</Field>
+		<TestDateField
+			v-model="props.entry.test_date"
+			:index="props.index"
+			:editable="props.editable"
+			id-base="gre-date"
+			:label="t('test.testDate') || 'Test date'"
+		/>
 
 		<div class="grid grid-cols-2 gap-4">
 			<Field>

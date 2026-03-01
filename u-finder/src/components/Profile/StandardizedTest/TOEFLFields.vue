@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import TestDateField from "./TestDateField.vue"
 
 type TOEFLEntry = {
 	test_date?: string
@@ -30,11 +31,13 @@ if (!props.entry.scores) {
 
 <template>
 	<div class="grid gap-4">
-		<Field>
-			<FieldLabel :for="`toefl-date-${props.index}`">{{ t('test.testDate') || 'Test date' }}</FieldLabel>
-			<Input v-if="props.editable" :id="`toefl-date-${props.index}`" type="date" v-model="props.entry.test_date" />
-			<div v-else class="text-sm text-left">{{ props.entry.test_date || '-' }}</div>
-		</Field>
+		<TestDateField
+			v-model="props.entry.test_date"
+			:index="props.index"
+			:editable="props.editable"
+			id-base="toefl-date"
+			:label="t('test.testDate') || 'Test date'"
+		/>
 
 		<Field>
 			<FieldLabel :for="`toefl-reg-${props.index}`">{{ t('test.registrationNumber') || 'Registration number' }}</FieldLabel>

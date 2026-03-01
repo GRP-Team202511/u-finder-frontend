@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { Button } from "@/components/ui/button"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 
 type ALevelEntry = {
 	exam_session?: string
@@ -17,7 +18,7 @@ const props = defineProps<{
 	editable: boolean
 }>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const subjects = computed(() => {
 	if (!props.entry.subjects || props.entry.subjects.length === 0) {
@@ -25,6 +26,57 @@ const subjects = computed(() => {
 	}
 	return props.entry.subjects
 })
+
+const now = new Date()
+const currentYear = now.getFullYear()
+const currentMonth = now.getMonth() + 1
+
+const examYears = computed(() => {
+	const years: number[] = []
+	for (let y = currentYear; y >= currentYear - 30; y -= 1) years.push(y)
+	return years
+})
+
+const monthLabels = computed(() => {
+	const formatter = new Intl.DateTimeFormat(locale.value, { month: 'long' })
+	return Array.from({ length: 12 }, (_, idx) => formatter.format(new Date(2020, idx, 1)))
+})
+
+const availableMonths = computed(() => {
+	const year = Number(selectedYear.value)
+	const max = year === currentYear ? currentMonth : 12
+	const months: Array<{ value: string; label: string }> = []
+	for (let m = 1; m <= max; m += 1) {
+		months.push({ value: String(m).padStart(2, '0'), label: monthLabels.value[m - 1] || '' })
+	}
+	return months
+})
+
+const selectedYear = computed({
+	get: () => (props.entry.exam_session ? props.entry.exam_session.split('-')[0] : ''),
+	set: (val) => updateExamSession(val ?? '', selectedMonth.value ?? '')
+})
+
+const selectedMonth = computed({
+	get: () => (props.entry.exam_session ? (props.entry.exam_session.split('-')[1] || '') : ''),
+	set: (val) => updateExamSession(selectedYear.value ?? '', val ?? '')
+})
+
+function updateExamSession(year: string, month: string) {
+	if (!year && !month) {
+		props.entry.exam_session = ''
+		return
+	}
+	if (year && month) {
+		const y = Number(year)
+		const mNum = Number(month)
+		const max = y === currentYear ? currentMonth : 12
+		const safeMonth = String(Math.min(Math.max(mNum || 1, 1), max)).padStart(2, '0')
+		props.entry.exam_session = `${year}-${safeMonth}`
+		return
+	}
+	props.entry.exam_session = year
+}
 
 function addSubject() {
 	subjects.value.push({ subject: '', grade: '' })
@@ -39,7 +91,24 @@ function removeSubject(index: number) {
 	<div class="grid gap-4">
 		<Field>
 			<FieldLabel :for="`alevel-session-${props.index}`">{{ t('test.examSession') || 'Exam session' }}</FieldLabel>
-			<Input v-if="props.editable" :id="`alevel-session-${props.index}`" v-model="props.entry.exam_session" />
+			<div v-if="props.editable" class="grid grid-cols-2 gap-4">
+				<Select v-model="selectedYear">
+					<SelectTrigger :id="`alevel-year-${props.index}`" class="w-full">
+						<SelectValue :placeholder="t('test.examYear') || 'Year'" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem v-for="year in examYears" :key="year" :value="String(year)">{{ year }}</SelectItem>
+					</SelectContent>
+				</Select>
+				<Select v-model="selectedMonth">
+					<SelectTrigger :id="`alevel-month-${props.index}`" class="w-full">
+						<SelectValue :placeholder="t('test.month') || 'Month'" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem v-for="month in availableMonths" :key="month.value" :value="month.value">{{ month.label }}</SelectItem>
+					</SelectContent>
+				</Select>
+			</div>
 			<div v-else class="text-sm text-left">{{ props.entry.exam_session || '-' }}</div>
 		</Field>
 
