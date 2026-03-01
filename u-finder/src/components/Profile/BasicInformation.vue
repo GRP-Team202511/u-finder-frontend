@@ -73,8 +73,8 @@ async function createDateValueFromYYYYMM(yyyyMm: string) {
   }
 }
 
-import { updatePersonalInfo } from '@/api/userApi'
-import type { PersonalInfo } from '@/api/userApi'
+import { updatePersonalInfo } from '@/api/profileApi'
+import type { PersonalInfo } from '@/api/profileTypes'
 import { useUserStore } from '@/stores/userStore'
 
 type BasicInfomationEntry = PersonalInfo
@@ -99,7 +99,6 @@ type ProfileEditor = {
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 const userStore = useUserStore()
-const token = computed(() => userStore.user?.token || '')
 const isLoading = ref(false)
 const errorMessage = ref('')
 const fieldErrors = reactive({
@@ -177,7 +176,7 @@ function clearFieldErrors() {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
-  if (!token.value) {
+  if (!userStore.isLoggedIn) {
     errorMessage.value = t('info.errors.notLoggedIn') || 'You are not logged in.'
     return
   }
@@ -202,13 +201,13 @@ function save(e?: Event) {
     gender: genderValue,
     birthday: birthdayValue,
   }
-  updatePersonalInfo(payload, token.value)
-    .then((res) => {
-      const updated = res.data
-      information.value = JSON.parse(JSON.stringify(updated))
-      committedInformation.value = JSON.parse(JSON.stringify(updated))
-      emit('update:modelValue', JSON.parse(JSON.stringify(updated)))
-      emit('save', JSON.parse(JSON.stringify(updated)))
+  updatePersonalInfo(payload)
+    .then(() => {
+      // Use local payload as source of truth since the API only returns { message }
+      information.value = JSON.parse(JSON.stringify(payload))
+      committedInformation.value = JSON.parse(JSON.stringify(payload))
+      emit('update:modelValue', JSON.parse(JSON.stringify(payload)))
+      emit('save', JSON.parse(JSON.stringify(payload)))
       localEditing.value = false
     })
     .catch((err) => {
