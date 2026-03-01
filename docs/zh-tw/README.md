@@ -1,6 +1,6 @@
 # U-Finder 前端
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![License](https://img.shields.io/badge/license-Apache%202.0-orange.svg)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3.5-green.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)
 
