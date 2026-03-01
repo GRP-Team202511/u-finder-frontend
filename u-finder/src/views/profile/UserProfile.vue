@@ -9,14 +9,16 @@ import Internship from '@/components/Profile/Internship.vue'
 import Project from '@/components/Profile/Project.vue'
 import CampusExperience from '@/components/Profile/CampusExperience.vue'
 import Award from '@/components/Profile/Award.vue'
-import { getPersonalInfo } from '@/api/userApi'
+import { getAllProfile, updatePersonalInfo, updateProfileField } from '@/api/profileApi'
+import type { PersonalInfo } from '@/api/profileTypes'
 import { useUserStore } from '@/stores/userStore'
 
 const { t } = useI18n()
 const userStore = useUserStore()
 const token = computed(() => userStore.user?.token || '')
 
-const informationData = ref<any | undefined>(undefined)
+// Profile section data — undefined means not yet loaded
+const informationData = ref<PersonalInfo | undefined>(undefined)
 const educationData = ref<any[] | undefined>(undefined)
 const academicOutcomeData = ref<any[] | undefined>(undefined)
 const standardizedTestData = ref<any[] | undefined>(undefined)
@@ -24,58 +26,124 @@ const internshipData = ref<any[] | undefined>(undefined)
 const projectData = ref<any[] | undefined>(undefined)
 const campusExpData = ref<any[] | undefined>(undefined)
 const awardData = ref<any[] | undefined>(undefined)
-const personalInfoLoadError = ref('')
 
+const loadError = ref('')
+
+// Load all profile sections at once when the user is authenticated
 watch(
 	() => token.value,
 	async (nextToken) => {
 		if (!nextToken) {
+			// Clear all data on logout
 			informationData.value = undefined
-			personalInfoLoadError.value = ''
+			educationData.value = undefined
+			academicOutcomeData.value = undefined
+			standardizedTestData.value = undefined
+			internshipData.value = undefined
+			projectData.value = undefined
+			campusExpData.value = undefined
+			awardData.value = undefined
+			loadError.value = ''
 			return
 		}
 		try {
-			const res = await getPersonalInfo(nextToken)
-			informationData.value = res.data
-			personalInfoLoadError.value = ''
+			const res = await getAllProfile()
+			const profile = res.data
+			informationData.value = profile.personalInfo
+			educationData.value = profile.education.data
+			academicOutcomeData.value = profile.academic.data
+			standardizedTestData.value = profile.test.data
+			internshipData.value = profile.internship.data
+			projectData.value = profile.project.data
+			campusExpData.value = profile.campus.data
+			awardData.value = profile.award.data
+			loadError.value = ''
 		} catch (e) {
-			personalInfoLoadError.value = t('info.errors.loadFailed') || 'Failed to load personal information.'
-			console.error('Failed to load personal information', e)
+			loadError.value = t('info.errors.loadFailed') || 'Failed to load profile.'
+			console.error('Failed to load profile', e)
 		}
 	},
 	{ immediate: true }
 )
 
-function onInformationSave(payload: any) {
+// Save personal info and persist to backend
+async function onInformationSave(payload: PersonalInfo) {
 	informationData.value = payload
+	try {
+		await updatePersonalInfo(payload)
+	} catch (e) {
+		console.error('Failed to save personal info', e)
+	}
 }
 
-function onEducationSave(payload: any) {
+// Save education background and persist to backend
+async function onEducationSave(payload: any[]) {
 	educationData.value = payload
+	try {
+		await updateProfileField('education', payload)
+	} catch (e) {
+		console.error('Failed to save education', e)
+	}
 }
 
-function onAcademicOutcomeSave(payload: any) {
+// Save academic outcomes and persist to backend
+async function onAcademicOutcomeSave(payload: any[]) {
 	academicOutcomeData.value = payload
+	try {
+		await updateProfileField('academic', payload)
+	} catch (e) {
+		console.error('Failed to save academic outcomes', e)
+	}
 }
 
-function onStandardizedTestSave(payload: any) {
+// Save standardized tests and persist to backend
+async function onStandardizedTestSave(payload: any[]) {
 	standardizedTestData.value = payload
+	try {
+		await updateProfileField('test', payload)
+	} catch (e) {
+		console.error('Failed to save standardized tests', e)
+	}
 }
 
-function onInternshipSave(payload: any) {
+// Save internship experience and persist to backend
+async function onInternshipSave(payload: any[]) {
 	internshipData.value = payload
+	try {
+		await updateProfileField('internship', payload)
+	} catch (e) {
+		console.error('Failed to save internship', e)
+	}
 }
 
-function onProjectSave(payload: any) {
+// Save project experience and persist to backend
+async function onProjectSave(payload: any[]) {
 	projectData.value = payload
+	try {
+		await updateProfileField('project', payload)
+	} catch (e) {
+		console.error('Failed to save project', e)
+	}
 }
 
-function onCampusExpSave(payload: any) {
+// Save campus experience and persist to backend
+async function onCampusExpSave(payload: any[]) {
 	campusExpData.value = payload
+	try {
+		await updateProfileField('campus', payload)
+	} catch (e) {
+		console.error('Failed to save campus experience', e)
+	}
 }
 
-function onAwardSave(payload: any) {
+// Save awards and persist to backend
+async function onAwardSave(payload: any[]) {
 	awardData.value = payload
+	try {
+		await updateProfileField('award', payload)
+	} catch (e) {
+		console.error('Failed to save awards', e)
+	}
 }
 
 </script>
@@ -87,8 +155,8 @@ function onAwardSave(payload: any) {
 		</div>
 			
 		<div class="space-y-8">
-			<div v-if="personalInfoLoadError" class="text-sm text-destructive">
-				{{ personalInfoLoadError }}
+			<div v-if="loadError" class="text-sm text-destructive">
+				{{ loadError }}
 			</div>
 			<BasicInformation
 				:modelValue="informationData"
@@ -109,9 +177,9 @@ function onAwardSave(payload: any) {
 			/>
 
 			<StandardizedTest
-				:modelValue="academicOutcomeData"
-				@update:modelValue="academicOutcomeData = $event"
-				@save="onAcademicOutcomeSave"
+				:modelValue="standardizedTestData"
+				@update:modelValue="standardizedTestData = $event"
+				@save="onStandardizedTestSave"
 			/>
 			
 			<Internship
