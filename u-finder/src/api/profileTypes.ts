@@ -35,7 +35,7 @@ export interface ResearchPaperItem {
 export interface PatentItem {
   type: 'patent'
   title: string
-  patent_number: string
+  patentNumber: string
   region: string
   description: string
 }
