@@ -149,30 +149,32 @@ function removeSubject(index: number) {
 			</div>
 		</div>
 
-		<div class="grid gap-2">
-			<div class="text-sm font-medium">{{ t('test.subjects') || 'Subjects' }}</div>
-			<div v-for="(subject, sidx) in subjects" :key="sidx" class="grid grid-cols-2 gap-4">
-				<Field>
-					<FieldLabel :for="`ib-subject-${props.index}-${sidx}`">{{ t('test.subject') || 'Subject' }}</FieldLabel>
-					<Input
-						v-if="props.editable"
-						:id="`ib-subject-${props.index}-${sidx}`"
-						v-model="subject.subject"
-					/>
-					<div v-else class="text-sm text-left">{{ subject.subject || '-' }}</div>
-				</Field>
-				<Field>
-					<FieldLabel :for="`ib-grade-${props.index}-${sidx}`">{{ t('test.grade') || 'Grade' }}</FieldLabel>
-					<Input
-						v-if="props.editable"
-						:id="`ib-grade-${props.index}-${sidx}`"
-						v-model="subject.grade"
-					/>
-					<div v-else class="text-sm text-left">{{ subject.grade || '-' }}</div>
-				</Field>
-				<div v-if="props.editable" class="col-span-2 flex justify-end gap-2">
-					<Button type="button" variant="secondary" @click="removeSubject(sidx)">Remove</Button>
-					<Button type="button" @click="addSubject">Add</Button>
+		<div class="rounded-md border p-4">
+			<div class="grid gap-2">
+				<div class="text-sm font-medium text-left">{{ t('test.subjects') || 'Subjects' }}</div>
+				<div v-for="(subject, sidx) in subjects" :key="sidx" class="grid grid-cols-2 gap-4 pt-2">
+					<Field>
+						<FieldLabel :for="`ib-subject-${props.index}-${sidx}`">{{ t('test.subject') || 'Subject' }}</FieldLabel>
+						<Input
+							v-if="props.editable"
+							:id="`ib-subject-${props.index}-${sidx}`"
+							v-model="subject.subject"
+						/>
+						<div v-else class="text-sm text-left">{{ subject.subject || '-' }}</div>
+					</Field>
+					<Field>
+						<FieldLabel :for="`ib-grade-${props.index}-${sidx}`">{{ t('test.grade') || 'Grade' }}</FieldLabel>
+						<Input
+							v-if="props.editable"
+							:id="`ib-grade-${props.index}-${sidx}`"
+							v-model="subject.grade"
+						/>
+						<div v-else class="text-sm text-left">{{ subject.grade || '-' }}</div>
+					</Field>
+					<div v-if="props.editable" class="col-span-2 flex justify-end gap-2">
+						<Button type="button" variant="secondary" @click="removeSubject(sidx)">Remove</Button>
+						<Button type="button" @click="addSubject">Add</Button>
+					</div>
 				</div>
 			</div>
 		</div>
