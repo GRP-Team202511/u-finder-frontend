@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import SidebarPage from '../Sidebar.vue'
 import BasicInformation from '@/components/Profile/BasicInformation.vue'
 import EducationBackground from '@/components/Profile/EducationBackground.vue'
 import AcademicOutcome from '@/components/Profile/AcademicOutcome/AcademicOutcome.vue'
