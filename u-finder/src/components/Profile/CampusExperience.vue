@@ -132,21 +132,21 @@ onMounted(() => {
               <template v-for="(campusExp, idx) in campusExperience" :key="idx">
                 <Field>
                   <FieldLabel :for="`name-${idx}`">{{ t('campusExp.name') || 'name' }}</FieldLabel>
-                  <Input :id="`name-${idx}`" v-model="campusExp.name" placeholder="Campus Experience" />
+                  <Input :id="`name-${idx}`" v-model="campusExp.name" :placeholder="t('campusExp.placeholders.name') || 'Campus Experience'" />
                 </Field>
                 <Field>
                   <FieldLabel :for="`description-${idx}`">{{ t('campusExp.description') || 'Description' }}</FieldLabel>
                   <textarea
                     :id="`description-${idx}`"
                     v-model="campusExp.description"
-                    placeholder="Description"
+                    :placeholder="t('campusExp.placeholders.description') || 'Description'"
                     rows="6"
                     class="w-full rounded-md border px-3 py-2 text-sm"
                   ></textarea>                
                 </Field>
                 <div class="flex justify-end gap-2 mt-2">
-                  <Button v-if="campusExperience.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">Remove</Button>
-                  <Button type="button" @click="addEntry">Add</Button>
+                  <Button v-if="campusExperience.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
+                  <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
                 </div>
               </template>
             </FieldGroup>

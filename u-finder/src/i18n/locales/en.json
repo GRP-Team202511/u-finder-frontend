@@ -95,7 +95,9 @@
         "title": "Profile",
         "edit": "Edit",
         "save": "Save",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "add": "Add",
+        "remove": "Remove"
     },
     "info": {
         "title": "Personal Information",
@@ -107,6 +109,10 @@
             "other": "Other"
         },
         "birthday": "Birthday",
+        "placeholders": {
+            "name": "Name",
+            "gender": "Gender"
+        },
         "empty": "No information records",
         "add": "Add information",
         "errors": {
@@ -132,7 +138,23 @@
         "major": "Major",
         "ranking": "Ranking",
         "GPA": "GPA",
-        "GPA-base": "GPA Base"
+        "GPA-base": "GPA Base",
+        "empty": "No education records",
+        "add": "Add education",
+        "placeholders": {
+            "type": "Select education type",
+            "institution": "University name",
+            "major": "Computer Science",
+            "ranking": "e.g. 5/200",
+            "gpa": "3.8",
+            "gpaBase": "4.0"
+        },
+        "types": {
+            "highSchool": "High School",
+            "undergraduate": "Undergraduate",
+            "master": "Master",
+            "doctoral": "Doctoral"
+        }
     },
     "academic": {
         "title": "Academic Outcome",
@@ -182,6 +204,19 @@
         "grade": "Grade",
         "score": "Score",
         "cefrLevel": "CEFR level",
+        "types": {
+            "ielts": "IELTS",
+            "toeflIbt": "TOEFL iBT",
+            "duolingo": "Duolingo English Test",
+            "gre": "GRE",
+            "gmat": "GMAT",
+            "sat": "SAT",
+            "act": "ACT",
+            "aLevel": "A-Level",
+            "ap": "AP",
+            "ibDiploma": "IB Diploma",
+            "cae": "Cambridge English C1 Advanced (CAE)"
+        },
         "scores": {
             "title": "Scores",
             "overall": "Overall",
@@ -219,6 +254,12 @@
             "start": "Start Date",
             "end": "End Date",
             "till now": "Till now"
+        },
+        "empty": "No internships",
+        "add": "Add internship",
+        "placeholders": {
+            "company": "Company name",
+            "role": "Position / Role"
         }
     },
     "project": {
@@ -230,16 +271,40 @@
             "end": "End Date",
             "till now": "Till now"
         },
-        "description": "Description"
+        "description": "Description",
+        "empty": "No projects",
+        "add": "Add project",
+        "placeholders": {
+            "name": "Project name",
+            "role": "Role",
+            "description": "Description"
+        }
     },
     "campusExp": {
         "title": "Campus Experience",
         "name": "Name",
-        "description": "Description"
+        "description": "Description",
+        "empty": "No campus experiences",
+        "add": "Add campus experience",
+        "placeholders": {
+            "name": "Campus experience",
+            "description": "Description"
+        }
     },
     "award": {
         "title": "Award",
         "name": "Name",
-        "description": "Description"
+        "description": "Description",
+        "empty": "No awards",
+        "add": "Add award",
+        "placeholders": {
+            "name": "Award name",
+            "description": "Description"
+        }
+    },
+    "date": {
+        "pickDate": "Pick date",
+        "pickStart": "Pick start",
+        "pickEnd": "Pick end"
     }
 }

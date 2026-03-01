@@ -140,7 +140,18 @@ function resetFieldsForType(index: number, nextType: StandardizedType) {
 }
 
 function typeLabel(type: StandardizedType) {
-	return type || '-'
+	if (type === 'IELTS') return t('test.types.ielts') || 'IELTS'
+	if (type === 'TOEFL iBT') return t('test.types.toeflIbt') || 'TOEFL iBT'
+	if (type === 'Duolingo English Test') return t('test.types.duolingo') || 'Duolingo English Test'
+	if (type === 'GRE') return t('test.types.gre') || 'GRE'
+	if (type === 'GMAT') return t('test.types.gmat') || 'GMAT'
+	if (type === 'SAT') return t('test.types.sat') || 'SAT'
+	if (type === 'ACT') return t('test.types.act') || 'ACT'
+	if (type === 'A-Level') return t('test.types.aLevel') || 'A-Level'
+	if (type === 'AP') return t('test.types.ap') || 'AP'
+	if (type === 'IB Diploma') return t('test.types.ibDiploma') || 'IB Diploma'
+	if (type === 'Cambridge English C1 Advanced (CAE)') return t('test.types.cae') || 'Cambridge English C1 Advanced (CAE)'
+	return '-'
 }
 
 function addEntry() {
@@ -206,17 +217,17 @@ onMounted(() => {
 											<SelectValue :placeholder="t('test.selectType') || 'Select test type'" />
 										</SelectTrigger>
 										<SelectContent>
-											<SelectItem value="IELTS">IELTS</SelectItem>
-											<SelectItem value="TOEFL iBT">TOEFL iBT</SelectItem>
-											<SelectItem value="Duolingo English Test">Duolingo English Test</SelectItem>
-											<SelectItem value="GRE">GRE</SelectItem>
-											<SelectItem value="GMAT">GMAT</SelectItem>
-											<SelectItem value="SAT">SAT</SelectItem>
-											<SelectItem value="ACT">ACT</SelectItem>
-											<SelectItem value="A-Level">A-Level</SelectItem>
-											<SelectItem value="AP">AP</SelectItem>
-											<SelectItem value="IB Diploma">IB Diploma</SelectItem>
-											<SelectItem value="Cambridge English C1 Advanced (CAE)">Cambridge English C1 Advanced (CAE)</SelectItem>
+											<SelectItem value="IELTS">{{ t('test.types.ielts') || 'IELTS' }}</SelectItem>
+											<SelectItem value="TOEFL iBT">{{ t('test.types.toeflIbt') || 'TOEFL iBT' }}</SelectItem>
+											<SelectItem value="Duolingo English Test">{{ t('test.types.duolingo') || 'Duolingo English Test' }}</SelectItem>
+											<SelectItem value="GRE">{{ t('test.types.gre') || 'GRE' }}</SelectItem>
+											<SelectItem value="GMAT">{{ t('test.types.gmat') || 'GMAT' }}</SelectItem>
+											<SelectItem value="SAT">{{ t('test.types.sat') || 'SAT' }}</SelectItem>
+											<SelectItem value="ACT">{{ t('test.types.act') || 'ACT' }}</SelectItem>
+											<SelectItem value="A-Level">{{ t('test.types.aLevel') || 'A-Level' }}</SelectItem>
+											<SelectItem value="AP">{{ t('test.types.ap') || 'AP' }}</SelectItem>
+											<SelectItem value="IB Diploma">{{ t('test.types.ibDiploma') || 'IB Diploma' }}</SelectItem>
+											<SelectItem value="Cambridge English C1 Advanced (CAE)">{{ t('test.types.cae') || 'Cambridge English C1 Advanced (CAE)' }}</SelectItem>
 										</SelectContent>
 									</Select>
 								</Field>
@@ -259,8 +270,8 @@ onMounted(() => {
 								</div>
 
 								<div class="flex justify-end gap-2 mt-2">
-									<Button v-if="standardizedTests.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">Remove</Button>
-									<Button type="button" @click="addEntry">Add</Button>
+									<Button v-if="standardizedTests.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
+									<Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
 								</div>
 							</template>
 						</FieldGroup>

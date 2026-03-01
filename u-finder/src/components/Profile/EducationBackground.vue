@@ -244,20 +244,20 @@ onMounted(() => {
                   <FieldLabel :for="`type-${idx}`">{{ t('edu.type') || 'Type' }}</FieldLabel>
                   <Select v-model="edu.type">
                     <SelectTrigger :id="`type-${idx}`" class="w-full">
-                      <SelectValue placeholder="Select Education type" />
+                      <SelectValue :placeholder="t('edu.placeholders.type') || 'Select Education type'" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="high school">High School</SelectItem>
-                      <SelectItem value="undergraduate">Undergraduate</SelectItem>
-                      <SelectItem value="master">Master</SelectItem>
-                      <SelectItem value="doctoral">Doctoral</SelectItem>
+                      <SelectItem value="high school">{{ t('edu.types.highSchool') || 'High School' }}</SelectItem>
+                      <SelectItem value="undergraduate">{{ t('edu.types.undergraduate') || 'Undergraduate' }}</SelectItem>
+                      <SelectItem value="master">{{ t('edu.types.master') || 'Master' }}</SelectItem>
+                      <SelectItem value="doctoral">{{ t('edu.types.doctoral') || 'Doctoral' }}</SelectItem>
                     </SelectContent>
                   </Select>
                 </Field>
 
                 <Field>
                   <FieldLabel :for="`name-${idx}`">{{ t('edu.institution') || 'Institution' }}</FieldLabel>
-                  <Input :id="`name-${idx}`" v-model="edu.name" placeholder="University name" />
+                  <Input :id="`name-${idx}`" v-model="edu.name" :placeholder="t('edu.placeholders.institution') || 'University name'" />
                 </Field>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -267,7 +267,7 @@ onMounted(() => {
                         <PopoverTrigger as-child>
                           <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !edu.time.start && 'text-muted-foreground')">
                             <CalendarIcon class="mr-2 h-4 w-4" />
-                            {{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.start || 'Pick start') }}
+                            {{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.start || (t('date.pickStart') || 'Pick start')) }}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent class="w-auto p-0" align="start">
@@ -287,7 +287,7 @@ onMounted(() => {
                       <PopoverTrigger as-child>
                         <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !edu.time.end && 'text-muted-foreground')">
                           <CalendarIcon class="mr-2 h-4 w-4" />
-                          {{ endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.end || 'Pick end') }}
+                          {{ endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.end || (t('date.pickEnd') || 'Pick end')) }}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent class="w-auto p-0" align="start">
@@ -305,27 +305,27 @@ onMounted(() => {
 
                 <Field>
                   <FieldLabel :for="`major-${idx}`">{{ t('edu.major') || 'Major' }}</FieldLabel>
-                  <Input :id="`major-${idx}`" v-model="edu.major" placeholder="Computer Science" />
+                  <Input :id="`major-${idx}`" v-model="edu.major" :placeholder="t('edu.placeholders.major') || 'Computer Science'" />
                 </Field>
 
                 <div class="grid grid-cols-3 gap-4">
                   <Field>
                     <FieldLabel :for="`ranking-${idx}`">{{ t('edu.ranking') || 'Ranking' }}</FieldLabel>
-                    <Input :id="`ranking-${idx}`" v-model="edu.ranking" placeholder="e.g. 5/200" />
+                    <Input :id="`ranking-${idx}`" v-model="edu.ranking" :placeholder="t('edu.placeholders.ranking') || 'e.g. 5/200'" />
                   </Field>
                   <Field>
                     <FieldLabel :for="`gpa-${idx}`">{{ t('edu.GPA') || 'GPA' }}</FieldLabel>
-                    <Input :id="`gpa-${idx}`" v-model="edu.GPA" placeholder="3.8" />
+                    <Input :id="`gpa-${idx}`" v-model="edu.GPA" :placeholder="t('edu.placeholders.gpa') || '3.8'" />
                   </Field>
                   <Field>
                     <FieldLabel :for="`gpa-base-${idx}`">{{ t('edu.GPA-base') || 'GPA Base' }}</FieldLabel>
-                    <Input :id="`gpa-base-${idx}`" v-model="edu.GPA_base" placeholder="4.0" />
+                    <Input :id="`gpa-base-${idx}`" v-model="edu.GPA_base" :placeholder="t('edu.placeholders.gpaBase') || '4.0'" />
                   </Field>
                 </div>
 
                 <div class="flex justify-end gap-2 mt-2">
-                  <Button v-if="education.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">Remove</Button>
-                  <Button type="button" @click="addEntry">Add</Button>
+                  <Button v-if="education.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
+                  <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
                 </div>
               </template>
             </FieldGroup>

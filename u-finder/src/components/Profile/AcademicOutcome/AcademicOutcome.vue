@@ -185,8 +185,8 @@ onMounted(() => {
                   </div>
 
                 <div class="flex justify-end gap-2 mt-2">
-                  <Button v-if="academicOutcomes.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">Remove</Button>
-                  <Button type="button" @click="addEntry">Add</Button>
+                  <Button v-if="academicOutcomes.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
+                  <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
                 </div>
               </template>
             </FieldGroup>

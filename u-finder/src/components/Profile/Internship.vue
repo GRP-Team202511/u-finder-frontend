@@ -247,12 +247,12 @@ onMounted(() => {
               <template v-for="(intern, idx) in internships" :key="idx">
                 <Field>
                   <FieldLabel :for="`company-${idx}`">{{ t('internship.company') || 'Company' }}</FieldLabel>
-                  <Input :id="`company-${idx}`" v-model="intern.company" placeholder="Company name" />
+                  <Input :id="`company-${idx}`" v-model="intern.company" :placeholder="t('internship.placeholders.company') || 'Company name'" />
                 </Field>
 
                 <Field>
                   <FieldLabel :for="`role-${idx}`">{{ t('internship.role') || 'Role' }}</FieldLabel>
-                  <Input :id="`role-${idx}`" v-model="intern.role" placeholder="Position / Role" />
+                  <Input :id="`role-${idx}`" v-model="intern.role" :placeholder="t('internship.placeholders.role') || 'Position / Role'" />
                 </Field>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -262,7 +262,7 @@ onMounted(() => {
                         <PopoverTrigger as-child>
                           <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !intern.time.start && 'text-muted-foreground')">
                             <CalendarIcon class="mr-2 h-4 w-4" />
-                            {{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (intern.time.start || 'Pick start') }}
+                            {{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (intern.time.start || (t('date.pickStart') || 'Pick start')) }}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent class="w-auto p-0" align="start">
@@ -282,7 +282,7 @@ onMounted(() => {
                       <PopoverTrigger as-child>
                         <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !intern.time.end && 'text-muted-foreground')">
                           <CalendarIcon class="mr-2 h-4 w-4" />
-                            {{ ongoing[idx] ? (t('internship.time.till now') || 'Till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (intern.time.end || 'Pick end')) }}
+                            {{ ongoing[idx] ? (t('internship.time.till now') || 'Till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (intern.time.end || (t('date.pickEnd') || 'Pick end'))) }}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent class="w-auto p-0" align="start">
@@ -304,8 +304,8 @@ onMounted(() => {
                 </div>
 
                 <div class="flex justify-end gap-2 mt-2">
-                  <Button v-if="internships.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">Remove</Button>
-                  <Button type="button" @click="addEntry">Add</Button>
+                  <Button v-if="internships.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
+                  <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
                 </div>
               </template>
             </FieldGroup>

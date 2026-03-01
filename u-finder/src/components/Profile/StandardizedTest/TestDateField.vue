@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Field, FieldLabel } from "@/components/ui/field"
@@ -26,6 +27,7 @@ const df = new DateFormatter('en-US', { dateStyle: 'medium' })
 const dfMonth = new DateFormatter('en-US', { month: 'long', year: 'numeric' })
 const defaultPlaceholder = today(getLocalTimeZone())
 const maxValue = defaultPlaceholder
+const { t } = useI18n()
 
 async function createDateValueFromYYYYMM(yyyyMm: string) {
   if (!yyyyMm) return undefined
@@ -115,13 +117,13 @@ function handleUpdate(dv: any, close?: () => void) {
 
 <template>
   <Field>
-    <FieldLabel :for="`${props.idBase}-${props.index}`">{{ props.label || 'Test date' }}</FieldLabel>
+    <FieldLabel :for="`${props.idBase}-${props.index}`">{{ props.label || (t('test.testDate') || 'Test date') }}</FieldLabel>
     <div v-if="props.editable">
       <Popover v-slot="{ close }">
         <PopoverTrigger as-child>
           <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !props.modelValue && 'text-muted-foreground')">
             <CalendarIcon class="mr-2 h-4 w-4" />
-            {{ dateValue ? (props.mode === 'month' ? dfMonth.format(dateValue!.toDate(getLocalTimeZone())) : df.format(dateValue!.toDate(getLocalTimeZone()))) : (props.modelValue || 'Pick date') }}
+            {{ dateValue ? (props.mode === 'month' ? dfMonth.format(dateValue!.toDate(getLocalTimeZone())) : df.format(dateValue!.toDate(getLocalTimeZone()))) : (props.modelValue || (t('date.pickDate') || 'Pick date')) }}
           </Button>
         </PopoverTrigger>
         <PopoverContent class="w-auto p-0" align="start">
