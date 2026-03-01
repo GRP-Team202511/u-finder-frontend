@@ -5,15 +5,10 @@ import { useUserStore } from '@/stores/userStore'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'Home',
-    component: () => import('../views/Home.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import('../views/Home.vue'),
-    meta: { requiresAuth: true }
+    redirect: () => {
+      const userStore = useUserStore()
+      return userStore.isLoggedIn ? { name: 'UserProfile' } : { name: 'Cover' }
+    }
   },
   {
     path: '/cover',
@@ -47,7 +42,7 @@ const routes: RouteRecordRaw[] = [
         path: 'userprofile',
         name: 'UserProfile',
         component: () => import('../views/profile/UserProfile.vue'),
-        meta: { requiresAuth: false }
+        meta: { requiresAuth: true }
       }
     ]
   }
@@ -68,7 +63,7 @@ router.beforeEach((to, _from, next) => {
     next({ name: 'Cover' })
   } else if (!requiresAuth && userStore.isLoggedIn) {
     // Redirect to home if already logged in and trying to access login/signup
-    next({ name: 'Home' })
+    next({ name: 'UserProfile' })
   } else {
     next()
   }
