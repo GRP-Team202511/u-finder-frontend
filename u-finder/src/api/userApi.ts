@@ -231,3 +231,8 @@ export const updateFullProfile = (data: FullProfile, token: string) => {
     headers: authHeaders(token)
   })
 }
+
+// Logs out the current user; JWT token is attached automatically by the request interceptor
+export const logoutUser = () => {
+  return http.post<{ message: string }>('/auth/logout')
+}
