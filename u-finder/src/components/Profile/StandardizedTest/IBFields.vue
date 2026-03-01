@@ -172,7 +172,7 @@ function removeSubject(index: number) {
 						<div v-else class="text-sm text-left">{{ subject.grade || '-' }}</div>
 					</Field>
 					<div v-if="props.editable" class="col-span-2 flex justify-end gap-2">
-						<Button type="button" variant="secondary" @click="removeSubject(sidx)">Remove</Button>
+						<Button v-if="subjects.length > 1" type="button" variant="secondary" @click="removeSubject(sidx)">Remove</Button>
 						<Button type="button" @click="addSubject">Add</Button>
 					</div>
 				</div>

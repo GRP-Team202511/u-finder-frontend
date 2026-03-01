@@ -259,7 +259,7 @@ onMounted(() => {
 								</div>
 
 								<div class="flex justify-end gap-2 mt-2">
-									<Button type="button" variant="secondary" @click="removeEntry(idx)">Remove</Button>
+									<Button v-if="standardizedTests.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">Remove</Button>
 									<Button type="button" @click="addEntry">Add</Button>
 								</div>
 							</template>
