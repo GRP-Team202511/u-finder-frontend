@@ -5,6 +5,7 @@ import SidebarPage from '../Sidebar.vue'
 import BasicInformation from '@/components/Profile/BasicInformation.vue'
 import EducationBackground from '@/components/Profile/EducationBackground.vue'
 import AcademicOutcome from '@/components/Profile/AcademicOutcome/AcademicOutcome.vue'
+import StandardizedTest from '@/components/Profile/StandardizedTest/StandardizedTest.vue'
 import Internship from '@/components/Profile/Internship.vue'
 import Project from '@/components/Profile/Project.vue'
 import CampusExperience from '@/components/Profile/CampusExperience.vue'
@@ -19,6 +20,7 @@ const token = computed(() => userStore.user?.token || '')
 const informationData = ref<any | undefined>(undefined)
 const educationData = ref<any[] | undefined>(undefined)
 const academicOutcomeData = ref<any[] | undefined>(undefined)
+const standardizedTestData = ref<any[] | undefined>(undefined)
 const internshipData = ref<any[] | undefined>(undefined)
 const projectData = ref<any[] | undefined>(undefined)
 const campusExpData = ref<any[] | undefined>(undefined)
@@ -55,6 +57,10 @@ function onEducationSave(payload: any) {
 
 function onAcademicOutcomeSave(payload: any) {
 	academicOutcomeData.value = payload
+}
+
+function onStandardizedTestSave(payload: any) {
+	standardizedTestData.value = payload
 }
 
 function onInternshipSave(payload: any) {
@@ -98,6 +104,12 @@ function onAwardSave(payload: any) {
 			/>
 
 			<AcademicOutcome
+				:modelValue="academicOutcomeData"
+				@update:modelValue="academicOutcomeData = $event"
+				@save="onAcademicOutcomeSave"
+			/>
+
+			<StandardizedTest
 				:modelValue="academicOutcomeData"
 				@update:modelValue="academicOutcomeData = $event"
 				@save="onAcademicOutcomeSave"
