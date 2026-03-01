@@ -28,17 +28,31 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { useUserStore } from '@/stores/userStore'
+import { logoutUser } from '@/api/userApi'
 
 const props = defineProps<{
   user: {
-    name: string
-    email: string
+    name: string | undefined
+    // email: string
     avatar: string
   }
 }>()
 const { isMobile } = useSidebar()
 const router = useRouter()
 const { t } = useI18n()
+const userStore = useUserStore()
+
+const handleLogout = async () => {
+  try {
+    await logoutUser()
+  } catch {
+    // Clear local state regardless of server response
+  } finally {
+    userStore.logout()
+    router.push({ name: 'Login' })
+  }
+}
 </script>
 
 <template>
@@ -58,7 +72,7 @@ const { t } = useI18n()
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight menu-label">
               <span class="truncate font-medium">{{ user.name }}</span>
-              <span class="truncate text-xs">{{ user.email }}</span>
+              <!-- <span class="truncate text-xs">{{ user.email }}</span> -->
             </div>
             <ChevronsUpDown class="ml-auto size-4" />
           </SidebarMenuButton>
@@ -79,7 +93,7 @@ const { t } = useI18n()
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight menu-label">
               <span class="truncate font-semibold">{{ user.name }}</span>
-              <span class="truncate text-xs">{{ user.email }}</span>
+              <!-- <span class="truncate text-xs">{{ user.email }}</span> -->
             </div>
           </div>
         </DropdownMenuLabel>
@@ -92,7 +106,7 @@ const { t } = useI18n()
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem @click="() => router.push({ name: 'Cover' })">
+        <DropdownMenuItem @click="handleLogout">
           <LogOut />
           {{ t('sidebar.logout') }}
         </DropdownMenuItem>
