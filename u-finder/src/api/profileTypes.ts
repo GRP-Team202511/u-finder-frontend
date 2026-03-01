@@ -3,7 +3,7 @@
 export interface PersonalInfo {
   name: string
   gender: string
-  birthday: string | null // YYYY-MM-DD
+  birthday: string // YYYY-MM-DD; empty string when not set
 }
 
 // ─── Education Background ─────────────────────────────────────────────────────
