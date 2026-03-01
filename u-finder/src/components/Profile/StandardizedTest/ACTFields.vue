@@ -39,37 +39,42 @@ if (!props.entry.scores) {
 			:label="t('test.testDate') || 'Test date'"
 		/>
 
-		<div class="grid grid-cols-2 gap-4">
-			<Field>
-				<FieldLabel>{{ t('test.scores.composite') || 'Composite' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.composite" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.composite || '-' }}</div>
-			</Field>
-			<Field>
-				<FieldLabel>{{ t('test.scores.english') || 'English' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.english" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.english || '-' }}</div>
-			</Field>
-			<Field>
-				<FieldLabel>{{ t('test.scores.math') || 'Math' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.math" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.math || '-' }}</div>
-			</Field>
-			<Field>
-				<FieldLabel>{{ t('test.scores.reading') || 'Reading' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.reading" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.reading || '-' }}</div>
-			</Field>
-			<Field>
-				<FieldLabel>{{ t('test.scores.science') || 'Science' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.science" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.science || '-' }}</div>
-			</Field>
-			<Field>
-				<FieldLabel>{{ t('test.scores.writingOptional') || 'Writing (optional)' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.writing_optional" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.writing_optional || '-' }}</div>
-			</Field>
+		<div class="rounded-md border p-4">
+			<div class="grid gap-2">
+			<div class="text-sm font-medium text-left">{{ t('test.scores.title') || 'Scores' }}</div>
+			<div class="grid grid-cols-2 gap-4 pt-2">
+				<Field>
+					<FieldLabel>{{ t('test.scores.composite') || 'Composite' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.composite" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.composite || '-' }}</div>
+				</Field>
+				<Field>
+					<FieldLabel>{{ t('test.scores.english') || 'English' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.english" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.english || '-' }}</div>
+				</Field>
+				<Field>
+					<FieldLabel>{{ t('test.scores.math') || 'Math' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.math" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.math || '-' }}</div>
+				</Field>
+				<Field>
+					<FieldLabel>{{ t('test.scores.reading') || 'Reading' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.reading" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.reading || '-' }}</div>
+				</Field>
+				<Field>
+					<FieldLabel>{{ t('test.scores.science') || 'Science' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.science" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.science || '-' }}</div>
+				</Field>
+				<Field>
+					<FieldLabel>{{ t('test.scores.writingOptional') || 'Writing (optional)' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.writing_optional" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.writing_optional || '-' }}</div>
+				</Field>
+			</div>
+			</div>
 		</div>
 	</div>
 </template>

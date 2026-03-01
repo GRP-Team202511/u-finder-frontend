@@ -38,32 +38,37 @@ if (!props.entry.scores) {
 			:label="t('test.testDate') || 'Test date'"
 		/>
 
-		<div class="grid grid-cols-2 gap-4">
-			<Field>
-				<FieldLabel>{{ t('test.scores.overall') || 'Overall' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.overall" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.overall || '-' }}</div>
-			</Field>
-			<Field>
-				<FieldLabel>{{ t('test.scores.literacy') || 'Literacy' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.literacy" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.literacy || '-' }}</div>
-			</Field>
-			<Field>
-				<FieldLabel>{{ t('test.scores.comprehension') || 'Comprehension' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.comprehension" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.comprehension || '-' }}</div>
-			</Field>
-			<Field>
-				<FieldLabel>{{ t('test.scores.conversation') || 'Conversation' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.conversation" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.conversation || '-' }}</div>
-			</Field>
-			<Field>
-				<FieldLabel>{{ t('test.scores.production') || 'Production' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.production" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.production || '-' }}</div>
-			</Field>
+		<div class="rounded-md border p-4">
+			<div class="grid gap-2">
+			<div class="text-sm font-medium text-left">{{ t('test.scores.title') || 'Scores' }}</div>
+			<div class="grid grid-cols-2 gap-4 pt-2">
+				<Field>
+					<FieldLabel>{{ t('test.scores.overall') || 'Overall' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.overall" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.overall || '-' }}</div>
+				</Field>
+				<Field>
+					<FieldLabel>{{ t('test.scores.literacy') || 'Literacy' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.literacy" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.literacy || '-' }}</div>
+				</Field>
+				<Field>
+					<FieldLabel>{{ t('test.scores.comprehension') || 'Comprehension' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.comprehension" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.comprehension || '-' }}</div>
+				</Field>
+				<Field>
+					<FieldLabel>{{ t('test.scores.conversation') || 'Conversation' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.conversation" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.conversation || '-' }}</div>
+				</Field>
+				<Field>
+					<FieldLabel>{{ t('test.scores.production') || 'Production' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.production" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.production || '-' }}</div>
+				</Field>
+			</div>
+			</div>
 		</div>
 	</div>
 </template>

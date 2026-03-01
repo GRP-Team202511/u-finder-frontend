@@ -182,6 +182,7 @@
         "score": "Score",
         "cefrLevel": "CEFR level",
         "scores": {
+            "title": "Scores",
             "overall": "Overall",
             "listening": "Listening",
             "reading": "Reading",

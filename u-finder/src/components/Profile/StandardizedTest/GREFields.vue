@@ -37,27 +37,32 @@ if (!props.entry.scores) {
 			:label="t('test.testDate') || 'Test date'"
 		/>
 
-		<div class="grid grid-cols-2 gap-4">
-			<Field>
-				<FieldLabel>{{ t('test.scores.verbal') || 'Verbal' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.verbal" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.verbal || '-' }}</div>
-			</Field>
-			<Field>
-				<FieldLabel>{{ t('test.scores.quantitative') || 'Quantitative' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.quantitative" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.quantitative || '-' }}</div>
-			</Field>
-			<Field>
-				<FieldLabel>{{ t('test.scores.analyticalWriting') || 'Analytical writing' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.analytical_writing" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.analytical_writing || '-' }}</div>
-			</Field>
-			<Field>
-				<FieldLabel>{{ t('test.scores.total') || 'Total' }}</FieldLabel>
-				<Input v-if="props.editable" v-model="props.entry.scores.total" />
-				<div v-else class="text-sm text-left">{{ props.entry.scores.total || '-' }}</div>
-			</Field>
+		<div class="rounded-md border p-4">
+			<div class="grid gap-2">
+			<div class="text-sm font-medium text-left">{{ t('test.scores.title') || 'Scores' }}</div>
+			<div class="grid grid-cols-2 gap-4 pt-2">
+				<Field>
+					<FieldLabel>{{ t('test.scores.verbal') || 'Verbal' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.verbal" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.verbal || '-' }}</div>
+				</Field>
+				<Field>
+					<FieldLabel>{{ t('test.scores.quantitative') || 'Quantitative' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.quantitative" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.quantitative || '-' }}</div>
+				</Field>
+				<Field>
+					<FieldLabel>{{ t('test.scores.analyticalWriting') || 'Analytical writing' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.analytical_writing" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.analytical_writing || '-' }}</div>
+				</Field>
+				<Field>
+					<FieldLabel>{{ t('test.scores.total') || 'Total' }}</FieldLabel>
+					<Input v-if="props.editable" v-model="props.entry.scores.total" />
+					<div v-else class="text-sm text-left">{{ props.entry.scores.total || '-' }}</div>
+				</Field>
+			</div>
+			</div>
 		</div>
 	</div>
 </template>
