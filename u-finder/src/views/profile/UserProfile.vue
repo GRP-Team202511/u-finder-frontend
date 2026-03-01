@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import SidebarPage from '../Sidebar.vue'
 import BasicInformation from '@/components/Profile/BasicInformation.vue'
 import EducationBackground from '@/components/Profile/EducationBackground.vue'
+import AcademicOutcome from '@/components/Profile/AcademicOutcome/AcademicOutcome.vue'
 import Internship from '@/components/Profile/Internship.vue'
 import Project from '@/components/Profile/Project.vue'
 import CampusExperience from '@/components/Profile/CampusExperience.vue'
@@ -17,6 +18,7 @@ const token = computed(() => userStore.user?.token || '')
 
 const informationData = ref<any | undefined>(undefined)
 const educationData = ref<any[] | undefined>(undefined)
+const academicOutcomeData = ref<any[] | undefined>(undefined)
 const internshipData = ref<any[] | undefined>(undefined)
 const projectData = ref<any[] | undefined>(undefined)
 const campusExpData = ref<any[] | undefined>(undefined)
@@ -49,6 +51,10 @@ function onInformationSave(payload: any) {
 
 function onEducationSave(payload: any) {
 	educationData.value = payload
+}
+
+function onAcademicOutcomeSave(payload: any) {
+	academicOutcomeData.value = payload
 }
 
 function onInternshipSave(payload: any) {
@@ -89,6 +95,12 @@ function onAwardSave(payload: any) {
 				:modelValue="educationData"
 				@update:modelValue="educationData = $event"
 				@save="onEducationSave"
+			/>
+
+			<AcademicOutcome
+				:modelValue="academicOutcomeData"
+				@update:modelValue="academicOutcomeData = $event"
+				@save="onAcademicOutcomeSave"
 			/>
 			
 			<Internship
