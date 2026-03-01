@@ -93,9 +93,39 @@
     },
     "profile": {
         "title": "Profile",
-        "edit": "Edit Profile",
+        "edit": "Edit",
         "save": "Save",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "add": "Add",
+        "remove": "Remove"
+    },
+    "info": {
+        "title": "Personal Information",
+        "name": "Name",
+        "gender": {
+            "title": "Gender",
+            "male": "Male",
+            "female": "Female",
+            "other": "Other"
+        },
+        "birthday": "Birthday",
+        "placeholders": {
+            "name": "Name",
+            "gender": "Gender"
+        },
+        "empty": "No information records",
+        "add": "Add information",
+        "errors": {
+            "notLoggedIn": "You are not logged in.",
+            "saveFailed": "Failed to save personal information.",
+            "loadFailed": "Failed to load personal information.",
+            "unauthorized": "Invalid or expired token.",
+            "notFound": "User not found.",
+            "serverError": "Internal server error.",
+            "nameRequired": "Name is required.",
+            "genderRequired": "Gender is required.",
+            "birthdayRequired": "Birthday is required."
+        }
     },
     "edu": {
         "title": "Education Background",
@@ -108,6 +138,173 @@
         "major": "Major",
         "ranking": "Ranking",
         "GPA": "GPA",
-        "GPA-base": "GPA Base"
+        "GPA-base": "GPA Base",
+        "empty": "No education records",
+        "add": "Add education",
+        "placeholders": {
+            "type": "Select education type",
+            "institution": "University name",
+            "major": "Computer Science",
+            "ranking": "e.g. 5/200",
+            "gpa": "3.8",
+            "gpaBase": "4.0"
+        },
+        "types": {
+            "highSchool": "High School",
+            "undergraduate": "Undergraduate",
+            "master": "Master",
+            "doctoral": "Doctoral"
+        }
+    },
+    "academic": {
+        "title": "Academic Outcome",
+        "selectType": "Select type",
+        "selectTypeHint": "Select a type to enter details.",
+        "empty": "No academic outcomes",
+        "add": "Add academic outcome",
+        "type": {
+            "title": "Type",
+            "researchPaper": "Research paper",
+            "patent": "Patent"
+        },
+        "researchPaper": {
+            "title": "Title",
+            "titlePlaceholder": "Paper title",
+            "doi": "DOI",
+            "doiPlaceholder": "DOI",
+            "abstract": "Abstract",
+            "abstractPlaceholder": "Abstract"
+        },
+        "patent": {
+            "title": "Title",
+            "titlePlaceholder": "Patent title",
+            "number": "Patent number",
+            "numberPlaceholder": "Patent number",
+            "region": "Region",
+            "regionPlaceholder": "Region",
+            "description": "Description",
+            "descriptionPlaceholder": "Description"
+        }
+    },
+    "test": {
+        "title": "Standardized Test",
+        "type": "Type",
+        "selectType": "Select test type",
+        "selectTypeHint": "Select a type to enter details.",
+        "empty": "No standardized tests",
+        "add": "Add standardized test",
+        "testDate": "Test date",
+        "registrationNumber": "Registration number",
+        "examSession": "Exam session",
+        "overallPredicted": "Overall predicted",
+        "examYear": "Exam year",
+        "month": "Exam month",
+        "subjects": "Subjects",
+        "subject": "Subject",
+        "grade": "Grade",
+        "score": "Score",
+        "cefrLevel": "CEFR level",
+        "types": {
+            "ielts": "IELTS",
+            "toeflIbt": "TOEFL iBT",
+            "duolingo": "Duolingo English Test",
+            "gre": "GRE",
+            "gmat": "GMAT",
+            "sat": "SAT",
+            "act": "ACT",
+            "aLevel": "A-Level",
+            "ap": "AP",
+            "ibDiploma": "IB Diploma",
+            "cae": "Cambridge English C1 Advanced (CAE)"
+        },
+        "scores": {
+            "title": "Scores",
+            "overall": "Overall",
+            "listening": "Listening",
+            "reading": "Reading",
+            "writing": "Writing",
+            "speaking": "Speaking",
+            "literacy": "Literacy",
+            "comprehension": "Comprehension",
+            "conversation": "Conversation",
+            "production": "Production",
+            "verbal": "Verbal",
+            "quantitative": "Quantitative",
+            "analyticalWriting": "Analytical writing",
+            "total": "Total",
+            "integratedReasoning": "Integrated reasoning",
+            "math": "Math",
+            "ebrw": "Evidence-based reading and writing",
+            "essayOptional": "Essay (optional)",
+            "composite": "Composite",
+            "english": "English",
+            "science": "Science",
+            "writingOptional": "Writing (optional)",
+            "corePoints": "Core points",
+            "extendedEssay": "Extended essay grade",
+            "tok": "TOK grade",
+            "readingUseOfEnglish": "Reading & Use of English"
+        }
+    },
+    "internship": {
+        "title": "Internship",
+        "company": "Company",
+        "role": "Role",
+        "time": {
+            "start": "Start Date",
+            "end": "End Date",
+            "till now": "Till now"
+        },
+        "empty": "No internships",
+        "add": "Add internship",
+        "placeholders": {
+            "company": "Company name",
+            "role": "Position / Role"
+        }
+    },
+    "project": {
+        "title": "Project",
+        "name": "Name",
+        "role": "Role",
+        "time": {
+            "start": "Start Date",
+            "end": "End Date",
+            "till now": "Till now"
+        },
+        "description": "Description",
+        "empty": "No projects",
+        "add": "Add project",
+        "placeholders": {
+            "name": "Project name",
+            "role": "Role",
+            "description": "Description"
+        }
+    },
+    "campusExp": {
+        "title": "Campus Experience",
+        "name": "Name",
+        "description": "Description",
+        "empty": "No campus experiences",
+        "add": "Add campus experience",
+        "placeholders": {
+            "name": "Campus experience",
+            "description": "Description"
+        }
+    },
+    "award": {
+        "title": "Award",
+        "name": "Name",
+        "description": "Description",
+        "empty": "No awards",
+        "add": "Add award",
+        "placeholders": {
+            "name": "Award name",
+            "description": "Description"
+        }
+    },
+    "date": {
+        "pickDate": "Pick date",
+        "pickStart": "Pick start",
+        "pickEnd": "Pick end"
     }
 }

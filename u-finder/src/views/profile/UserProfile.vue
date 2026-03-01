@@ -1,65 +1,142 @@
 <script setup lang="ts">
-import { ref, provide } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import SidebarPage from '../SidebarLayout.vue'
+import BasicInformation from '@/components/Profile/BasicInformation.vue'
 import EducationBackground from '@/components/Profile/EducationBackground.vue'
-import { Button } from '@/components/ui/button'
+import AcademicOutcome from '@/components/Profile/AcademicOutcome/AcademicOutcome.vue'
+import StandardizedTest from '@/components/Profile/StandardizedTest/StandardizedTest.vue'
+import Internship from '@/components/Profile/Internship.vue'
+import Project from '@/components/Profile/Project.vue'
+import CampusExperience from '@/components/Profile/CampusExperience.vue'
+import Award from '@/components/Profile/Award.vue'
+import { getPersonalInfo } from '@/api/userApi'
+import { useUserStore } from '@/stores/userStore'
 
 const { t } = useI18n()
+const userStore = useUserStore()
+const token = computed(() => userStore.user?.token || '')
 
-const editing = ref(false)
+const informationData = ref<any | undefined>(undefined)
 const educationData = ref<any[] | undefined>(undefined)
+const academicOutcomeData = ref<any[] | undefined>(undefined)
+const standardizedTestData = ref<any[] | undefined>(undefined)
+const internshipData = ref<any[] | undefined>(undefined)
+const projectData = ref<any[] | undefined>(undefined)
+const campusExpData = ref<any[] | undefined>(undefined)
+const awardData = ref<any[] | undefined>(undefined)
+const personalInfoLoadError = ref('')
 
-// simple registration API for child components to participate in global save/cancel
-const registry = new Set<{ save: () => void; cancel?: () => void }>()
-const profileEditor = {
-	register(handlers: { save: () => void; cancel?: () => void }) {
-		registry.add(handlers)
-		return () => registry.delete(handlers)
+watch(
+	() => token.value,
+	async (nextToken) => {
+		if (!nextToken) {
+			informationData.value = undefined
+			personalInfoLoadError.value = ''
+			return
+		}
+		try {
+			const res = await getPersonalInfo(nextToken)
+			informationData.value = res.data
+			personalInfoLoadError.value = ''
+		} catch (e) {
+			personalInfoLoadError.value = t('info.errors.loadFailed') || 'Failed to load personal information.'
+			console.error('Failed to load personal information', e)
+		}
 	},
-	saveAll() {
-		for (const h of registry) h.save()
-	},
-	cancelAll() {
-		for (const h of registry) h.cancel && h.cancel()
-	}
+	{ immediate: true }
+)
+
+function onInformationSave(payload: any) {
+	informationData.value = payload
 }
-provide('profileEditor', profileEditor)
 
 function onEducationSave(payload: any) {
 	educationData.value = payload
-	editing.value = false
 }
 
-function onEducationCancel() {
-	editing.value = false
+function onAcademicOutcomeSave(payload: any) {
+	academicOutcomeData.value = payload
 }
+
+function onStandardizedTestSave(payload: any) {
+	standardizedTestData.value = payload
+}
+
+function onInternshipSave(payload: any) {
+	internshipData.value = payload
+}
+
+function onProjectSave(payload: any) {
+	projectData.value = payload
+}
+
+function onCampusExpSave(payload: any) {
+	campusExpData.value = payload
+}
+
+function onAwardSave(payload: any) {
+	awardData.value = payload
+}
+
 </script>
 
 <template>
 	<div class="p-4">
 		<div class="flex items-center justify-between mb-6">
 			<h1 class="text-3xl font-bold">{{ t('profile.title') || 'Profile' }}</h1>
-			<div>
-				<template v-if="!editing">
-					<Button @click="editing = true">{{ t('profile.edit') || 'Edit' }}</Button>
-				</template>
-				<template v-else>
-					<div class="flex gap-2">
-						<Button variant="secondary" @click.prevent="(function(){ profileEditor.cancelAll(); editing = false })()">{{ t('profile.cancel') || 'Cancel' }}</Button>
-						<Button @click.prevent="(function(){ profileEditor.saveAll(); editing = false })()">{{ t('profile.save') || 'Save' }}</Button>
-					</div>
-				</template>
-			</div>
 		</div>
+			
+		<div class="space-y-8">
+			<div v-if="personalInfoLoadError" class="text-sm text-destructive">
+				{{ personalInfoLoadError }}
+			</div>
+			<BasicInformation
+				:modelValue="informationData"
+				@update:modelValue="informationData = $event"
+				@save="onInformationSave"
+			/>
 
-		<EducationBackground
-			:modelValue="educationData"
-			:editable="editing"
-			@update:modelValue="educationData = $event"
-			@save="onEducationSave"
-			@cancel="onEducationCancel"
-			@request-edit="editing = true"
-		/>
+			<EducationBackground
+				:modelValue="educationData"
+				@update:modelValue="educationData = $event"
+				@save="onEducationSave"
+			/>
+
+			<AcademicOutcome
+				:modelValue="academicOutcomeData"
+				@update:modelValue="academicOutcomeData = $event"
+				@save="onAcademicOutcomeSave"
+			/>
+
+			<StandardizedTest
+				:modelValue="academicOutcomeData"
+				@update:modelValue="academicOutcomeData = $event"
+				@save="onAcademicOutcomeSave"
+			/>
+			
+			<Internship
+				:modelValue="internshipData"
+				@update:modelValue="internshipData = $event"
+				@save="onInternshipSave"
+			/>
+
+			<Project
+				:modelValue="projectData"
+				@update:modelValue="projectData = $event"
+				@save="onProjectSave"
+			/>
+
+			<CampusExperience
+				:modelValue="campusExpData"
+				@update:modelValue="campusExpData = $event"
+				@save="onCampusExpSave"
+			/>
+
+			<Award
+				:modelValue="awardData"
+				@update:modelValue="awardData = $event"
+				@save="onAwardSave"
+			/>
+		</div>
 	</div>
 </template>

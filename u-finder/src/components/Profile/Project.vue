@@ -16,7 +16,6 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-vue-next'
 import { computed, ref, reactive, inject, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
@@ -73,27 +72,24 @@ async function createDateValueFromYYYYMM(yyyyMm: string) {
   }
 }
 
-type EducationEntry = {
-  type: string
+type ProjectEntry = {
   name: string
+  role: string
   time: { start: string; end: string }
-  major: string
-  ranking: string
-  GPA: string
-  GPA_base: string
+  description: string
 }
 
 const { t } = useI18n()
 
 const props = defineProps<{
   class?: HTMLAttributes["class"]
-  modelValue?: EducationEntry[]
+  modelValue?: ProjectEntry[]
   editable?: boolean
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', payload: EducationEntry[]): void
-  (e: 'save', payload: EducationEntry[]): void
+  (e: 'update:modelValue', payload: ProjectEntry[]): void
+  (e: 'save', payload: ProjectEntry[]): void
   (e: 'cancel'): void
   (e: 'request-edit'): void
 }>()
@@ -111,21 +107,20 @@ const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.protot
 const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
 
 // local draft state used while editing
-const education: Ref<EducationEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
+const projects: Ref<ProjectEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
   {
-    type: '',
     name: '',
+    role: '',
     time: { start: '', end: '' },
-    major: '',
-    ranking: '',
-    GPA: '',
-    GPA_base: ''
+    description: '',
   }
 ])
 
 // per-entry calendar values for calendar v-models (use `any` to match calendar implementation)
-const startDates = reactive<any[]>(education.value.map(() => undefined))
-const endDates = reactive<any[]>(education.value.map(() => undefined))
+const startDates = reactive<any[]>(projects.value.map(() => undefined))
+const endDates = reactive<any[]>(projects.value.map(() => undefined))
+// per-entry ongoing flag for "till now" end selection
+const ongoing = reactive<boolean[]>(projects.value.map(() => false))
 
 // when parent provides new modelValue, sync into local draft when not editing
 import { watch } from 'vue'
@@ -133,19 +128,26 @@ watch(
   () => props.modelValue,
   (nv) => {
     if (!isEditable.value) {
-      if (nv) education.value = JSON.parse(JSON.stringify(nv))
+      if (nv) projects.value = JSON.parse(JSON.stringify(nv))
       // reinitialize calendars; try to parse YYYY-MM into DateValue objects
       ;(async () => {
         const starts = [] as any[]
         const ends = [] as any[]
-        for (const edu of education.value) {
-          if (edu?.time?.start) starts.push(await createDateValueFromYYYYMM(edu.time.start))
+        const ongs = [] as boolean[]
+        for (const project of projects.value) {
+          if (project?.time?.start) starts.push(await createDateValueFromYYYYMM(project.time.start))
           else starts.push(undefined)
-          if (edu?.time?.end) ends.push(await createDateValueFromYYYYMM(edu.time.end))
-          else ends.push(undefined)
+          if (project?.time?.end) {
+            ends.push(await createDateValueFromYYYYMM(project.time.end))
+            ongs.push(false)
+          } else {
+            ends.push(undefined)
+            ongs.push(false)
+          }
         }
         startDates.splice(0, startDates.length, ...starts)
         endDates.splice(0, endDates.length, ...ends)
+        ongoing.splice(0, ongoing.length, ...ongs)
       })()
     }
   },
@@ -156,15 +158,17 @@ const defaultPlaceholder = today(getLocalTimeZone())
 const df = new DateFormatter('en-US', { dateStyle: 'medium' })
 
 function addEntry() {
-  education.value.push({ type: '', name: '', time: { start: '', end: '' }, major: '', ranking: '', GPA: '', GPA_base: '' })
+  projects.value.push({ name: '', role: '', time: { start: '', end: '' }, description: '' })
   startDates.push(undefined)
   endDates.push(undefined)
+  ongoing.push(false)
 }
 
 function removeEntry(index: number) {
-  if (education.value.length > 1) education.value.splice(index, 1)
+  if (projects.value.length > 1) projects.value.splice(index, 1)
   if (startDates.length > index) startDates.splice(index, 1)
   if (endDates.length > index) endDates.splice(index, 1)
+  if (ongoing.length > index) ongoing.splice(index, 1)
 }
 
 function formatToDate(dv: any, tz: string) {
@@ -182,11 +186,13 @@ function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
   // convert DateValue to YYYY-MM strings for storage
   const tz = getLocalTimeZone()
-  const formatted = education.value.map((edu, i) => ({
-    ...edu,
+  const formatted = projects.value.map((project, i) => ({
+    ...project,
     time: {
-      start: startDates[i] ? formatToDate(startDates[i], tz) : edu.time.start,
-      end: endDates[i] ? formatToDate(endDates[i], tz) : edu.time.end,
+      start: startDates[i] ? formatToDate(startDates[i], tz) : project.time.start,
+      end: ongoing[i]
+        ? formatToDate(today(tz), tz)
+        : (endDates[i] ? formatToDate(endDates[i], tz) : project.time.end),
     }
   }))
   // emit v-model update and save
@@ -197,9 +203,10 @@ function save(e?: Event) {
 
 function cancel() {
   // discard drafts and notify parent
-  if (props.modelValue) education.value = JSON.parse(JSON.stringify(props.modelValue))
-  startDates.splice(0, startDates.length, ...education.value.map(() => undefined))
-  endDates.splice(0, endDates.length, ...education.value.map(() => undefined))
+  if (props.modelValue) projects.value = JSON.parse(JSON.stringify(props.modelValue))
+  startDates.splice(0, startDates.length, ...projects.value.map(() => undefined))
+  endDates.splice(0, endDates.length, ...projects.value.map(() => undefined))
+  ongoing.splice(0, ongoing.length, ...projects.value.map(() => false))
   emit('cancel')
   if (!hasEditableProp.value) localEditing.value = false
 }
@@ -224,7 +231,7 @@ onMounted(() => {
       <CardHeader class="text-left">
         <div class="flex items-center justify-between gap-4">
           <CardTitle class="text-3xl font-bold">
-            {{ t("edu.title") }}
+            {{ t('project.title') || 'projects' }}
           </CardTitle>
           <div v-if="!isEditable">
             <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
@@ -239,35 +246,25 @@ onMounted(() => {
           <div v-if="isEditable">
           <form @submit="save">
             <FieldGroup>
-              <template v-for="(edu, idx) in education" :key="idx">
+              <template v-for="(project, idx) in projects" :key="idx">
                 <Field>
-                  <FieldLabel :for="`type-${idx}`">{{ t('edu.type') || 'Type' }}</FieldLabel>
-                  <Select v-model="edu.type">
-                    <SelectTrigger :id="`type-${idx}`" class="w-full">
-                      <SelectValue :placeholder="t('edu.placeholders.type') || 'Select Education type'" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="high school">{{ t('edu.types.highSchool') || 'High School' }}</SelectItem>
-                      <SelectItem value="undergraduate">{{ t('edu.types.undergraduate') || 'Undergraduate' }}</SelectItem>
-                      <SelectItem value="master">{{ t('edu.types.master') || 'Master' }}</SelectItem>
-                      <SelectItem value="doctoral">{{ t('edu.types.doctoral') || 'Doctoral' }}</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <FieldLabel :for="`name-${idx}`">{{ t('project.name') || 'name' }}</FieldLabel>
+                  <Input :id="`name-${idx}`" v-model="project.name" :placeholder="t('project.placeholders.name') || 'Project name'" />
                 </Field>
 
                 <Field>
-                  <FieldLabel :for="`name-${idx}`">{{ t('edu.institution') || 'Institution' }}</FieldLabel>
-                  <Input :id="`name-${idx}`" v-model="edu.name" :placeholder="t('edu.placeholders.institution') || 'University name'" />
+                  <FieldLabel :for="`role-${idx}`">{{ t('project.role') || 'Role' }}</FieldLabel>
+                  <Input :id="`role-${idx}`" v-model="project.role" :placeholder="t('project.placeholders.role') || 'Role'" />
                 </Field>
 
                 <div class="grid grid-cols-2 gap-4">
                   <Field>
-                    <FieldLabel :for="`start-${idx}`">{{ t('edu.time.start') || 'Start' }}</FieldLabel>
+                    <FieldLabel :for="`start-${idx}`">{{ t('project.time.start') || 'Start' }}</FieldLabel>
                       <Popover v-slot="{ close }">
                         <PopoverTrigger as-child>
-                          <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !edu.time.start && 'text-muted-foreground')">
+                          <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !project.time.start && 'text-muted-foreground')">
                             <CalendarIcon class="mr-2 h-4 w-4" />
-                            {{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.start || (t('date.pickStart') || 'Pick start')) }}
+                            {{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (project.time.start || (t('date.pickStart') || 'Pick start')) }}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent class="w-auto p-0" align="start">
@@ -282,49 +279,45 @@ onMounted(() => {
                       </Popover>
                   </Field>
                   <Field>
-                    <FieldLabel :for="`end-${idx}`">{{ t('edu.time.end') || 'End' }}</FieldLabel>
+                    <FieldLabel :for="`end-${idx}`">{{ t('project.time.end') || 'End' }}</FieldLabel>
                     <Popover v-slot="{ close }">
                       <PopoverTrigger as-child>
-                        <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !edu.time.end && 'text-muted-foreground')">
+                        <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !project.time.end && 'text-muted-foreground')">
                           <CalendarIcon class="mr-2 h-4 w-4" />
-                          {{ endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.end || (t('date.pickEnd') || 'Pick end')) }}
+                            {{ ongoing[idx] ? (t('project.time.till now') || 'Till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (project.time.end || (t('date.pickEnd') || 'Pick end'))) }}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent class="w-auto p-0" align="start">
-                        <Calendar
-                          v-model="endDates[idx]"
-                          :default-placeholder="defaultPlaceholder"
-                          layout="month-and-year"
-                          initial-focus
-                          @update:model-value="close"
-                        />
+                          <Calendar
+                            v-model="endDates[idx]"
+                            :default-placeholder="defaultPlaceholder"
+                            layout="month-and-year"
+                            initial-focus
+                            @update:model-value="(val) => (endDates[idx]=val, ongoing[idx]=false, (project.time && (project.time.end = formatToDate(val, getLocalTimeZone()))), close())"
+                          />
+                          <div class="p-2 border-t">
+                            <Button type="button" variant="secondary" class="w-full" @click="(ongoing[idx]=true, endDates[idx]=today(getLocalTimeZone()), (project.time && (project.time.end = formatToDate(endDates[idx], getLocalTimeZone()))), close())">
+                              {{ t('project.time.till now') || 'Till now' }}
+                            </Button>
+                          </div>
                       </PopoverContent>
                     </Popover>
                   </Field>
                 </div>
 
                 <Field>
-                  <FieldLabel :for="`major-${idx}`">{{ t('edu.major') || 'Major' }}</FieldLabel>
-                  <Input :id="`major-${idx}`" v-model="edu.major" :placeholder="t('edu.placeholders.major') || 'Computer Science'" />
+                  <FieldLabel :for="`description-${idx}`">{{ t('project.description') || 'Description' }}</FieldLabel>
+                  <textarea
+                    :id="`description-${idx}`"
+                    v-model="project.description"
+                    :placeholder="t('project.placeholders.description') || 'Description'"
+                    rows="6"
+                    class="w-full rounded-md border px-3 py-2 text-sm"
+                  ></textarea>
                 </Field>
 
-                <div class="grid grid-cols-3 gap-4">
-                  <Field>
-                    <FieldLabel :for="`ranking-${idx}`">{{ t('edu.ranking') || 'Ranking' }}</FieldLabel>
-                    <Input :id="`ranking-${idx}`" v-model="edu.ranking" :placeholder="t('edu.placeholders.ranking') || 'e.g. 5/200'" />
-                  </Field>
-                  <Field>
-                    <FieldLabel :for="`gpa-${idx}`">{{ t('edu.GPA') || 'GPA' }}</FieldLabel>
-                    <Input :id="`gpa-${idx}`" v-model="edu.GPA" :placeholder="t('edu.placeholders.gpa') || '3.8'" />
-                  </Field>
-                  <Field>
-                    <FieldLabel :for="`gpa-base-${idx}`">{{ t('edu.GPA-base') || 'GPA Base' }}</FieldLabel>
-                    <Input :id="`gpa-base-${idx}`" v-model="edu.GPA_base" :placeholder="t('edu.placeholders.gpaBase') || '4.0'" />
-                  </Field>
-                </div>
-
                 <div class="flex justify-end gap-2 mt-2">
-                  <Button v-if="education.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
+                  <Button v-if="projects.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
                   <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
                 </div>
               </template>
@@ -332,56 +325,41 @@ onMounted(() => {
           </form>
         </div>
         <div v-else>
-          <div v-if="education && education.length">
+          <div v-if="projects && projects.length">
             <FieldGroup>
-              <template v-for="(edu, idx) in education" :key="idx">
+              <template v-for="(project, idx) in projects" :key="idx">
                 <Field>
-                  <FieldLabel>{{ t('edu.type') || 'Type' }}</FieldLabel>
-                  <div class="text-sm text-left">{{ edu.type || '-' }}</div>
+                  <FieldLabel>{{ t('project.name') || 'name' }}</FieldLabel>
+                  <div class="text-sm text-left">{{ project.name || '-' }}</div>
                 </Field>
 
                 <Field>
-                  <FieldLabel>{{ t('edu.institution') || 'Institution' }}</FieldLabel>
-                  <div class="text-sm text-left">{{ edu.name || '-' }}</div>
+                  <FieldLabel>{{ t('project.role') || 'Role' }}</FieldLabel>
+                  <div class="text-sm text-left">{{ project.role || '-' }}</div>
                 </Field>
 
                 <div class="grid grid-cols-2 gap-4">
                   <Field>
-                    <FieldLabel>{{ t('edu.time.start') || 'Start' }}</FieldLabel>
-                    <div class="text-sm text-left">{{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.start || '-') }}</div>
+                    <FieldLabel>{{ t('project.time.start') || 'Start' }}</FieldLabel>
+                    <div class="text-sm text-left">{{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (project.time.start || '-') }}</div>
                   </Field>
                   <Field>
-                    <FieldLabel>{{ t('edu.time.end') || 'End' }}</FieldLabel>
-                    <div class="text-sm text-left">{{ endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.end || '-') }}</div>
+                    <FieldLabel>{{ t('project.time.end') || 'End' }}</FieldLabel>
+                    <div class="text-sm text-left">{{ ongoing[idx] ? (t('project.time.till now') || 'Till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (project.time.end || '-')) }}</div>
                   </Field>
                 </div>
 
                 <Field>
-                  <FieldLabel>{{ t('edu.major') || 'Major' }}</FieldLabel>
-                  <div class="text-sm text-left">{{ edu.major || '-' }}</div>
+                  <FieldLabel>{{ t('project.description') || 'Description' }}</FieldLabel>
+                  <div class="text-sm text-left whitespace-pre-wrap break-words">{{ project.description || '-' }}</div>
                 </Field>
-
-                <div class="grid grid-cols-3 gap-4">
-                  <Field>
-                    <FieldLabel>{{ t('edu.ranking') || 'Ranking' }}</FieldLabel>
-                    <div class="text-sm text-left">{{ edu.ranking || '-' }}</div>
-                  </Field>
-                  <Field>
-                    <FieldLabel>{{ t('edu.GPA') || 'GPA' }}</FieldLabel>
-                    <div class="text-sm text-left">{{ edu.GPA || '-' }}</div>
-                  </Field>
-                  <Field>
-                    <FieldLabel>{{ t('edu.GPA-base') || 'GPA Base' }}</FieldLabel>
-                    <div class="text-sm text-left">{{ edu.GPA_base || '-' }}</div>
-                  </Field>
-                </div>
 
               </template>
             </FieldGroup>
           </div>
           <div v-else class="text-center text-muted-foreground">
-            <div class="mb-2">{{ t('edu.empty') || 'No education records' }}</div>
-            <Button type="button" @click="$emit('request-edit')">{{ t('edu.add') || 'Add education' }}</Button>
+            <div class="mb-2">{{ t('project.empty') || 'No projects' }}</div>
+            <Button type="button" @click="$emit('request-edit')">{{ t('project.add') || 'Add project' }}</Button>
           </div>
         </div>
       </CardContent>
