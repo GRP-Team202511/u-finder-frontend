@@ -23,7 +23,7 @@ import { ref } from "vue";
 import { verifySignup, resendSignupCode } from "@/api/userApi";
 import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "vue-router";
-import { Toaster, toast } from 'vue-sonner'
+import { toast } from 'vue-sonner'
 import { Spinner } from "@/components/ui/spinner"
 
 const userStore = useUserStore()
@@ -90,7 +90,6 @@ const handleResend = async() => {
 </script>
 
 <template>
-  <Toaster />
   <Card>
     <CardHeader>
       <CardTitle>{{ t("signup.verification.enter") }}</CardTitle>
