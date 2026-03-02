@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import AIMessage from "@/components/Chat/AIMessage.vue";
 import UniversityCard from "@/components/Chat/UniversityCard.vue";
 
 type UniversityCardData = {
@@ -32,7 +33,16 @@ const roleClass = computed(() =>
 <template>
 	<article :class="['flex max-w-[80%] flex-col gap-2', roleClass]">
 		<div class="rounded-md border px-4 py-3 text-sm">
-			<p v-if="message.type === 'text'" class="leading-relaxed text-foreground">
+			<AIMessage
+				v-if="message.role === 'ai'"
+				:content="message.content"
+				:universities="message.cards"
+			/>
+
+			<p
+				v-else-if="message.type === 'text'"
+				class="leading-relaxed text-foreground"
+			>
 				{{ message.content }}
 			</p>
 
