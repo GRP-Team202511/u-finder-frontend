@@ -15,7 +15,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { computed, ref, inject, onBeforeUnmount, onMounted, getCurrentInstance, watch } from 'vue'
+import { ref, inject, onBeforeUnmount, onMounted, watch } from 'vue'
 import type { Ref } from 'vue'
 import PatentFields from "./PatentFields.vue"
 import ResearchPaperFields from "./ResearchPaperFields.vue"
@@ -35,7 +35,6 @@ const { t } = useI18n()
 const props = defineProps<{
   class?: HTMLAttributes["class"]
   modelValue?: AcademicEntry[]
-  editable?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -51,11 +50,8 @@ type ProfileEditor = {
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
-// local edit state (used when parent does not control `editable`)
+// local edit state
 const localEditing = ref(false)
-const instance = getCurrentInstance()
-const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
-const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
 
 function createEntryForType(type: AcademicEntry["type"]): AcademicEntry {
   if (type === "research paper") {
@@ -87,7 +83,7 @@ const academicOutcomes: Ref<AcademicEntry[]> = ref(props.modelValue ? JSON.parse
 watch(
   () => props.modelValue,
   (nv) => {
-    if (!isEditable.value && nv) academicOutcomes.value = JSON.parse(JSON.stringify(nv))
+    if (!localEditing.value && nv) academicOutcomes.value = JSON.parse(JSON.stringify(nv))
   },
   { deep: true }
 )
@@ -116,17 +112,21 @@ function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
   emit('update:modelValue', JSON.parse(JSON.stringify(academicOutcomes.value)))
   emit('save', JSON.parse(JSON.stringify(academicOutcomes.value)))
-  if (!hasEditableProp.value) localEditing.value = false
+  localEditing.value = false
 }
 
 function cancel() {
   if (props.modelValue) academicOutcomes.value = JSON.parse(JSON.stringify(props.modelValue))
   emit('cancel')
-  if (!hasEditableProp.value) localEditing.value = false
+  localEditing.value = false
 }
 
 function startEdit() {
-  if (!hasEditableProp.value) localEditing.value = true
+  localEditing.value = true
+  // Ensure there's at least one entry to edit
+  if (academicOutcomes.value.length === 0) {
+    academicOutcomes.value.push(createEntryForType(''))
+  }
   emit('request-edit')
 }
 
@@ -147,7 +147,7 @@ onMounted(() => {
           <CardTitle class="text-3xl font-bold">
             {{ t('academic.title') || 'Academic Outcome' }}
           </CardTitle>
-          <div v-if="!isEditable">
+          <div v-if="!localEditing">
             <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
           </div>
           <div v-else class="flex gap-2">
@@ -157,7 +157,7 @@ onMounted(() => {
         </div>
       </CardHeader>
       <CardContent>
-          <div v-if="isEditable">
+          <div v-if="localEditing">
           <form @submit="save">
             <FieldGroup>
                 <template v-for="(aca, idx) in academicOutcomes" :key="idx">
@@ -184,12 +184,17 @@ onMounted(() => {
                     {{ t('academic.selectTypeHint') || 'Select a type to enter details.' }}
                   </div>
 
-                <div class="flex justify-end gap-2 mt-2">
-                  <Button v-if="academicOutcomes.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
-                  <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+                <div v-if="academicOutcomes.length > 1" class="flex justify-end gap-2 mt-2">
+                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
                 </div>
+
+                <FieldSeparator v-if="idx < academicOutcomes.length - 1" />
               </template>
             </FieldGroup>
+            
+            <div class="flex justify-end gap-2 mt-4">
+              <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+            </div>
           </form>
         </div>
         <div v-else>
@@ -216,7 +221,7 @@ onMounted(() => {
           </div>
           <div v-else class="text-center text-muted-foreground">
             <div class="mb-2">{{ t('academic.empty') || 'No academic outcomes' }}</div>
-            <Button type="button" @click="$emit('request-edit')">{{ t('academic.add') || 'Add academic outcome' }}</Button>
+            <Button type="button" @click="startEdit">{{ t('academic.add') || 'Add academic outcome' }}</Button>
           </div>
         </div>
       </CardContent>

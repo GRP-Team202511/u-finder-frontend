@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-vue-next'
-import { computed, ref, reactive, inject, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
+import { ref, reactive, inject, onBeforeUnmount, onMounted } from 'vue'
 import type { Ref } from 'vue'
 import { Calendar } from '@/components/ui/calendar'
 // (calendar value type will be treated as any to match calendar implementation)
@@ -84,7 +84,6 @@ const { t } = useI18n()
 const props = defineProps<{
   class?: HTMLAttributes["class"]
   modelValue?: ProjectEntry[]
-  editable?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -100,11 +99,8 @@ type ProfileEditor = {
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
-// local edit state (used when parent does not control `editable`)
+// local edit state
 const localEditing = ref(false)
-const instance = getCurrentInstance()
-const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
-const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
 
 // local draft state used while editing
 const projects: Ref<ProjectEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
@@ -127,7 +123,7 @@ import { watch } from 'vue'
 watch(
   () => props.modelValue,
   (nv) => {
-    if (!isEditable.value) {
+    if (!localEditing.value) {
       if (nv) projects.value = JSON.parse(JSON.stringify(nv))
       // reinitialize calendars; try to parse YYYY-MM into DateValue objects
       ;(async () => {
@@ -198,7 +194,7 @@ function save(e?: Event) {
   // emit v-model update and save
   emit('update:modelValue', JSON.parse(JSON.stringify(formatted)))
   emit('save', JSON.parse(JSON.stringify(formatted)))
-  if (!hasEditableProp.value) localEditing.value = false
+  localEditing.value = false
 }
 
 function cancel() {
@@ -208,11 +204,18 @@ function cancel() {
   endDates.splice(0, endDates.length, ...projects.value.map(() => undefined))
   ongoing.splice(0, ongoing.length, ...projects.value.map(() => false))
   emit('cancel')
-  if (!hasEditableProp.value) localEditing.value = false
+  localEditing.value = false
 }
 
 function startEdit() {
-  if (!hasEditableProp.value) localEditing.value = true
+  localEditing.value = true
+  // Ensure there's at least one entry to edit
+  if (projects.value.length === 0) {
+    projects.value.push({ name: '', role: '', time: { start: '', end: '' }, description: '' })
+    startDates.push(undefined)
+    endDates.push(undefined)
+    ongoing.push(false)
+  }
   emit('request-edit')
 }
 
@@ -233,7 +236,7 @@ onMounted(() => {
           <CardTitle class="text-3xl font-bold">
             {{ t('project.title') || 'projects' }}
           </CardTitle>
-          <div v-if="!isEditable">
+          <div v-if="!localEditing">
             <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
           </div>
           <div v-else class="flex gap-2">
@@ -243,7 +246,7 @@ onMounted(() => {
         </div>
       </CardHeader>
       <CardContent>
-          <div v-if="isEditable">
+          <div v-if="localEditing">
           <form @submit="save">
             <FieldGroup>
               <template v-for="(project, idx) in projects" :key="idx">
@@ -316,12 +319,17 @@ onMounted(() => {
                   ></textarea>
                 </Field>
 
-                <div class="flex justify-end gap-2 mt-2">
-                  <Button v-if="projects.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
-                  <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+                <div v-if="projects.length > 1" class="flex justify-end gap-2 mt-2">
+                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
                 </div>
+
+                <FieldSeparator v-if="idx < projects.length - 1" />
               </template>
             </FieldGroup>
+            
+            <div class="flex justify-end gap-2 mt-4">
+              <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+            </div>
           </form>
         </div>
         <div v-else>
@@ -359,7 +367,7 @@ onMounted(() => {
           </div>
           <div v-else class="text-center text-muted-foreground">
             <div class="mb-2">{{ t('project.empty') || 'No projects' }}</div>
-            <Button type="button" @click="$emit('request-edit')">{{ t('project.add') || 'Add project' }}</Button>
+            <Button type="button" @click="startEdit">{{ t('project.add') || 'Add project' }}</Button>
           </div>
         </div>
       </CardContent>

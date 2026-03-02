@@ -9,7 +9,7 @@ import Internship from '@/components/Profile/Internship.vue'
 import Project from '@/components/Profile/Project.vue'
 import CampusExperience from '@/components/Profile/CampusExperience.vue'
 import Award from '@/components/Profile/Award.vue'
-import { getAllProfile, updatePersonalInfo, updateProfileField } from '@/api/profileApi'
+import { getAllProfile, updateProfileField } from '@/api/profileApi'
 import type { PersonalInfo } from '@/api/profileTypes'
 import { useUserStore } from '@/stores/userStore'
 
@@ -66,14 +66,10 @@ watch(
 	{ immediate: true }
 )
 
-// Save personal info and persist to backend
-async function onInformationSave(payload: PersonalInfo) {
+// Personal info is saved directly by BasicInformation component;
+// here we only sync the local ref so the parent stays up to date.
+function onInformationSave(payload: PersonalInfo) {
 	informationData.value = payload
-	try {
-		await updatePersonalInfo(payload)
-	} catch (e) {
-		console.error('Failed to save personal info', e)
-	}
 }
 
 // Save education background and persist to backend

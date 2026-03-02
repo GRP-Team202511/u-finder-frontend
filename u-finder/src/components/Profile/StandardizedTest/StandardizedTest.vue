@@ -15,7 +15,7 @@ import {
 	FieldLabel,
 } from "@/components/ui/field"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { computed, ref, inject, onBeforeUnmount, onMounted, getCurrentInstance, watch } from 'vue'
+import { ref, inject, onBeforeUnmount, onMounted, watch } from 'vue'
 import type { Ref } from 'vue'
 import IELTSFields from "./IELTSFields.vue"
 import TOEFLFields from "./TOEFLFields.vue"
@@ -60,7 +60,6 @@ const { t } = useI18n()
 const props = defineProps<{
 	class?: HTMLAttributes["class"]
 	modelValue?: StandardizedEntry[]
-	editable?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -76,11 +75,8 @@ type ProfileEditor = {
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
-// local edit state (used when parent does not control `editable`)
+// local edit state
 const localEditing = ref(false)
-const instance = getCurrentInstance()
-const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
-const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
 
 function createEntryForType(type: StandardizedType): StandardizedEntry {
 	switch (type) {
@@ -128,7 +124,7 @@ const standardizedTests: Ref<StandardizedEntry[]> = ref(props.modelValue ? JSON.
 watch(
 	() => props.modelValue,
 	(nv) => {
-		if (!isEditable.value && nv) standardizedTests.value = JSON.parse(JSON.stringify(nv))
+		if (!localEditing.value && nv) standardizedTests.value = JSON.parse(JSON.stringify(nv))
 	},
 	{ deep: true }
 )
@@ -166,17 +162,21 @@ function save(e?: Event) {
 	if (e && e.preventDefault) e.preventDefault()
 	emit('update:modelValue', JSON.parse(JSON.stringify(standardizedTests.value)))
 	emit('save', JSON.parse(JSON.stringify(standardizedTests.value)))
-	if (!hasEditableProp.value) localEditing.value = false
+	localEditing.value = false
 }
 
 function cancel() {
 	if (props.modelValue) standardizedTests.value = JSON.parse(JSON.stringify(props.modelValue))
 	emit('cancel')
-	if (!hasEditableProp.value) localEditing.value = false
+	localEditing.value = false
 }
 
 function startEdit() {
-	if (!hasEditableProp.value) localEditing.value = true
+	localEditing.value = true
+	// Ensure there's at least one entry to edit
+	if (standardizedTests.value.length === 0) {
+		standardizedTests.value.push(createEntryForType(''))
+	}
 	emit('request-edit')
 }
 
@@ -196,7 +196,7 @@ onMounted(() => {
 					<CardTitle class="text-3xl font-bold">
 						{{ t('test.title') || 'Standardized Test' }}
 					</CardTitle>
-					<div v-if="!isEditable">
+				<div v-if="!localEditing">
 						<Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
 					</div>
 					<div v-else class="flex gap-2">
@@ -206,7 +206,7 @@ onMounted(() => {
 				</div>
 			</CardHeader>
 			<CardContent>
-				<div v-if="isEditable">
+				<div v-if="localEditing">
 					<form @submit="save">
 						<FieldGroup>
 							<template v-for="(test, idx) in standardizedTests" :key="idx">
@@ -269,12 +269,17 @@ onMounted(() => {
 									{{ t('test.selectTypeHint') || 'Select a type to enter details.' }}
 								</div>
 
-								<div class="flex justify-end gap-2 mt-2">
-									<Button v-if="standardizedTests.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
-									<Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+								<div v-if="standardizedTests.length > 1" class="flex justify-end gap-2 mt-2">
+									<Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
 								</div>
+
+								<FieldSeparator v-if="idx < standardizedTests.length - 1" />
 							</template>
 						</FieldGroup>
+						
+						<div class="flex justify-end gap-2 mt-4">
+							<Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+						</div>
 					</form>
 				</div>
 				<div v-else>
@@ -327,7 +332,7 @@ onMounted(() => {
 					</div>
 					<div v-else class="text-center text-muted-foreground">
 						<div class="mb-2">{{ t('test.empty') || 'No standardized tests' }}</div>
-						<Button type="button" @click="$emit('request-edit')">{{ t('test.add') || 'Add standardized test' }}</Button>
+					<Button type="button" @click="startEdit">{{ t('test.add') || 'Add standardized test' }}</Button>
 					</div>
 				</div>
 			</CardContent>

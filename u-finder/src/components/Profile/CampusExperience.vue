@@ -16,7 +16,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { computed, ref, inject, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
+import { ref, inject, onBeforeUnmount, onMounted } from 'vue'
 import type { Ref } from 'vue'
 
 type CampusExpEntry = {
@@ -29,7 +29,6 @@ const { t } = useI18n()
 const props = defineProps<{
   class?: HTMLAttributes["class"]
   modelValue?: CampusExpEntry[]
-  editable?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -45,11 +44,8 @@ type ProfileEditor = {
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
-// local edit state (used when parent does not control `editable`)
+// local edit state
 const localEditing = ref(false)
-const instance = getCurrentInstance()
-const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
-const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
 
 // local draft state used while editing
 const campusExperience: Ref<CampusExpEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
@@ -65,7 +61,7 @@ import { watch } from 'vue'
 watch(
   () => props.modelValue,
   (nv) => {
-    if (!isEditable.value) {
+    if (!localEditing.value) {
       if (nv) campusExperience.value = JSON.parse(JSON.stringify(nv))
     }
   },
@@ -85,17 +81,21 @@ function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
   emit('update:modelValue', JSON.parse(JSON.stringify(campusExperience.value)))
   emit('save', JSON.parse(JSON.stringify(campusExperience.value)))
-  if (!hasEditableProp.value) localEditing.value = false
+  localEditing.value = false
 }
 
 function cancel() {
   if (props.modelValue) campusExperience.value = JSON.parse(JSON.stringify(props.modelValue))
   emit('cancel')
-  if (!hasEditableProp.value) localEditing.value = false
+  localEditing.value = false
 }
 
 function startEdit() {
-  if (!hasEditableProp.value) localEditing.value = true
+  localEditing.value = true
+  // Ensure there's at least one entry to edit
+  if (campusExperience.value.length === 0) {
+    campusExperience.value.push({ name: '', description: '' })
+  }
   emit('request-edit')
 }
 
@@ -116,7 +116,7 @@ onMounted(() => {
           <CardTitle class="text-3xl font-bold">
             {{ t('campusExp.title') || 'campusExp' }}
           </CardTitle>
-          <div v-if="!isEditable">
+          <div v-if="!localEditing">
             <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
           </div>
           <div v-else class="flex gap-2">
@@ -126,7 +126,7 @@ onMounted(() => {
         </div>
       </CardHeader>
       <CardContent>
-          <div v-if="isEditable">
+          <div v-if="localEditing">
           <form @submit="save">
             <FieldGroup>
               <template v-for="(campusExp, idx) in campusExperience" :key="idx">
@@ -144,12 +144,17 @@ onMounted(() => {
                     class="w-full rounded-md border px-3 py-2 text-sm"
                   ></textarea>                
                 </Field>
-                <div class="flex justify-end gap-2 mt-2">
-                  <Button v-if="campusExperience.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
-                  <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+                <div v-if="campusExperience.length > 1" class="flex justify-end gap-2 mt-2">
+                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
                 </div>
+
+                <FieldSeparator v-if="idx < campusExperience.length - 1" />
               </template>
             </FieldGroup>
+            
+            <div class="flex justify-end gap-2 mt-4">
+              <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+            </div>
           </form>
         </div>
         <div v-else>
@@ -169,7 +174,7 @@ onMounted(() => {
           </div>
           <div v-else class="text-center text-muted-foreground">
             <div class="mb-2">{{ t('campusExp.empty') || 'No campusExp' }}</div>
-            <Button type="button" @click="$emit('request-edit')">{{ t('campusExp.add') || 'Add campusExp' }}</Button>
+            <Button type="button" @click="startEdit">{{ t('campusExp.add') || 'Add campusExp' }}</Button>
           </div>
         </div>
       </CardContent>
