@@ -15,6 +15,7 @@
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dompurify": "^3.3.1",
     "lucide-vue-next": "^0.553.0",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
@@ -25,7 +26,8 @@
     "vue-i18n": "^11.1.12",
     "vue-input-otp": "^0.3.2",
     "vue-router": "^4.6.3",
-    "vue-sonner": "^2.0.9"
+    "vue-sonner": "^2.0.9",
+    "vue3-markdown-it": "^1.0.10"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",
