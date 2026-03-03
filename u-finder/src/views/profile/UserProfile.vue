@@ -170,43 +170,36 @@ async function onAwardSave(payload: any[]) {
 
 			<EducationBackground
 				:modelValue="educationData"
-				@update:modelValue="educationData = $event"
 				@save="onEducationSave"
 			/>
 
 			<AcademicOutcome
 				:modelValue="academicOutcomeData"
-				@update:modelValue="academicOutcomeData = $event"
 				@save="onAcademicOutcomeSave"
 			/>
 
 			<StandardizedTest
 				:modelValue="standardizedTestData"
-				@update:modelValue="standardizedTestData = $event"
 				@save="onStandardizedTestSave"
 			/>
 			
 			<Internship
 				:modelValue="internshipData"
-				@update:modelValue="internshipData = $event"
 				@save="onInternshipSave"
 			/>
 
 			<Project
 				:modelValue="projectData"
-				@update:modelValue="projectData = $event"
 				@save="onProjectSave"
 			/>
 
 			<CampusExperience
 				:modelValue="campusExpData"
-				@update:modelValue="campusExpData = $event"
 				@save="onCampusExpSave"
 			/>
 
 			<Award
 				:modelValue="awardData"
-				@update:modelValue="awardData = $event"
 				@save="onAwardSave"
 			/>
 		</div>

@@ -46,6 +46,7 @@ const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
 // local edit state
 const localEditing = ref(false)
+const pendingSave = ref(false)
 
 // local draft state used while editing
 const awards: Ref<AwardEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
@@ -63,6 +64,10 @@ watch(
   (nv) => {
     if (!localEditing.value) {
       if (nv) awards.value = JSON.parse(JSON.stringify(nv))
+    } else if (pendingSave.value && nv) {
+      // Save succeeded: parent updated modelValue, exit edit mode
+      localEditing.value = false
+      pendingSave.value = false
     }
   },
   { deep: true }
@@ -79,14 +84,15 @@ function removeEntry(index: number) {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
-  emit('update:modelValue', JSON.parse(JSON.stringify(awards.value)))
   emit('save', JSON.parse(JSON.stringify(awards.value)))
-  localEditing.value = false
+  // Don't exit edit mode yet; wait for parent to confirm save success via modelValue update
+  pendingSave.value = true
 }
 
 function cancel() {
   if (props.modelValue) awards.value = JSON.parse(JSON.stringify(props.modelValue))
   emit('cancel')
+  pendingSave.value = false
   localEditing.value = false
 }
 

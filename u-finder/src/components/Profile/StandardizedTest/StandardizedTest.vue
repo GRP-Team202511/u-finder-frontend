@@ -77,6 +77,7 @@ const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
 // local edit state
 const localEditing = ref(false)
+const pendingSave = ref(false)
 
 function createEntryForType(type: StandardizedType): StandardizedEntry {
 	switch (type) {
@@ -124,7 +125,13 @@ const standardizedTests: Ref<StandardizedEntry[]> = ref(props.modelValue ? JSON.
 watch(
 	() => props.modelValue,
 	(nv) => {
-		if (!localEditing.value && nv) standardizedTests.value = JSON.parse(JSON.stringify(nv))
+		if (!localEditing.value && nv) {
+			standardizedTests.value = JSON.parse(JSON.stringify(nv))
+		} else if (pendingSave.value && nv) {
+			// Save succeeded: parent updated modelValue, exit edit mode
+			localEditing.value = false
+			pendingSave.value = false
+		}
 	},
 	{ deep: true }
 )
@@ -160,14 +167,15 @@ function removeEntry(index: number) {
 
 function save(e?: Event) {
 	if (e && e.preventDefault) e.preventDefault()
-	emit('update:modelValue', JSON.parse(JSON.stringify(standardizedTests.value)))
 	emit('save', JSON.parse(JSON.stringify(standardizedTests.value)))
-	localEditing.value = false
+	// Don't exit edit mode yet; wait for parent to confirm save success via modelValue update
+	pendingSave.value = true
 }
 
 function cancel() {
 	if (props.modelValue) standardizedTests.value = JSON.parse(JSON.stringify(props.modelValue))
 	emit('cancel')
+	pendingSave.value = false
 	localEditing.value = false
 }
 

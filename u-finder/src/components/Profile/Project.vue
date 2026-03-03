@@ -101,6 +101,7 @@ const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
 // local edit state
 const localEditing = ref(false)
+const pendingSave = ref(false)
 
 // local draft state used while editing
 const projects: Ref<ProjectEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
@@ -145,6 +146,10 @@ watch(
         endDates.splice(0, endDates.length, ...ends)
         ongoing.splice(0, ongoing.length, ...ongs)
       })()
+    } else if (pendingSave.value && nv) {
+      // Save succeeded: parent updated modelValue, exit edit mode
+      localEditing.value = false
+      pendingSave.value = false
     }
   },
   { deep: true }
@@ -191,10 +196,10 @@ function save(e?: Event) {
         : (endDates[i] ? formatToDate(endDates[i], tz) : project.time.end),
     }
   }))
-  // emit v-model update and save
-  emit('update:modelValue', JSON.parse(JSON.stringify(formatted)))
+  // emit save event only; parent will update modelValue on success
   emit('save', JSON.parse(JSON.stringify(formatted)))
-  localEditing.value = false
+  // Don't exit edit mode yet; wait for parent to confirm save success via modelValue update
+  pendingSave.value = true
 }
 
 function cancel() {
@@ -204,6 +209,7 @@ function cancel() {
   endDates.splice(0, endDates.length, ...projects.value.map(() => undefined))
   ongoing.splice(0, ongoing.length, ...projects.value.map(() => false))
   emit('cancel')
+  pendingSave.value = false
   localEditing.value = false
 }
 
