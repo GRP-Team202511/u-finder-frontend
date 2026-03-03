@@ -3,7 +3,11 @@ import { nextTick, ref, watch } from "vue";
 import ChatMessage from "@/components/Chat/ChatMessage.vue";
 import type { ChatMessageData } from "@/types/chat";
 
-const props = defineProps<{ messages: ChatMessageData[] }>();
+const props = defineProps<{
+	messages: ChatMessageData[];
+	loadingMessageId?: string | null;
+	isSending?: boolean;
+}>();
 const scrollEl = ref<HTMLElement | null>(null);
 const bottomEl = ref<HTMLElement | null>(null);
 
@@ -32,6 +36,7 @@ watch(
 				v-for="message in messages"
 				:key="message.id"
 				:message="message"
+				:is-loading="Boolean(props.isSending && props.loadingMessageId === message.id)"
 			/>
 			<div ref="bottomEl" />
 		</div>

@@ -40,4 +40,5 @@ export type ChatMessageData = {
 	type: "text" | "cards";
 	content?: string;
 	cards?: ProgramCardData[];
+	isLoading?: boolean;
 };

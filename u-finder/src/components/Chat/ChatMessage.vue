@@ -4,7 +4,7 @@ import AIMessage from "@/components/Chat/AIMessage.vue";
 import UniversityCard from "@/components/Chat/UniversityCard.vue";
 import type { ChatMessageData } from "@/types/chat";
 
-const props = defineProps<{ message: ChatMessageData }>();
+const props = defineProps<{ message: ChatMessageData; isLoading?: boolean }>();
 
 const roleClass = computed(() =>
 	props.message.role === "user"
@@ -20,11 +20,12 @@ const roleClass = computed(() =>
 				v-if="message.role === 'ai'"
 				:content="message.content"
 				:universities="message.cards"
+				:is-loading="Boolean(props.isLoading || message.isLoading)"
 			/>
 
 			<p
 				v-else-if="message.type === 'text'"
-				class="leading-relaxed text-foreground"
+				class="whitespace-pre-line leading-relaxed text-foreground"
 			>
 				{{ message.content }}
 			</p>

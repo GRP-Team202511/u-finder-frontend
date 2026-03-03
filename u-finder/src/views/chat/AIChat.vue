@@ -13,6 +13,7 @@ const isSending = ref(false);
 const userStore = useUserStore();
 const streamController = ref<AbortController | null>(null);
 const conversationId = ref<string | null>(null);
+const activeMessageId = ref<string | null>(null);
 const { t } = useI18n();
 let messageCounter = 1;
 const programCardStart = "<<<__DIFY_PROGRAM_CARD_START_v1__>>>";
@@ -89,6 +90,10 @@ const flushMessageBuffer = (messageId: string) => {
 };
 
 const stopStream = () => {
+	if (activeMessageId.value) {
+		updateMessage(activeMessageId.value, { isLoading: false });
+		activeMessageId.value = null;
+	}
 	streamController.value?.abort();
 	streamController.value = null;
 };
@@ -170,6 +175,8 @@ const handleSsePayload = (messageId: string, payload: string) => {
 const startStream = async (prompt: string, messageId: string) => {
 	stopStream();
 	isSending.value = true;
+	activeMessageId.value = messageId;
+	updateMessage(messageId, { isLoading: true });
 	const { controller, done } = streamChat({
 		message: prompt,
 		conversationId: conversationId.value,
@@ -191,6 +198,8 @@ const startStream = async (prompt: string, messageId: string) => {
 		}
 	} finally {
 		isSending.value = false;
+		updateMessage(messageId, { isLoading: false });
+		activeMessageId.value = null;
 		streamController.value = null;
 	}
 };
@@ -213,6 +222,7 @@ const handleSend = (text: string) => {
 		role: "ai",
 		type: "text",
 		content: "",
+		isLoading: true,
 	});
 
 	void startStream(trimmed, aiMessageId);
@@ -247,7 +257,11 @@ onBeforeUnmount(() => {
 
 		<div v-else class="flex min-h-0 flex-1 flex-col gap-4">
 			<div class="min-h-0 flex-1 pt-8">
-				<ChatWindow :messages="messages" />
+				<ChatWindow
+					:messages="messages"
+					:loading-message-id="activeMessageId"
+					:is-sending="isSending"
+				/>
 			</div>
 
 			<div class="pb-4">
