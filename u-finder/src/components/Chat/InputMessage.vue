@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { Button } from "@/components/ui/button";
 import {
 	Field,
@@ -13,6 +14,7 @@ import { SendHorizontal } from 'lucide-vue-next';
 
 const props = defineProps<{ placeholder?: string; disabled?: boolean }>();
 const emit = defineEmits<{ (event: "send", value: string): void }>();
+const { t } = useI18n();
 
 const draft = ref("");
 
@@ -35,7 +37,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 	<form class="flex w-full flex-col gap-2" @submit.prevent="submit">
 		<FieldGroup class="w-full">
 			<Field class="gap-2">
-				<FieldLabel class="sr-only">Message</FieldLabel>
+				<FieldLabel class="sr-only">{{ t("chat.input.label") }}</FieldLabel>
 				<FieldContent>
 					<div class="flex w-full items-center gap-3">
 						<Input

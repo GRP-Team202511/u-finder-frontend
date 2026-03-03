@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from "vue";
+import { useI18n } from "vue-i18n";
 import ChatWindow from "@/components/Chat/ChatWindow.vue";
 import MessageInput from "@/components/Chat/InputMessage.vue";
 import { streamChat } from "@/api/chatApi";
@@ -11,6 +12,7 @@ const isSending = ref(false);
 const userStore = useUserStore();
 const streamController = ref<AbortController | null>(null);
 const conversationId = ref<string | null>(null);
+const { t } = useI18n();
 let messageCounter = 1;
 
 const stopStream = () => {
@@ -99,7 +101,7 @@ const startStream = async (prompt: string, messageId: string) => {
 		if (message && !message.content && !message.cards?.length) {
 			updateMessage(messageId, {
 				type: "text",
-				content: "Sorry, I could not complete that request.",
+				content: t("chat.errors.streamFailed"),
 			});
 		}
 	} finally {
@@ -143,16 +145,16 @@ onBeforeUnmount(() => {
 			class="flex flex-1 flex-col items-center justify-center gap-6 text-center"
 		>
 			<header class="space-y-1">
-				<h1 class="text-3xl font-bold">U-Finder</h1>
+				<h1 class="text-3xl font-bold">{{ t("chat.title") }}</h1>
 				<p class="text-m text-muted-foreground">
-					Find your best-fit university — powered by AI.
+					{{ t("chat.tagline") }}
 				</p>
 			</header>
 
 			<div class="w-full max-w-xl">
 				<MessageInput
 					:disabled="isSending"
-					placeholder="Chat with U-Finder..."
+					:placeholder="t('chat.input.placeholder')"
 					@send="handleSend"
 				/>
 			</div>
@@ -166,7 +168,7 @@ onBeforeUnmount(() => {
 			<div class="pb-4">
 				<MessageInput
 					:disabled="isSending"
-					placeholder="Chat with U-Finder..."
+					:placeholder="t('chat.input.placeholder')"
 					@send="handleSend"
 				/>
 			</div>
