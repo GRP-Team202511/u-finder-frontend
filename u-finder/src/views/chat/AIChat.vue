@@ -4,26 +4,9 @@ import ChatWindow from "@/components/Chat/ChatWindow.vue";
 import MessageInput from "@/components/Chat/InputMessage.vue";
 import { streamChat } from "@/api/chatApi";
 import { useUserStore } from "@/stores/userStore";
+import type { ChatMessageData } from "@/types/chat";
 
-type UniversityCardData = {
-	id: string;
-	name: string;
-	location: string;
-	program: string;
-	tuition: string;
-	rating: string;
-	highlights: string[];
-};
-
-type ChatMessage = {
-	id: string;
-	role: "user" | "ai";
-	type: "text" | "cards";
-	content?: string;
-	cards?: UniversityCardData[];
-};
-
-const messages = ref<ChatMessage[]>([]);
+const messages = ref<ChatMessageData[]>([]);
 const isSending = ref(false);
 const userStore = useUserStore();
 const streamController = ref<AbortController | null>(null);
@@ -35,7 +18,10 @@ const stopStream = () => {
 	streamController.value = null;
 };
 
-const updateMessage = (messageId: string, update: Partial<ChatMessage>) => {
+const updateMessage = (
+	messageId: string,
+	update: Partial<ChatMessageData>
+) => {
 	const message = messages.value.find((item) => item.id === messageId);
 	if (!message) return;
 	Object.assign(message, update);
@@ -75,6 +61,15 @@ const handleSsePayload = (messageId: string, payload: string) => {
 		return;
 	}
 
+	const cards =
+		(parsed.type === "program_card" && parsed.payload?.programs) ||
+		parsed.cards ||
+		parsed.universities;
+	if (Array.isArray(cards)) {
+		updateMessage(messageId, { type: "cards", cards });
+		return;
+	}
+
 	if (typeof parsed.text === "string") {
 		appendToMessage(messageId, parsed.text);
 		return;
@@ -99,6 +94,7 @@ const startStream = async (prompt: string, messageId: string) => {
 	try {
 		await done;
 	} catch (error) {
+		if (streamController.value?.signal.aborted) return;
 		const message = messages.value.find((item) => item.id === messageId);
 		if (message && !message.content && !message.cards?.length) {
 			updateMessage(messageId, {

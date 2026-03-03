@@ -1,24 +1,7 @@
 <script setup lang="ts">
 import { nextTick, ref, watch } from "vue";
 import ChatMessage from "@/components/Chat/ChatMessage.vue";
-
-type UniversityCardData = {
-	id: string;
-	name: string;
-	location: string;
-	program: string;
-	tuition: string;
-	rating: string;
-	highlights: string[];
-};
-
-type ChatMessageData = {
-	id: string;
-	role: "user" | "ai";
-	type: "text" | "cards";
-	content?: string;
-	cards?: UniversityCardData[];
-};
+import type { ChatMessageData } from "@/types/chat";
 
 const props = defineProps<{ messages: ChatMessageData[] }>();
 const scrollEl = ref<HTMLElement | null>(null);

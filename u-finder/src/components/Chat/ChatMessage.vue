@@ -2,24 +2,7 @@
 import { computed } from "vue";
 import AIMessage from "@/components/Chat/AIMessage.vue";
 import UniversityCard from "@/components/Chat/UniversityCard.vue";
-
-type UniversityCardData = {
-	id: string;
-	name: string;
-	location: string;
-	program: string;
-	tuition: string;
-	rating: string;
-	highlights: string[];
-};
-
-type ChatMessageData = {
-	id: string;
-	role: "user" | "ai";
-	type: "text" | "cards";
-	content?: string;
-	cards?: UniversityCardData[];
-};
+import type { ChatMessageData } from "@/types/chat";
 
 const props = defineProps<{ message: ChatMessageData }>();
 
@@ -49,8 +32,8 @@ const roleClass = computed(() =>
 			<div v-else class="grid gap-3">
 				<UniversityCard
 					v-for="card in message.cards || []"
-					:key="card.id"
-					:university="card"
+					:key="card.official_program_url || `${card.university.name}-${card.degree_program.name}`"
+					:program="card"
 				/>
 			</div>
 		</div>

@@ -2,10 +2,11 @@
 import { computed } from "vue"
 import { renderMarkdown } from "@/lib/markdown"
 import UniversityCard from "./UniversityCard.vue"
+import type { ProgramCardData } from "@/types/chat"
 
 const props = defineProps<{
   content?: string
-  universities?: any[]
+  universities?: ProgramCardData[]
 }>()
 
 const rendered = computed(() =>
@@ -26,8 +27,8 @@ const rendered = computed(() =>
     <div v-if="universities?.length" class="grid gap-4">
       <UniversityCard
         v-for="uni in universities"
-        :key="uni.id"
-        :university="uni"
+        :key="uni.official_program_url || `${uni.university.name}-${uni.degree_program.name}`"
+        :program="uni"
       />
     </div>
   </div>
