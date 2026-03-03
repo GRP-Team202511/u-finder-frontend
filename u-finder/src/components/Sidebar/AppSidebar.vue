@@ -33,7 +33,7 @@ const data = {
   navMain: [
     {
       titleKey: "sidebar.aiChat",
-      to: { name: 'Cover' }, // to be updated when the page is being developed
+      to: { name: 'AIChat' },
       icon: MessageCircle,
     },
     {
