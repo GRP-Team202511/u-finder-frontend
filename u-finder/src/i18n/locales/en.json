@@ -312,7 +312,8 @@
         "tagline": "Find your best-fit university — powered by AI.",
         "input": {
             "label": "Message",
-            "placeholder": "Chat with U-Finder..."
+            "placeholder": "Chat with U-Finder...",
+            "disclaimer": "U-Finder can make mistakes. Check important info."
         },
         "errors": {
             "streamFailed": "Sorry, I could not complete that request."

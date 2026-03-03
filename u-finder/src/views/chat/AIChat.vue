@@ -171,6 +171,9 @@ onBeforeUnmount(() => {
 					:placeholder="t('chat.input.placeholder')"
 					@send="handleSend"
 				/>
+				<p class="mt-2 text-xs text-muted-foreground">
+					{{ t("chat.input.disclaimer") }}
+				</p>
 			</div>
 		</div>
 	</div>
