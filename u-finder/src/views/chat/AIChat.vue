@@ -158,8 +158,8 @@ onBeforeUnmount(() => {
 			</div>
 		</div>
 
-		<div v-else class="flex flex-1 flex-col gap-4">
-			<div class="flex-1 pt-8">
+		<div v-else class="flex min-h-0 flex-1 flex-col gap-4">
+			<div class="min-h-0 flex-1 pt-8">
 				<ChatWindow :messages="messages" />
 			</div>
 
