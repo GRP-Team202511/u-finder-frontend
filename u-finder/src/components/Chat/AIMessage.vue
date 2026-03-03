@@ -19,7 +19,7 @@ const rendered = computed(() =>
     <!-- Normal markdown content -->
     <div
       v-if="content"
-      class="prose prose-sm max-w-none dark:prose-invert"
+      class="prose prose-base max-w-none dark:prose-invert"
       v-html="rendered"
     />
 

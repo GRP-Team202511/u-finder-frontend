@@ -15,7 +15,7 @@ const roleClass = computed(() =>
 
 <template>
 	<article :class="['flex max-w-[80%] flex-col gap-2', roleClass]">
-		<div class="rounded-md border px-4 py-3 text-sm">
+		<div class="rounded-md border px-4 py-3 text-base">
 			<AIMessage
 				v-if="message.role === 'ai'"
 				:content="message.content"

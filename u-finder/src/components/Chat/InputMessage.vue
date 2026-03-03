@@ -42,16 +42,17 @@ const handleKeydown = (event: KeyboardEvent) => {
 							v-model="draft"
 							:placeholder="placeholder"
 							:disabled="disabled"
-							class="flex-1"
+							class="flex-1 h-12 text-lg placeholder:text-lg"
 							@keydown="handleKeydown"
 						/>
 						<Button
-							variant="secondary"
+							variant="ghost"
 							size="icon"
 							type="submit"
 							:disabled="disabled || !draft.trim()"
+							class="h-12 w-12"
 						>
-							<SendHorizontal class="h-4 w-4" />
+							<SendHorizontal class="size-5" />
 						</Button>
 					</div>
 				</FieldContent>

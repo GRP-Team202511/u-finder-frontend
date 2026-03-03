@@ -63,32 +63,32 @@ const formatVerifiedDate = () => {
 		<CardHeader>
 			<div class="flex items-start justify-between gap-4">
 				<div>
-					<CardTitle class = "text-xl font-bold">
+					<CardTitle class = "text-2xl font-bold">
 						{{ program.university.name }}
 					</CardTitle>
-					<CardDescription class="mt-1">
+					<CardDescription class="mt-1 text-sm">
 						{{ locationLabel() }}
 					</CardDescription>
 				</div>
 			</div>
 		</CardHeader>
-		<CardContent>
+		<CardContent class="text-base">
 			<div class = "pb-8">
-				<p class="text-xs text-foreground">Program</p>
-				<p class="text-sm font-semibold text-foreground">
+				<p class="text-sm text-foreground">Program</p>
+				<p class="text-base font-semibold text-foreground">
 					{{ program.degree_program.name }}
 				</p>
 			</div>
-			<Tabs v-model="selectedView" class="text-xs">
+			<Tabs v-model="selectedView" class="text-sm">
 				<div>
 					<TabsList class="h-8">
-						<TabsTrigger value="program" class="text-xs">
+						<TabsTrigger value="program" class="text-sm">
 							Program
 						</TabsTrigger>
-						<TabsTrigger value="admission" class="text-xs">
+						<TabsTrigger value="admission" class="text-sm">
 							Admission + Tuition
 						</TabsTrigger>
-						<TabsTrigger value="career" class="text-xs">
+						<TabsTrigger value="career" class="text-sm">
 							Career + URLs
 						</TabsTrigger>
 					</TabsList>
@@ -100,7 +100,7 @@ const formatVerifiedDate = () => {
 						force-mount
 						class="col-start-1 row-start-1 [&[hidden]]:block data-[state=inactive]:invisible data-[state=inactive]:pointer-events-none"
 					>
-					<p class="text-xs font-semibold text-foreground">Program details</p>
+					<p class="text-sm font-semibold text-foreground">Program details</p>
 					<div class="mt-2 grid gap-2">
 						<div class="flex items-center justify-between gap-4">
 							<span class="text-muted-foreground">Degree</span>
@@ -153,7 +153,7 @@ const formatVerifiedDate = () => {
 						class="col-start-1 row-start-1 [&[hidden]]:block data-[state=inactive]:invisible data-[state=inactive]:pointer-events-none"
 					>
 					<div>
-						<p class="text-xs font-semibold text-foreground">Admissions</p>
+						<p class="text-sm font-semibold text-foreground">Admissions</p>
 						<div class="mt-2 grid gap-2">
 							<div class="flex items-center justify-between gap-4">
 								<span class="text-muted-foreground">Deadline</span>
@@ -183,7 +183,7 @@ const formatVerifiedDate = () => {
 					</div>
 
 					<div class="mt-4">
-						<p class="text-xs font-semibold text-foreground">Tuition</p>
+						<p class="text-sm font-semibold text-foreground">Tuition</p>
 						<div class="mt-2 flex items-center justify-between gap-4">
 							<span class="text-muted-foreground">Cost</span>
 							<span class="font-semibold">
@@ -199,7 +199,7 @@ const formatVerifiedDate = () => {
 						class="col-start-1 row-start-1 [&[hidden]]:block data-[state=inactive]:invisible data-[state=inactive]:pointer-events-none"
 					>
 					<div>
-						<p class="text-xs font-semibold text-foreground">Career outcomes</p>
+						<p class="text-sm font-semibold text-foreground">Career outcomes</p>
 						<ul
 							v-if="program.career_outcomes && program.career_outcomes.length"
 							class="flex flex-wrap gap-2 pt-2"
@@ -215,7 +215,7 @@ const formatVerifiedDate = () => {
 					</div>
 
 					<div class="mt-4">
-						<p class="text-xs font-semibold text-foreground">Links</p>
+						<p class="text-sm font-semibold text-foreground">Links</p>
 						<div class="mt-2 flex flex-wrap gap-2">
 							<a
 								:href="program.official_program_url"
@@ -248,7 +248,7 @@ const formatVerifiedDate = () => {
 				</div>
 			</Tabs>
 			<div class="mt-8 flex justify-end text-right">
-				<div class="text-[10px] text-muted-foreground/70">
+				<div class="text-xs text-muted-foreground/70">
 					<p>Verified</p>
 					<p :title="program.last_verified || undefined">
 						{{ formatVerifiedDate() }}

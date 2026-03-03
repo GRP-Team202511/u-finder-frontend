@@ -144,7 +144,7 @@ onBeforeUnmount(() => {
 		>
 			<header class="space-y-1">
 				<h1 class="text-3xl font-bold">U-Finder</h1>
-				<p class="text-sm text-muted-foreground">
+				<p class="text-m text-muted-foreground">
 					Find your best-fit university — powered by AI.
 				</p>
 			</header>
