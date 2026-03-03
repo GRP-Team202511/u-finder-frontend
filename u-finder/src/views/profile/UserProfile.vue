@@ -71,9 +71,9 @@ function onInformationSave(payload: PersonalInfo) {
 
 // Save education background and persist to backend
 async function onEducationSave(payload: any[]) {
-	educationData.value = payload
 	try {
 		await updateProfileField('education', payload)
+		educationData.value = payload
 		toast.success(t('profile.toast.education.saveSuccess'))
 	} catch (e) {
 		console.error('Failed to save education', e)
@@ -83,9 +83,9 @@ async function onEducationSave(payload: any[]) {
 
 // Save academic outcomes and persist to backend
 async function onAcademicOutcomeSave(payload: any[]) {
-	academicOutcomeData.value = payload
 	try {
 		await updateProfileField('academic', payload)
+		academicOutcomeData.value = payload
 		toast.success(t('profile.toast.academic.saveSuccess'))
 	} catch (e) {
 		console.error('Failed to save academic outcomes', e)
@@ -95,9 +95,9 @@ async function onAcademicOutcomeSave(payload: any[]) {
 
 // Save standardized tests and persist to backend
 async function onStandardizedTestSave(payload: any[]) {
-	standardizedTestData.value = payload
 	try {
 		await updateProfileField('test', payload)
+		standardizedTestData.value = payload
 		toast.success(t('profile.toast.test.saveSuccess'))
 	} catch (e) {
 		console.error('Failed to save standardized tests', e)
@@ -107,9 +107,9 @@ async function onStandardizedTestSave(payload: any[]) {
 
 // Save internship experience and persist to backend
 async function onInternshipSave(payload: any[]) {
-	internshipData.value = payload
 	try {
 		await updateProfileField('internship', payload)
+		internshipData.value = payload
 		toast.success(t('profile.toast.internship.saveSuccess'))
 	} catch (e) {
 		console.error('Failed to save internship', e)
@@ -119,9 +119,9 @@ async function onInternshipSave(payload: any[]) {
 
 // Save project experience and persist to backend
 async function onProjectSave(payload: any[]) {
-	projectData.value = payload
 	try {
 		await updateProfileField('project', payload)
+		projectData.value = payload
 		toast.success(t('profile.toast.project.saveSuccess'))
 	} catch (e) {
 		console.error('Failed to save project', e)
@@ -131,9 +131,9 @@ async function onProjectSave(payload: any[]) {
 
 // Save campus experience and persist to backend
 async function onCampusExpSave(payload: any[]) {
-	campusExpData.value = payload
 	try {
 		await updateProfileField('campus', payload)
+		campusExpData.value = payload
 		toast.success(t('profile.toast.campusExp.saveSuccess'))
 	} catch (e) {
 		console.error('Failed to save campus experience', e)
@@ -143,9 +143,9 @@ async function onCampusExpSave(payload: any[]) {
 
 // Save awards and persist to backend
 async function onAwardSave(payload: any[]) {
-	awardData.value = payload
 	try {
 		await updateProfileField('award', payload)
+		awardData.value = payload
 		toast.success(t('profile.toast.award.saveSuccess'))
 	} catch (e) {
 		console.error('Failed to save awards', e)
