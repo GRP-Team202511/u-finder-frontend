@@ -28,8 +28,6 @@ const projectData = ref<any[] | undefined>(undefined)
 const campusExpData = ref<any[] | undefined>(undefined)
 const awardData = ref<any[] | undefined>(undefined)
 
-const loadError = ref('')
-
 // Load all profile sections at once when the user is authenticated
 watch(
 	() => token.value,
@@ -44,7 +42,6 @@ watch(
 			projectData.value = undefined
 			campusExpData.value = undefined
 			awardData.value = undefined
-			loadError.value = ''
 			return
 		}
 		try {
@@ -58,9 +55,8 @@ watch(
 			projectData.value = profile.project.data
 			campusExpData.value = profile.campus.data
 			awardData.value = profile.award.data
-			loadError.value = ''
 		} catch (e) {
-			loadError.value = t('info.errors.loadFailed') || 'Failed to load profile.'
+			toast.error(t('profile.toast.loadFailed'))
 			console.error('Failed to load profile', e)
 		}
 	},
@@ -166,9 +162,6 @@ async function onAwardSave(payload: any[]) {
 		</div>
 			
 		<div class="space-y-8">
-			<div v-if="loadError" class="text-sm text-destructive">
-				{{ loadError }}
-			</div>
 			<BasicInformation
 				:modelValue="informationData"
 				@update:modelValue="informationData = $event"
