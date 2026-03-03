@@ -9,4 +9,4 @@ import piniaPersist from 'pinia-plugin-persistedstate'
 const pinia = createPinia()
 pinia.use(piniaPersist)
 
-createApp(App).use(router).use(i18n).use(pinia).mount('#app')
+createApp(App).use(pinia).use(router).use(i18n).mount('#app')

@@ -53,7 +53,7 @@ const handleLogin = async() => {
     if (response.status == 200) {
       // Save info to userStore
       userStore.setUser(response.data)
-      // TODO: jump to the main page when it is ready
+        router.push({ name: 'UserProfile' })
     }
   } catch (error: any) {
     if (error.response?.status === 401) {

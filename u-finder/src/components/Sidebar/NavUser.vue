@@ -28,17 +28,31 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { useUserStore } from '@/stores/userStore'
+import { logoutUser } from '@/api/userApi'
 
 const props = defineProps<{
   user: {
-    name: string
-    email: string
+    name: string | undefined
+    // email: string
     avatar: string
   }
 }>()
 const { isMobile } = useSidebar()
 const router = useRouter()
 const { t } = useI18n()
+const userStore = useUserStore()
+
+const handleLogout = async () => {
+  try {
+    await logoutUser()
+  } catch {
+    // Clear local state regardless of server response
+  } finally {
+    userStore.logout()
+    router.push({ name: 'Login' })
+  }
+}
 </script>
 
 <template>
@@ -58,44 +72,44 @@ const { t } = useI18n()
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight menu-label">
               <span class="truncate font-medium">{{ user.name }}</span>
-              <span class="truncate text-xs">{{ user.email }}</span>
+              <!-- <span class="truncate text-xs">{{ user.email }}</span> -->
             </div>
             <ChevronsUpDown class="ml-auto size-4" />
           </SidebarMenuButton>
         </DropdownMenuTrigger>
-          <DropdownMenuContent
+        <DropdownMenuContent
           class="w-[--reka-dropdown-menu-trigger-width] min-w-56 rounded-lg"
           :side="isMobile ? 'bottom' : 'right'"
           align="end"
           :side-offset="4"
         >
-          <DropdownMenuLabel class="p-0 font-normal">
-            <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-              <Avatar class="h-8 w-8 rounded-lg">
-                <AvatarImage :src="user.avatar" :alt="user.name" />
-                <AvatarFallback class="rounded-lg">
-                  CN
-                </AvatarFallback>
-              </Avatar>
-              <div class="grid flex-1 text-left text-sm leading-tight menu-label">
-                <span class="truncate font-semibold">{{ user.name }}</span>
-                <span class="truncate text-xs">{{ user.email }}</span>
-              </div>
+        <DropdownMenuLabel class="p-0 font-normal">
+          <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+            <Avatar class="h-8 w-8 rounded-lg">
+              <AvatarImage :src="user.avatar" :alt="user.name" />
+              <AvatarFallback class="rounded-lg">
+                CN
+              </AvatarFallback>
+            </Avatar>
+            <div class="grid flex-1 text-left text-sm leading-tight menu-label">
+              <span class="truncate font-semibold">{{ user.name }}</span>
+              <!-- <span class="truncate text-xs">{{ user.email }}</span> -->
             </div>
-          </DropdownMenuLabel>
-          <DropdownMenuGroup>
-            <DropdownMenuItem as-child>
-              <RouterLink :to="{ name: 'Cover' }"> <!--to be updated when the page is being developed-->
-                <Settings />
-                {{ t('sidebar.settings') }}
-              </RouterLink>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem @click="() => router.push({ name: 'Cover' })">
-            <LogOut />
-            {{ t('sidebar.logout') }}
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuItem as-child>
+            <RouterLink :to="{ name: 'Cover' }"> <!--to be updated when the page is being developed-->
+              <Settings />
+              {{ t('sidebar.settings') }}
+            </RouterLink>
           </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem @click="handleLogout">
+          <LogOut />
+          {{ t('sidebar.logout') }}
+        </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </SidebarMenuItem>

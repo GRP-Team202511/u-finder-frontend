@@ -19,15 +19,18 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 
+import { useUserStore } from "@/stores/userStore"
+
 const props = defineProps<SidebarProps>()
+
+const userStore = useUserStore()
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: userStore.user?.name,
     avatar: "/avatars/shadcn.jpg",
   },
-    navMain: [
+  navMain: [
     {
       titleKey: "sidebar.aiChat",
       to: { name: 'Cover' }, // to be updated when the page is being developed

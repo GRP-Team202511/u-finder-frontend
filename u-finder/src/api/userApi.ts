@@ -114,3 +114,125 @@ export const resendResetPasswordCode = (tempToken: string) => {
     }
   })
 }
+
+export interface PersonalInfo {
+  birthday: string
+  gender: string
+  name: string
+  [property: string]: any
+}
+
+export interface Education {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export interface Academic {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export interface Test {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export interface Internship {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export interface Project {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export interface Campus {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export interface Award {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export type OtherProfileField =
+  | 'education'
+  | 'academic'
+  | 'test'
+  | 'internship'
+  | 'project'
+  | 'campus'
+  | 'award'
+
+export interface FullProfile {
+  education: Education
+  academic: Academic
+  test: Test
+  internship: Internship
+  personalInfo: PersonalInfo
+  project: Project
+  campus: Campus
+  award: Award
+  [property: string]: any
+}
+
+type ProfileFieldDataMap = {
+  education: Education['data']
+  academic: Academic['data']
+  test: Test['data']
+  internship: Internship['data']
+  project: Project['data']
+  campus: Campus['data']
+  award: Award['data']
+}
+
+const authHeaders = (token: string) => ({
+  Authorization: `Bearer ${token}`
+})
+
+export const getPersonalInfo = (token: string) => {
+  return http.get<PersonalInfo>('/profile/personal', {
+    headers: authHeaders(token)
+  })
+}
+
+export const updatePersonalInfo = (data: PersonalInfo, token: string) => {
+  return http.put<PersonalInfo>('/profile/personal', data, {
+    headers: authHeaders(token)
+  })
+}
+
+export const getProfileArrayField = <TField extends OtherProfileField>(field: TField, token: string) => {
+  return http.get<ProfileFieldDataMap[TField]>(`/profile/array/${field}`, {
+    headers: authHeaders(token)
+  })
+}
+
+export const updateProfileArrayField = <TField extends OtherProfileField>(
+  field: TField,
+  data: ProfileFieldDataMap[TField],
+  token: string
+) => {
+  return http.put<{ message: string }>(`/profile/array/${field}`, data, {
+    headers: authHeaders(token)
+  })
+}
+
+export const getFullProfile = (token: string) => {
+  return http.get<FullProfile>('/profile', {
+    headers: authHeaders(token)
+  })
+}
+
+export const updateFullProfile = (data: FullProfile, token: string) => {
+  return http.put<FullProfile>('/profile', data, {
+    headers: authHeaders(token)
+  })
+}
+
+// Logs out the current user; JWT token is attached automatically by the request interceptor
+export const logoutUser = () => {
+  return http.post<{ message: string }>('/auth/logout')
+}
