@@ -6,6 +6,7 @@ import MessageInput from "@/components/Chat/InputMessage.vue";
 import { streamChat } from "@/api/chatApi";
 import { useUserStore } from "@/stores/userStore";
 import type { ChatMessageData } from "@/types/chat";
+import type { ProgramCardData } from "@/types/chat";
 
 const messages = ref<ChatMessageData[]>([]);
 const isSending = ref(false);
@@ -14,6 +15,74 @@ const streamController = ref<AbortController | null>(null);
 const conversationId = ref<string | null>(null);
 const { t } = useI18n();
 let messageCounter = 1;
+const programCardStart = "<<<DIFY_PROGRAM_CARD_START_v1>>>";
+const programCardEnd = "<<<DIFY_PROGRAM_CARD_END_v1>>>";
+const messageBuffers = new Map<string, string>();
+
+const findPartialStartSuffix = (value: string) => {
+	const max = Math.min(value.length, programCardStart.length - 1);
+	for (let size = max; size > 0; size -= 1) {
+		if (programCardStart.startsWith(value.slice(-size))) {
+			return size;
+		}
+	}
+	return 0;
+};
+
+const extractProgramCards = (buffer: string) => {
+	let remaining = buffer;
+	let text = "";
+	const cards: ProgramCardData[] = [];
+
+	while (true) {
+		const startIndex = remaining.indexOf(programCardStart);
+		if (startIndex === -1) {
+			const partialSize = findPartialStartSuffix(remaining);
+			if (partialSize > 0) {
+				text += remaining.slice(0, -partialSize);
+				remaining = remaining.slice(-partialSize);
+			} else {
+				text += remaining;
+				remaining = "";
+			}
+			break;
+		}
+
+		text += remaining.slice(0, startIndex);
+		const afterStart = remaining.slice(startIndex + programCardStart.length);
+		const endIndex = afterStart.indexOf(programCardEnd);
+		if (endIndex === -1) {
+			remaining = remaining.slice(startIndex);
+			break;
+		}
+
+		const payload = afterStart.slice(0, endIndex).trim();
+		try {
+			const parsed = JSON.parse(payload);
+			const list = Array.isArray(parsed) ? parsed : [parsed];
+			cards.push(...(list as ProgramCardData[]));
+		} catch {
+			remaining = remaining.slice(startIndex);
+			break;
+		}
+
+		remaining = afterStart.slice(endIndex + programCardEnd.length);
+	}
+
+	return { text, cards, remainder: remaining };
+};
+
+const flushMessageBuffer = (messageId: string) => {
+	const remainder = messageBuffers.get(messageId);
+	if (!remainder) return;
+	messageBuffers.delete(messageId);
+	if (remainder.includes(programCardStart)) return;
+	if (!remainder.trim()) return;
+	const message = messages.value.find((item) => item.id === messageId);
+	if (!message) return;
+	message.type = "text";
+	message.content = `${message.content ?? ""}${remainder}`;
+};
 
 const stopStream = () => {
 	streamController.value?.abort();
@@ -32,8 +101,17 @@ const updateMessage = (
 const appendToMessage = (messageId: string, chunk: string) => {
 	const message = messages.value.find((item) => item.id === messageId);
 	if (!message) return;
-	message.type = "text";
-	message.content = `${message.content ?? ""}${chunk}`;
+	const buffer = `${messageBuffers.get(messageId) ?? ""}${chunk}`;
+	const { text, cards, remainder } = extractProgramCards(buffer);
+	messageBuffers.set(messageId, remainder);
+	if (text) {
+		message.type = "text";
+		message.content = `${message.content ?? ""}${text}`;
+	}
+	if (cards.length) {
+		const existing = message.cards ?? [];
+		updateMessage(messageId, { type: "cards", cards: [...existing, ...cards] });
+	}
 };
 
 const handleSsePayload = (messageId: string, payload: string) => {
@@ -56,7 +134,10 @@ const handleSsePayload = (messageId: string, payload: string) => {
 		conversationId.value = parsed.conversation_id;
 	}
 
-	if (parsed.event === "message_end" || parsed.done === true) return;
+	if (parsed.event === "message_end" || parsed.done === true) {
+		flushMessageBuffer(messageId);
+		return;
+	}
 
 	if (parsed.event === "agent_message" && typeof parsed.answer === "string") {
 		appendToMessage(messageId, parsed.answer);
