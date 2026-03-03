@@ -14,6 +14,8 @@ import {
 	TabsList,
 	TabsTrigger,
 } from "@/components/ui/tabs";
+import { Star } from "lucide-vue-next"
+
 import type { ProgramCardData } from "@/types/chat";
 
 const props = defineProps<{ program: ProgramCardData }>();
@@ -73,6 +75,13 @@ const formatVerifiedDate = () => {
 						{{ locationLabel() }}
 					</CardDescription>
 				</div>
+				<button
+					type="button"
+					class="rounded-md p-2 text-muted-foreground transition hover:text-foreground"
+					aria-label="Add to favorites"
+				>
+					<Star class="h-5 w-5" />
+				</button>
 			</div>
 		</CardHeader>
 		<CardContent class="text-base">
