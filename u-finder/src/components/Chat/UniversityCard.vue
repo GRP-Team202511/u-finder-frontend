@@ -19,7 +19,7 @@ import type { ProgramCardData } from "@/types/chat";
 const props = defineProps<{ program: ProgramCardData }>();
 
 const selectedView = ref("program");
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const locationLabel = () => {
 	const parts = [props.program.university.city, props.program.university.country].filter(
@@ -33,7 +33,8 @@ const tuitionLabel = () => {
 	if (amount === null || !currency) {
 		return t("chat.card.tuitionNotSpecified");
 	}
-	return `${currency} ${amount}${per ? ` / ${per}` : ""}`;
+	const formattedAmount = new Intl.NumberFormat(locale.value).format(amount);
+	return `${currency} ${formattedAmount}${per ? ` / ${per}` : ""}`;
 };
 
 const formatLanguageRequirements = () => {
