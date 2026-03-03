@@ -3,6 +3,7 @@ import type { HTMLAttributes } from "vue"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useI18n } from 'vue-i18n'
+import { toast } from 'vue-sonner'
 import {
   Card,
   CardContent,
@@ -208,9 +209,11 @@ function save(e?: Event) {
       emit('update:modelValue', JSON.parse(JSON.stringify(payload)))
       emit('save', JSON.parse(JSON.stringify(payload)))
       localEditing.value = false
+      toast.success(t('profile.toast.information.saveSuccess'))
     })
     .catch((err) => {
       errorMessage.value = getHttpErrorMessage(err, 'info.errors.saveFailed') || 'Failed to save personal information.'
+      toast.error(t('profile.toast.information.saveFailed'))
     })
     .finally(() => {
       isLoading.value = false
