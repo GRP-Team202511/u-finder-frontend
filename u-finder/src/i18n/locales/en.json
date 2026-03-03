@@ -97,7 +97,42 @@
         "save": "Save",
         "cancel": "Cancel",
         "add": "Add",
-        "remove": "Remove"
+        "remove": "Remove",
+        "toast": {
+            "loadFailed": "Failed to load profile data",
+            "information": {
+                "saveSuccess": "Personal information saved successfully",
+                "saveFailed": "Failed to save personal information"
+            },
+            "education": {
+                "saveSuccess": "Education background saved successfully",
+                "saveFailed": "Failed to save education background"
+            },
+            "academic": {
+                "saveSuccess": "Academic outcomes saved successfully",
+                "saveFailed": "Failed to save academic outcomes"
+            },
+            "test": {
+                "saveSuccess": "Standardized tests saved successfully",
+                "saveFailed": "Failed to save standardized tests"
+            },
+            "internship": {
+                "saveSuccess": "Internship experience saved successfully",
+                "saveFailed": "Failed to save internship experience"
+            },
+            "project": {
+                "saveSuccess": "Project experience saved successfully",
+                "saveFailed": "Failed to save project experience"
+            },
+            "campusExp": {
+                "saveSuccess": "Campus experience saved successfully",
+                "saveFailed": "Failed to save campus experience"
+            },
+            "award": {
+                "saveSuccess": "Awards saved successfully",
+                "saveFailed": "Failed to save awards"
+            }
+        }
     },
     "info": {
         "title": "Personal Information",
