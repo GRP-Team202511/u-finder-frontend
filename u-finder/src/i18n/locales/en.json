@@ -194,6 +194,11 @@
             "undergraduate": "Undergraduate",
             "master": "Master",
             "doctoral": "Doctoral"
+        },
+        "validation": {
+            "typeRequired": "Education type is required",
+            "nameRequired": "Institution name is required",
+            "startRequired": "Start date is required"
         }
     },
     "academic": {

@@ -24,6 +24,7 @@ import type { Ref } from 'vue'
 import { Calendar } from '@/components/ui/calendar'
 // (calendar value type will be treated as any to match calendar implementation)
 import { DateFormatter, getLocalTimeZone, today } from '@internationalized/date'
+import { toast } from 'vue-sonner'
 // helper: create a DateValue-like object from YYYY-MM or YYYY-MM-DD using the library if available,
 // otherwise return a shim with `toDate(tz)` so the calendar can consume it.
 async function createDateValueFromYYYYMM(yyyyMm: string) {
@@ -125,6 +126,24 @@ const education: Ref<EducationEntry[]> = ref(props.modelValue ? JSON.parse(JSON.
 const startDates = reactive<any[]>(education.value.map(() => undefined))
 const endDates = reactive<any[]>(education.value.map(() => undefined))
 
+// validation error tracking for each entry
+const validationErrors = reactive<{
+  type: boolean[]
+  name: boolean[]
+  startDate: boolean[]
+}>(
+  {
+    type: education.value.map(() => false),
+    name: education.value.map(() => false),
+    startDate: education.value.map(() => false)
+  }
+)
+
+// Clear validation error for a specific field
+function clearError(index: number, field: 'type' | 'name' | 'startDate') {
+  validationErrors[field][index] = false
+}
+
 // when parent provides new modelValue, sync into local draft when not editing
 import { watch } from 'vue'
 watch(
@@ -145,6 +164,10 @@ watch(
         startDates.splice(0, startDates.length, ...starts)
         endDates.splice(0, endDates.length, ...ends)
       })()
+      // Reset validation errors
+      validationErrors.type = education.value.map(() => false)
+      validationErrors.name = education.value.map(() => false)
+      validationErrors.startDate = education.value.map(() => false)
     } else if (pendingSave.value && nv) {
       // Save succeeded: parent updated modelValue, exit edit mode
       localEditing.value = false
@@ -162,12 +185,18 @@ function addEntry() {
   education.value.push({ type: '', name: '', time: { start: '', end: '' }, major: '', ranking: '', GPA: '', GPA_base: '' })
   startDates.push(undefined)
   endDates.push(undefined)
+  validationErrors.type.push(false)
+  validationErrors.name.push(false)
+  validationErrors.startDate.push(false)
 }
 
 function removeEntry(index: number) {
   if (education.value.length > 1) education.value.splice(index, 1)
   if (startDates.length > index) startDates.splice(index, 1)
   if (endDates.length > index) endDates.splice(index, 1)
+  if (validationErrors.type.length > index) validationErrors.type.splice(index, 1)
+  if (validationErrors.name.length > index) validationErrors.name.splice(index, 1)
+  if (validationErrors.startDate.length > index) validationErrors.startDate.splice(index, 1)
 }
 
 function formatToDate(dv: any, tz: string) {
@@ -183,6 +212,45 @@ function formatToDate(dv: any, tz: string) {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
+  
+  // Clear all validation errors first
+  validationErrors.type = education.value.map(() => false)
+  validationErrors.name = education.value.map(() => false)
+  validationErrors.startDate = education.value.map(() => false)
+  
+  // Validate required fields
+  let hasError = false
+  for (let i = 0; i < education.value.length; i++) {
+    const edu = education.value[i]
+    if (!edu) continue
+    
+    const hasStartDate = startDates[i] || edu.time?.start
+    
+    if (!edu.type) {
+      validationErrors.type[i] = true
+      hasError = true
+      toast.error(t('edu.validation.typeRequired') || `Education #${i + 1}: Type is required`)
+    }
+    if (!edu.name || !edu.name.trim()) {
+      validationErrors.name[i] = true
+      hasError = true
+      if (!hasError || edu.type) { // Only show if not already showing type error
+        toast.error(t('edu.validation.nameRequired') || `Education #${i + 1}: Institution name is required`)
+      }
+    }
+    if (!hasStartDate) {
+      validationErrors.startDate[i] = true
+      hasError = true
+      if (!validationErrors.type[i] && !validationErrors.name[i]) { // Only show if no previous errors
+        toast.error(t('edu.validation.startRequired') || `Education #${i + 1}: Start date is required`)
+      }
+    }
+  }
+  
+  if (hasError) {
+    return
+  }
+  
   // convert DateValue to YYYY-MM strings for storage
   const tz = getLocalTimeZone()
   const formatted = education.value.map((edu, i) => ({
@@ -203,6 +271,10 @@ function cancel() {
   if (props.modelValue) education.value = JSON.parse(JSON.stringify(props.modelValue))
   startDates.splice(0, startDates.length, ...education.value.map(() => undefined))
   endDates.splice(0, endDates.length, ...education.value.map(() => undefined))
+  // Clear validation errors
+  validationErrors.type = education.value.map(() => false)
+  validationErrors.name = education.value.map(() => false)
+  validationErrors.startDate = education.value.map(() => false)
   emit('cancel')
   pendingSave.value = false
   localEditing.value = false
@@ -223,6 +295,9 @@ function startEdit() {
     })
     startDates.push(undefined)
     endDates.push(undefined)
+    validationErrors.type.push(false)
+    validationErrors.name.push(false)
+    validationErrors.startDate.push(false)
   }
   emit('request-edit')
 }
@@ -259,9 +334,9 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(edu, idx) in education" :key="idx">
                 <Field>
-                  <FieldLabel :for="`type-${idx}`">{{ t('edu.type') || 'Type' }}</FieldLabel>
-                  <Select v-model="edu.type">
-                    <SelectTrigger :id="`type-${idx}`" class="w-full">
+                  <FieldLabel :for="`type-${idx}`"><span class="text-red-500">*</span> {{ t('edu.type') || 'Type' }}</FieldLabel>
+                  <Select v-model="edu.type" @update:model-value="clearError(idx, 'type')">
+                    <SelectTrigger :id="`type-${idx}`" :class="cn('w-full', validationErrors.type[idx] && 'border-red-500')">
                       <SelectValue :placeholder="t('edu.placeholders.type') || 'Select Education type'" />
                     </SelectTrigger>
                     <SelectContent>
@@ -274,16 +349,29 @@ onMounted(() => {
                 </Field>
 
                 <Field>
-                  <FieldLabel :for="`name-${idx}`">{{ t('edu.institution') || 'Institution' }}</FieldLabel>
-                  <Input :id="`name-${idx}`" v-model="edu.name" :placeholder="t('edu.placeholders.institution') || 'University name'" />
+                  <FieldLabel :for="`name-${idx}`"><span class="text-red-500">*</span> {{ t('edu.institution') || 'Institution' }}</FieldLabel>
+                  <Input 
+                    :id="`name-${idx}`" 
+                    v-model="edu.name" 
+                    :placeholder="t('edu.placeholders.institution') || 'University name'" 
+                    :class="validationErrors.name[idx] && 'border-red-500'"
+                    @input="clearError(idx, 'name')"
+                  />
                 </Field>
 
                 <div class="grid grid-cols-2 gap-4">
                   <Field>
-                    <FieldLabel :for="`start-${idx}`">{{ t('edu.time.start') || 'Start' }}</FieldLabel>
+                    <FieldLabel :for="`start-${idx}`"><span class="text-red-500">*</span> {{ t('edu.time.start') || 'Start' }}</FieldLabel>
                       <Popover v-slot="{ close }">
                         <PopoverTrigger as-child>
-                          <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !edu.time.start && 'text-muted-foreground')">
+                          <Button 
+                            variant="outline" 
+                            :class="cn(
+                              'w-full justify-start text-left font-normal', 
+                              !edu.time.start && 'text-muted-foreground',
+                              validationErrors.startDate[idx] && 'border-red-500'
+                            )"
+                          >
                             <CalendarIcon class="mr-2 h-4 w-4" />
                             {{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.start || (t('date.pickStart') || 'Pick start')) }}
                           </Button>
@@ -294,7 +382,7 @@ onMounted(() => {
                             :default-placeholder="defaultPlaceholder"
                             layout="month-and-year"
                             initial-focus
-                            @update:model-value="close"
+                            @update:model-value="() => { clearError(idx, 'startDate'); close(); }"
                           />
                         </PopoverContent>
                       </Popover>
