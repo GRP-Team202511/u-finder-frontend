@@ -98,6 +98,11 @@
         "cancel": "Cancel",
         "add": "Add",
         "remove": "Remove",
+        "retry": "Retry",
+        "errors": {
+            "loadFailed": "Ops, something went wrong...",
+            "loadFailedDescription": "Unable to load your profile data. Please try refreshing the page."
+        },
         "toast": {
             "loadFailed": "Failed to load profile data",
             "information": {

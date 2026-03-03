@@ -82,6 +82,22 @@
             "tooMany": "请求过于频繁，请等待 {seconds} 秒后再试。",
             "resendError": "重发验证码失败，请重试。"
         }
+    },
+    "profile": {
+        "title": "个人资料",
+        "edit": "编辑",
+        "save": "保存",
+        "cancel": "取消",
+        "add": "添加",
+        "remove": "删除",
+        "retry": "重试",
+        "errors": {
+            "loadFailed": "哎呀，出错了……",
+            "loadFailedDescription": "无法加载您的个人资料数据，请尝试刷新页面。"
+        },
+        "toast": {
+            "loadFailed": "加载个人资料数据失败"
+        }
     }
 
 }

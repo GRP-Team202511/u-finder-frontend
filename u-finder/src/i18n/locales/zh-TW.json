@@ -82,6 +82,22 @@
             "tooMany": "請求過於頻繁，請等待 {seconds} 秒後再試。",
             "resendError": "重發驗證碼失敗，請重試。"
         }
+    },
+    "profile": {
+        "title": "個人資料",
+        "edit": "編輯",
+        "save": "儲存",
+        "cancel": "取消",
+        "add": "新增",
+        "remove": "刪除",
+        "retry": "重試",
+        "errors": {
+            "loadFailed": "哎呀，出錯啦……",
+            "loadFailedDescription": "無法載入您的個人資料資料，請嘗試重新整理頁面。"
+        },
+        "toast": {
+            "loadFailed": "載入個人資料資料失敗"
+        }
     }
 
 }
