@@ -15,8 +15,8 @@ const streamController = ref<AbortController | null>(null);
 const conversationId = ref<string | null>(null);
 const { t } = useI18n();
 let messageCounter = 1;
-const programCardStart = "<<<DIFY_PROGRAM_CARD_START_v1>>>";
-const programCardEnd = "<<<DIFY_PROGRAM_CARD_END_v1>>>";
+const programCardStart = "<<<__DIFY_PROGRAM_CARD_START_v1__>>>";
+const programCardEnd = "<<<__DIFY_PROGRAM_CARD_END_v1__>>>";
 const messageBuffers = new Map<string, string>();
 
 const findPartialStartSuffix = (value: string) => {
@@ -59,7 +59,11 @@ const extractProgramCards = (buffer: string) => {
 		const payload = afterStart.slice(0, endIndex).trim();
 		try {
 			const parsed = JSON.parse(payload);
-			const list = Array.isArray(parsed) ? parsed : [parsed];
+			const programs =
+				(parsed?.type === "program_card" && parsed?.payload?.programs) ||
+				parsed?.programs ||
+				parsed;
+			const list = Array.isArray(programs) ? programs : [programs];
 			cards.push(...(list as ProgramCardData[]));
 		} catch {
 			remaining = remaining.slice(startIndex);
@@ -159,7 +163,7 @@ const handleSsePayload = (messageId: string, payload: string) => {
 	}
 
 	if (typeof parsed.content === "string") {
-		updateMessage(messageId, { type: "text", content: parsed.content });
+		appendToMessage(messageId, parsed.content);
 	}
 };
 
