@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import BasicInformation from '@/components/Profile/BasicInformation.vue'
@@ -17,6 +17,9 @@ import { useUserStore } from '@/stores/userStore'
 const { t } = useI18n()
 const userStore = useUserStore()
 const token = computed(() => userStore.user?.token || '')
+
+// Track how many components are currently in edit mode
+const editingComponentsCount = ref(0)
 
 // Profile section data — undefined means not yet loaded
 const informationData = ref<PersonalInfo | undefined>(undefined)
@@ -153,6 +156,36 @@ async function onAwardSave(payload: any[]) {
 	}
 }
 
+// Track editing status to prevent accidental page close
+function onComponentStartEdit() {
+	editingComponentsCount.value++
+}
+
+function onComponentEndEdit() {
+	if (editingComponentsCount.value > 0) {
+		editingComponentsCount.value--
+	}
+}
+
+// Warn user before leaving page if any component is in edit mode
+function handleBeforeUnload(e: BeforeUnloadEvent) {
+	if (editingComponentsCount.value > 0) {
+		// Modern browsers (Chrome 51+, Firefox 44+, Safari 9.1+) only need preventDefault()
+		e.preventDefault()
+		// Returning any value (including undefined) is enough for legacy browsers
+		// The browser will show its own confirmation dialog
+	}
+}
+
+// Setup and cleanup beforeunload listener
+onMounted(() => {
+	window.addEventListener('beforeunload', handleBeforeUnload)
+})
+
+onBeforeUnmount(() => {
+	window.removeEventListener('beforeunload', handleBeforeUnload)
+})
+
 </script>
 
 <template>
@@ -166,41 +199,65 @@ async function onAwardSave(payload: any[]) {
 				:modelValue="informationData"
 				@update:modelValue="informationData = $event"
 				@save="onInformationSave"
+				@request-edit="onComponentStartEdit"
+				@cancel="onComponentEndEdit"
+				@edit-complete="onComponentEndEdit"
 			/>
 
 			<EducationBackground
 				:modelValue="educationData"
 				@save="onEducationSave"
+				@request-edit="onComponentStartEdit"
+				@cancel="onComponentEndEdit"
+				@edit-complete="onComponentEndEdit"
 			/>
 
 			<AcademicOutcome
 				:modelValue="academicOutcomeData"
 				@save="onAcademicOutcomeSave"
+				@request-edit="onComponentStartEdit"
+				@cancel="onComponentEndEdit"
+				@edit-complete="onComponentEndEdit"
 			/>
 
 			<StandardizedTest
 				:modelValue="standardizedTestData"
 				@save="onStandardizedTestSave"
+				@request-edit="onComponentStartEdit"
+				@cancel="onComponentEndEdit"
+				@edit-complete="onComponentEndEdit"
 			/>
 			
 			<Internship
 				:modelValue="internshipData"
 				@save="onInternshipSave"
+				@request-edit="onComponentStartEdit"
+				@cancel="onComponentEndEdit"
+				@edit-complete="onComponentEndEdit"
 			/>
 
 			<Project
 				:modelValue="projectData"
 				@save="onProjectSave"
+				@request-edit="onComponentStartEdit"
+				@cancel="onComponentEndEdit"
+				@edit-complete="onComponentEndEdit"
 			/>
 
 			<CampusExperience
 				:modelValue="campusExpData"
 				@save="onCampusExpSave"
+				@request-edit="onComponentStartEdit"
+				@cancel="onComponentEndEdit"
+				@edit-complete="onComponentEndEdit"
 			/>
 
 			<Award
 				:modelValue="awardData"
 				@save="onAwardSave"
+				@request-edit="onComponentStartEdit"
+				@cancel="onComponentEndEdit"
+				@edit-complete="onComponentEndEdit"
 			/>
 		</div>
 	</div>

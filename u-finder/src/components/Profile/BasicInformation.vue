@@ -92,6 +92,7 @@ const emit = defineEmits<{
   (e: 'save', payload: BasicInfomationEntry): void
   (e: 'cancel'): void
   (e: 'request-edit'): void
+  (e: 'edit-complete'): void
 }>()
 
 // participate in global profile edit/save/cancel via optional provided API
@@ -209,6 +210,7 @@ function save(e?: Event) {
       emit('update:modelValue', JSON.parse(JSON.stringify(payload)))
       emit('save', JSON.parse(JSON.stringify(payload)))
       localEditing.value = false
+      emit('edit-complete')
       toast.success(t('profile.toast.information.saveSuccess'))
     })
     .catch((err) => {

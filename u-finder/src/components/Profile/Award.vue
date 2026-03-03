@@ -36,6 +36,7 @@ const emit = defineEmits<{
   (e: 'save', payload: AwardEntry[]): void
   (e: 'cancel'): void
   (e: 'request-edit'): void
+  (e: 'edit-complete'): void
 }>()
 
 // participate in global profile edit/save/cancel via optional provided API
@@ -68,6 +69,7 @@ watch(
       // Save succeeded: parent updated modelValue, exit edit mode
       localEditing.value = false
       pendingSave.value = false
+      emit('edit-complete')
     }
   },
   { deep: true }
