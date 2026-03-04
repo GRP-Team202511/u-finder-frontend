@@ -16,9 +16,13 @@ const conversationId = ref<string | null>(null);
 const activeMessageId = ref<string | null>(null);
 const { t } = useI18n();
 let messageCounter = 1;
-const programCardStart = "<<<__DIFY_PROGRAM_CARD_START_v1__>>>";
-const programCardEnd = "<<<__DIFY_PROGRAM_CARD_END_v1__>>>";
+const programCardStart = "<<__CARD__>>";
+const programCardEnd = "<<__END__>>";
 const messageBuffers = new Map<string, string>();
+const searchingMarker = "<<__SEARCHING__>>";
+
+const stripControlMarkers = (value: string) =>
+	value.split(searchingMarker).join("");
 
 const findPartialStartSuffix = (value: string) => {
 	const max = Math.min(value.length, programCardStart.length - 1);
@@ -40,16 +44,16 @@ const extractProgramCards = (buffer: string) => {
 		if (startIndex === -1) {
 			const partialSize = findPartialStartSuffix(remaining);
 			if (partialSize > 0) {
-				text += remaining.slice(0, -partialSize);
+				text += stripControlMarkers(remaining.slice(0, -partialSize));
 				remaining = remaining.slice(-partialSize);
 			} else {
-				text += remaining;
+				text += stripControlMarkers(remaining);
 				remaining = "";
 			}
 			break;
 		}
 
-		text += remaining.slice(0, startIndex);
+		text += stripControlMarkers(remaining.slice(0, startIndex));
 		const afterStart = remaining.slice(startIndex + programCardStart.length);
 		const endIndex = afterStart.indexOf(programCardEnd);
 		if (endIndex === -1) {
@@ -110,12 +114,12 @@ const updateMessage = (
 const appendToMessage = (messageId: string, chunk: string) => {
 	const message = messages.value.find((item) => item.id === messageId);
 	if (!message) return;
-	const buffer = `${messageBuffers.get(messageId) ?? ""}${chunk}`;
+	const buffer = `${messageBuffers.get(messageId) ?? ""}${stripControlMarkers(chunk)}`;
 	const { text, cards, remainder } = extractProgramCards(buffer);
 	messageBuffers.set(messageId, remainder);
 	if (text) {
 		message.type = "text";
-		message.content = `${message.content ?? ""}${text}`;
+			message.content = `${message.content ?? ""}${text}`;
 	}
 	if (cards.length) {
 		const existing = message.cards ?? [];
@@ -163,12 +167,12 @@ const handleSsePayload = (messageId: string, payload: string) => {
 	}
 
 	if (typeof parsed.text === "string") {
-		appendToMessage(messageId, parsed.text);
+		appendToMessage(messageId, stripControlMarkers(parsed.text));
 		return;
 	}
 
 	if (typeof parsed.content === "string") {
-		appendToMessage(messageId, parsed.content);
+		appendToMessage(messageId, stripControlMarkers(parsed.content));
 	}
 };
 

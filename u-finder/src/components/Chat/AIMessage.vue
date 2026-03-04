@@ -10,8 +10,12 @@ const props = defineProps<{
   isLoading?: boolean
 }>()
 
+const searchingMarker = "<<__SEARCHING__>>"
+const stripControlMarkers = (value: string) =>
+  value.split(searchingMarker).join("")
+
 const rendered = computed(() =>
-  props.content ? renderMarkdown(props.content) : ""
+  props.content ? renderMarkdown(stripControlMarkers(props.content)) : ""
 )
 
 const showDots = ref(false)
@@ -28,8 +32,7 @@ const resetDots = () => {
 const scheduleDots = () => {
   if (dotsTimer) return
   dotsTimer = setTimeout(() => {
-    const hasCards = Boolean(props.universities?.length)
-    if (props.isLoading && !hasCards) {
+    if (props.isLoading) {
       showDots.value = true
     }
     dotsTimer = null
@@ -44,10 +47,9 @@ watch(
   ) => {
     const [prevLoading, prevContent] = prev
     const isLoadingBool = Boolean(isLoading)
-    const hasCards = Boolean(universitiesLength && universitiesLength > 0)
     const contentChanged = content !== prevContent
 
-    if (!isLoadingBool || hasCards) {
+    if (!isLoadingBool) {
       resetDots()
       return
     }
@@ -79,14 +81,6 @@ onBeforeUnmount(() => {
       v-html="rendered"
     />
 
-    <div v-if="showDots" class="flex items-center text-muted-foreground">
-      <span class="typing-dots" aria-label="AI is typing">
-        <span class="dot" />
-        <span class="dot" />
-        <span class="dot" />
-      </span>
-    </div>
-
     <!-- University cards -->
     <div v-if="universities?.length" class="grid gap-4">
       <UniversityCard
@@ -94,6 +88,14 @@ onBeforeUnmount(() => {
         :key="uni.official_program_url || `${uni.university.name}-${uni.degree_program.name}`"
         :program="uni"
       />
+    </div>
+
+    <div v-if="showDots" class="flex items-center text-muted-foreground">
+      <span class="typing-dots" aria-label="AI is typing">
+        <span class="dot" />
+        <span class="dot" />
+        <span class="dot" />
+      </span>
     </div>
   </div>
 </template>
