@@ -30,7 +30,7 @@ watch(
 </script>
 
 <template>
-	<section ref="scrollEl" class="min-h-0 flex-1 overflow-y-auto">
+	<section ref="scrollEl" class="no-scrollbar min-h-0 flex-1 overflow-y-auto">
 		<div class="flex flex-col gap-3">
 			<ChatMessage
 				v-for="message in messages"

@@ -202,6 +202,16 @@ button:focus-visible {
 }
 
 @layer components {
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
   .typing-dots {
     display: inline-flex;
     gap: 0.25rem;
