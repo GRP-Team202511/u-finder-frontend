@@ -234,7 +234,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<div class="flex min-h-full w-full flex-col gap-6 p-2">
+	<div class="flex h-full min-h-0 w-full flex-col gap-6 p-2">
 		<div
 			v-if="!messages.length"
 			class="flex flex-1 flex-col items-center justify-center gap-6 text-center"
@@ -256,7 +256,7 @@ onBeforeUnmount(() => {
 		</div>
 
 		<div v-else class="flex min-h-0 flex-1 flex-col gap-4">
-			<div class="min-h-0 flex-1 pt-8">
+			<div class="flex min-h-0 flex-1 pt-8">
 				<ChatWindow
 					:messages="messages"
 					:loading-message-id="activeMessageId"
@@ -264,7 +264,7 @@ onBeforeUnmount(() => {
 				/>
 			</div>
 
-			<div class="pb-4">
+			<div class="pb-4 pt-2">
 				<MessageInput
 					:disabled="isSending"
 					:placeholder="t('chat.input.placeholder')"
