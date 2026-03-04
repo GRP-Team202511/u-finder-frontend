@@ -20,7 +20,7 @@ export type ProgramCardData = {
 	};
 	admissions: {
 		academic_requirements: string | null;
-		language_requirements: Record<string, unknown> | null;
+		language_requirements: string | null;
 		other_requirements: string | null;
 		application_deadline: string | null;
 	};

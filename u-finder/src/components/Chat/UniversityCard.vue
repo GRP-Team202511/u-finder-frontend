@@ -44,9 +44,7 @@ const formatLanguageRequirements = () => {
 	if (!requirements) {
 		return t("chat.card.notSpecified");
 	}
-	return Object.entries(requirements)
-		.map(([key, value]) => `${key}: ${String(value)}`)
-		.join(", ");
+	return requirements.trim() || t("chat.card.notSpecified");
 };
 
 const formatVerifiedDate = () => {
