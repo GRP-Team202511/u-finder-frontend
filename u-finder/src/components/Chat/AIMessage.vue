@@ -6,6 +6,7 @@ import type { ProgramCardData } from "@/types/chat"
 
 const props = defineProps<{
   content?: string
+  tailContent?: string
   universities?: ProgramCardData[]
   isLoading?: boolean
 }>()
@@ -16,6 +17,10 @@ const stripControlMarkers = (value: string) =>
 
 const rendered = computed(() =>
   props.content ? renderMarkdown(stripControlMarkers(props.content)) : ""
+)
+
+const renderedTail = computed(() =>
+  props.tailContent ? renderMarkdown(stripControlMarkers(props.tailContent)) : ""
 )
 
 const showDots = ref(false)
@@ -40,14 +45,16 @@ const scheduleDots = () => {
 }
 
 watch(
-  () => [props.isLoading, props.content, props.universities?.length] as const,
+  () => [props.isLoading, props.content, props.tailContent, props.universities?.length] as const,
   (
-    [isLoading, content, universitiesLength],
-    prev = [false, undefined, undefined] as const
+    [isLoading, content, tailContent, universitiesLength],
+    prev = [false, undefined, undefined, undefined] as const
   ) => {
-    const [prevLoading, prevContent] = prev
+    const [prevLoading, prevContent, prevTailContent, prevUniversitiesLength] = prev
     const isLoadingBool = Boolean(isLoading)
     const contentChanged = content !== prevContent
+    const tailChanged = tailContent !== prevTailContent
+    const cardsChanged = universitiesLength !== prevUniversitiesLength
 
     if (!isLoadingBool) {
       resetDots()
@@ -58,7 +65,7 @@ watch(
       resetDots()
     }
 
-    if (contentChanged) {
+    if (contentChanged || tailChanged || cardsChanged) {
       resetDots()
     }
 
@@ -89,6 +96,12 @@ onBeforeUnmount(() => {
         :program="uni"
       />
     </div>
+
+    <div
+      v-if="tailContent"
+      class="prose prose-base max-w-none dark:prose-invert"
+      v-html="renderedTail"
+    />
 
     <div v-if="showDots" class="flex items-center text-muted-foreground">
       <span class="typing-dots" aria-label="AI is typing">

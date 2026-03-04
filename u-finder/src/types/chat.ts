@@ -39,6 +39,7 @@ export type ChatMessageData = {
 	role: "user" | "ai";
 	type: "text" | "cards";
 	content?: string;
+	tailContent?: string;
 	cards?: ProgramCardData[];
 	isLoading?: boolean;
 };

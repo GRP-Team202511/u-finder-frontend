@@ -19,6 +19,7 @@ const roleClass = computed(() =>
 			<AIMessage
 				v-if="message.role === 'ai'"
 				:content="message.content"
+				:tail-content="message.tailContent"
 				:universities="message.cards"
 				:is-loading="Boolean(props.isLoading || message.isLoading)"
 			/>

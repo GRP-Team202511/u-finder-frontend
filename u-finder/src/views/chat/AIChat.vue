@@ -89,6 +89,10 @@ const flushMessageBuffer = (messageId: string) => {
 	if (!remainder.trim()) return;
 	const message = messages.value.find((item) => item.id === messageId);
 	if (!message) return;
+	if (message.cards?.length) {
+		message.tailContent = `${message.tailContent ?? ""}${remainder}`;
+		return;
+	}
 	message.type = "text";
 	message.content = `${message.content ?? ""}${remainder}`;
 };
@@ -118,8 +122,12 @@ const appendToMessage = (messageId: string, chunk: string) => {
 	const { text, cards, remainder } = extractProgramCards(buffer);
 	messageBuffers.set(messageId, remainder);
 	if (text) {
-		message.type = "text";
+		if (message.cards?.length) {
+			message.tailContent = `${message.tailContent ?? ""}${text}`;
+		} else {
+			message.type = "text";
 			message.content = `${message.content ?? ""}${text}`;
+		}
 	}
 	if (cards.length) {
 		const existing = message.cards ?? [];
@@ -201,6 +209,7 @@ const startStream = async (prompt: string, messageId: string) => {
 			});
 		}
 	} finally {
+		flushMessageBuffer(messageId);
 		isSending.value = false;
 		updateMessage(messageId, { isLoading: false });
 		activeMessageId.value = null;
