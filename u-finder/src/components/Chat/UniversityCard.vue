@@ -171,21 +171,21 @@ const formatVerifiedDate = () => {
 									{{ program.admissions.application_deadline ?? t("chat.card.notSpecified") }}
 								</span>
 							</div>
-							<div class="flex items-center justify-between gap-4">
+							<div class="flex items-center justify-between gap-20">
 								<span class="text-muted-foreground">{{ t("chat.card.labels.languageReqs") }}</span>
-								<span class="font-semibold">
+								<span class="text-right font-semibold">
 									{{ formatLanguageRequirements() }}
 								</span>
 							</div>
-							<div class="flex items-center justify-between gap-4">
+							<div class="flex items-center justify-between gap-20">
 								<span class="text-muted-foreground">{{ t("chat.card.labels.academicRequirements") }}</span>
-								<span class="font-semibold">
+								<span class="text-right font-semibold">
 									{{ program.admissions.academic_requirements ?? t("chat.card.notSpecified") }}
 								</span>
 							</div>
-							<div class="flex items-center justify-between gap-4">
+							<div class="flex items-center justify-between gap-20">
 								<span class="text-muted-foreground">{{ t("chat.card.labels.otherRequirements") }}</span>
-								<span class="font-semibold">
+								<span class="text-right font-semibold">
 									{{ program.admissions.other_requirements ?? t("chat.card.notSpecified") }}
 								</span>
 							</div>
@@ -212,7 +212,7 @@ const formatVerifiedDate = () => {
 						<p class="text-sm font-semibold text-foreground">{{ t("chat.card.careerOutcomes") }}</p>
 						<ul
 							v-if="program.career_outcomes && program.career_outcomes.length"
-							class="flex flex-wrap gap-2 pt-2"
+							class="list-disc space-y-1 pt-2 pl-5"
 						>
 							<li
 								v-for="(outcome, index) in program.career_outcomes"
@@ -229,7 +229,7 @@ const formatVerifiedDate = () => {
 						<div class="mt-2 flex flex-wrap gap-2">
 							<a
 								:href="program.official_program_url"
-								class="py-1 text-muted-foreground transition hover:underline hover:underline-offset-2"
+								class="px-2 py-1 text-muted-foreground transition hover:text-primary hover:underline hover:underline-offset-2"
 								target="_blank"
 								rel="noreferrer"
 							>
@@ -237,7 +237,7 @@ const formatVerifiedDate = () => {
 							</a>
 							<a
 								:href="program.university.official_website"
-								class="px-2 py-1 text-muted-foreground transition hover:underline hover:underline-offset-2"
+								class="px-2 py-1 text-muted-foreground transition hover:text-primary hover:underline hover:underline-offset-2"
 								target="_blank"
 								rel="noreferrer"
 							>
@@ -246,7 +246,7 @@ const formatVerifiedDate = () => {
 							<a
 								v-if="program.faculty.official_website"
 								:href="program.faculty.official_website"
-								class="px-2 py-1 text-muted-foreground transition hover:underline hover:underline-offset-2"
+								class="px-2 py-1 text-muted-foreground transition hover:text-primary hover:underline hover:underline-offset-2"
 								target="_blank"
 								rel="noreferrer"
 							>
