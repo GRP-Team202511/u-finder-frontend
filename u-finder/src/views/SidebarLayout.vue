@@ -18,10 +18,8 @@ import {
   <SidebarProvider class="h-dvh">
     <AppSidebar />
     <SidebarInset>
-      <div class="flex h-full min-h-0 flex-1 flex-col gap-4 overflow-hidden p-4 pt-0">
-        <div class="flex min-h-0 flex-1">
-          <router-view />
-        </div>
+      <div class="flex h-full min-h-0 flex-1 flex-col gap-4 overflow-auto p-4 pt-0">
+        <router-view />
       </div>
     </SidebarInset>
   </SidebarProvider>
