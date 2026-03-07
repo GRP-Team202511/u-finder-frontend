@@ -28,7 +28,10 @@ const { t } = useI18n()
 <template>
   <div class="grid gap-4">
     <Field>
-      <FieldLabel :for="`patent-title-${props.index}`">{{ t('academic.patent.title') || 'Title' }} <span class="text-red-500">*</span></FieldLabel>
+      <FieldLabel :for="`patent-title-${props.index}`">
+        {{ t('academic.patent.title') || 'Title' }}
+        <span v-if="props.editable" class="text-red-500">*</span>
+      </FieldLabel>
       <Input
         v-if="props.editable"
         :id="`patent-title-${props.index}`"
