@@ -209,7 +209,7 @@
         "add": "Add academic outcome",
         "type": {
             "title": "Type",
-            "researchPaper": "Research paper",
+            "researchPaper": "Research Paper",
             "patent": "Patent"
         },
         "researchPaper": {

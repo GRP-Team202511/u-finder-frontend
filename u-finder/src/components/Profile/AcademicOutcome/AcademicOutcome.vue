@@ -124,7 +124,7 @@ function resetFieldsForType(index: number, nextType: AcademicEntry["type"]) {
 }
 
 function typeLabel(type: AcademicEntry["type"]) {
-  if (type === 'research paper') return t('academic.type.researchPaper') || 'Research paper'
+  if (type === 'research paper') return t('academic.type.researchPaper') || 'Research Paper'
   if (type === 'patent') return t('academic.type.patent') || 'Patent'
   return '-'
 }
