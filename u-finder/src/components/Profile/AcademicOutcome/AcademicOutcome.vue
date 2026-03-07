@@ -136,7 +136,7 @@ function addEntry() {
 }
 
 function removeEntry(index: number) {
-  if (academicOutcomes.value.length > 1) academicOutcomes.value.splice(index, 1)
+  academicOutcomes.value.splice(index, 1)
   if (validationErrors.type.length > index) validationErrors.type.splice(index, 1)
   if (validationErrors.title.length > index) validationErrors.title.splice(index, 1)
 }
@@ -251,7 +251,7 @@ onMounted(() => {
                     {{ t('academic.selectTypeHint') || 'Select a type to enter details.' }}
                   </div>
 
-                <div v-if="academicOutcomes.length > 1" class="flex justify-end gap-2 mt-2">
+                <div class="flex justify-end gap-2 mt-2">
                   <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
                 </div>
 

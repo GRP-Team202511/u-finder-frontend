@@ -182,7 +182,7 @@ function addEntry() {
 }
 
 function removeEntry(index: number) {
-	if (standardizedTests.value.length > 1) standardizedTests.value.splice(index, 1)
+	standardizedTests.value.splice(index, 1)
 	if (validationErrors.type.length > index) validationErrors.type.splice(index, 1)
 }
 
@@ -345,11 +345,11 @@ onMounted(() => {
 									{{ t('test.selectTypeHint') || 'Select a type to enter details.' }}
 								</div>
 
-								<div v-if="standardizedTests.length > 1" class="flex justify-end gap-2 mt-2">
-									<Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
-								</div>
+							<div class="flex justify-end gap-2 mt-2">
+								<Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
+							</div>
 
-								<FieldSeparator v-if="idx < standardizedTests.length - 1" />
+							<FieldSeparator v-if="idx < standardizedTests.length - 1" />
 							</template>
 						</FieldGroup>
 						

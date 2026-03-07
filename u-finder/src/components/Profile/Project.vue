@@ -186,7 +186,7 @@ function addEntry() {
 }
 
 function removeEntry(index: number) {
-  if (projects.value.length > 1) projects.value.splice(index, 1)
+  projects.value.splice(index, 1)
   if (startDates.length > index) startDates.splice(index, 1)
   if (endDates.length > index) endDates.splice(index, 1)
   if (ongoing.length > index) ongoing.splice(index, 1)
@@ -376,7 +376,7 @@ onMounted(() => {
                   ></textarea>
                 </Field>
 
-                <div v-if="projects.length > 1" class="flex justify-end gap-2 mt-2">
+                <div class="flex justify-end gap-2 mt-2">
                   <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
                 </div>
 

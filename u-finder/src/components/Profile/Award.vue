@@ -99,7 +99,7 @@ function addEntry() {
 }
 
 function removeEntry(index: number) {
-  if (awards.value.length > 1) awards.value.splice(index, 1)
+  awards.value.splice(index, 1)
   if (validationErrors.name.length > index) validationErrors.name.splice(index, 1)
 }
 
@@ -201,7 +201,7 @@ onMounted(() => {
                     class="w-full rounded-md border px-3 py-2 text-sm"
                   ></textarea>   
                 </Field>
-                <div v-if="awards.length > 1" class="flex justify-end gap-2 mt-2">
+                <div class="flex justify-end gap-2 mt-2">
                   <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
                 </div>
 
