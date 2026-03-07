@@ -160,6 +160,12 @@
             "nameRequired": "学校名称为必填项",
             "startRequired": "开始日期为必填项"
         }
+    },
+    "test": {
+        "validation": {
+            "typeRequired": "考试类型为必填项",
+            "subjectRequired": "至少需要填写一个科目"
+        }
     }
 
 }

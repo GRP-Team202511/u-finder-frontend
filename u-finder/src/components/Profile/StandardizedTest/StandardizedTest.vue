@@ -192,6 +192,19 @@ function save(e?: Event) {
 	// Clear all validation errors first
 	validationErrors.type = standardizedTests.value.map(() => false)
 	
+	// Clean up empty subjects for tests that have subjects
+	for (let i = 0; i < standardizedTests.value.length; i++) {
+		const test = standardizedTests.value[i]
+		if (!test) continue
+		
+		// Remove empty subjects for A-Level, AP, and IB Diploma
+		if (test.type === 'A-Level' || test.type === 'AP' || test.type === 'IB Diploma') {
+			if (test.subjects && test.subjects.length > 0) {
+				test.subjects = test.subjects.filter(s => s.subject && s.subject.trim())
+			}
+		}
+	}
+	
 	// Validate required fields
 	let hasError = false
 	for (let i = 0; i < standardizedTests.value.length; i++) {
@@ -202,6 +215,16 @@ function save(e?: Event) {
 			validationErrors.type[i] = true
 			hasError = true
 			toast.error(t('test.validation.typeRequired') || `Test #${i + 1}: Type is required`)
+			continue
+		}
+		
+		// Validate subjects for A-Level, AP, and IB Diploma
+		if (test.type === 'A-Level' || test.type === 'AP' || test.type === 'IB Diploma') {
+			const subjects = test.subjects || []
+			if (subjects.length === 0) {
+				hasError = true
+				toast.error(t('test.validation.subjectRequired') || `Test #${i + 1}: At least one subject is required`)
+			}
 		}
 	}
 	

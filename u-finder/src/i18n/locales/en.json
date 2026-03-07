@@ -295,7 +295,8 @@
             "readingUseOfEnglish": "Reading & Use Of English"
         },
         "validation": {
-            "typeRequired": "Test type is required"
+            "typeRequired": "Test type is required",
+            "subjectRequired": "At least one subject is required"
         }
     },
     "internship": {
