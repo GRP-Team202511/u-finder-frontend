@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref } from "vue";
+import { computed, onBeforeUnmount, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import ChatWindow from "@/components/Chat/ChatWindow.vue";
 import MessageInput from "@/components/Chat/InputMessage.vue";
@@ -9,9 +9,12 @@ import type { ChatMessageData } from "@/types/chat";
 import type { ProgramCardData } from "@/types/chat";
 
 const messages = ref<ChatMessageData[]>([]);
-const isSending = ref(false);
+const isSending = computed(() =>
+	messages.value.some((message) => Boolean(message.isLoading))
+);
 const userStore = useUserStore();
 const streamController = ref<AbortController | null>(null);
+const activeStreamToken = ref<number | null>(null);
 const conversationId = ref<string | null>(null);
 const activeMessageId = ref<string | null>(null);
 const { t } = useI18n();
@@ -104,6 +107,7 @@ const stopStream = () => {
 	}
 	streamController.value?.abort();
 	streamController.value = null;
+	activeStreamToken.value = null;
 };
 
 const updateMessage = (
@@ -186,9 +190,10 @@ const handleSsePayload = (messageId: string, payload: string) => {
 
 const startStream = async (prompt: string, messageId: string) => {
 	stopStream();
-	isSending.value = true;
 	activeMessageId.value = messageId;
 	updateMessage(messageId, { isLoading: true });
+	const streamToken = (activeStreamToken.value ?? 0) + 1;
+	activeStreamToken.value = streamToken;
 	const { controller, done } = streamChat({
 		message: prompt,
 		conversationId: conversationId.value,
@@ -201,6 +206,7 @@ const startStream = async (prompt: string, messageId: string) => {
 		await done;
 	} catch (error) {
 		if (streamController.value?.signal.aborted) return;
+		if (activeStreamToken.value !== streamToken) return;
 		const message = messages.value.find((item) => item.id === messageId);
 		if (message && !message.content && !message.cards?.length) {
 			updateMessage(messageId, {
@@ -210,10 +216,12 @@ const startStream = async (prompt: string, messageId: string) => {
 		}
 	} finally {
 		flushMessageBuffer(messageId);
-		isSending.value = false;
-		updateMessage(messageId, { isLoading: false });
-		activeMessageId.value = null;
-		streamController.value = null;
+		if (activeStreamToken.value === streamToken) {
+			updateMessage(messageId, { isLoading: false });
+			activeMessageId.value = null;
+			streamController.value = null;
+			activeStreamToken.value = null;
+		}
 	}
 };
 
