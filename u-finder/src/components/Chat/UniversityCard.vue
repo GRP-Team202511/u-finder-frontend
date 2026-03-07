@@ -53,7 +53,7 @@ const formatVerifiedDate = () => {
 	if (Number.isNaN(parsed.getTime())) {
 		return rawDate || t("chat.card.notSpecified");
 	}
-	return new Intl.DateTimeFormat("en", {
+	return new Intl.DateTimeFormat(locale.value, {
 		year: "numeric",
 		month: "short",
 		day: "2-digit",
