@@ -8,7 +8,6 @@ const props = defineProps<{
 	loadingMessageId?: string | null;
 	isSending?: boolean;
 }>();
-const scrollEl = ref<HTMLElement | null>(null);
 const bottomEl = ref<HTMLElement | null>(null);
 
 const scrollToBottom = () => {
@@ -46,7 +45,7 @@ watch(
 </script>
 
 <template>
-	<section ref="scrollEl" class="no-scrollbar min-h-0 flex-1 overflow-y-auto">
+	<section class="no-scrollbar min-h-0 flex-1 overflow-y-auto">
 		<div class="flex flex-col gap-3">
 			<ChatMessage
 				v-for="message in messages"
