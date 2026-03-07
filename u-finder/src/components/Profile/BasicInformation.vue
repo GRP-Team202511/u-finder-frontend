@@ -149,6 +149,15 @@ watch(
 const defaultPlaceholder = today(getLocalTimeZone())
 const df = new DateFormatter('en-US', { dateStyle: 'medium' })
 
+function genderLabel(gender: string) {
+  if (!gender) return '-'
+  if (gender.toLowerCase() === 'male') return t('info.gender.male') || 'Male'
+  if (gender.toLowerCase() === 'female') return t('info.gender.female') || 'Female'
+  if (gender.toLowerCase() === 'other') return t('info.gender.other') || 'Other'
+  // Fallback: capitalize first letter of each word
+  return gender.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+}
+
 function getHttpErrorMessage(err: any, fallbackKey: string) {
   const status = err?.response?.status
   if (status === 401) return t('info.errors.unauthorized') || 'Invalid or expired token.'
@@ -328,7 +337,7 @@ onMounted(async () => {
 
               <Field>
                 <FieldLabel>{{ t('info.gender.title') || 'Gender' }}</FieldLabel>
-                <div class="text-sm text-left">{{ information.gender || '-' }}</div>
+                <div class="text-sm text-left">{{ genderLabel(information.gender) }}</div>
               </Field>
 
               <Field>

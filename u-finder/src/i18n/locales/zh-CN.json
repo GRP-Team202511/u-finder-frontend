@@ -98,6 +98,68 @@
         "toast": {
             "loadFailed": "加载个人资料数据失败"
         }
+    },
+    "info": {
+        "title": "基本信息",
+        "name": "姓名",
+        "gender": {
+            "title": "性别",
+            "male": "男",
+            "female": "女",
+            "other": "其他"
+        },
+        "birthday": "生日",
+        "placeholders": {
+            "name": "姓名",
+            "gender": "性别"
+        },
+        "empty": "暂无信息记录",
+        "add": "添加信息",
+        "errors": {
+            "notLoggedIn": "您尚未登录。",
+            "saveFailed": "保存个人信息失败。",
+            "loadFailed": "加载个人信息失败。",
+            "unauthorized": "无效或已过期的令牌。",
+            "notFound": "未找到用户。",
+            "serverError": "服务器内部错误。",
+            "nameRequired": "姓名为必填项。",
+            "genderRequired": "性别为必填项。",
+            "birthdayRequired": "生日为必填项。"
+        }
+    },
+    "edu": {
+        "title": "教育背景",
+        "type": "类型",
+        "institution": "学校",
+        "time": {
+            "start": "开始日期",
+            "end": "结束日期"
+        },
+        "major": "专业",
+        "ranking": "排名",
+        "GPA": "GPA",
+        "GPA-base": "GPA 满分",
+        "empty": "暂无教育记录",
+        "add": "添加教育经历",
+        "placeholders": {
+            "type": "选择教育类型",
+            "institution": "学校名称",
+            "major": "计算机科学",
+            "ranking": "例如：5/200",
+            "gpa": "3.8",
+            "gpaBase": "4.0"
+        },
+        "types": {
+            "highSchool": "高中",
+            "undergraduate": "本科",
+            "master": "硕士",
+            "doctoral": "博士"
+        },
+        "validation": {
+            "typeRequired": "教育类型为必填项",
+            "nameRequired": "学校名称为必填项",
+            "startRequired": "开始日期为必填项"
+        }
     }
 
 }

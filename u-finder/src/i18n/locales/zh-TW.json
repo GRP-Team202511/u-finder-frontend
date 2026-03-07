@@ -98,6 +98,68 @@
         "toast": {
             "loadFailed": "載入個人資料資料失敗"
         }
+    },
+    "info": {
+        "title": "基本資訊",
+        "name": "姓名",
+        "gender": {
+            "title": "性別",
+            "male": "男",
+            "female": "女",
+            "other": "其他"
+        },
+        "birthday": "生日",
+        "placeholders": {
+            "name": "姓名",
+            "gender": "性別"
+        },
+        "empty": "目前無資訊記錄",
+        "add": "新增資訊",
+        "errors": {
+            "notLoggedIn": "您尚未登入。",
+            "saveFailed": "儲存個人資訊失敗。",
+            "loadFailed": "載入個人資訊失敗。",
+            "unauthorized": "無效或已過期的令牌。",
+            "notFound": "未找到使用者。",
+            "serverError": "伺服器內部錯誤。",
+            "nameRequired": "姓名為必填項。",
+            "genderRequired": "性別為必填項。",
+            "birthdayRequired": "生日為必填項。"
+        }
+    },
+    "edu": {
+        "title": "教育背景",
+        "type": "類型",
+        "institution": "學校",
+        "time": {
+            "start": "開始日期",
+            "end": "結束日期"
+        },
+        "major": "專業",
+        "ranking": "排名",
+        "GPA": "GPA",
+        "GPA-base": "GPA 滿分",
+        "empty": "目前無教育記錄",
+        "add": "新增教育經歷",
+        "placeholders": {
+            "type": "選擇教育類型",
+            "institution": "學校名稱",
+            "major": "電腦科學",
+            "ranking": "例如：5/200",
+            "gpa": "3.8",
+            "gpaBase": "4.0"
+        },
+        "types": {
+            "highSchool": "高中",
+            "undergraduate": "大學",
+            "master": "碩士",
+            "doctoral": "博士"
+        },
+        "validation": {
+            "typeRequired": "教育類型為必填項",
+            "nameRequired": "學校名稱為必填項",
+            "startRequired": "開始日期為必填項"
+        }
     }
 
 }

@@ -210,6 +210,16 @@ function formatToDate(dv: any, tz: string) {
   return `${dt.getFullYear()}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`
 }
 
+function typeLabel(type: string) {
+  if (!type) return '-'
+  if (type === 'highSchool' || type === 'high school') return t('edu.types.highSchool') || 'High School'
+  if (type === 'undergraduate') return t('edu.types.undergraduate') || 'Undergraduate'
+  if (type === 'master') return t('edu.types.master') || 'Master'
+  if (type === 'doctoral') return t('edu.types.doctoral') || 'Doctoral'
+  // Fallback: capitalize first letter of each word
+  return type.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+}
+
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
   
@@ -448,7 +458,7 @@ onMounted(() => {
               <template v-for="(edu, idx) in education" :key="idx">
                 <Field>
                   <FieldLabel>{{ t('edu.type') || 'Type' }}</FieldLabel>
-                  <div class="text-sm text-left">{{ edu.type || '-' }}</div>
+                  <div class="text-sm text-left">{{ typeLabel(edu.type) }}</div>
                 </Field>
 
                 <Field>
