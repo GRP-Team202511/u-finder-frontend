@@ -66,6 +66,11 @@ export const streamChat = (options: StreamOptions) => {
       buffer += decoder.decode(value, { stream: true })
       buffer = consumeSseBuffer(buffer, options.onPayload)
     }
+
+    buffer += decoder.decode()
+    if (buffer.trim()) {
+      consumeSseBuffer(`${buffer}\n\n`, options.onPayload)
+    }
   })()
 
   return { controller, done }
