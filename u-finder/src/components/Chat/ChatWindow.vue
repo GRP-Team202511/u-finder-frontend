@@ -17,15 +17,31 @@ const scrollToBottom = () => {
 	anchor.scrollIntoView({ block: "end" });
 };
 
+let rafId: number | null = null;
+const scheduleScrollToBottom = () => {
+	if (rafId !== null) return;
+	rafId = requestAnimationFrame(() => {
+		rafId = null;
+		scrollToBottom();
+	});
+};
+
 watch(
-	() => props.messages,
+	() => {
+		const lastMessage = props.messages[props.messages.length - 1];
+		return {
+			count: props.messages.length,
+			lastId: lastMessage?.id,
+			lastContent: lastMessage?.content,
+			lastTail: lastMessage?.tailContent,
+			lastLoading: lastMessage?.isLoading,
+		};
+	},
 	async () => {
 		await nextTick();
-		requestAnimationFrame(() => {
-			scrollToBottom();
-		});
+		scheduleScrollToBottom();
 	},
-	{ immediate: true, deep: true, flush: "post" }
+	{ immediate: true, flush: "post" }
 );
 </script>
 
