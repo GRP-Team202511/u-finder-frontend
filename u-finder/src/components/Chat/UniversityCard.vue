@@ -231,7 +231,7 @@ const formatVerifiedDate = () => {
 								:href="program.official_program_url"
 								class="px-2 py-1 text-muted-foreground transition hover:text-primary hover:underline hover:underline-offset-2"
 								target="_blank"
-								rel="noreferrer"
+								rel="noopener noreferrer"
 							>
 								{{ t("chat.card.links.officialProgram") }}
 							</a>
@@ -239,7 +239,7 @@ const formatVerifiedDate = () => {
 								:href="program.university.official_website"
 								class="px-2 py-1 text-muted-foreground transition hover:text-primary hover:underline hover:underline-offset-2"
 								target="_blank"
-								rel="noreferrer"
+								rel="noopener noreferrer"
 							>
 								{{ t("chat.card.links.universitySite") }}
 							</a>
@@ -248,7 +248,7 @@ const formatVerifiedDate = () => {
 								:href="program.faculty.official_website"
 								class="px-2 py-1 text-muted-foreground transition hover:text-primary hover:underline hover:underline-offset-2"
 								target="_blank"
-								rel="noreferrer"
+								rel="noopener noreferrer"
 							>
 								{{ t("chat.card.links.facultySite") }}
 							</a>
