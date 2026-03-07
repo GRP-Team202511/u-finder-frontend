@@ -15,7 +15,8 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { ref, inject, onBeforeUnmount, onMounted, watch } from 'vue'
+import { toast } from 'vue-sonner'
+import { ref, reactive, inject, onBeforeUnmount, onMounted, watch } from 'vue'
 import type { Ref } from 'vue'
 import PatentFields from "./PatentFields.vue"
 import ResearchPaperFields from "./ResearchPaperFields.vue"
@@ -81,12 +82,31 @@ const academicOutcomes: Ref<AcademicEntry[]> = ref(props.modelValue ? JSON.parse
   createEntryForType('')
 ])
 
+// validation error tracking for each entry
+const validationErrors = reactive<{
+  type: boolean[]
+  title: boolean[]
+}>(
+  {
+    type: academicOutcomes.value.map(() => false),
+    title: academicOutcomes.value.map(() => false)
+  }
+)
+
+// Clear validation error for a specific field
+function clearError(index: number, field: 'type' | 'title') {
+  validationErrors[field][index] = false
+}
+
 // when parent provides new modelValue, sync into local draft when not editing
 watch(
   () => props.modelValue,
   (nv) => {
     if (!localEditing.value && nv) {
       academicOutcomes.value = JSON.parse(JSON.stringify(nv))
+      // Reset validation errors
+      validationErrors.type = academicOutcomes.value.map(() => false)
+      validationErrors.title = academicOutcomes.value.map(() => false)
     } else if (pendingSave.value && nv) {
       // Save succeeded: parent updated modelValue, exit edit mode
       localEditing.value = false
@@ -111,14 +131,46 @@ function typeLabel(type: AcademicEntry["type"]) {
 
 function addEntry() {
   academicOutcomes.value.push(createEntryForType(''))
+  validationErrors.type.push(false)
+  validationErrors.title.push(false)
 }
 
 function removeEntry(index: number) {
   if (academicOutcomes.value.length > 1) academicOutcomes.value.splice(index, 1)
+  if (validationErrors.type.length > index) validationErrors.type.splice(index, 1)
+  if (validationErrors.title.length > index) validationErrors.title.splice(index, 1)
 }
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
+  
+  // Clear all validation errors first
+  validationErrors.type = academicOutcomes.value.map(() => false)
+  validationErrors.title = academicOutcomes.value.map(() => false)
+  
+  // Validate required fields
+  let hasError = false
+  for (let i = 0; i < academicOutcomes.value.length; i++) {
+    const outcome = academicOutcomes.value[i]
+    if (!outcome) continue
+    
+    if (!outcome.type) {
+      validationErrors.type[i] = true
+      hasError = true
+      toast.error(t('academic.validation.typeRequired') || `Academic Outcome #${i + 1}: Type is required`)
+    } else if (!outcome.title || !outcome.title.trim()) {
+      validationErrors.title[i] = true
+      hasError = true
+      if (!validationErrors.type[i]) {
+        toast.error(t('academic.validation.titleRequired') || `Academic Outcome #${i + 1}: Title is required`)
+      }
+    }
+  }
+  
+  if (hasError) {
+    return
+  }
+  
   emit('save', JSON.parse(JSON.stringify(academicOutcomes.value)))
   // Don't exit edit mode yet; wait for parent to confirm save success via modelValue update
   pendingSave.value = true
@@ -126,6 +178,9 @@ function save(e?: Event) {
 
 function cancel() {
   if (props.modelValue) academicOutcomes.value = JSON.parse(JSON.stringify(props.modelValue))
+  // Clear validation errors
+  validationErrors.type = academicOutcomes.value.map(() => false)
+  validationErrors.title = academicOutcomes.value.map(() => false)
   emit('cancel')
   pendingSave.value = false
   localEditing.value = false
@@ -136,6 +191,8 @@ function startEdit() {
   // Ensure there's at least one entry to edit
   if (academicOutcomes.value.length === 0) {
     academicOutcomes.value.push(createEntryForType(''))
+    validationErrors.type.push(false)
+    validationErrors.title.push(false)
   }
   emit('request-edit')
 }
@@ -172,9 +229,9 @@ onMounted(() => {
             <FieldGroup>
                 <template v-for="(aca, idx) in academicOutcomes" :key="idx">
                 <Field>
-                    <FieldLabel :for="`type-${idx}`">{{ t('academic.type.title') || 'Type' }}</FieldLabel>
-                    <Select v-model="aca.type" @update:model-value="(val) => resetFieldsForType(idx, (val ?? '') as AcademicEntry['type'])">
-                    <SelectTrigger :id="`type-${idx}`" class="w-full">
+                    <FieldLabel :for="`type-${idx}`">{{ t('academic.type.title') || 'Type' }} <span class="text-red-500">*</span></FieldLabel>
+                    <Select v-model="aca.type" @update:model-value="(val) => { resetFieldsForType(idx, (val ?? '') as AcademicEntry['type']); clearError(idx, 'type') }">
+                    <SelectTrigger :id="`type-${idx}`" :class="cn('w-full', validationErrors.type[idx] && 'border-red-500')">
                         <SelectValue :placeholder="t('academic.selectType') || 'Select type'" />
                     </SelectTrigger>
                     <SelectContent>
@@ -185,10 +242,10 @@ onMounted(() => {
                 </Field>
 
                   <div v-if="aca.type === 'research paper'" class="mt-2">
-                    <ResearchPaperFields :entry="aca" :index="idx" :editable="true" />
+                    <ResearchPaperFields :entry="aca" :index="idx" :editable="true" :has-title-error="validationErrors.title[idx]" @clear-title-error="clearError(idx, 'title')" />
                   </div>
                   <div v-else-if="aca.type === 'patent'" class="mt-2">
-                    <PatentFields :entry="aca" :index="idx" :editable="true" />
+                    <PatentFields :entry="aca" :index="idx" :editable="true" :has-title-error="validationErrors.title[idx]" @clear-title-error="clearError(idx, 'title')" />
                   </div>
                   <div v-else class="text-sm text-muted-foreground">
                     {{ t('academic.selectTypeHint') || 'Select a type to enter details.' }}

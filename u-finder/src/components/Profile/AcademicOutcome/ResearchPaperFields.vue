@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
 
 type ResearchPaperEntry = {
   title?: string
@@ -13,6 +14,11 @@ const props = defineProps<{
   entry: ResearchPaperEntry
   index: number
   editable: boolean
+  hasTitleError?: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: 'clearTitleError'): void
 }>()
 
 const { t } = useI18n()
@@ -21,12 +27,14 @@ const { t } = useI18n()
 <template>
   <div class="grid gap-4">
     <Field>
-      <FieldLabel :for="`paper-title-${props.index}`">{{ t('academic.researchPaper.title') || 'Title' }}</FieldLabel>
+      <FieldLabel :for="`paper-title-${props.index}`">{{ t('academic.researchPaper.title') || 'Title' }} <span class="text-red-500">*</span></FieldLabel>
       <Input
         v-if="props.editable"
         :id="`paper-title-${props.index}`"
         v-model="props.entry.title"
         :placeholder="t('academic.researchPaper.titlePlaceholder') || 'Paper title'"
+        :class="cn(props.hasTitleError && 'border-red-500')"
+        @input="emit('clearTitleError')"
       />
       <div v-else class="text-sm text-left">{{ props.entry.title || '-' }}</div>
     </Field>

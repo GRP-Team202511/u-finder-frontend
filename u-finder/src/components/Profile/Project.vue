@@ -23,6 +23,7 @@ import type { Ref } from 'vue'
 import { Calendar } from '@/components/ui/calendar'
 // (calendar value type will be treated as any to match calendar implementation)
 import { DateFormatter, getLocalTimeZone, today } from '@internationalized/date'
+import { toast } from 'vue-sonner'
 // helper: create a DateValue-like object from YYYY-MM or YYYY-MM-DD using the library if available,
 // otherwise return a shim with `toDate(tz)` so the calendar can consume it.
 async function createDateValueFromYYYYMM(yyyyMm: string) {
@@ -120,6 +121,20 @@ const endDates = reactive<any[]>(projects.value.map(() => undefined))
 // per-entry ongoing flag for "till now" end selection
 const ongoing = reactive<boolean[]>(projects.value.map(() => false))
 
+// validation error tracking for each entry
+const validationErrors = reactive<{
+  name: boolean[]
+}>(
+  {
+    name: projects.value.map(() => false)
+  }
+)
+
+// Clear validation error for a specific field
+function clearError(index: number, field: 'name') {
+  validationErrors[field][index] = false
+}
+
 // when parent provides new modelValue, sync into local draft when not editing
 import { watch } from 'vue'
 watch(
@@ -147,6 +162,8 @@ watch(
         endDates.splice(0, endDates.length, ...ends)
         ongoing.splice(0, ongoing.length, ...ongs)
       })()
+      // Reset validation errors
+      validationErrors.name = projects.value.map(() => false)
     } else if (pendingSave.value && nv) {
       // Save succeeded: parent updated modelValue, exit edit mode
       localEditing.value = false
@@ -165,6 +182,7 @@ function addEntry() {
   startDates.push(undefined)
   endDates.push(undefined)
   ongoing.push(false)
+  validationErrors.name.push(false)
 }
 
 function removeEntry(index: number) {
@@ -172,6 +190,7 @@ function removeEntry(index: number) {
   if (startDates.length > index) startDates.splice(index, 1)
   if (endDates.length > index) endDates.splice(index, 1)
   if (ongoing.length > index) ongoing.splice(index, 1)
+  if (validationErrors.name.length > index) validationErrors.name.splice(index, 1)
 }
 
 function formatToDate(dv: any, tz: string) {
@@ -187,6 +206,27 @@ function formatToDate(dv: any, tz: string) {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
+  
+  // Clear all validation errors first
+  validationErrors.name = projects.value.map(() => false)
+  
+  // Validate required fields
+  let hasError = false
+  for (let i = 0; i < projects.value.length; i++) {
+    const project = projects.value[i]
+    if (!project) continue
+    
+    if (!project.name || !project.name.trim()) {
+      validationErrors.name[i] = true
+      hasError = true
+      toast.error(t('project.validation.nameRequired') || `Project #${i + 1}: Project name is required`)
+    }
+  }
+  
+  if (hasError) {
+    return
+  }
+  
   // convert DateValue to YYYY-MM strings for storage
   const tz = getLocalTimeZone()
   const formatted = projects.value.map((project, i) => ({
@@ -210,6 +250,8 @@ function cancel() {
   startDates.splice(0, startDates.length, ...projects.value.map(() => undefined))
   endDates.splice(0, endDates.length, ...projects.value.map(() => undefined))
   ongoing.splice(0, ongoing.length, ...projects.value.map(() => false))
+  // Clear validation errors
+  validationErrors.name = projects.value.map(() => false)
   emit('cancel')
   pendingSave.value = false
   localEditing.value = false
@@ -223,6 +265,7 @@ function startEdit() {
     startDates.push(undefined)
     endDates.push(undefined)
     ongoing.push(false)
+    validationErrors.name.push(false)
   }
   emit('request-edit')
 }
@@ -259,8 +302,14 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(project, idx) in projects" :key="idx">
                 <Field>
-                  <FieldLabel :for="`name-${idx}`">{{ t('project.name') || 'name' }}</FieldLabel>
-                  <Input :id="`name-${idx}`" v-model="project.name" :placeholder="t('project.placeholders.name') || 'Project name'" />
+                  <FieldLabel :for="`name-${idx}`"><span class="text-red-500">*</span> {{ t('project.name') || 'name' }}</FieldLabel>
+                  <Input 
+                    :id="`name-${idx}`" 
+                    v-model="project.name" 
+                    :placeholder="t('project.placeholders.name') || 'Project name'" 
+                    :class="validationErrors.name[idx] && 'border-red-500'"
+                    @input="clearError(idx, 'name')"
+                  />
                 </Field>
 
                 <Field>

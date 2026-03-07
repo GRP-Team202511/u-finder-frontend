@@ -16,7 +16,8 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { ref, inject, onBeforeUnmount, onMounted } from 'vue'
+import { toast } from 'vue-sonner'
+import { ref, reactive, inject, onBeforeUnmount, onMounted } from 'vue'
 import type { Ref } from 'vue'
 
 type AwardEntry = {
@@ -57,6 +58,20 @@ const awards: Ref<AwardEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringi
   }
 ])
 
+// validation error tracking for each entry
+const validationErrors = reactive<{
+  name: boolean[]
+}>(
+  {
+    name: awards.value.map(() => false)
+  }
+)
+
+// Clear validation error for a specific field
+function clearError(index: number, field: 'name') {
+  validationErrors[field][index] = false
+}
+
 
 // when parent provides new modelValue, sync into local draft when not editing
 import { watch } from 'vue'
@@ -65,6 +80,8 @@ watch(
   (nv) => {
     if (!localEditing.value) {
       if (nv) awards.value = JSON.parse(JSON.stringify(nv))
+      // Reset validation errors
+      validationErrors.name = awards.value.map(() => false)
     } else if (pendingSave.value && nv) {
       // Save succeeded: parent updated modelValue, exit edit mode
       localEditing.value = false
@@ -78,14 +95,37 @@ watch(
 
 function addEntry() {
   awards.value.push({ name: '', description: '' })
+  validationErrors.name.push(false)
 }
 
 function removeEntry(index: number) {
   if (awards.value.length > 1) awards.value.splice(index, 1)
+  if (validationErrors.name.length > index) validationErrors.name.splice(index, 1)
 }
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
+  
+  // Clear all validation errors first
+  validationErrors.name = awards.value.map(() => false)
+  
+  // Validate required fields
+  let hasError = false
+  for (let i = 0; i < awards.value.length; i++) {
+    const award = awards.value[i]
+    if (!award) continue
+    
+    if (!award.name || !award.name.trim()) {
+      validationErrors.name[i] = true
+      hasError = true
+      toast.error(t('award.validation.nameRequired') || `Award #${i + 1}: Award name is required`)
+    }
+  }
+  
+  if (hasError) {
+    return
+  }
+  
   emit('save', JSON.parse(JSON.stringify(awards.value)))
   // Don't exit edit mode yet; wait for parent to confirm save success via modelValue update
   pendingSave.value = true
@@ -93,6 +133,8 @@ function save(e?: Event) {
 
 function cancel() {
   if (props.modelValue) awards.value = JSON.parse(JSON.stringify(props.modelValue))
+  // Clear validation errors
+  validationErrors.name = awards.value.map(() => false)
   emit('cancel')
   pendingSave.value = false
   localEditing.value = false
@@ -103,6 +145,7 @@ function startEdit() {
   // Ensure there's at least one entry to edit
   if (awards.value.length === 0) {
     awards.value.push({ name: '', description: '' })
+    validationErrors.name.push(false)
   }
   emit('request-edit')
 }
@@ -139,8 +182,14 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(award, idx) in awards" :key="idx">
                 <Field>
-                  <FieldLabel :for="`name-${idx}`">{{ t('award.name') || 'name' }}</FieldLabel>
-                  <Input :id="`name-${idx}`" v-model="award.name" :placeholder="t('award.placeholders.name') || 'Award name'" />
+                  <FieldLabel :for="`name-${idx}`"><span class="text-red-500">*</span> {{ t('award.name') || 'name' }}</FieldLabel>
+                  <Input 
+                    :id="`name-${idx}`" 
+                    v-model="award.name" 
+                    :placeholder="t('award.placeholders.name') || 'Award name'" 
+                    :class="validationErrors.name[idx] && 'border-red-500'"
+                    @input="clearError(idx, 'name')"
+                  />
                 </Field>
                 <Field>
                   <FieldLabel :for="`description-${idx}`">{{ t('award.description') || 'Description' }}</FieldLabel>
