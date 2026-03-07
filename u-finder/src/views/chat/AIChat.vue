@@ -88,16 +88,30 @@ const flushMessageBuffer = (messageId: string) => {
 	const remainder = messageBuffers.get(messageId);
 	if (!remainder) return;
 	messageBuffers.delete(messageId);
-	if (remainder.includes(programCardStart)) return;
-	if (!remainder.trim()) return;
+	const sanitizedRemainder = stripControlMarkers(
+		remainder.split(programCardStart).join("").split(programCardEnd).join("")
+	);
+	if (remainder.includes(programCardStart)) {
+		if (!sanitizedRemainder.trim()) return;
+		const message = messages.value.find((item) => item.id === messageId);
+		if (!message) return;
+		if (message.cards?.length) {
+			message.tailContent = `${message.tailContent ?? ""}${sanitizedRemainder}`;
+			return;
+		}
+		message.type = "text";
+		message.content = `${message.content ?? ""}${sanitizedRemainder}`;
+		return;
+	}
+	if (!sanitizedRemainder.trim()) return;
 	const message = messages.value.find((item) => item.id === messageId);
 	if (!message) return;
 	if (message.cards?.length) {
-		message.tailContent = `${message.tailContent ?? ""}${remainder}`;
+		message.tailContent = `${message.tailContent ?? ""}${sanitizedRemainder}`;
 		return;
 	}
 	message.type = "text";
-	message.content = `${message.content ?? ""}${remainder}`;
+	message.content = `${message.content ?? ""}${sanitizedRemainder}`;
 };
 
 const stopStream = () => {
