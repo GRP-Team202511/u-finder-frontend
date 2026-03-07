@@ -302,7 +302,7 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(project, idx) in projects" :key="idx">
                 <Field>
-                  <FieldLabel :for="`name-${idx}`"><span class="text-red-500">*</span> {{ t('project.name') || 'name' }}</FieldLabel>
+                  <FieldLabel :for="`name-${idx}`">{{ t('project.name') || 'name' }} <span class="text-red-500">*</span></FieldLabel>
                   <Input 
                     :id="`name-${idx}`" 
                     v-model="project.name" 

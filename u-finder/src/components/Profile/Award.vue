@@ -182,7 +182,7 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(award, idx) in awards" :key="idx">
                 <Field>
-                  <FieldLabel :for="`name-${idx}`"><span class="text-red-500">*</span> {{ t('award.name') || 'name' }}</FieldLabel>
+                  <FieldLabel :for="`name-${idx}`">{{ t('award.name') || 'name' }} <span class="text-red-500">*</span></FieldLabel>
                   <Input 
                     :id="`name-${idx}`" 
                     v-model="award.name" 

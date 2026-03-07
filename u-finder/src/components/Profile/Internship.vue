@@ -315,7 +315,7 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(intern, idx) in internships" :key="idx">
                 <Field>
-                  <FieldLabel :for="`company-${idx}`"><span class="text-red-500">*</span> {{ t('internship.company') || 'Company' }}</FieldLabel>
+                  <FieldLabel :for="`company-${idx}`">{{ t('internship.company') || 'Company' }} <span class="text-red-500">*</span></FieldLabel>
                   <Input 
                     :id="`company-${idx}`" 
                     v-model="intern.company" 
@@ -326,7 +326,7 @@ onMounted(() => {
                 </Field>
 
                 <Field>
-                  <FieldLabel :for="`role-${idx}`"><span class="text-red-500">*</span> {{ t('internship.role') || 'Role' }}</FieldLabel>
+                  <FieldLabel :for="`role-${idx}`">{{ t('internship.role') || 'Role' }} <span class="text-red-500">*</span></FieldLabel>
                   <Input 
                     :id="`role-${idx}`" 
                     v-model="intern.role" 

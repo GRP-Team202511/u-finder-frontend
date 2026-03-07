@@ -344,7 +344,7 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(edu, idx) in education" :key="idx">
                 <Field>
-                  <FieldLabel :for="`type-${idx}`"><span class="text-red-500">*</span> {{ t('edu.type') || 'Type' }}</FieldLabel>
+                  <FieldLabel :for="`type-${idx}`">{{ t('edu.type') || 'Type' }} <span class="text-red-500">*</span></FieldLabel>
                   <Select v-model="edu.type" @update:model-value="clearError(idx, 'type')">
                     <SelectTrigger :id="`type-${idx}`" :class="cn('w-full', validationErrors.type[idx] && 'border-red-500')">
                       <SelectValue :placeholder="t('edu.placeholders.type') || 'Select Education type'" />
@@ -359,7 +359,7 @@ onMounted(() => {
                 </Field>
 
                 <Field>
-                  <FieldLabel :for="`name-${idx}`"><span class="text-red-500">*</span> {{ t('edu.institution') || 'Institution' }}</FieldLabel>
+                  <FieldLabel :for="`name-${idx}`">{{ t('edu.institution') || 'Institution' }} <span class="text-red-500">*</span></FieldLabel>
                   <Input 
                     :id="`name-${idx}`" 
                     v-model="edu.name" 
@@ -371,7 +371,7 @@ onMounted(() => {
 
                 <div class="grid grid-cols-2 gap-4">
                   <Field>
-                    <FieldLabel :for="`start-${idx}`"><span class="text-red-500">*</span> {{ t('edu.time.start') || 'Start' }}</FieldLabel>
+                    <FieldLabel :for="`start-${idx}`">{{ t('edu.time.start') || 'Start' }} <span class="text-red-500">*</span></FieldLabel>
                       <Popover v-slot="{ close }">
                         <PopoverTrigger as-child>
                           <Button 
