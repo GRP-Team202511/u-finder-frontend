@@ -83,6 +83,14 @@
             "resendError": "重发验证码失败，请重试。"
         }
     },
+    "sidebar": {
+        "aiChat": "AI 聊天",
+        "favourite": "收藏",
+        "history": "历史记录",
+        "profile": "个人资料",
+        "settings": "设置",
+        "logout": "登出"
+    },
     "profile": {
         "title": "个人资料",
         "edit": "编辑",
@@ -96,7 +104,39 @@
             "loadFailedDescription": "无法加载您的个人资料数据，请尝试刷新页面。"
         },
         "toast": {
-            "loadFailed": "加载个人资料数据失败"
+            "loadFailed": "加载个人资料数据失败",
+            "information": {
+                "saveSuccess": "个人信息保存成功",
+                "saveFailed": "个人信息保存失败"
+            },
+            "education": {
+                "saveSuccess": "教育背景保存成功",
+                "saveFailed": "教育背景保存失败"
+            },
+            "academic": {
+                "saveSuccess": "学术成果保存成功",
+                "saveFailed": "学术成果保存失败"
+            },
+            "test": {
+                "saveSuccess": "标准化考试保存成功",
+                "saveFailed": "标准化考试保存失败"
+            },
+            "internship": {
+                "saveSuccess": "实习经历保存成功",
+                "saveFailed": "实习经历保存失败"
+            },
+            "project": {
+                "saveSuccess": "项目经历保存成功",
+                "saveFailed": "项目经历保存失败"
+            },
+            "campusExp": {
+                "saveSuccess": "校园经历保存成功",
+                "saveFailed": "校园经历保存失败"
+            },
+            "award": {
+                "saveSuccess": "奖项保存成功",
+                "saveFailed": "奖项保存失败"
+            }
         }
     },
     "info": {
@@ -161,10 +201,224 @@
             "startRequired": "开始日期为必填项"
         }
     },
+    "academic": {
+        "title": "学术成果",
+        "selectType": "选择类型",
+        "selectTypeHint": "选择类型以输入详细信息。",
+        "empty": "暂无学术成果",
+        "add": "添加学术成果",
+        "type": {
+            "title": "类型",
+            "researchPaper": "研究论文",
+            "patent": "专利"
+        },
+        "researchPaper": {
+            "title": "标题",
+            "titlePlaceholder": "论文标题",
+            "doi": "DOI",
+            "doiPlaceholder": "DOI",
+            "abstract": "摘要",
+            "abstractPlaceholder": "摘要"
+        },
+        "patent": {
+            "title": "标题",
+            "titlePlaceholder": "专利标题",
+            "number": "专利号",
+            "numberPlaceholder": "专利号",
+            "region": "地区",
+            "regionPlaceholder": "地区",
+            "description": "描述",
+            "descriptionPlaceholder": "描述"
+        },
+        "validation": {
+            "typeRequired": "学术成果类型为必填项",
+            "titleRequired": "标题为必填项"
+        }
+    },
     "test": {
+        "title": "标准化考试",
+        "type": "类型",
+        "selectType": "选择考试类型",
+        "selectTypeHint": "选择类型以输入详细信息。",
+        "empty": "暂无标准化考试记录",
+        "add": "添加标准化考试",
+        "testDate": "考试日期",
+        "registrationNumber": "注册号",
+        "examSession": "考试场次",
+        "overallPredicted": "预估总分",
+        "examYear": "考试年份",
+        "month": "考试月份",
+        "subjects": "科目",
+        "subject": "科目",
+        "grade": "成绩",
+        "score": "分数",
+        "cefrLevel": "CEFR 等级",
+        "types": {
+            "ielts": "雅思 (IELTS)",
+            "toeflIbt": "托福 (TOEFL iBT)",
+            "duolingo": "多邻国英语测试 (Duolingo)",
+            "gre": "GRE",
+            "gmat": "GMAT",
+            "sat": "SAT",
+            "act": "ACT",
+            "aLevel": "A-Level",
+            "ap": "AP",
+            "ibDiploma": "IB 文凭 (IB Diploma)",
+            "cae": "剑桥英语 C1 高级 (CAE)"
+        },
+        "scores": {
+            "title": "分数",
+            "overall": "总分 (Overall)",
+            "listening": "听力 (Listening)",
+            "reading": "阅读 (Reading)",
+            "writing": "写作 (Writing)",
+            "speaking": "口语 (Speaking)",
+            "literacy": "Literacy",
+            "comprehension": "Comprehension",
+            "conversation": "Conversation",
+            "production": "Production",
+            "verbal": "Verbal Reasoning",
+            "quantitative": "Quantitative Reasoning",
+            "analyticalWriting": "Analytical Writing",
+            "total": "总分 (Total)",
+            "integratedReasoning": "Integrated Reasoning",
+            "math": "数学 (Math)",
+            "ebrw": "Evidence-Based Reading and Writing",
+            "essayOptional": "Essay（可选）",
+            "composite": "Composite",
+            "english": "English",
+            "science": "Science",
+            "writingOptional": "Writing（可选）",
+            "corePoints": "Core Points",
+            "extendedEssay": "Extended Essay",
+            "tok": "TOK",
+            "readingUseOfEnglish": "Reading & Use of English"
+        },
         "validation": {
             "typeRequired": "考试类型为必填项",
             "subjectRequired": "至少需要填写一个科目"
+        }
+    },
+    "internship": {
+        "title": "实习经历",
+        "company": "公司",
+        "role": "职位",
+        "time": {
+            "start": "开始日期",
+            "end": "结束日期",
+            "till now": "至今"
+        },
+        "empty": "暂无实习经历",
+        "add": "添加实习经历",
+        "placeholders": {
+            "company": "公司名称",
+            "role": "职位 / 角色"
+        },
+        "validation": {
+            "companyRequired": "公司名称为必填项",
+            "roleRequired": "职位为必填项"
+        }
+    },
+    "project": {
+        "title": "项目经历",
+        "name": "项目名称",
+        "role": "角色",
+        "time": {
+            "start": "开始日期",
+            "end": "结束日期",
+            "till now": "至今"
+        },
+        "description": "描述",
+        "empty": "暂无项目经历",
+        "add": "添加项目经历",
+        "placeholders": {
+            "name": "项目名称",
+            "role": "角色",
+            "description": "描述"
+        },
+        "validation": {
+            "nameRequired": "项目名称为必填项"
+        }
+    },
+    "campusExp": {
+        "title": "校园经历",
+        "name": "名称",
+        "description": "描述",
+        "empty": "暂无校园经历",
+        "add": "添加校园经历",
+        "placeholders": {
+            "name": "校园经历",
+            "description": "描述"
+        },
+        "validation": {
+            "nameRequired": "校园经历名称为必填项"
+        }
+    },
+    "award": {
+        "title": "奖项",
+        "name": "名称",
+        "description": "描述",
+        "empty": "暂无奖项",
+        "add": "添加奖项",
+        "placeholders": {
+            "name": "奖项名称",
+            "description": "描述"
+        },
+        "validation": {
+            "nameRequired": "奖项名称为必填项"
+        }
+    },
+    "date": {
+        "pickDate": "选择日期",
+        "pickStart": "选择开始日期",
+        "pickEnd": "选择结束日期"
+    },
+    "chat": {
+        "title": "U-Finder",
+        "tagline": "发现最适合你的大学。",
+        "input": {
+            "label": "消息",
+            "placeholder": "与 U-Finder 聊天...",
+            "disclaimer": "U-Finder 可能会出错。请核实重要信息。"
+        },
+        "errors": {
+            "streamFailed": "抱歉，我无法完成该请求。"
+        },
+        "card": {
+            "locationNotSpecified": "未指定地点",
+            "tuitionNotSpecified": "未指定学费",
+            "notSpecified": "未指定",
+            "program": "项目",
+            "programDetails": "项目详情",
+            "admissions": "录取要求",
+            "tuition": "学费",
+            "careerOutcomes": "就业前景",
+            "linksTitle": "相关链接",
+            "verified": "已验证",
+            "tabs": {
+                "program": "项目",
+                "admission": "录取 + 学费",
+                "career": "就业 + 链接"
+            },
+            "labels": {
+                "degree": "学位",
+                "field": "领域",
+                "track": "方向",
+                "type": "类型",
+                "duration": "学制",
+                "language": "授课语言",
+                "faculty": "学院",
+                "deadline": "申请截止日期",
+                "languageReqs": "语言要求",
+                "academicRequirements": "学术要求",
+                "otherRequirements": "其他要求",
+                "cost": "费用"
+            },
+            "links": {
+                "officialProgram": "官方项目页面",
+                "universitySite": "大学官网",
+                "facultySite": "学院官网"
+            }
         }
     }
 
