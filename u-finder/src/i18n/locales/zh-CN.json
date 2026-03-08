@@ -372,6 +372,54 @@
         "pickDate": "选择日期",
         "pickStart": "选择开始日期",
         "pickEnd": "选择结束日期"
+    },
+    "chat": {
+        "title": "U-Finder",
+        "tagline": "发现最适合你的大学。",
+        "input": {
+            "label": "消息",
+            "placeholder": "与 U-Finder 聊天...",
+            "disclaimer": "U-Finder 可能会出错。请核实重要信息。"
+        },
+        "errors": {
+            "streamFailed": "抱歉，我无法完成该请求。"
+        },
+        "card": {
+            "locationNotSpecified": "未指定地点",
+            "tuitionNotSpecified": "未指定学费",
+            "notSpecified": "未指定",
+            "program": "项目",
+            "programDetails": "项目详情",
+            "admissions": "录取要求",
+            "tuition": "学费",
+            "careerOutcomes": "就业前景",
+            "linksTitle": "相关链接",
+            "verified": "已验证",
+            "tabs": {
+                "program": "项目",
+                "admission": "录取 + 学费",
+                "career": "就业 + 链接"
+            },
+            "labels": {
+                "degree": "学位",
+                "field": "领域",
+                "track": "方向",
+                "type": "类型",
+                "duration": "学制",
+                "language": "授课语言",
+                "faculty": "学院",
+                "deadline": "申请截止日期",
+                "languageReqs": "语言要求",
+                "academicRequirements": "学术要求",
+                "otherRequirements": "其他要求",
+                "cost": "费用"
+            },
+            "links": {
+                "officialProgram": "官方项目页面",
+                "universitySite": "大学官网",
+                "facultySite": "学院官网"
+            }
+        }
     }
 
 }
