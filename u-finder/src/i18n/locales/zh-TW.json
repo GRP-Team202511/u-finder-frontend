@@ -83,6 +83,14 @@
             "resendError": "重發驗證碼失敗，請重試。"
         }
     },
+    "sidebar": {
+        "aiChat": "AI 聊天",
+        "favourite": "收藏",
+        "history": "歷史記錄",
+        "profile": "個人資料",
+        "settings": "設定",
+        "logout": "登出"
+    },
     "profile": {
         "title": "個人資料",
         "edit": "編輯",
@@ -96,7 +104,39 @@
             "loadFailedDescription": "無法載入您的個人資料資料，請嘗試重新整理頁面。"
         },
         "toast": {
-            "loadFailed": "載入個人資料資料失敗"
+            "loadFailed": "載入個人資料資料失敗",
+            "information": {
+                "saveSuccess": "個人資訊儲存成功",
+                "saveFailed": "個人資訊儲存失敗"
+            },
+            "education": {
+                "saveSuccess": "教育背景儲存成功",
+                "saveFailed": "教育背景儲存失敗"
+            },
+            "academic": {
+                "saveSuccess": "學術成果儲存成功",
+                "saveFailed": "學術成果儲存失敗"
+            },
+            "test": {
+                "saveSuccess": "標準化考試儲存成功",
+                "saveFailed": "標準化考試儲存失敗"
+            },
+            "internship": {
+                "saveSuccess": "實習經歷儲存成功",
+                "saveFailed": "實習經歷儲存失敗"
+            },
+            "project": {
+                "saveSuccess": "專案經歷儲存成功",
+                "saveFailed": "專案經歷儲存失敗"
+            },
+            "campusExp": {
+                "saveSuccess": "校園經歷儲存成功",
+                "saveFailed": "校園經歷儲存失敗"
+            },
+            "award": {
+                "saveSuccess": "獎項儲存成功",
+                "saveFailed": "獎項儲存失敗"
+            }
         }
     },
     "info": {
@@ -166,6 +206,11 @@
             "typeRequired": "考試類型為必填項",
             "subjectRequired": "至少需要填寫一個科目"
         }
+    },
+    "date": {
+        "pickDate": "選擇日期",
+        "pickStart": "選擇開始日期",
+        "pickEnd": "選擇結束日期"
     }
 
 }
