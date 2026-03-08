@@ -18,11 +18,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-vue-next'
-import { computed, ref, reactive, inject, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
+import { ref, reactive, inject, onBeforeUnmount, onMounted } from 'vue'
 import type { Ref } from 'vue'
 import { Calendar } from '@/components/ui/calendar'
 // (calendar value type will be treated as any to match calendar implementation)
 import { DateFormatter, getLocalTimeZone, today } from '@internationalized/date'
+import { toast } from 'vue-sonner'
 // helper: create a DateValue-like object from YYYY-MM or YYYY-MM-DD using the library if available,
 // otherwise return a shim with `toDate(tz)` so the calendar can consume it.
 async function createDateValueFromYYYYMM(yyyyMm: string) {
@@ -83,7 +84,6 @@ const { t } = useI18n()
 const props = defineProps<{
   class?: HTMLAttributes["class"]
   modelValue?: InternshipEntry[]
-  editable?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -91,6 +91,7 @@ const emit = defineEmits<{
   (e: 'save', payload: InternshipEntry[]): void
   (e: 'cancel'): void
   (e: 'request-edit'): void
+  (e: 'edit-complete'): void
 }>()
 
 // participate in global profile edit/save/cancel via optional provided API
@@ -99,11 +100,9 @@ type ProfileEditor = {
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
-// local edit state (used when parent does not control `editable`)
+// local edit state
 const localEditing = ref(false)
-const instance = getCurrentInstance()
-const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
-const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
+const pendingSave = ref(false)
 
 // local draft state used while editing
 const internships: Ref<InternshipEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
@@ -120,12 +119,28 @@ const endDates = reactive<any[]>(internships.value.map(() => undefined))
 // per-entry ongoing flag for "till now" end selection
 const ongoing = reactive<boolean[]>(internships.value.map(() => false))
 
+// validation error tracking for each entry
+const validationErrors = reactive<{
+  company: boolean[]
+  role: boolean[]
+}>(
+  {
+    company: internships.value.map(() => false),
+    role: internships.value.map(() => false)
+  }
+)
+
+// Clear validation error for a specific field
+function clearError(index: number, field: 'company' | 'role') {
+  validationErrors[field][index] = false
+}
+
 // when parent provides new modelValue, sync into local draft when not editing
 import { watch } from 'vue'
 watch(
   () => props.modelValue,
   (nv) => {
-    if (!isEditable.value) {
+    if (!localEditing.value) {
       if (nv) internships.value = JSON.parse(JSON.stringify(nv))
       // reinitialize calendars; try to parse YYYY-MM into DateValue objects
       ;(async () => {
@@ -147,6 +162,14 @@ watch(
         endDates.splice(0, endDates.length, ...ends)
         ongoing.splice(0, ongoing.length, ...ongs)
       })()
+      // Reset validation errors
+      validationErrors.company = internships.value.map(() => false)
+      validationErrors.role = internships.value.map(() => false)
+    } else if (pendingSave.value && nv) {
+      // Save succeeded: parent updated modelValue, exit edit mode
+      localEditing.value = false
+      pendingSave.value = false
+      emit('edit-complete')
     }
   },
   { deep: true }
@@ -160,13 +183,17 @@ function addEntry() {
   startDates.push(undefined)
   endDates.push(undefined)
   ongoing.push(false)
+  validationErrors.company.push(false)
+  validationErrors.role.push(false)
 }
 
 function removeEntry(index: number) {
-  if (internships.value.length > 1) internships.value.splice(index, 1)
+  internships.value.splice(index, 1)
   if (startDates.length > index) startDates.splice(index, 1)
   if (endDates.length > index) endDates.splice(index, 1)
   if (ongoing.length > index) ongoing.splice(index, 1)
+  if (validationErrors.company.length > index) validationErrors.company.splice(index, 1)
+  if (validationErrors.role.length > index) validationErrors.role.splice(index, 1)
 }
 
 function formatToDate(dv: any, tz: string) {
@@ -182,6 +209,35 @@ function formatToDate(dv: any, tz: string) {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
+  
+  // Clear all validation errors first
+  validationErrors.company = internships.value.map(() => false)
+  validationErrors.role = internships.value.map(() => false)
+  
+  // Validate required fields
+  let hasError = false
+  for (let i = 0; i < internships.value.length; i++) {
+    const intern = internships.value[i]
+    if (!intern) continue
+    
+    if (!intern.company || !intern.company.trim()) {
+      validationErrors.company[i] = true
+      hasError = true
+      toast.error(t('internship.validation.companyRequired') || `Internship #${i + 1}: Company name is required`)
+    }
+    if (!intern.role || !intern.role.trim()) {
+      validationErrors.role[i] = true
+      hasError = true
+      if (!validationErrors.company[i]) {
+        toast.error(t('internship.validation.roleRequired') || `Internship #${i + 1}: Role is required`)
+      }
+    }
+  }
+  
+  if (hasError) {
+    return
+  }
+  
   // convert DateValue to YYYY-MM strings for storage
   const tz = getLocalTimeZone()
   const formatted = internships.value.map((intern, i) => ({
@@ -193,10 +249,10 @@ function save(e?: Event) {
         : (endDates[i] ? formatToDate(endDates[i], tz) : intern.time.end),
     }
   }))
-  // emit v-model update and save
-  emit('update:modelValue', JSON.parse(JSON.stringify(formatted)))
+  // emit save event only; parent will update modelValue on success
   emit('save', JSON.parse(JSON.stringify(formatted)))
-  if (!hasEditableProp.value) localEditing.value = false
+  // Don't exit edit mode yet; wait for parent to confirm save success via modelValue update
+  pendingSave.value = true
 }
 
 function cancel() {
@@ -205,12 +261,25 @@ function cancel() {
   startDates.splice(0, startDates.length, ...internships.value.map(() => undefined))
   endDates.splice(0, endDates.length, ...internships.value.map(() => undefined))
   ongoing.splice(0, ongoing.length, ...internships.value.map(() => false))
+  // Clear validation errors
+  validationErrors.company = internships.value.map(() => false)
+  validationErrors.role = internships.value.map(() => false)
   emit('cancel')
-  if (!hasEditableProp.value) localEditing.value = false
+  pendingSave.value = false
+  localEditing.value = false
 }
 
 function startEdit() {
-  if (!hasEditableProp.value) localEditing.value = true
+  localEditing.value = true
+  // Ensure there's at least one entry to edit
+  if (internships.value.length === 0) {
+    internships.value.push({ company: '', role: '', time: { start: '', end: '' } })
+    startDates.push(undefined)
+    endDates.push(undefined)
+    ongoing.push(false)
+    validationErrors.company.push(false)
+    validationErrors.role.push(false)
+  }
   emit('request-edit')
 }
 
@@ -231,7 +300,7 @@ onMounted(() => {
           <CardTitle class="text-3xl font-bold">
             {{ t('internship.title') || 'Internships' }}
           </CardTitle>
-          <div v-if="!isEditable">
+          <div v-if="!localEditing">
             <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
           </div>
           <div v-else class="flex gap-2">
@@ -241,17 +310,30 @@ onMounted(() => {
         </div>
       </CardHeader>
       <CardContent>
-          <div v-if="isEditable">
+          <div v-if="localEditing">
           <form @submit="save">
             <FieldGroup>
               <template v-for="(intern, idx) in internships" :key="idx">
                 <Field>
-                  <FieldLabel :for="`company-${idx}`">{{ t('internship.company') || 'Company' }}</FieldLabel>
-                  <Input :id="`company-${idx}`" v-model="intern.company" :placeholder="t('internship.placeholders.company') || 'Company name'" />
+                  <FieldLabel :for="`company-${idx}`">{{ t('internship.company') || 'Company' }} <span class="text-red-500">*</span></FieldLabel>
+                  <Input 
+                    :id="`company-${idx}`" 
+                    v-model="intern.company" 
+                    :placeholder="t('internship.placeholders.company') || 'Company name'" 
+                    :class="validationErrors.company[idx] && 'border-red-500'"
+                    @input="clearError(idx, 'company')"
+                  />
                 </Field>
 
                 <Field>
-                  <FieldLabel :for="`role-${idx}`">{{ t('internship.role') || 'Role' }}</FieldLabel>
+                  <FieldLabel :for="`role-${idx}`">{{ t('internship.role') || 'Role' }} <span class="text-red-500">*</span></FieldLabel>
+                  <Input 
+                    :id="`role-${idx}`" 
+                    v-model="intern.role" 
+                    :placeholder="t('internship.placeholders.role') || 'Software Engineer'" 
+                    :class="validationErrors.role[idx] && 'border-red-500'"
+                    @input="clearError(idx, 'role')"
+                  />
                   <Input :id="`role-${idx}`" v-model="intern.role" :placeholder="t('internship.placeholders.role') || 'Position / Role'" />
                 </Field>
 
@@ -304,11 +386,16 @@ onMounted(() => {
                 </div>
 
                 <div class="flex justify-end gap-2 mt-2">
-                  <Button v-if="internships.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
-                  <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
                 </div>
+
+                <FieldSeparator v-if="idx < internships.length - 1" />
               </template>
             </FieldGroup>
+            
+            <div class="flex justify-end gap-2 mt-4">
+              <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+            </div>
           </form>
         </div>
         <div v-else>
@@ -341,7 +428,7 @@ onMounted(() => {
           </div>
           <div v-else class="text-center text-muted-foreground">
             <div class="mb-2">{{ t('internship.empty') || 'No internships' }}</div>
-            <Button type="button" @click="$emit('request-edit')">{{ t('internship.add') || 'Add internship' }}</Button>
+            <Button type="button" @click="startEdit">{{ t('internship.add') || 'Add internship' }}</Button>
           </div>
         </div>
       </CardContent>

@@ -97,7 +97,47 @@
         "save": "Save",
         "cancel": "Cancel",
         "add": "Add",
-        "remove": "Remove"
+        "remove": "Remove",
+        "retry": "Retry",
+        "errors": {
+            "loadFailed": "Ops, something went wrong...",
+            "loadFailedDescription": "Unable to load your profile data. Please try refreshing the page."
+        },
+        "toast": {
+            "loadFailed": "Failed to load profile data",
+            "information": {
+                "saveSuccess": "Personal information saved successfully",
+                "saveFailed": "Failed to save personal information"
+            },
+            "education": {
+                "saveSuccess": "Education background saved successfully",
+                "saveFailed": "Failed to save education background"
+            },
+            "academic": {
+                "saveSuccess": "Academic outcomes saved successfully",
+                "saveFailed": "Failed to save academic outcomes"
+            },
+            "test": {
+                "saveSuccess": "Standardized tests saved successfully",
+                "saveFailed": "Failed to save standardized tests"
+            },
+            "internship": {
+                "saveSuccess": "Internship experience saved successfully",
+                "saveFailed": "Failed to save internship experience"
+            },
+            "project": {
+                "saveSuccess": "Project experience saved successfully",
+                "saveFailed": "Failed to save project experience"
+            },
+            "campusExp": {
+                "saveSuccess": "Campus experience saved successfully",
+                "saveFailed": "Failed to save campus experience"
+            },
+            "award": {
+                "saveSuccess": "Awards saved successfully",
+                "saveFailed": "Failed to save awards"
+            }
+        }
     },
     "info": {
         "title": "Personal Information",
@@ -154,6 +194,11 @@
             "undergraduate": "Undergraduate",
             "master": "Master",
             "doctoral": "Doctoral"
+        },
+        "validation": {
+            "typeRequired": "Education type is required",
+            "nameRequired": "Institution name is required",
+            "startRequired": "Start date is required"
         }
     },
     "academic": {
@@ -164,7 +209,7 @@
         "add": "Add academic outcome",
         "type": {
             "title": "Type",
-            "researchPaper": "Research paper",
+            "researchPaper": "Research Paper",
             "patent": "Patent"
         },
         "researchPaper": {
@@ -184,6 +229,10 @@
             "regionPlaceholder": "Region",
             "description": "Description",
             "descriptionPlaceholder": "Description"
+        },
+        "validation": {
+            "typeRequired": "Academic outcome type is required",
+            "titleRequired": "Title is required"
         }
     },
     "test": {
@@ -193,17 +242,17 @@
         "selectTypeHint": "Select a type to enter details.",
         "empty": "No standardized tests",
         "add": "Add standardized test",
-        "testDate": "Test date",
-        "registrationNumber": "Registration number",
-        "examSession": "Exam session",
-        "overallPredicted": "Overall predicted",
-        "examYear": "Exam year",
+        "testDate": "Test Date",
+        "registrationNumber": "Registration Number",
+        "examSession": "Exam Session",
+        "overallPredicted": "Overall Predicted",
+        "examYear": "Exam Year",
         "month": "Exam month",
         "subjects": "Subjects",
         "subject": "Subject",
         "grade": "Grade",
         "score": "Score",
-        "cefrLevel": "CEFR level",
+        "cefrLevel": "CEFR Level",
         "types": {
             "ielts": "IELTS",
             "toeflIbt": "TOEFL iBT",
@@ -230,20 +279,24 @@
             "production": "Production",
             "verbal": "Verbal",
             "quantitative": "Quantitative",
-            "analyticalWriting": "Analytical writing",
+            "analyticalWriting": "Analytical Writing",
             "total": "Total",
-            "integratedReasoning": "Integrated reasoning",
+            "integratedReasoning": "Integrated Reasoning",
             "math": "Math",
-            "ebrw": "Evidence-based reading and writing",
-            "essayOptional": "Essay (optional)",
+            "ebrw": "Evidence-Based Reading And Writing",
+            "essayOptional": "Essay (Optional)",
             "composite": "Composite",
             "english": "English",
             "science": "Science",
-            "writingOptional": "Writing (optional)",
-            "corePoints": "Core points",
-            "extendedEssay": "Extended essay grade",
-            "tok": "TOK grade",
-            "readingUseOfEnglish": "Reading & Use of English"
+            "writingOptional": "Writing (Optional)",
+            "corePoints": "Core Points",
+            "extendedEssay": "Extended Essay Grade",
+            "tok": "TOK Grade",
+            "readingUseOfEnglish": "Reading & Use Of English"
+        },
+        "validation": {
+            "typeRequired": "Test type is required",
+            "subjectRequired": "At least one subject is required"
         }
     },
     "internship": {
@@ -260,6 +313,10 @@
         "placeholders": {
             "company": "Company name",
             "role": "Position / Role"
+        },
+        "validation": {
+            "companyRequired": "Company name is required",
+            "roleRequired": "Role is required"
         }
     },
     "project": {
@@ -278,6 +335,9 @@
             "name": "Project name",
             "role": "Role",
             "description": "Description"
+        },
+        "validation": {
+            "nameRequired": "Project name is required"
         }
     },
     "campusExp": {
@@ -289,6 +349,9 @@
         "placeholders": {
             "name": "Campus experience",
             "description": "Description"
+        },
+        "validation": {
+            "nameRequired": "Campus experience name is required"
         }
     },
     "award": {
@@ -300,6 +363,9 @@
         "placeholders": {
             "name": "Award name",
             "description": "Description"
+        },
+        "validation": {
+            "nameRequired": "Award name is required"
         }
     },
     "date": {

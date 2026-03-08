@@ -19,11 +19,12 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-vue-next'
-import { computed, ref, reactive, inject, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
+import { ref, reactive, inject, onBeforeUnmount, onMounted } from 'vue'
 import type { Ref } from 'vue'
 import { Calendar } from '@/components/ui/calendar'
 // (calendar value type will be treated as any to match calendar implementation)
 import { DateFormatter, getLocalTimeZone, today } from '@internationalized/date'
+import { toast } from 'vue-sonner'
 // helper: create a DateValue-like object from YYYY-MM or YYYY-MM-DD using the library if available,
 // otherwise return a shim with `toDate(tz)` so the calendar can consume it.
 async function createDateValueFromYYYYMM(yyyyMm: string) {
@@ -88,7 +89,6 @@ const { t } = useI18n()
 const props = defineProps<{
   class?: HTMLAttributes["class"]
   modelValue?: EducationEntry[]
-  editable?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -96,6 +96,7 @@ const emit = defineEmits<{
   (e: 'save', payload: EducationEntry[]): void
   (e: 'cancel'): void
   (e: 'request-edit'): void
+  (e: 'edit-complete'): void
 }>()
 
 // participate in global profile edit/save/cancel via optional provided API
@@ -104,11 +105,9 @@ type ProfileEditor = {
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
-// local edit state (used when parent does not control `editable`)
+// local edit state
 const localEditing = ref(false)
-const instance = getCurrentInstance()
-const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
-const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
+const pendingSave = ref(false)
 
 // local draft state used while editing
 const education: Ref<EducationEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
@@ -127,12 +126,30 @@ const education: Ref<EducationEntry[]> = ref(props.modelValue ? JSON.parse(JSON.
 const startDates = reactive<any[]>(education.value.map(() => undefined))
 const endDates = reactive<any[]>(education.value.map(() => undefined))
 
+// validation error tracking for each entry
+const validationErrors = reactive<{
+  type: boolean[]
+  name: boolean[]
+  startDate: boolean[]
+}>(
+  {
+    type: education.value.map(() => false),
+    name: education.value.map(() => false),
+    startDate: education.value.map(() => false)
+  }
+)
+
+// Clear validation error for a specific field
+function clearError(index: number, field: 'type' | 'name' | 'startDate') {
+  validationErrors[field][index] = false
+}
+
 // when parent provides new modelValue, sync into local draft when not editing
 import { watch } from 'vue'
 watch(
   () => props.modelValue,
   (nv) => {
-    if (!isEditable.value) {
+    if (!localEditing.value) {
       if (nv) education.value = JSON.parse(JSON.stringify(nv))
       // reinitialize calendars; try to parse YYYY-MM into DateValue objects
       ;(async () => {
@@ -147,6 +164,15 @@ watch(
         startDates.splice(0, startDates.length, ...starts)
         endDates.splice(0, endDates.length, ...ends)
       })()
+      // Reset validation errors
+      validationErrors.type = education.value.map(() => false)
+      validationErrors.name = education.value.map(() => false)
+      validationErrors.startDate = education.value.map(() => false)
+    } else if (pendingSave.value && nv) {
+      // Save succeeded: parent updated modelValue, exit edit mode
+      localEditing.value = false
+      pendingSave.value = false
+      emit('edit-complete')
     }
   },
   { deep: true }
@@ -159,12 +185,18 @@ function addEntry() {
   education.value.push({ type: '', name: '', time: { start: '', end: '' }, major: '', ranking: '', GPA: '', GPA_base: '' })
   startDates.push(undefined)
   endDates.push(undefined)
+  validationErrors.type.push(false)
+  validationErrors.name.push(false)
+  validationErrors.startDate.push(false)
 }
 
 function removeEntry(index: number) {
-  if (education.value.length > 1) education.value.splice(index, 1)
+  education.value.splice(index, 1)
   if (startDates.length > index) startDates.splice(index, 1)
   if (endDates.length > index) endDates.splice(index, 1)
+  if (validationErrors.type.length > index) validationErrors.type.splice(index, 1)
+  if (validationErrors.name.length > index) validationErrors.name.splice(index, 1)
+  if (validationErrors.startDate.length > index) validationErrors.startDate.splice(index, 1)
 }
 
 function formatToDate(dv: any, tz: string) {
@@ -178,8 +210,57 @@ function formatToDate(dv: any, tz: string) {
   return `${dt.getFullYear()}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`
 }
 
+function typeLabel(type: string) {
+  if (!type) return '-'
+  if (type === 'highSchool' || type === 'high school') return t('edu.types.highSchool') || 'High School'
+  if (type === 'undergraduate') return t('edu.types.undergraduate') || 'Undergraduate'
+  if (type === 'master') return t('edu.types.master') || 'Master'
+  if (type === 'doctoral') return t('edu.types.doctoral') || 'Doctoral'
+  // Fallback: capitalize first letter of each word
+  return type.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+}
+
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
+  
+  // Clear all validation errors first
+  validationErrors.type = education.value.map(() => false)
+  validationErrors.name = education.value.map(() => false)
+  validationErrors.startDate = education.value.map(() => false)
+  
+  // Validate required fields
+  let hasError = false
+  for (let i = 0; i < education.value.length; i++) {
+    const edu = education.value[i]
+    if (!edu) continue
+    
+    const hasStartDate = startDates[i] || edu.time?.start
+    
+    if (!edu.type) {
+      validationErrors.type[i] = true
+      hasError = true
+      toast.error(t('edu.validation.typeRequired') || `Education #${i + 1}: Type is required`)
+    }
+    if (!edu.name || !edu.name.trim()) {
+      validationErrors.name[i] = true
+      hasError = true
+      if (!hasError || edu.type) { // Only show if not already showing type error
+        toast.error(t('edu.validation.nameRequired') || `Education #${i + 1}: Institution name is required`)
+      }
+    }
+    if (!hasStartDate) {
+      validationErrors.startDate[i] = true
+      hasError = true
+      if (!validationErrors.type[i] && !validationErrors.name[i]) { // Only show if no previous errors
+        toast.error(t('edu.validation.startRequired') || `Education #${i + 1}: Start date is required`)
+      }
+    }
+  }
+  
+  if (hasError) {
+    return
+  }
+  
   // convert DateValue to YYYY-MM strings for storage
   const tz = getLocalTimeZone()
   const formatted = education.value.map((edu, i) => ({
@@ -189,10 +270,10 @@ function save(e?: Event) {
       end: endDates[i] ? formatToDate(endDates[i], tz) : edu.time.end,
     }
   }))
-  // emit v-model update and save
-  emit('update:modelValue', JSON.parse(JSON.stringify(formatted)))
+  // emit save event only; parent will update modelValue on success
   emit('save', JSON.parse(JSON.stringify(formatted)))
-  if (!hasEditableProp.value) localEditing.value = false
+  // Don't exit edit mode yet; wait for parent to confirm save success via modelValue update
+  pendingSave.value = true
 }
 
 function cancel() {
@@ -200,12 +281,34 @@ function cancel() {
   if (props.modelValue) education.value = JSON.parse(JSON.stringify(props.modelValue))
   startDates.splice(0, startDates.length, ...education.value.map(() => undefined))
   endDates.splice(0, endDates.length, ...education.value.map(() => undefined))
+  // Clear validation errors
+  validationErrors.type = education.value.map(() => false)
+  validationErrors.name = education.value.map(() => false)
+  validationErrors.startDate = education.value.map(() => false)
   emit('cancel')
-  if (!hasEditableProp.value) localEditing.value = false
+  pendingSave.value = false
+  localEditing.value = false
 }
 
 function startEdit() {
-  if (!hasEditableProp.value) localEditing.value = true
+  localEditing.value = true
+  // Ensure there's at least one entry to edit
+  if (education.value.length === 0) {
+    education.value.push({
+      type: '',
+      name: '',
+      time: { start: '', end: '' },
+      major: '',
+      ranking: '',
+      GPA: '',
+      GPA_base: ''
+    })
+    startDates.push(undefined)
+    endDates.push(undefined)
+    validationErrors.type.push(false)
+    validationErrors.name.push(false)
+    validationErrors.startDate.push(false)
+  }
   emit('request-edit')
 }
 
@@ -226,7 +329,7 @@ onMounted(() => {
           <CardTitle class="text-3xl font-bold">
             {{ t("edu.title") }}
           </CardTitle>
-          <div v-if="!isEditable">
+          <div v-if="!localEditing">
             <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
           </div>
           <div v-else class="flex gap-2">
@@ -236,14 +339,14 @@ onMounted(() => {
         </div>
       </CardHeader>
       <CardContent>
-          <div v-if="isEditable">
+          <div v-if="localEditing">
           <form @submit="save">
             <FieldGroup>
               <template v-for="(edu, idx) in education" :key="idx">
                 <Field>
-                  <FieldLabel :for="`type-${idx}`">{{ t('edu.type') || 'Type' }}</FieldLabel>
-                  <Select v-model="edu.type">
-                    <SelectTrigger :id="`type-${idx}`" class="w-full">
+                  <FieldLabel :for="`type-${idx}`">{{ t('edu.type') || 'Type' }} <span class="text-red-500">*</span></FieldLabel>
+                  <Select v-model="edu.type" @update:model-value="clearError(idx, 'type')">
+                    <SelectTrigger :id="`type-${idx}`" :class="cn('w-full', validationErrors.type[idx] && 'border-red-500')">
                       <SelectValue :placeholder="t('edu.placeholders.type') || 'Select Education type'" />
                     </SelectTrigger>
                     <SelectContent>
@@ -256,16 +359,29 @@ onMounted(() => {
                 </Field>
 
                 <Field>
-                  <FieldLabel :for="`name-${idx}`">{{ t('edu.institution') || 'Institution' }}</FieldLabel>
-                  <Input :id="`name-${idx}`" v-model="edu.name" :placeholder="t('edu.placeholders.institution') || 'University name'" />
+                  <FieldLabel :for="`name-${idx}`">{{ t('edu.institution') || 'Institution' }} <span class="text-red-500">*</span></FieldLabel>
+                  <Input 
+                    :id="`name-${idx}`" 
+                    v-model="edu.name" 
+                    :placeholder="t('edu.placeholders.institution') || 'University name'" 
+                    :class="validationErrors.name[idx] && 'border-red-500'"
+                    @input="clearError(idx, 'name')"
+                  />
                 </Field>
 
                 <div class="grid grid-cols-2 gap-4">
                   <Field>
-                    <FieldLabel :for="`start-${idx}`">{{ t('edu.time.start') || 'Start' }}</FieldLabel>
+                    <FieldLabel :for="`start-${idx}`">{{ t('edu.time.start') || 'Start' }} <span class="text-red-500">*</span></FieldLabel>
                       <Popover v-slot="{ close }">
                         <PopoverTrigger as-child>
-                          <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !edu.time.start && 'text-muted-foreground')">
+                          <Button 
+                            variant="outline" 
+                            :class="cn(
+                              'w-full justify-start text-left font-normal', 
+                              !edu.time.start && 'text-muted-foreground',
+                              validationErrors.startDate[idx] && 'border-red-500'
+                            )"
+                          >
                             <CalendarIcon class="mr-2 h-4 w-4" />
                             {{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.start || (t('date.pickStart') || 'Pick start')) }}
                           </Button>
@@ -276,7 +392,7 @@ onMounted(() => {
                             :default-placeholder="defaultPlaceholder"
                             layout="month-and-year"
                             initial-focus
-                            @update:model-value="close"
+                            @update:model-value="() => { clearError(idx, 'startDate'); close(); }"
                           />
                         </PopoverContent>
                       </Popover>
@@ -324,11 +440,16 @@ onMounted(() => {
                 </div>
 
                 <div class="flex justify-end gap-2 mt-2">
-                  <Button v-if="education.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
-                  <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
                 </div>
+
+                <FieldSeparator v-if="idx < education.length - 1" />
               </template>
             </FieldGroup>
+            
+            <div class="flex justify-end gap-2 mt-4">
+              <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+            </div>
           </form>
         </div>
         <div v-else>
@@ -337,7 +458,7 @@ onMounted(() => {
               <template v-for="(edu, idx) in education" :key="idx">
                 <Field>
                   <FieldLabel>{{ t('edu.type') || 'Type' }}</FieldLabel>
-                  <div class="text-sm text-left">{{ edu.type || '-' }}</div>
+                  <div class="text-sm text-left">{{ typeLabel(edu.type) }}</div>
                 </Field>
 
                 <Field>
@@ -381,7 +502,7 @@ onMounted(() => {
           </div>
           <div v-else class="text-center text-muted-foreground">
             <div class="mb-2">{{ t('edu.empty') || 'No education records' }}</div>
-            <Button type="button" @click="$emit('request-edit')">{{ t('edu.add') || 'Add education' }}</Button>
+            <Button type="button" @click="startEdit">{{ t('edu.add') || 'Add education' }}</Button>
           </div>
         </div>
       </CardContent>

@@ -20,7 +20,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Toaster, toast } from 'vue-sonner'
+import { toast } from 'vue-sonner'
 import http from "@/api/http"
 import { useUserStore } from "@/stores/userStore"
 import { useRouter } from "vue-router"
@@ -74,7 +74,6 @@ const handleLogin = async() => {
 </script>
 
 <template>
-  <Toaster />
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-center">

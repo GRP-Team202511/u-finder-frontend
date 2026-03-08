@@ -15,7 +15,8 @@ import {
 	FieldLabel,
 } from "@/components/ui/field"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { computed, ref, inject, onBeforeUnmount, onMounted, getCurrentInstance, watch } from 'vue'
+import { toast } from 'vue-sonner'
+import { ref, reactive, inject, onBeforeUnmount, onMounted, watch } from 'vue'
 import type { Ref } from 'vue'
 import IELTSFields from "./IELTSFields.vue"
 import TOEFLFields from "./TOEFLFields.vue"
@@ -60,7 +61,6 @@ const { t } = useI18n()
 const props = defineProps<{
 	class?: HTMLAttributes["class"]
 	modelValue?: StandardizedEntry[]
-	editable?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -68,6 +68,7 @@ const emit = defineEmits<{
 	(e: 'save', payload: StandardizedEntry[]): void
 	(e: 'cancel'): void
 	(e: 'request-edit'): void
+	(e: 'edit-complete'): void
 }>()
 
 // participate in global profile edit/save/cancel via optional provided API
@@ -76,11 +77,9 @@ type ProfileEditor = {
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
-// local edit state (used when parent does not control `editable`)
+// local edit state
 const localEditing = ref(false)
-const instance = getCurrentInstance()
-const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
-const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
+const pendingSave = ref(false)
 
 function createEntryForType(type: StandardizedType): StandardizedEntry {
 	switch (type) {
@@ -125,10 +124,33 @@ const standardizedTests: Ref<StandardizedEntry[]> = ref(props.modelValue ? JSON.
 	createEntryForType('')
 ])
 
+// validation error tracking for each entry
+const validationErrors = reactive<{
+	type: boolean[]
+}>(
+	{
+		type: standardizedTests.value.map(() => false)
+	}
+)
+
+// Clear validation error for type field
+function clearError(index: number, field: 'type') {
+	validationErrors[field][index] = false
+}
+
 watch(
 	() => props.modelValue,
 	(nv) => {
-		if (!isEditable.value && nv) standardizedTests.value = JSON.parse(JSON.stringify(nv))
+		if (!localEditing.value && nv) {
+			standardizedTests.value = JSON.parse(JSON.stringify(nv))
+			// Reset validation errors
+			validationErrors.type = standardizedTests.value.map(() => false)
+		} else if (pendingSave.value && nv) {
+			// Save succeeded: parent updated modelValue, exit edit mode
+			localEditing.value = false
+			pendingSave.value = false
+			emit('edit-complete')
+		}
 	},
 	{ deep: true }
 )
@@ -156,27 +178,81 @@ function typeLabel(type: StandardizedType) {
 
 function addEntry() {
 	standardizedTests.value.push(createEntryForType(''))
+	validationErrors.type.push(false)
 }
 
 function removeEntry(index: number) {
-	if (standardizedTests.value.length > 1) standardizedTests.value.splice(index, 1)
+	standardizedTests.value.splice(index, 1)
+	if (validationErrors.type.length > index) validationErrors.type.splice(index, 1)
 }
 
 function save(e?: Event) {
 	if (e && e.preventDefault) e.preventDefault()
-	emit('update:modelValue', JSON.parse(JSON.stringify(standardizedTests.value)))
+	
+	// Clear all validation errors first
+	validationErrors.type = standardizedTests.value.map(() => false)
+	
+	// Clean up empty subjects for tests that have subjects
+	for (let i = 0; i < standardizedTests.value.length; i++) {
+		const test = standardizedTests.value[i]
+		if (!test) continue
+		
+		// Remove empty subjects for A-Level, AP, and IB Diploma
+		if (test.type === 'A-Level' || test.type === 'AP' || test.type === 'IB Diploma') {
+			if (test.subjects && test.subjects.length > 0) {
+				test.subjects = test.subjects.filter(s => s.subject && s.subject.trim())
+			}
+		}
+	}
+	
+	// Validate required fields
+	let hasError = false
+	for (let i = 0; i < standardizedTests.value.length; i++) {
+		const test = standardizedTests.value[i]
+		if (!test) continue
+		
+		if (!test.type) {
+			validationErrors.type[i] = true
+			hasError = true
+			toast.error(t('test.validation.typeRequired') || `Test #${i + 1}: Type is required`)
+			continue
+		}
+		
+		// Validate subjects for A-Level, AP, and IB Diploma
+		if (test.type === 'A-Level' || test.type === 'AP' || test.type === 'IB Diploma') {
+			const subjects = test.subjects || []
+			if (subjects.length === 0) {
+				hasError = true
+				toast.error(t('test.validation.subjectRequired') || `Test #${i + 1}: At least one subject is required`)
+			}
+		}
+	}
+	
+	if (hasError) {
+		return
+	}
+	
 	emit('save', JSON.parse(JSON.stringify(standardizedTests.value)))
-	if (!hasEditableProp.value) localEditing.value = false
+	// Don't exit edit mode yet; wait for parent to confirm save success via modelValue update
+	pendingSave.value = true
 }
 
 function cancel() {
 	if (props.modelValue) standardizedTests.value = JSON.parse(JSON.stringify(props.modelValue))
+	// Clear validation errors
+	validationErrors.type = standardizedTests.value.map(() => false)
 	emit('cancel')
-	if (!hasEditableProp.value) localEditing.value = false
+	pendingSave.value = false
+	localEditing.value = false
 }
 
 function startEdit() {
-	if (!hasEditableProp.value) localEditing.value = true
+	localEditing.value = true
+	// Ensure there's at least one entry to edit
+	if (standardizedTests.value.length === 0) {
+		standardizedTests.value.push(createEntryForType(''))
+		validationErrors.type.push(false)
+	}
 	emit('request-edit')
 }
 
@@ -196,7 +272,7 @@ onMounted(() => {
 					<CardTitle class="text-3xl font-bold">
 						{{ t('test.title') || 'Standardized Test' }}
 					</CardTitle>
-					<div v-if="!isEditable">
+				<div v-if="!localEditing">
 						<Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
 					</div>
 					<div v-else class="flex gap-2">
@@ -206,14 +282,14 @@ onMounted(() => {
 				</div>
 			</CardHeader>
 			<CardContent>
-				<div v-if="isEditable">
+				<div v-if="localEditing">
 					<form @submit="save">
 						<FieldGroup>
 							<template v-for="(test, idx) in standardizedTests" :key="idx">
 								<Field>
-									<FieldLabel :for="`standardized-type-${idx}`">{{ t('test.type') || 'Type' }}</FieldLabel>
-									<Select v-model="test.type" @update:model-value="(val) => resetFieldsForType(idx, (val ?? '') as StandardizedType)">
-										<SelectTrigger :id="`standardized-type-${idx}`" class="w-full">
+									<FieldLabel :for="`standardized-type-${idx}`">{{ t('test.type') || 'Type' }} <span class="text-red-500">*</span></FieldLabel>
+									<Select v-model="test.type" @update:model-value="(val) => { resetFieldsForType(idx, (val ?? '') as StandardizedType); clearError(idx, 'type') }">
+										<SelectTrigger :id="`standardized-type-${idx}`" :class="cn('w-full', validationErrors.type[idx] && 'border-red-500')">
 											<SelectValue :placeholder="t('test.selectType') || 'Select test type'" />
 										</SelectTrigger>
 										<SelectContent>
@@ -269,12 +345,17 @@ onMounted(() => {
 									{{ t('test.selectTypeHint') || 'Select a type to enter details.' }}
 								</div>
 
-								<div class="flex justify-end gap-2 mt-2">
-									<Button v-if="standardizedTests.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
-									<Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
-								</div>
+							<div class="flex justify-end gap-2 mt-2">
+								<Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
+							</div>
+
+							<FieldSeparator v-if="idx < standardizedTests.length - 1" />
 							</template>
 						</FieldGroup>
+						
+						<div class="flex justify-end gap-2 mt-4">
+							<Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+						</div>
 					</form>
 				</div>
 				<div v-else>
@@ -327,7 +408,7 @@ onMounted(() => {
 					</div>
 					<div v-else class="text-center text-muted-foreground">
 						<div class="mb-2">{{ t('test.empty') || 'No standardized tests' }}</div>
-						<Button type="button" @click="$emit('request-edit')">{{ t('test.add') || 'Add standardized test' }}</Button>
+					<Button type="button" @click="startEdit">{{ t('test.add') || 'Add standardized test' }}</Button>
 					</div>
 				</div>
 			</CardContent>

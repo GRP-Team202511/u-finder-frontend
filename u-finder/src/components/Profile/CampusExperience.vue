@@ -16,7 +16,8 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { computed, ref, inject, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
+import { toast } from 'vue-sonner'
+import { ref, reactive, inject, onBeforeUnmount, onMounted } from 'vue'
 import type { Ref } from 'vue'
 
 type CampusExpEntry = {
@@ -29,7 +30,6 @@ const { t } = useI18n()
 const props = defineProps<{
   class?: HTMLAttributes["class"]
   modelValue?: CampusExpEntry[]
-  editable?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -37,6 +37,7 @@ const emit = defineEmits<{
   (e: 'save', payload: CampusExpEntry[]): void
   (e: 'cancel'): void
   (e: 'request-edit'): void
+  (e: 'edit-complete'): void
 }>()
 
 // participate in global profile edit/save/cancel via optional provided API
@@ -45,11 +46,9 @@ type ProfileEditor = {
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
-// local edit state (used when parent does not control `editable`)
+// local edit state
 const localEditing = ref(false)
-const instance = getCurrentInstance()
-const hasEditableProp = computed(() => !!(instance?.vnode.props && Object.prototype.hasOwnProperty.call(instance.vnode.props, 'editable')))
-const isEditable = computed(() => (hasEditableProp.value ? props.editable : localEditing.value))
+const pendingSave = ref(false)
 
 // local draft state used while editing
 const campusExperience: Ref<CampusExpEntry[]> = ref(props.modelValue ? JSON.parse(JSON.stringify(props.modelValue)) : [
@@ -59,14 +58,35 @@ const campusExperience: Ref<CampusExpEntry[]> = ref(props.modelValue ? JSON.pars
   }
 ])
 
+// validation error tracking for each entry
+const validationErrors = reactive<{
+  name: boolean[]
+}>(
+  {
+    name: campusExperience.value.map(() => false)
+  }
+)
+
+// Clear validation error for a specific field
+function clearError(index: number, field: 'name') {
+  validationErrors[field][index] = false
+}
+
 
 // when parent provides new modelValue, sync into local draft when not editing
 import { watch } from 'vue'
 watch(
   () => props.modelValue,
   (nv) => {
-    if (!isEditable.value) {
+    if (!localEditing.value) {
       if (nv) campusExperience.value = JSON.parse(JSON.stringify(nv))
+      // Reset validation errors
+      validationErrors.name = campusExperience.value.map(() => false)
+    } else if (pendingSave.value && nv) {
+      // Save succeeded: parent updated modelValue, exit edit mode
+      localEditing.value = false
+      pendingSave.value = false
+      emit('edit-complete')
     }
   },
   { deep: true }
@@ -75,27 +95,58 @@ watch(
 
 function addEntry() {
   campusExperience.value.push({ name: '', description: '' })
+  validationErrors.name.push(false)
 }
 
 function removeEntry(index: number) {
-  if (campusExperience.value.length > 1) campusExperience.value.splice(index, 1)
+  campusExperience.value.splice(index, 1)
+  if (validationErrors.name.length > index) validationErrors.name.splice(index, 1)
 }
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
-  emit('update:modelValue', JSON.parse(JSON.stringify(campusExperience.value)))
+  
+  // Clear all validation errors first
+  validationErrors.name = campusExperience.value.map(() => false)
+  
+  // Validate required fields
+  let hasError = false
+  for (let i = 0; i < campusExperience.value.length; i++) {
+    const exp = campusExperience.value[i]
+    if (!exp) continue
+    
+    if (!exp.name || !exp.name.trim()) {
+      validationErrors.name[i] = true
+      hasError = true
+      toast.error(t('campusExp.validation.nameRequired') || `Campus Experience #${i + 1}: Activity name is required`)
+    }
+  }
+  
+  if (hasError) {
+    return
+  }
+  
   emit('save', JSON.parse(JSON.stringify(campusExperience.value)))
-  if (!hasEditableProp.value) localEditing.value = false
+  // Don't exit edit mode yet; wait for parent to confirm save success via modelValue update
+  pendingSave.value = true
 }
 
 function cancel() {
   if (props.modelValue) campusExperience.value = JSON.parse(JSON.stringify(props.modelValue))
+  // Clear validation errors
+  validationErrors.name = campusExperience.value.map(() => false)
   emit('cancel')
-  if (!hasEditableProp.value) localEditing.value = false
+  pendingSave.value = false
+  localEditing.value = false
 }
 
 function startEdit() {
-  if (!hasEditableProp.value) localEditing.value = true
+  localEditing.value = true
+  // Ensure there's at least one entry to edit
+  if (campusExperience.value.length === 0) {
+    campusExperience.value.push({ name: '', description: '' })
+    validationErrors.name.push(false)
+  }
   emit('request-edit')
 }
 
@@ -116,7 +167,7 @@ onMounted(() => {
           <CardTitle class="text-3xl font-bold">
             {{ t('campusExp.title') || 'campusExp' }}
           </CardTitle>
-          <div v-if="!isEditable">
+          <div v-if="!localEditing">
             <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
           </div>
           <div v-else class="flex gap-2">
@@ -126,13 +177,19 @@ onMounted(() => {
         </div>
       </CardHeader>
       <CardContent>
-          <div v-if="isEditable">
+          <div v-if="localEditing">
           <form @submit="save">
             <FieldGroup>
               <template v-for="(campusExp, idx) in campusExperience" :key="idx">
                 <Field>
-                  <FieldLabel :for="`name-${idx}`">{{ t('campusExp.name') || 'name' }}</FieldLabel>
-                  <Input :id="`name-${idx}`" v-model="campusExp.name" :placeholder="t('campusExp.placeholders.name') || 'Campus Experience'" />
+                  <FieldLabel :for="`name-${idx}`">{{ t('campusExp.name') || 'name' }} <span class="text-red-500">*</span></FieldLabel>
+                  <Input 
+                    :id="`name-${idx}`" 
+                    v-model="campusExp.name" 
+                    :placeholder="t('campusExp.placeholders.name') || 'Campus Experience'" 
+                    :class="validationErrors.name[idx] && 'border-red-500'"
+                    @input="clearError(idx, 'name')"
+                  />
                 </Field>
                 <Field>
                   <FieldLabel :for="`description-${idx}`">{{ t('campusExp.description') || 'Description' }}</FieldLabel>
@@ -145,11 +202,16 @@ onMounted(() => {
                   ></textarea>                
                 </Field>
                 <div class="flex justify-end gap-2 mt-2">
-                  <Button v-if="campusExperience.length > 1" type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
-                  <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
                 </div>
+
+                <FieldSeparator v-if="idx < campusExperience.length - 1" />
               </template>
             </FieldGroup>
+            
+            <div class="flex justify-end gap-2 mt-4">
+              <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+            </div>
           </form>
         </div>
         <div v-else>
@@ -169,7 +231,7 @@ onMounted(() => {
           </div>
           <div v-else class="text-center text-muted-foreground">
             <div class="mb-2">{{ t('campusExp.empty') || 'No campusExp' }}</div>
-            <Button type="button" @click="$emit('request-edit')">{{ t('campusExp.add') || 'Add campusExp' }}</Button>
+            <Button type="button" @click="startEdit">{{ t('campusExp.add') || 'Add campusExp' }}</Button>
           </div>
         </div>
       </CardContent>

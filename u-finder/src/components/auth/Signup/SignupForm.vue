@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/field"
 import { Spinner } from "@/components/ui/spinner"
 import { Input } from "@/components/ui/input"
-import { Toaster, toast } from 'vue-sonner'
+import { toast } from 'vue-sonner'
 import { signup } from "@/api/userApi"
 
 
@@ -73,7 +73,6 @@ const handleSignup = async() => {
 </script>
 
 <template>
-  <Toaster />
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card  >
       <CardHeader class="text-center">

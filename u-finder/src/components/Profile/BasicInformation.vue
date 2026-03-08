@@ -3,6 +3,7 @@ import type { HTMLAttributes } from "vue"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useI18n } from 'vue-i18n'
+import { toast } from 'vue-sonner'
 import {
   Card,
   CardContent,
@@ -19,7 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-vue-next'
-import { computed, ref, reactive, inject, onBeforeUnmount, onMounted } from 'vue'
+import { ref, reactive, inject, onBeforeUnmount, onMounted, watch } from 'vue'
 import type { Ref } from 'vue'
 import { Calendar } from '@/components/ui/calendar'
 // (calendar value type will be treated as any to match calendar implementation)
@@ -73,8 +74,8 @@ async function createDateValueFromYYYYMM(yyyyMm: string) {
   }
 }
 
-import { updatePersonalInfo } from '@/api/userApi'
-import type { PersonalInfo } from '@/api/userApi'
+import { updatePersonalInfo } from '@/api/profileApi'
+import type { PersonalInfo } from '@/api/profileTypes'
 import { useUserStore } from '@/stores/userStore'
 
 type BasicInfomationEntry = PersonalInfo
@@ -91,6 +92,7 @@ const emit = defineEmits<{
   (e: 'save', payload: BasicInfomationEntry): void
   (e: 'cancel'): void
   (e: 'request-edit'): void
+  (e: 'edit-complete'): void
 }>()
 
 // participate in global profile edit/save/cancel via optional provided API
@@ -99,7 +101,6 @@ type ProfileEditor = {
 }
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 const userStore = useUserStore()
-const token = computed(() => userStore.user?.token || '')
 const isLoading = ref(false)
 const errorMessage = ref('')
 const fieldErrors = reactive({
@@ -108,9 +109,8 @@ const fieldErrors = reactive({
   birthday: '',
 })
 
-// local edit state
+// local edit state — used directly as the single source of truth for edit mode
 const localEditing = ref(false)
-const isEditable = computed(() => localEditing.value)
 
 // local draft state used while editing
 const information: Ref<BasicInfomationEntry> = ref(
@@ -133,11 +133,10 @@ async function initBirthdays() {
 }
 
 // when parent provides new modelValue, sync into local draft when not editing
-import { watch } from 'vue'
 watch(
   () => props.modelValue,
   async (nv) => {
-    if (!isEditable.value) {
+    if (!localEditing.value) {
       const nextValue = nv ? JSON.parse(JSON.stringify(nv)) : { name: '', gender: '', birthday: '' }
       information.value = nextValue
       committedInformation.value = JSON.parse(JSON.stringify(nextValue))
@@ -149,6 +148,15 @@ watch(
 
 const defaultPlaceholder = today(getLocalTimeZone())
 const df = new DateFormatter('en-US', { dateStyle: 'medium' })
+
+function genderLabel(gender: string) {
+  if (!gender) return '-'
+  if (gender.toLowerCase() === 'male') return t('info.gender.male') || 'Male'
+  if (gender.toLowerCase() === 'female') return t('info.gender.female') || 'Female'
+  if (gender.toLowerCase() === 'other') return t('info.gender.other') || 'Other'
+  // Fallback: capitalize first letter of each word
+  return gender.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+}
 
 function getHttpErrorMessage(err: any, fallbackKey: string) {
   const status = err?.response?.status
@@ -177,8 +185,9 @@ function clearFieldErrors() {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
-  if (!token.value) {
-    errorMessage.value = t('info.errors.notLoggedIn') || 'You are not logged in.'
+  if (!localEditing.value || !userStore.isLoggedIn) {
+    if (!userStore.isLoggedIn)
+      errorMessage.value = t('info.errors.notLoggedIn') || 'You are not logged in.'
     return
   }
   clearFieldErrors()
@@ -202,17 +211,20 @@ function save(e?: Event) {
     gender: genderValue,
     birthday: birthdayValue,
   }
-  updatePersonalInfo(payload, token.value)
-    .then((res) => {
-      const updated = res.data
-      information.value = JSON.parse(JSON.stringify(updated))
-      committedInformation.value = JSON.parse(JSON.stringify(updated))
-      emit('update:modelValue', JSON.parse(JSON.stringify(updated)))
-      emit('save', JSON.parse(JSON.stringify(updated)))
+  updatePersonalInfo(payload)
+    .then(() => {
+      // Use local payload as source of truth since the API only returns { message }
+      information.value = JSON.parse(JSON.stringify(payload))
+      committedInformation.value = JSON.parse(JSON.stringify(payload))
+      emit('update:modelValue', JSON.parse(JSON.stringify(payload)))
+      emit('save', JSON.parse(JSON.stringify(payload)))
       localEditing.value = false
+      emit('edit-complete')
+      toast.success(t('profile.toast.information.saveSuccess'))
     })
     .catch((err) => {
       errorMessage.value = getHttpErrorMessage(err, 'info.errors.saveFailed') || 'Failed to save personal information.'
+      toast.error(t('profile.toast.information.saveFailed'))
     })
     .finally(() => {
       isLoading.value = false
@@ -220,9 +232,8 @@ function save(e?: Event) {
 }
 
 function cancel() {
-  // discard drafts and notify parent
+  // discard drafts and restore last committed state
   information.value = JSON.parse(JSON.stringify(committedInformation.value))
-  // reinitialize birthday values from restored information
   initBirthdays()
   emit('cancel')
   errorMessage.value = ''
@@ -231,8 +242,10 @@ function cancel() {
 }
 
 function startEdit() {
+  // enter edit mode
   localEditing.value = true
   clearFieldErrors()
+  errorMessage.value = ''
   emit('request-edit')
 }
 
@@ -254,7 +267,7 @@ onMounted(async () => {
           <CardTitle class="text-3xl font-bold">
             {{ t("info.title") }}
           </CardTitle>
-          <div v-if="!isEditable">
+          <div v-if="!localEditing">
             <Button type="button" :disabled="isLoading" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
           </div>
           <div v-else class="flex gap-2">
@@ -265,7 +278,7 @@ onMounted(async () => {
       </CardHeader>
       <CardContent>
           <div v-if="errorMessage" class="text-sm text-destructive mb-2">{{ errorMessage }}</div>
-          <div v-if="isEditable">
+          <div v-if="localEditing">
           <form @submit="save">
             <FieldGroup>
               <Field>
@@ -324,7 +337,7 @@ onMounted(async () => {
 
               <Field>
                 <FieldLabel>{{ t('info.gender.title') || 'Gender' }}</FieldLabel>
-                <div class="text-sm text-left">{{ information.gender || '-' }}</div>
+                <div class="text-sm text-left">{{ genderLabel(information.gender) }}</div>
               </Field>
 
               <Field>
@@ -335,7 +348,7 @@ onMounted(async () => {
           </div>
           <div v-else class="text-center text-muted-foreground">
             <div class="mb-2">{{ t('info.empty') || 'No information records' }}</div>
-            <Button type="button" @click="$emit('request-edit')">{{ t('info.add') || 'Add information' }}</Button>
+            <Button type="button" @click="startEdit">{{ t('info.add') || 'Add information' }}</Button>
           </div>
         </div>
       </CardContent>
