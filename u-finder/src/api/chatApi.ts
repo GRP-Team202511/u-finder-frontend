@@ -1,4 +1,4 @@
-import type { ConversationsResponse, ConversationMessagesResponse } from '@/types/chat'
+import type { ConversationsResponse, ConversationMessagesResponse, DeleteConversationResponse } from '@/types/chat'
 import http from './http'
 
 type StreamOptions = {
@@ -105,6 +105,12 @@ export const getConversationMessages = async (params: {
       limit: params.limit,
     },
   })
+  
+  return response.data
+}
+
+export const deleteConversation = async (conversationId: string): Promise<DeleteConversationResponse> => {
+  const response = await http.delete<DeleteConversationResponse>(`/chat/conversations/${conversationId}`)
   
   return response.data
 }
