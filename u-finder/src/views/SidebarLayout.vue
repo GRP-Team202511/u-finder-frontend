@@ -15,10 +15,10 @@ import {
 </script>
 
 <template>
-  <SidebarProvider>
+  <SidebarProvider class="h-dvh">
     <AppSidebar />
     <SidebarInset>
-      <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div class="flex h-full min-h-0 flex-1 flex-col gap-4 overflow-auto p-4 pt-0">
         <router-view />
       </div>
     </SidebarInset>

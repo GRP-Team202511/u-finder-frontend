@@ -14,8 +14,10 @@ import 'vue-sonner/style.css'
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0 2rem;
   text-align: center;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 nav {

@@ -43,6 +43,12 @@ const routes: RouteRecordRaw[] = [
         name: 'UserProfile',
         component: () => import('../views/profile/UserProfile.vue'),
         meta: { requiresAuth: true }
+      },
+      {
+        path: 'aichat',
+        name: 'AIChat',
+        component: () => import('../views/chat/AIChat.vue'),
+        meta: { requiresAuth: true }
       }
     ]
   }
