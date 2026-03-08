@@ -3,9 +3,12 @@ import {
   ChevronsUpDown,
   Settings,
   LogOut,
+  Languages,
+  Check,
 } from "lucide-vue-next"
 
 import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
 
 import {
   Avatar,
@@ -19,6 +22,9 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useRouter, RouterLink } from 'vue-router'
@@ -40,8 +46,38 @@ const props = defineProps<{
 }>()
 const { isMobile } = useSidebar()
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const userStore = useUserStore()
+
+// Load saved language from localStorage on component mount
+const savedLang = localStorage.getItem('preferred-language')
+if (savedLang && ['en', 'zh-CN', 'zh-TW'].includes(savedLang)) {
+  locale.value = savedLang as 'en' | 'zh-CN' | 'zh-TW'
+}
+
+const languages = [
+  {
+    code: 'en' as const,
+    name: 'English'
+  },
+  {
+    code: 'zh-CN' as const,
+    name: '简体中文'
+  },
+  {
+    code: 'zh-TW' as const,
+    name: '繁體中文'
+  }
+]
+
+const currentLocale = computed(() => locale.value)
+
+const switchLanguage = (langCode: string) => {
+  if (['en', 'zh-CN', 'zh-TW'].includes(langCode)) {
+    locale.value = langCode as 'en' | 'zh-CN' | 'zh-TW'
+    localStorage.setItem('preferred-language', langCode)
+  }
+}
 
 const handleLogout = async () => {
   try {
@@ -100,14 +136,34 @@ const handleLogout = async () => {
         <DropdownMenuGroup>
           <DropdownMenuItem as-child>
             <RouterLink :to="{ name: 'Cover' }"> <!--to be updated when the page is being developed-->
-              <Settings />
+              <Settings class="size-4" />
               {{ t('sidebar.settings') }}
             </RouterLink>
           </DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger class="gap-2">
+              <Languages class="size-4" />
+              {{ t('sidebar.language') }}
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem 
+                v-for="lang in languages" 
+                :key="lang.code"
+                @click="switchLanguage(lang.code)"
+                class="cursor-pointer"
+              >
+                <Check 
+                  class="size-4 mr-2" 
+                  :class="currentLocale === lang.code ? 'opacity-100' : 'opacity-0'"
+                />
+                {{ lang.name }}
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem @click="handleLogout">
-          <LogOut />
+          <LogOut class="size-4" />
           {{ t('sidebar.logout') }}
         </DropdownMenuItem>
         </DropdownMenuContent>

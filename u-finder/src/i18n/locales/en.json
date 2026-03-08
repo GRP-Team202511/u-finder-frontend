@@ -89,6 +89,7 @@
         "history": "History",
         "profile": "Profile",
         "settings": "Settings",
+        "language": "Language",
         "logout": "Log out"
     },
     "profile": {
