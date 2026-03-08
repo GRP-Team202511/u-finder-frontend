@@ -372,6 +372,54 @@
         "pickDate": "選擇日期",
         "pickStart": "選擇開始日期",
         "pickEnd": "選擇結束日期"
+    },
+    "chat": {
+        "title": "U-Finder",
+        "tagline": "發現最適合你的大學。",
+        "input": {
+            "label": "訊息",
+            "placeholder": "與 U-Finder 聊天...",
+            "disclaimer": "U-Finder 可能會出錯。請核實重要資訊。"
+        },
+        "errors": {
+            "streamFailed": "抱歉，我無法完成該請求。"
+        },
+        "card": {
+            "locationNotSpecified": "未指定地點",
+            "tuitionNotSpecified": "未指定學費",
+            "notSpecified": "未指定",
+            "program": "項目",
+            "programDetails": "項目詳情",
+            "admissions": "錄取要求",
+            "tuition": "學費",
+            "careerOutcomes": "就業前景",
+            "linksTitle": "相關連結",
+            "verified": "已驗證",
+            "tabs": {
+                "program": "項目",
+                "admission": "錄取 + 學費",
+                "career": "就業 + 連結"
+            },
+            "labels": {
+                "degree": "學位",
+                "field": "領域",
+                "track": "方向",
+                "type": "類型",
+                "duration": "學制",
+                "language": "授課語言",
+                "faculty": "學院",
+                "deadline": "申請截止日期",
+                "languageReqs": "語言要求",
+                "academicRequirements": "學術要求",
+                "otherRequirements": "其他要求",
+                "cost": "費用"
+            },
+            "links": {
+                "officialProgram": "官方項目頁面",
+                "universitySite": "大學官網",
+                "facultySite": "學院官網"
+            }
+        }
     }
 
 }
