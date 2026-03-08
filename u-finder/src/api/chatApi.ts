@@ -1,3 +1,6 @@
+import type { ConversationsResponse } from '@/types/chat'
+import http from './http'
+
 type StreamOptions = {
   message: string
   conversationId: string | null
@@ -74,4 +77,18 @@ export const streamChat = (options: StreamOptions) => {
   })()
 
   return { controller, done }
+}
+
+export const getConversations = async (params?: {
+  last_id?: string
+  limit?: number
+}): Promise<ConversationsResponse> => {
+  const response = await http.get<ConversationsResponse>('/chat/conversations', {
+    params: {
+      last_id: params?.last_id,
+      limit: params?.limit,
+    },
+  })
+  
+  return response.data
 }
