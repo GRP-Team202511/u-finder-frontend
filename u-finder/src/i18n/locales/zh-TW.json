@@ -101,10 +101,10 @@
         "retry": "重試",
         "errors": {
             "loadFailed": "哎呀，出錯啦……",
-            "loadFailedDescription": "無法載入您的個人資料資料，請嘗試重新整理頁面。"
+            "loadFailedDescription": "無法載入您的個人資料，請嘗試重新整理頁面。"
         },
         "toast": {
-            "loadFailed": "載入個人資料資料失敗",
+            "loadFailed": "載入個人資料失敗",
             "information": {
                 "saveSuccess": "個人資訊儲存成功",
                 "saveFailed": "個人資訊儲存失敗"
