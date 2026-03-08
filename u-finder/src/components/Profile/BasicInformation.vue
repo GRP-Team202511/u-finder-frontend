@@ -75,7 +75,7 @@ async function createDateValueFromYYYYMM(yyyyMm: string) {
 }
 
 import { updatePersonalInfo } from '@/api/profileApi'
-import type { PersonalInfo } from '@/api/profileTypes'
+import type { PersonalInfo } from '@/types/profileTypes'
 import { useUserStore } from '@/stores/userStore'
 
 type BasicInfomationEntry = PersonalInfo
