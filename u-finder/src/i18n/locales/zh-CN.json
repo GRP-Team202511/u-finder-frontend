@@ -83,6 +83,14 @@
             "resendError": "重发验证码失败，请重试。"
         }
     },
+    "sidebar": {
+        "aiChat": "AI 聊天",
+        "favourite": "收藏",
+        "history": "历史记录",
+        "profile": "个人资料",
+        "settings": "设置",
+        "logout": "登出"
+    },
     "profile": {
         "title": "个人资料",
         "edit": "编辑",
@@ -96,7 +104,39 @@
             "loadFailedDescription": "无法加载您的个人资料数据，请尝试刷新页面。"
         },
         "toast": {
-            "loadFailed": "加载个人资料数据失败"
+            "loadFailed": "加载个人资料数据失败",
+            "information": {
+                "saveSuccess": "个人信息保存成功",
+                "saveFailed": "个人信息保存失败"
+            },
+            "education": {
+                "saveSuccess": "教育背景保存成功",
+                "saveFailed": "教育背景保存失败"
+            },
+            "academic": {
+                "saveSuccess": "学术成果保存成功",
+                "saveFailed": "学术成果保存失败"
+            },
+            "test": {
+                "saveSuccess": "标准化考试保存成功",
+                "saveFailed": "标准化考试保存失败"
+            },
+            "internship": {
+                "saveSuccess": "实习经历保存成功",
+                "saveFailed": "实习经历保存失败"
+            },
+            "project": {
+                "saveSuccess": "项目经历保存成功",
+                "saveFailed": "项目经历保存失败"
+            },
+            "campusExp": {
+                "saveSuccess": "校园经历保存成功",
+                "saveFailed": "校园经历保存失败"
+            },
+            "award": {
+                "saveSuccess": "奖项保存成功",
+                "saveFailed": "奖项保存失败"
+            }
         }
     },
     "info": {
@@ -166,6 +206,11 @@
             "typeRequired": "考试类型为必填项",
             "subjectRequired": "至少需要填写一个科目"
         }
+    },
+    "date": {
+        "pickDate": "选择日期",
+        "pickStart": "选择开始日期",
+        "pickEnd": "选择结束日期"
     }
 
 }
