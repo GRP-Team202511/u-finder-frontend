@@ -4,7 +4,7 @@ import type {
   AllProfile,
   ProfileFieldName,
   ProfileFieldTypeMap,
-} from './profileTypes'
+} from '../types/profileTypes'
 
 // ─── Personal Info ────────────────────────────────────────────────────────────
 

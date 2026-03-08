@@ -14,7 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getAllProfile, updateProfileField } from '@/api/profileApi'
-import type { PersonalInfo } from '@/api/profileTypes'
+import type { PersonalInfo } from '@/types/profileTypes'
 import { useUserStore } from '@/stores/userStore'
 
 const { t } = useI18n()
