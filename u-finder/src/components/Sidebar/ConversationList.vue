@@ -48,10 +48,10 @@ const isHovered = (conversationId: string) => {
 }
 
 const handleConversationClick = (conversationId: string) => {
-  // 保存到 sessionStorage
+  // Save to sessionStorage
   sessionStorage.setItem('currentConversationId', conversationId)
   activeConversationId.value = conversationId
-  // 触发自定义事件通知 AIChat
+  // Trigger custom event to notify AIChat
   window.dispatchEvent(new CustomEvent('conversation-changed', { detail: { conversationId } }))
   router.push({ name: 'AIChat' })
 }
@@ -66,17 +66,17 @@ const handleRename = (conversationId: string, currentName: string, event: Event)
   emit('rename', conversationId, currentName)
 }
 
-// 监听对话切换事件
+// Listen to conversation switching event
 const onConversationChanged = (event: CustomEvent) => {
   const { conversationId } = event.detail
   activeConversationId.value = conversationId
 }
 
 onMounted(() => {
-  // 从 sessionStorage 读取当前激活的对话
+  // Read currently active conversation from sessionStorage
   activeConversationId.value = sessionStorage.getItem('currentConversationId')
   
-  // 监听对话切换事件
+  // Listen to conversation switching event
   window.addEventListener('conversation-changed', onConversationChanged as EventListener)
   
   if (!loadMoreTrigger.value) return

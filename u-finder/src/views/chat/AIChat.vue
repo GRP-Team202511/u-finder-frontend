@@ -174,13 +174,13 @@ const handleSsePayload = (messageId: string, payload: string) => {
 
 	if (typeof parsed.conversation_id === "string" && !conversationId.value) {
 		conversationId.value = parsed.conversation_id;
-		// 保存到 sessionStorage
+		// Save to sessionStorage
 		sessionStorage.setItem('currentConversationId', parsed.conversation_id);
-		// 触发事件通知 ConversationList 更新高亮状态
+		// Trigger event to notify ConversationList to update highlight state
 		window.dispatchEvent(new CustomEvent('conversation-changed', { 
 			detail: { conversationId: parsed.conversation_id } 
 		}));
-		// 只在第一次收到 conversationId 时本地添加新对话
+		// Add new conversation locally only on first conversationId received
 		if (!hasRefreshedConversations.value) {
 			hasRefreshedConversations.value = true;
 			addNewConversation?.(parsed.conversation_id);
@@ -259,13 +259,13 @@ const loadHistoryMessages = async (convId: string) => {
 			conversationId: convId,
 		});
 		
-		// 清空当前消息
+		// Clear current messages
 		messages.value = [];
 		messageCounter = 1;
 		
-		// 转换历史消息格式
+		// Convert history message format
 		for (const msg of response.data) {
-			// 添加用户消息
+			// Add user message
 			messages.value.push({
 				id: `m${messageCounter++}`,
 				role: "user",
@@ -273,7 +273,7 @@ const loadHistoryMessages = async (convId: string) => {
 				content: msg.query,
 			});
 			
-			// 添加 AI 回复
+			// Add AI reply
 			const aiMessage: ChatMessageData = {
 				id: `m${messageCounter++}`,
 				role: "ai",
@@ -281,12 +281,12 @@ const loadHistoryMessages = async (convId: string) => {
 				content: "",
 			};
 			
-			// 获取 AI 回复内容：优先使用 answer，为空时使用 agent_thoughts
+			// Get AI reply content: prefer `answer`; if empty, fall back to `agent_thoughts`
 			let aiContent = msg.answer;
 			if (!aiContent || aiContent.trim() === '') {
-				// answer 为空，尝试从 agent_thoughts 中提取
+				// `answer` is empty — attempt to extract from `agent_thoughts`
 				if (msg.agent_thoughts && msg.agent_thoughts.length > 0) {
-					// 按 position 排序并合并内容
+					// Sort by `position` and concatenate contents
 					const sortedThoughts = [...msg.agent_thoughts].sort((a, b) => a.position - b.position);
 					aiContent = sortedThoughts
 						.map(thought => {
@@ -300,7 +300,7 @@ const loadHistoryMessages = async (convId: string) => {
 				}
 			}
 			
-			// 解析内容中的程序卡片
+			// Parse program card
 			const { text, cards } = extractProgramCards(aiContent || '');
 			
 			if (cards.length > 0) {
@@ -317,7 +317,7 @@ const loadHistoryMessages = async (convId: string) => {
 			messages.value.push(aiMessage);
 		}
 		
-		// 设置当前 conversationId
+		// Set current conversationId
 		conversationId.value = convId;
 	} catch (error) {
 		console.error('Failed to load conversation history:', error);
@@ -349,19 +349,19 @@ const handleSend = (text: string) => {
 	void startStream(trimmed, aiMessageId);
 };
 
-// 处理对话切换
+// Handle conversation switching
 const handleConversationChange = (convId: string | null) => {
-	// 忽略与当前相同的 conversationId
+	// Ignore if same as current conversationId
 	if (convId && convId === conversationId.value) return;
 	
-	// 停止当前流
+	// Stop current stream
 	stopStream();
 	
 	if (convId) {
-		// 加载历史对话
+		// Load history conversation
 		void loadHistoryMessages(convId);
 	} else {
-		// 新对话：清空消息并重置刷新标志
+		// New conversation: clear messages and reset refresh flag
 		messages.value = [];
 		conversationId.value = null;
 		messageCounter = 1;
@@ -369,20 +369,20 @@ const handleConversationChange = (convId: string | null) => {
 	}
 };
 
-// 监听自定义事件（从 Sidebar 触发）
+// Listen to custom event (triggered from Sidebar)
 const onConversationChanged = (event: CustomEvent) => {
 	const { conversationId: newConvId } = event.detail;
 	handleConversationChange(newConvId);
 };
 
 onMounted(() => {
-	// 从 sessionStorage 读取当前对话
+	// Read current conversation from sessionStorage
 	const savedConvId = sessionStorage.getItem('currentConversationId');
 	if (savedConvId) {
 		handleConversationChange(savedConvId);
 	}
 	
-	// 监听对话变化事件
+	// Listen to conversation change events
 	window.addEventListener('conversation-changed', onConversationChanged as EventListener);
 });
 
