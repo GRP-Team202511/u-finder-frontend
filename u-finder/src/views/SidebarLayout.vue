@@ -12,6 +12,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { useFavouriteStore } from "@/stores/favouriteStore"
+
+useFavouriteStore().startStorageSync()
 </script>
 
 <template>
