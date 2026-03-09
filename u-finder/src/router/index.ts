@@ -45,7 +45,7 @@ const routes: RouteRecordRaw[] = [
         meta: { requiresAuth: true }
       },
       {
-        path: 'aichat/:conversationId?',
+        path: 'aichat',
         name: 'AIChat',
         component: () => import('../views/chat/AIChat.vue'),
         meta: { requiresAuth: true }

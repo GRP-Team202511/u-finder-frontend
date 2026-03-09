@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { MoreVertical, Pencil, Trash2 } from 'lucide-vue-next'
 import type { ConversationItem } from '@/types/chat'
@@ -32,18 +32,23 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
-const route = useRoute()
 const router = useRouter()
 
+const activeConversationId = ref<string | null>(null)
 const loadMoreTrigger = ref<HTMLElement | null>(null)
 let observer: IntersectionObserver | null = null
 
 const isActive = (conversationId: string) => {
-  return route.params.conversationId === conversationId
+  return activeConversationId.value === conversationId
 }
 
 const handleConversationClick = (conversationId: string) => {
-  router.push({ name: 'AIChat', params: { conversationId } })
+  // 保存到 sessionStorage
+  sessionStorage.setItem('currentConversationId', conversationId)
+  activeConversationId.value = conversationId
+  // 触发自定义事件通知 AIChat
+  window.dispatchEvent(new CustomEvent('conversation-changed', { detail: { conversationId } }))
+  router.push({ name: 'AIChat' })
 }
 
 const handleDelete = (conversationId: string, event: Event) => {
@@ -56,7 +61,19 @@ const handleRename = (conversationId: string, currentName: string, event: Event)
   emit('rename', conversationId, currentName)
 }
 
+// 监听对话切换事件
+const onConversationChanged = (event: CustomEvent) => {
+  const { conversationId } = event.detail
+  activeConversationId.value = conversationId
+}
+
 onMounted(() => {
+  // 从 sessionStorage 读取当前激活的对话
+  activeConversationId.value = sessionStorage.getItem('currentConversationId')
+  
+  // 监听对话切换事件
+  window.addEventListener('conversation-changed', onConversationChanged as EventListener)
+  
   if (!loadMoreTrigger.value) return
   
   observer = new IntersectionObserver((entries) => {
@@ -71,6 +88,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   observer?.disconnect()
+  window.removeEventListener('conversation-changed', onConversationChanged as EventListener)
 })
 </script>
 

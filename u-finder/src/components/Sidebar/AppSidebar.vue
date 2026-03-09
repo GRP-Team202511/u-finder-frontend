@@ -114,6 +114,10 @@ const loadConversations = async (isLoadMore = false) => {
 
 // Handle new chat
 const handleNewChat = () => {
+  // 清除 sessionStorage 中的 conversationId
+  sessionStorage.removeItem('currentConversationId')
+  // 触发自定义事件通知 AIChat
+  window.dispatchEvent(new CustomEvent('conversation-changed', { detail: { conversationId: null } }))
   router.push({ name: 'AIChat' })
 }
 

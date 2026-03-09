@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch, inject } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { computed, onBeforeUnmount, onMounted, ref, inject } from "vue";
 import { useI18n } from "vue-i18n";
 import { toast } from 'vue-sonner';
 import ChatWindow from "@/components/Chat/ChatWindow.vue";
@@ -14,8 +13,6 @@ const messages = ref<ChatMessageData[]>([]);
 const isSending = computed(() =>
 	messages.value.some((message) => Boolean(message.isLoading))
 );
-const route = useRoute();
-const router = useRouter();
 const userStore = useUserStore();
 const streamController = ref<AbortController | null>(null);
 const activeStreamToken = ref<number | null>(null);
@@ -177,6 +174,8 @@ const handleSsePayload = (messageId: string, payload: string) => {
 
 	if (typeof parsed.conversation_id === "string" && !conversationId.value) {
 		conversationId.value = parsed.conversation_id;
+		// 保存到 sessionStorage
+		sessionStorage.setItem('currentConversationId', parsed.conversation_id);
 		// 只在第一次收到 conversationId 时刷新 Sidebar
 		if (!hasRefreshedConversations.value) {
 			hasRefreshedConversations.value = true;
@@ -346,29 +345,43 @@ const handleSend = (text: string) => {
 	void startStream(trimmed, aiMessageId);
 };
 
-// 监听路由参数变化
-watch(
-	() => route.params.conversationId,
-	(newConvId) => {
-		// 停止当前流
-		stopStream();
-		
-		if (newConvId && typeof newConvId === 'string') {
-			// 加载历史对话
-			void loadHistoryMessages(newConvId);
-		} else {
-			// 新对话：清空消息并重置刷新标志
-			messages.value = [];
-			conversationId.value = null;
-			messageCounter = 1;
-			hasRefreshedConversations.value = false;
-		}
-	},
-	{ immediate: true }
-);
+// 处理对话切换
+const handleConversationChange = (convId: string | null) => {
+	// 停止当前流
+	stopStream();
+	
+	if (convId) {
+		// 加载历史对话
+		void loadHistoryMessages(convId);
+	} else {
+		// 新对话：清空消息并重置刷新标志
+		messages.value = [];
+		conversationId.value = null;
+		messageCounter = 1;
+		hasRefreshedConversations.value = false;
+	}
+};
+
+// 监听自定义事件（从 Sidebar 触发）
+const onConversationChanged = (event: CustomEvent) => {
+	const { conversationId: newConvId } = event.detail;
+	handleConversationChange(newConvId);
+};
+
+onMounted(() => {
+	// 从 sessionStorage 读取当前对话
+	const savedConvId = sessionStorage.getItem('currentConversationId');
+	if (savedConvId) {
+		handleConversationChange(savedConvId);
+	}
+	
+	// 监听对话变化事件
+	window.addEventListener('conversation-changed', onConversationChanged as EventListener);
+});
 
 onBeforeUnmount(() => {
 	stopStream();
+	window.removeEventListener('conversation-changed', onConversationChanged as EventListener);
 });
 </script>
 
