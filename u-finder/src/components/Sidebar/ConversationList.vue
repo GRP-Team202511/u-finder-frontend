@@ -35,11 +35,16 @@ const { t } = useI18n()
 const router = useRouter()
 
 const activeConversationId = ref<string | null>(null)
+const hoveredConversationId = ref<string | null>(null)
 const loadMoreTrigger = ref<HTMLElement | null>(null)
 let observer: IntersectionObserver | null = null
 
 const isActive = (conversationId: string) => {
   return activeConversationId.value === conversationId
+}
+
+const isHovered = (conversationId: string) => {
+  return hoveredConversationId.value === conversationId
 }
 
 const handleConversationClick = (conversationId: string) => {
@@ -121,6 +126,8 @@ onUnmounted(() => {
               : 'hover:bg-accent hover:text-accent-foreground'
           )"
           @click="handleConversationClick(conversation.id)"
+          @mouseenter="hoveredConversationId = conversation.id"
+          @mouseleave="hoveredConversationId = null"
         >
           <!-- Conversation Name -->
           <span class="flex-1 truncate text-sm min-w-0 text-left">
@@ -133,7 +140,10 @@ onUnmounted(() => {
               <Button
                 variant="ghost"
                 size="icon"
-                class="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                :class="cn(
+                  'h-6 w-6 transition-opacity shrink-0',
+                  isHovered(conversation.id) ? 'opacity-100' : 'opacity-0'
+                )"
                 @click.stop
               >
                 <MoreVertical class="h-4 w-4" />
