@@ -19,7 +19,7 @@ const activeStreamToken = ref<number | null>(null);
 const conversationId = ref<string | null>(null);
 const activeMessageId = ref<string | null>(null);
 const { t } = useI18n();
-const refreshConversations = inject<(() => void) | undefined>('refreshConversations');
+const addNewConversation = inject<((conversationId: string) => void) | undefined>('addNewConversation');
 const hasRefreshedConversations = ref(false);
 let messageCounter = 1;
 const programCardStart = "<<__CARD__>>";
@@ -176,10 +176,14 @@ const handleSsePayload = (messageId: string, payload: string) => {
 		conversationId.value = parsed.conversation_id;
 		// 保存到 sessionStorage
 		sessionStorage.setItem('currentConversationId', parsed.conversation_id);
-		// 只在第一次收到 conversationId 时刷新 Sidebar
+		// 触发事件通知 ConversationList 更新高亮状态
+		window.dispatchEvent(new CustomEvent('conversation-changed', { 
+			detail: { conversationId: parsed.conversation_id } 
+		}));
+		// 只在第一次收到 conversationId 时本地添加新对话
 		if (!hasRefreshedConversations.value) {
 			hasRefreshedConversations.value = true;
-			refreshConversations?.();
+			addNewConversation?.(parsed.conversation_id);
 		}
 	}
 
@@ -347,6 +351,9 @@ const handleSend = (text: string) => {
 
 // 处理对话切换
 const handleConversationChange = (convId: string | null) => {
+	// 忽略与当前相同的 conversationId
+	if (convId && convId === conversationId.value) return;
+	
 	// 停止当前流
 	stopStream();
 	

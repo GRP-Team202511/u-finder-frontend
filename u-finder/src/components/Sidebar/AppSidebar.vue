@@ -177,13 +177,32 @@ const confirmRename = async () => {
   }
 }
 
+// Add new conversation to list (local update)
+const addNewConversation = (conversationId: string) => {
+  // Check if already exists
+  const exists = conversations.value.some(conv => conv.id === conversationId)
+  if (exists) return
+  
+  // Add to top of list
+  const newConversation: ConversationItem = {
+    id: conversationId,
+    name: t('sidebar.newConversation'),
+    inputs: {},
+    status: 'normal',
+    created_at: Date.now() / 1000,
+    updated_at: Date.now() / 1000,
+  }
+  conversations.value = [newConversation, ...conversations.value]
+}
+
 onMounted(() => {
   loadConversations()
 })
 
 // Expose for parent component
 defineExpose({
-  loadConversations
+  loadConversations,
+  addNewConversation
 })
 </script>
 

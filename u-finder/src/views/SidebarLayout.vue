@@ -16,9 +16,9 @@ import {
 
 const sidebarRef = ref<InstanceType<typeof AppSidebar>>()
 
-// Provide refresh function for child components
-provide('refreshConversations', () => {
-  sidebarRef.value?.loadConversations(false)
+// Provide function to add new conversation locally
+provide('addNewConversation', (conversationId: string) => {
+  sidebarRef.value?.addNewConversation(conversationId)
 })
 </script>
 
