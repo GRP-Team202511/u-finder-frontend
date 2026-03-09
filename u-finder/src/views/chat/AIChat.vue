@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { computed, onBeforeUnmount, ref, watch, inject } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { toast } from 'vue-sonner';
 import ChatWindow from "@/components/Chat/ChatWindow.vue";
@@ -15,12 +15,15 @@ const isSending = computed(() =>
 	messages.value.some((message) => Boolean(message.isLoading))
 );
 const route = useRoute();
+const router = useRouter();
 const userStore = useUserStore();
 const streamController = ref<AbortController | null>(null);
 const activeStreamToken = ref<number | null>(null);
 const conversationId = ref<string | null>(null);
 const activeMessageId = ref<string | null>(null);
 const { t } = useI18n();
+const refreshConversations = inject<(() => void) | undefined>('refreshConversations');
+const hasRefreshedConversations = ref(false);
 let messageCounter = 1;
 const programCardStart = "<<__CARD__>>";
 const programCardEnd = "<<__END__>>";
@@ -174,6 +177,11 @@ const handleSsePayload = (messageId: string, payload: string) => {
 
 	if (typeof parsed.conversation_id === "string" && !conversationId.value) {
 		conversationId.value = parsed.conversation_id;
+		// 只在第一次收到 conversationId 时刷新 Sidebar
+		if (!hasRefreshedConversations.value) {
+			hasRefreshedConversations.value = true;
+			refreshConversations?.();
+		}
 	}
 
 	if (parsed.event === "message_end" || parsed.done === true) {
@@ -330,10 +338,11 @@ watch(
 			// 加载历史对话
 			void loadHistoryMessages(newConvId);
 		} else {
-			// 新对话：清空消息
+			// 新对话：清空消息并重置刷新标志
 			messages.value = [];
 			conversationId.value = null;
 			messageCounter = 1;
+			hasRefreshedConversations.value = false;
 		}
 	},
 	{ immediate: true }

@@ -176,6 +176,11 @@ const confirmRename = async () => {
 onMounted(() => {
   loadConversations()
 })
+
+// Expose for parent component
+defineExpose({
+  loadConversations
+})
 </script>
 
 <template>

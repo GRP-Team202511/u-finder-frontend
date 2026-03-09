@@ -84,8 +84,7 @@
         }
     },
     "sidebar": {
-        "newChat": "新对话",
-        "conversations": "对话列表",
+        "newChat": "新对话",        "newConversation": "新对话",        "conversations": "对话列表",
         "noConversations": "暂无对话",
         "loadMore": "加载更多...",
         "loading": "加载中...",

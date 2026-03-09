@@ -85,6 +85,7 @@
     },
     "sidebar": {
         "newChat": "New Chat",
+        "newConversation": "New Conversation",
         "conversations": "Conversations",
         "noConversations": "No conversations yet",
         "loadMore": "Load more...",
