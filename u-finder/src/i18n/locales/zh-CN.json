@@ -104,7 +104,9 @@
         "save": "保存",
         "confirm": "确认",
         "renameSuccess": "重命名成功",
-        "renameFailed": "重命名失败"
+        "renameFailed": "重命名失败",
+        "deleteSuccess": "删除成功",
+        "deleteFailed": "删除失败"
     },
     "profile": {
         "title": "个人资料",

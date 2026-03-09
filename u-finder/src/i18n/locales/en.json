@@ -104,7 +104,9 @@
         "save": "Save",
         "confirm": "Confirm",
         "renameSuccess": "Conversation renamed successfully",
-        "renameFailed": "Failed to rename conversation"
+        "renameFailed": "Failed to rename conversation",
+        "deleteSuccess": "Conversation deleted successfully",
+        "deleteFailed": "Failed to delete conversation"
     },
     "profile": {
         "title": "Profile",

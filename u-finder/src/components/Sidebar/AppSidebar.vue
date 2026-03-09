@@ -26,18 +26,9 @@ import {
 } from "@/components/ui/sidebar"
 
 import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
-
-import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -140,10 +131,12 @@ const confirmDelete = async () => {
     conversations.value = conversations.value.filter(
       conv => conv.id !== deleteConversationId.value
     )
+    toast.success(t('sidebar.deleteSuccess'))
     showDeleteDialog.value = false
     deleteConversationId.value = undefined
   } catch (error) {
     console.error('Failed to delete conversation:', error)
+    toast.error(t('sidebar.deleteFailed'))
   }
 }
 
@@ -231,26 +224,24 @@ onMounted(() => {
   </Sidebar>
 
   <!-- Delete Confirmation Dialog -->
-  <Sheet v-model:open="showDeleteDialog">
-    <SheetContent side="bottom" class="sm:max-w-md sm:mx-auto">
-      <SheetHeader>
-        <SheetTitle>{{ t('sidebar.deleteConversation') }}</SheetTitle>
-        <SheetDescription>
+  <Dialog v-model:open="showDeleteDialog">
+    <DialogContent class="sm:max-w-md">
+      <DialogHeader>
+        <DialogTitle>{{ t('sidebar.deleteConversation') }}</DialogTitle>
+        <DialogDescription>
           {{ t('sidebar.deleteConfirm') }}
-        </SheetDescription>
-      </SheetHeader>
-      <SheetFooter class="mt-4">
-        <SheetClose as-child>
-          <Button variant="outline">
-            {{ t('sidebar.cancel') }}
-          </Button>
-        </SheetClose>
+        </DialogDescription>
+      </DialogHeader>
+      <DialogFooter>
+        <Button variant="outline" @click="showDeleteDialog = false">
+          {{ t('sidebar.cancel') }}
+        </Button>
         <Button variant="destructive" @click="confirmDelete">
           {{ t('sidebar.delete') }}
         </Button>
-      </SheetFooter>
-    </SheetContent>
-  </Sheet>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 
   <!-- Rename Dialog -->
   <Dialog v-model:open="showRenameDialog">
