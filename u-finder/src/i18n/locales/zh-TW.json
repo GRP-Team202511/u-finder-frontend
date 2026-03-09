@@ -83,6 +83,15 @@
             "resendError": "重發驗證碼失敗，請重試。"
         }
     },
+    "sidebar": {
+        "aiChat": "AI 聊天",
+        "favourite": "收藏",
+        "history": "歷史記錄",
+        "profile": "個人資料",
+        "settings": "設定",
+        "language": "語言",
+        "logout": "登出"
+    },
     "profile": {
         "title": "個人資料",
         "edit": "編輯",
@@ -93,10 +102,42 @@
         "retry": "重試",
         "errors": {
             "loadFailed": "哎呀，出錯啦……",
-            "loadFailedDescription": "無法載入您的個人資料資料，請嘗試重新整理頁面。"
+            "loadFailedDescription": "無法載入您的個人資料，請嘗試重新整理頁面。"
         },
         "toast": {
-            "loadFailed": "載入個人資料資料失敗"
+            "loadFailed": "載入個人資料失敗",
+            "information": {
+                "saveSuccess": "個人資訊儲存成功",
+                "saveFailed": "個人資訊儲存失敗"
+            },
+            "education": {
+                "saveSuccess": "教育背景儲存成功",
+                "saveFailed": "教育背景儲存失敗"
+            },
+            "academic": {
+                "saveSuccess": "學術成果儲存成功",
+                "saveFailed": "學術成果儲存失敗"
+            },
+            "test": {
+                "saveSuccess": "標準化考試儲存成功",
+                "saveFailed": "標準化考試儲存失敗"
+            },
+            "internship": {
+                "saveSuccess": "實習經歷儲存成功",
+                "saveFailed": "實習經歷儲存失敗"
+            },
+            "project": {
+                "saveSuccess": "專案經歷儲存成功",
+                "saveFailed": "專案經歷儲存失敗"
+            },
+            "campusExp": {
+                "saveSuccess": "校園經歷儲存成功",
+                "saveFailed": "校園經歷儲存失敗"
+            },
+            "award": {
+                "saveSuccess": "獎項儲存成功",
+                "saveFailed": "獎項儲存失敗"
+            }
         }
     },
     "info": {
@@ -161,10 +202,224 @@
             "startRequired": "開始日期為必填項"
         }
     },
+    "academic": {
+        "title": "學術成果",
+        "selectType": "選擇類型",
+        "selectTypeHint": "選擇類型以輸入詳細資訊。",
+        "empty": "目前無學術成果",
+        "add": "新增學術成果",
+        "type": {
+            "title": "類型",
+            "researchPaper": "研究論文",
+            "patent": "專利"
+        },
+        "researchPaper": {
+            "title": "標題",
+            "titlePlaceholder": "論文標題",
+            "doi": "DOI",
+            "doiPlaceholder": "DOI",
+            "abstract": "摘要",
+            "abstractPlaceholder": "摘要"
+        },
+        "patent": {
+            "title": "標題",
+            "titlePlaceholder": "專利標題",
+            "number": "專利號",
+            "numberPlaceholder": "專利號",
+            "region": "地區",
+            "regionPlaceholder": "地區",
+            "description": "描述",
+            "descriptionPlaceholder": "描述"
+        },
+        "validation": {
+            "typeRequired": "學術成果類型為必填項",
+            "titleRequired": "標題為必填項"
+        }
+    },
     "test": {
+        "title": "標準化考試",
+        "type": "類型",
+        "selectType": "選擇考試類型",
+        "selectTypeHint": "選擇類型以輸入詳細資訊。",
+        "empty": "目前無標準化考試記錄",
+        "add": "新增標準化考試",
+        "testDate": "考試日期",
+        "registrationNumber": "註冊號",
+        "examSession": "考試場次",
+        "overallPredicted": "預估總分",
+        "examYear": "考試年份",
+        "month": "考試月份",
+        "subjects": "科目",
+        "subject": "科目",
+        "grade": "成績",
+        "score": "分數",
+        "cefrLevel": "CEFR 等級",
+        "types": {
+            "ielts": "雅思 (IELTS)",
+            "toeflIbt": "托福 (TOEFL iBT)",
+            "duolingo": "多鄰國英語測試 (Duolingo)",
+            "gre": "GRE",
+            "gmat": "GMAT",
+            "sat": "SAT",
+            "act": "ACT",
+            "aLevel": "A-Level",
+            "ap": "AP",
+            "ibDiploma": "IB 文憑 (IB Diploma)",
+            "cae": "劍橋英語 C1 高級 (CAE)"
+        },
+        "scores": {
+            "title": "分數",
+            "overall": "總分 (Overall)",
+            "listening": "聽力 (Listening)",
+            "reading": "閱讀 (Reading)",
+            "writing": "寫作 (Writing)",
+            "speaking": "口語 (Speaking)",
+            "literacy": "Literacy",
+            "comprehension": "Comprehension",
+            "conversation": "Conversation",
+            "production": "Production",
+            "verbal": "Verbal Reasoning",
+            "quantitative": "Quantitative Reasoning",
+            "analyticalWriting": "Analytical Writing",
+            "total": "總分 (Total)",
+            "integratedReasoning": "Integrated Reasoning",
+            "math": "數學 (Math)",
+            "ebrw": "Evidence-Based Reading and Writing",
+            "essayOptional": "Essay（可選）",
+            "composite": "Composite",
+            "english": "English",
+            "science": "Science",
+            "writingOptional": "Writing（可選）",
+            "corePoints": "Core Points",
+            "extendedEssay": "Extended Essay",
+            "tok": "TOK",
+            "readingUseOfEnglish": "Reading & Use of English"
+        },
         "validation": {
             "typeRequired": "考試類型為必填項",
             "subjectRequired": "至少需要填寫一個科目"
+        }
+    },
+    "internship": {
+        "title": "實習經歷",
+        "company": "公司",
+        "role": "職位",
+        "time": {
+            "start": "開始日期",
+            "end": "結束日期",
+            "till now": "至今"
+        },
+        "empty": "目前無實習經歷",
+        "add": "新增實習經歷",
+        "placeholders": {
+            "company": "公司名稱",
+            "role": "職位 / 角色"
+        },
+        "validation": {
+            "companyRequired": "公司名稱為必填項",
+            "roleRequired": "職位為必填項"
+        }
+    },
+    "project": {
+        "title": "專案經歷",
+        "name": "專案名稱",
+        "role": "角色",
+        "time": {
+            "start": "開始日期",
+            "end": "結束日期",
+            "till now": "至今"
+        },
+        "description": "描述",
+        "empty": "目前無專案經歷",
+        "add": "新增專案經歷",
+        "placeholders": {
+            "name": "專案名稱",
+            "role": "角色",
+            "description": "描述"
+        },
+        "validation": {
+            "nameRequired": "專案名稱為必填項"
+        }
+    },
+    "campusExp": {
+        "title": "校園經歷",
+        "name": "名稱",
+        "description": "描述",
+        "empty": "目前無校園經歷",
+        "add": "新增校園經歷",
+        "placeholders": {
+            "name": "校園經歷",
+            "description": "描述"
+        },
+        "validation": {
+            "nameRequired": "校園經歷名稱為必填項"
+        }
+    },
+    "award": {
+        "title": "獎項",
+        "name": "名稱",
+        "description": "描述",
+        "empty": "目前無獎項",
+        "add": "新增獎項",
+        "placeholders": {
+            "name": "獎項名稱",
+            "description": "描述"
+        },
+        "validation": {
+            "nameRequired": "獎項名稱為必填項"
+        }
+    },
+    "date": {
+        "pickDate": "選擇日期",
+        "pickStart": "選擇開始日期",
+        "pickEnd": "選擇結束日期"
+    },
+    "chat": {
+        "title": "U-Finder",
+        "tagline": "發現最適合你的大學。",
+        "input": {
+            "label": "訊息",
+            "placeholder": "與 U-Finder 聊天...",
+            "disclaimer": "U-Finder 可能會出錯。請核實重要資訊。"
+        },
+        "errors": {
+            "streamFailed": "抱歉，我無法完成該請求。"
+        },
+        "card": {
+            "locationNotSpecified": "未指定地點",
+            "tuitionNotSpecified": "未指定學費",
+            "notSpecified": "未指定",
+            "program": "項目",
+            "programDetails": "項目詳情",
+            "admissions": "錄取要求",
+            "tuition": "學費",
+            "careerOutcomes": "就業前景",
+            "linksTitle": "相關連結",
+            "verified": "已驗證",
+            "tabs": {
+                "program": "項目",
+                "admission": "錄取 + 學費",
+                "career": "就業 + 連結"
+            },
+            "labels": {
+                "degree": "學位",
+                "field": "領域",
+                "track": "方向",
+                "type": "類型",
+                "duration": "學制",
+                "language": "授課語言",
+                "faculty": "學院",
+                "deadline": "申請截止日期",
+                "languageReqs": "語言要求",
+                "academicRequirements": "學術要求",
+                "otherRequirements": "其他要求",
+                "cost": "費用"
+            },
+            "links": {
+                "officialProgram": "官方項目頁面",
+                "universitySite": "大學官網",
+                "facultySite": "學院官網"
+            }
         }
     }
 
