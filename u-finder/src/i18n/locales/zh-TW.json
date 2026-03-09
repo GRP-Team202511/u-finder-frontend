@@ -397,7 +397,8 @@
             "disclaimer": "U-Finder 可能會出錯。請核實重要資訊。"
         },
         "errors": {
-            "streamFailed": "抱歉，我無法完成該請求。"
+            "streamFailed": "抱歉，無法完成該請求。",
+            "loadHistoryFailed": "載入對話歷史失敗"
         },
         "card": {
             "locationNotSpecified": "未指定地點",

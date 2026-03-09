@@ -397,7 +397,8 @@
             "disclaimer": "U-Finder can make mistakes. Check important info."
         },
         "errors": {
-            "streamFailed": "Sorry, I could not complete that request."
+            "streamFailed": "Sorry, I could not complete that request.",
+            "loadHistoryFailed": "Failed to load conversation history"
         },
         "card": {
             "locationNotSpecified": "Location not specified",
