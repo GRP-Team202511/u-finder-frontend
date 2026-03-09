@@ -43,3 +43,69 @@ export type ChatMessageData = {
 	cards?: ProgramCardData[];
 	isLoading?: boolean;
 };
+
+// Conversation types for history feature
+export type ConversationItem = {
+	id: string;
+	name: string;
+	inputs: Record<string, any>;
+	status: string;
+	introduction?: string;
+	created_at: number;
+	updated_at: number;
+};
+
+export type ConversationsResponse = {
+	limit: number;
+	has_more: boolean;
+	data: ConversationItem[];
+};
+
+export type ConversationMessage = {
+	id: string;
+	conversation_id: string;
+	inputs: Record<string, any>;
+	query: string;
+	answer: string;
+	message_files: Array<{
+		id: string;
+		type: string;
+		url: string;
+		belongs_to: string;
+	}>;
+	feedback: {
+		rating: string;
+	} | null;
+	retriever_resources: string[];
+	created_at: number;
+	agent_thoughts: Array<{
+		id: string;
+		chain_id: string | null;
+		message_id: string;
+		position: number;
+		thought: string;
+		tool: string;
+		tool_input: string;
+		created_at: number;
+		observation: string;
+		files: string[];
+	}>;
+};
+
+export type ConversationMessagesResponse = {
+	limit: number;
+	has_more: boolean;
+	data: ConversationMessage[];
+};
+
+export type DeleteConversationResponse = {
+	result: string;
+};
+
+export type RenameConversationRequest = {
+	name: string;
+};
+
+export type RenameConversationResponse = {
+	result: string;
+};

@@ -84,13 +84,28 @@
         }
     },
     "sidebar": {
-        "aiChat": "AI 聊天",
+        "newChat": "新对话",        "newConversation": "新对话",        "conversations": "对话列表",
+        "noConversations": "暂无对话",
+        "loadMore": "加载更多...",
+        "loading": "加载中...",
         "favourite": "收藏",
-        "history": "历史记录",
         "profile": "个人资料",
         "settings": "设置",
         "language": "语言",
-        "logout": "登出"
+        "logout": "登出",
+        "deleteConversation": "删除对话",
+        "deleteConfirm": "确定要删除此对话吗？此操作无法撤销。",
+        "renameConversation": "编辑对话名称",
+        "conversationName": "输入对话名称",
+        "cancel": "取消",
+        "delete": "删除",
+        "rename": "重命名",
+        "save": "保存",
+        "confirm": "确认",
+        "renameSuccess": "重命名成功",
+        "renameFailed": "重命名失败",
+        "deleteSuccess": "删除成功",
+        "deleteFailed": "删除失败"
     },
     "profile": {
         "title": "个人资料",
@@ -383,7 +398,8 @@
             "disclaimer": "U-Finder 可能会出错。请核实重要信息。"
         },
         "errors": {
-            "streamFailed": "抱歉，我无法完成该请求。"
+            "streamFailed": "抱歉，无法完成该请求。",
+            "loadHistoryFailed": "加载对话历史失败"
         },
         "card": {
             "locationNotSpecified": "未指定地点",
