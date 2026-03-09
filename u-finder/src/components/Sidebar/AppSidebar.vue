@@ -38,7 +38,7 @@ const data = {
     },
     {
       titleKey: "sidebar.favourite",
-      to: { name: 'Cover' }, // to be updated when the page is being developed
+      to: { name: 'Favourite' },
       icon: Star,
     },
     {
