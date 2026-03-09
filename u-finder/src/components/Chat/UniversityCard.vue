@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import {
 	Card,
@@ -15,7 +16,7 @@ import {
 	TabsTrigger,
 } from "@/components/ui/tabs";
 import { Star } from "lucide-vue-next"
-import { useFavouriteStore } from "@/stores/favouriteStore";
+import { extractProgram, programKey, useFavouriteStore } from "@/stores/favouriteStore";
 
 import type { ProgramCardData } from "@/types/chat";
 
@@ -24,8 +25,12 @@ const props = defineProps<{ program: ProgramCardData }>();
 const selectedView = ref("program");
 const { t, locale } = useI18n();
 const favouriteStore = useFavouriteStore();
+const { items } = storeToRefs(favouriteStore);
 
-const isFavourite = computed(() => favouriteStore.isFavourite(props.program));
+const isFavourite = computed(() => {
+	const key = programKey(props.program);
+	return items.value.some((item) => programKey(extractProgram(item)) === key);
+});
 
 const locationLabel = () => {
 	const parts = [props.program.university.city, props.program.university.country].filter(
@@ -84,7 +89,7 @@ const formatVerifiedDate = () => {
 					:aria-label="isFavourite ? t('favourites.actions.remove') : t('favourites.actions.add')"
 					:aria-pressed="isFavourite"
 					:title="isFavourite ? t('favourites.actions.remove') : t('favourites.actions.add')"
-					@click="favouriteStore.toggle(program)"
+					@click="void favouriteStore.toggle(program)"
 				>
 					<Star class="h-5 w-5" :fill="isFavourite ? 'currentColor' : 'none'" />
 				</button>
