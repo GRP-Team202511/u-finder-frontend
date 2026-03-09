@@ -278,8 +278,27 @@ const loadHistoryMessages = async (convId: string) => {
 				content: "",
 			};
 			
-			// 解析 answer 中的程序卡片
-			const { text, cards } = extractProgramCards(msg.answer);
+			// 获取 AI 回复内容：优先使用 answer，为空时使用 agent_thoughts
+			let aiContent = msg.answer;
+			if (!aiContent || aiContent.trim() === '') {
+				// answer 为空，尝试从 agent_thoughts 中提取
+				if (msg.agent_thoughts && msg.agent_thoughts.length > 0) {
+					// 按 position 排序并合并内容
+					const sortedThoughts = [...msg.agent_thoughts].sort((a, b) => a.position - b.position);
+					aiContent = sortedThoughts
+						.map(thought => {
+							const parts: string[] = [];
+							if (thought.thought) parts.push(thought.thought);
+							if (thought.observation) parts.push(thought.observation);
+							return parts.join('\n');
+						})
+						.filter(content => content.trim())
+						.join('\n\n');
+				}
+			}
+			
+			// 解析内容中的程序卡片
+			const { text, cards } = extractProgramCards(aiContent || '');
 			
 			if (cards.length > 0) {
 				aiMessage.type = "cards";
@@ -289,7 +308,7 @@ const loadHistoryMessages = async (convId: string) => {
 				}
 			} else {
 				aiMessage.type = "text";
-				aiMessage.content = text || msg.answer;
+				aiMessage.content = text || aiContent || '';
 			}
 			
 			messages.value.push(aiMessage);
