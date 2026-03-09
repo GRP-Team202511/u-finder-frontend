@@ -223,7 +223,7 @@ defineExpose({
       </div>
     </SidebarHeader>
 
-    <SidebarContent>
+    <SidebarContent class="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <div class="pt-4">
         <!-- Other Navigation Items -->
         <NavMain :items="data.navMain" />
