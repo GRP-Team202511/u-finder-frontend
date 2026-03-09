@@ -420,5 +420,19 @@
                 "facultySite": "Faculty site"
             }
         }
+    },
+    "favourites": {
+        "title": "Favourite Universities",
+        "subtitle": "Keep the university you want to revisit.",
+        "empty": {
+            "title": "No favourites yet",
+            "description": "Add a university from AI Chat to see it here."
+        },
+        "actions": {
+            "showDetails": "Show details",
+            "remove": "Remove",
+            "add": "Add to favourites",
+            "close": "Close"
+        }
     }
 }
