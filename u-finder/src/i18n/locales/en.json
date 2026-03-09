@@ -102,7 +102,9 @@
         "delete": "Delete",
         "rename": "Rename",
         "save": "Save",
-        "confirm": "Confirm"
+        "confirm": "Confirm",
+        "renameSuccess": "Conversation renamed successfully",
+        "renameFailed": "Failed to rename conversation"
     },
     "profile": {
         "title": "Profile",

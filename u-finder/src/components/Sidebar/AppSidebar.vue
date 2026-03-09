@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { toast } from 'vue-sonner'
 import type { SidebarProps } from "@/components/ui/sidebar"
 import type { ConversationItem } from '@/types/chat'
 
@@ -169,11 +170,13 @@ const confirmRename = async () => {
       conversation.name = newConversationName.value.trim()
     }
     
+    toast.success(t('sidebar.renameSuccess'))
     showRenameDialog.value = false
     renameConversationId.value = undefined
     newConversationName.value = ''
   } catch (error) {
     console.error('Failed to rename conversation:', error)
+    toast.error(t('sidebar.renameFailed'))
   }
 }
 

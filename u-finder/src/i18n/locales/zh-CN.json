@@ -102,7 +102,9 @@
         "delete": "删除",
         "rename": "重命名",
         "save": "保存",
-        "confirm": "确认"
+        "confirm": "确认",
+        "renameSuccess": "重命名成功",
+        "renameFailed": "重命名失败"
     },
     "profile": {
         "title": "个人资料",
