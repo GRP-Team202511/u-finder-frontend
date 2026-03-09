@@ -34,10 +34,19 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 import { useUserStore } from "@/stores/userStore"
-import { getConversations, deleteConversation } from '@/api/chatApi'
+import { getConversations, deleteConversation, renameConversation } from '@/api/chatApi'
 
 const props = defineProps<SidebarProps>()
 
@@ -54,6 +63,11 @@ const lastId = ref<string>()
 // Delete dialog state
 const showDeleteDialog = ref(false)
 const deleteConversationId = ref<string>()
+
+// Rename dialog state
+const showRenameDialog = ref(false)
+const renameConversationId = ref<string>()
+const newConversationName = ref('')
 
 const data = {
   user: {
@@ -134,8 +148,33 @@ const confirmDelete = async () => {
 
 // Handle rename conversation
 const handleRenameConversation = (conversationId: string, currentName: string) => {
-  // TODO: Implement rename functionality with better UI
-  console.log('Rename conversation:', conversationId, currentName)
+  renameConversationId.value = conversationId
+  newConversationName.value = currentName
+  showRenameDialog.value = true
+}
+
+const confirmRename = async () => {
+  if (!renameConversationId.value || !newConversationName.value.trim()) return
+  
+  try {
+    await renameConversation({
+      conversationId: renameConversationId.value,
+      name: newConversationName.value.trim(),
+    })
+    
+    const conversation = conversations.value.find(
+      conv => conv.id === renameConversationId.value
+    )
+    if (conversation) {
+      conversation.name = newConversationName.value.trim()
+    }
+    
+    showRenameDialog.value = false
+    renameConversationId.value = undefined
+    newConversationName.value = ''
+  } catch (error) {
+    console.error('Failed to rename conversation:', error)
+  }
 }
 
 onMounted(() => {
@@ -209,4 +248,28 @@ onMounted(() => {
       </SheetFooter>
     </SheetContent>
   </Sheet>
+
+  <!-- Rename Dialog -->
+  <Dialog v-model:open="showRenameDialog">
+    <DialogContent class="sm:max-w-md">
+      <DialogHeader>
+        <DialogTitle>{{ t('sidebar.renameConversation') }}</DialogTitle>
+      </DialogHeader>
+      <div class="py-4">
+        <Input
+          v-model="newConversationName"
+          :placeholder="t('sidebar.conversationName')"
+          @keyup.enter="confirmRename"
+        />
+      </div>
+      <DialogFooter>
+        <Button variant="outline" @click="showRenameDialog = false">
+          {{ t('sidebar.cancel') }}
+        </Button>
+        <Button @click="confirmRename">
+          {{ t('sidebar.confirm') }}
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
