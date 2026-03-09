@@ -115,8 +115,10 @@ onUnmounted(() => {
       >
         <div
           :class="cn(
-            'group flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors min-w-0 w-full',
-            isActive(conversation.id) && 'bg-accent text-accent-foreground'
+            'group flex items-center gap-2 rounded-md px-2 py-1.5 text-sm cursor-pointer transition-colors min-w-0 w-full',
+            isActive(conversation.id) 
+              ? 'bg-sidebar-accent text-sidebar-accent-foreground' 
+              : 'hover:bg-accent hover:text-accent-foreground'
           )"
           @click="handleConversationClick(conversation.id)"
         >
