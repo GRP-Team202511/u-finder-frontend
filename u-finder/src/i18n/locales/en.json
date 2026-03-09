@@ -429,6 +429,12 @@
             "title": "No favourites yet",
             "description": "Add a university from AI Chat to see it here."
         },
+        "toast": {
+            "addSuccess": "Added university to favourites",
+            "addFailed": "Failed to add university to favourites",
+            "removeSuccess": "Removed university from favourites",
+            "removeFailed": "Failed to remove university from favourites"
+        },
         "actions": {
             "showDetails": "Show details",
             "remove": "Remove",

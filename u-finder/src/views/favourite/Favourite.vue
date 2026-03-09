@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { toast } from "vue-sonner";
 import CompactUniversityCard from "@/components/Favourite/CompactUniversityCard.vue";
 import UniversityDetailDialog from "@/components/Favourite/UniversityDetailDialog.vue";
 import { useFavouriteStore } from "@/stores/favouriteStore";
@@ -22,6 +23,16 @@ const openDetails = (program: ProgramCardData) => {
 
 const closeDetails = () => {
 	selectedProgram.value = null;
+};
+
+const handleRemove = async (program: ProgramCardData) => {
+	try {
+		await favouriteStore.remove(program);
+		toast.success(t("favourites.toast.removeSuccess"));
+	} catch (error) {
+		toast.error(t("favourites.toast.removeFailed"));
+		console.error("Failed to remove favourite", error);
+	}
 };
 
 watch(
@@ -54,7 +65,7 @@ watch(
 				:key="program.official_program_url || `${program.university.name}-${program.degree_program.name}`"
 				:program="program"
 				@show-details="openDetails"
-				@remove="favouriteStore.remove"
+				@remove="handleRemove"
 			/>
 		</div>
 

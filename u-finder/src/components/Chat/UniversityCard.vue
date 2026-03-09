@@ -2,6 +2,7 @@
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
+import { toast } from "vue-sonner";
 import {
 	Card,
 	CardContent,
@@ -68,6 +69,25 @@ const formatVerifiedDate = () => {
 		day: "2-digit",
 	}).format(parsed);
 };
+
+const handleToggleFavourite = async () => {
+	const wasFavourite = isFavourite.value;
+	try {
+		if (wasFavourite) {
+			await favouriteStore.remove(props.program);
+			toast.success(t("favourites.toast.removeSuccess"));
+			return;
+		}
+		await favouriteStore.add(props.program);
+		toast.success(t("favourites.toast.addSuccess"));
+	} catch (error) {
+		const messageKey = wasFavourite
+			? "favourites.toast.removeFailed"
+			: "favourites.toast.addFailed";
+		toast.error(t(messageKey));
+		console.error("Failed to update favourite", error);
+	}
+};
 </script>
 
 <template>
@@ -89,7 +109,7 @@ const formatVerifiedDate = () => {
 					:aria-label="isFavourite ? t('favourites.actions.remove') : t('favourites.actions.add')"
 					:aria-pressed="isFavourite"
 					:title="isFavourite ? t('favourites.actions.remove') : t('favourites.actions.add')"
-					@click="void favouriteStore.toggle(program)"
+					@click="void handleToggleFavourite()"
 				>
 					<Star class="h-5 w-5" :fill="isFavourite ? 'currentColor' : 'none'" />
 				</button>

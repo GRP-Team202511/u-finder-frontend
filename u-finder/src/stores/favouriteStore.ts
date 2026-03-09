@@ -110,13 +110,7 @@ export const useFavouriteStore = defineStore("favourite", {
 				await this.fetchAll(this.lastUserId);
 			}
 		},
-		async toggle(program: ProgramCardData) {
-			if (this.isFavourite(program)) {
-				await this.remove(program);
-				return;
-			}
-			await this.add(program);
-		},
+
 	},
 
 	persist: true,
