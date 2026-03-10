@@ -39,7 +39,7 @@ watch(
 	() => userStore.user?.id,
 	async (userId) => {
 		if (useMockFavourites || !userId) return;
-		await favouriteStore.fetchAll(String(userId));
+		await favouriteStore.fetchAll();
 	},
 	{ immediate: true }
 );

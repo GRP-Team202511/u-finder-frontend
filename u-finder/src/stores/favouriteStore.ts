@@ -31,7 +31,6 @@ const extractUnitId = (payload: unknown) => {
 export const useFavouriteStore = defineStore("favourite", {
 	state: () => ({
 		items: [] as StoredItem[],
-		lastUserId: null as string | null,
 	}),
 
 	getters: {
@@ -49,23 +48,18 @@ export const useFavouriteStore = defineStore("favourite", {
 				try {
 					const parsed = JSON.parse(event.newValue) as {
 						items?: StoredItem[];
-						lastUserId?: string | null;
 					};
 					if (Array.isArray(parsed.items)) {
 						this.items = parsed.items;
-					}
-					if (parsed.lastUserId !== undefined) {
-						this.lastUserId = parsed.lastUserId ?? null;
 					}
 				} catch {
 					// Ignore malformed persisted data.
 				}
 			});
 		},
-		async fetchAll(userId: string) {
-			this.lastUserId = userId;
+		async fetchAll() {
 			if (useMockFavourites) return;
-			const response = await getFavouriteUniversities(userId);
+			const response = await getFavouriteUniversities();
 			this.items = response.data?.data ?? [];
 		},
 		isFavourite(program: ProgramCardData) {
@@ -93,9 +87,7 @@ export const useFavouriteStore = defineStore("favourite", {
 			const unitId = await this.resolveUnitId(program);
 			if (!unitId) return;
 			await addFavouriteUniversity(unitId);
-			if (this.lastUserId) {
-				await this.fetchAll(this.lastUserId);
-			}
+			await this.fetchAll();
 		},
 		async remove(program: ProgramCardData) {
 			const key = programKey(program);
@@ -106,9 +98,7 @@ export const useFavouriteStore = defineStore("favourite", {
 			const existing = this.findItem(program) as FavouriteItem | null;
 			if (!existing?.unit_id) return;
 			await deleteFavouriteUniversity(existing.unit_id);
-			if (this.lastUserId) {
-				await this.fetchAll(this.lastUserId);
-			}
+			await this.fetchAll();
 		},
 
 	},
