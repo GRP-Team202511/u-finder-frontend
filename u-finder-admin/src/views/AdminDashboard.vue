@@ -48,12 +48,6 @@
         </div>
 
         <div class="kpi">
-          <div class="kpi-label">Active Sessions</div>
-          <div class="kpi-value">87</div>
-          <div class="kpi-hint">last 15 minutes</div>
-        </div>
-
-        <div class="kpi">
           <div class="kpi-label">LLM Cost (Today)</div>
           <div class="kpi-value">$18.42</div>
           <div class="kpi-hint">budget: $40/day</div>
@@ -86,7 +80,6 @@
                   <th>User</th>
                   <th>Role</th>
                   <th>Status</th>
-                  <th>Last Active</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -100,7 +93,6 @@
                   </td>
                   <td><span class="badge">Student</span></td>
                   <td><span class="badge">Active</span></td>
-                  <td class="muted">3 min<br />ago</td>
                   <td>
                     <div class="actions-cell">
                       <button class="btn-sm">Block</button>
@@ -117,7 +109,6 @@
                   </td>
                   <td><span class="badge">Student</span></td>
                   <td><span class="badge">Pending</span></td>
-                  <td class="muted">1 hour<br />ago</td>
                   <td>
                     <div class="actions-cell">
                       <button class="btn-sm">Block</button>
@@ -134,7 +125,6 @@
                   </td>
                   <td><span class="badge">Unknown</span></td>
                   <td><span class="badge">Blocked</span></td>
-                  <td class="muted">2 days<br />ago</td>
                   <td>
                     <div class="actions-cell">
                       <button class="btn-sm">Unblock</button>
@@ -477,7 +467,7 @@ const filteredLogs = computed(() => {
 
 .kpis {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
   margin-bottom: 20px;
 }
@@ -576,6 +566,12 @@ table {
   overflow: hidden;
   border: 1px solid #e6e6e6;
   border-radius: 18px;
+}
+
+.action-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 thead th {
