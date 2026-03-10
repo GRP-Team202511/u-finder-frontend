@@ -128,6 +128,17 @@
             "parsing": "Parsing your CV...",
             "parseSuccess": "CV parsed successfully!",
             "selectData": "Select the data you want to import",
+            "reviewTitle": "Review Parsed Data",
+            "reviewDescription": "Select the sections you want to import to your profile.",
+            "selectAll": "Select All",
+            "noData": "No data found",
+            "confirmImport": "Confirm Import",
+            "importSuccess": "CV data imported successfully!",
+            "importFailed": "Failed to import CV data",
+            "actions": {
+                "overwrite": "Overwrite",
+                "append": "Append"
+            },
             "errors": {
                 "invalidFormat": "Invalid file format. Only PDF, DOCX, and DOC are supported.",
                 "fileTooLarge": "File size exceeds 10MB limit.",
@@ -247,6 +258,8 @@
         "selectTypeHint": "Select a type to enter details.",
         "empty": "No academic outcomes",
         "add": "Add academic outcome",
+        "paper": "Paper",
+        "patent": "Patent",
         "type": {
             "title": "Type",
             "researchPaper": "Research Paper",

@@ -11,12 +11,13 @@ import Project from '@/components/Profile/Project.vue'
 import CampusExperience from '@/components/Profile/CampusExperience.vue'
 import Award from '@/components/Profile/Award.vue'
 import CVParserDialog from '@/components/Profile/CVParserDialog.vue'
+import CVParseResultReview from '@/components/Profile/CVParseResultReview.vue'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { getAllProfile, updateProfileField } from '@/api/profileApi'
-import type { PersonalInfo } from '@/types/profileTypes'
+import { getAllProfile, updateProfileField, updatePersonalInfo } from '@/api/profileApi'
+import type { PersonalInfo, CVParseResponse } from '@/types/profileTypes'
 import { useUserStore } from '@/stores/userStore'
 
 const { t } = useI18n()
@@ -32,6 +33,8 @@ const editingComponentsCount = ref(0)
 
 // CV Parser Dialog state
 const showCVParserDialog = ref(false)
+const showCVResultReview = ref(false)
+const cvParseResult = ref<CVParseResponse | null>(null)
 
 // Profile section data — undefined means not yet loaded
 const informationData = ref<PersonalInfo | undefined>(undefined)
@@ -207,6 +210,160 @@ onBeforeUnmount(() => {
 	window.removeEventListener('beforeunload', handleBeforeUnload)
 })
 
+// Handle CV parse complete
+function handleCVParseComplete(data: CVParseResponse) {
+	cvParseResult.value = data
+	showCVParserDialog.value = false
+	showCVResultReview.value = true
+}
+
+// Handle CV result confirmation
+async function handleCVResultConfirm(selections: any) {
+	if (!cvParseResult.value) return
+	
+	const promises: Promise<any>[] = []
+	
+	try {
+		// Update personal info (overwrite)
+		if (selections.personalInfo) {
+			const promise = updatePersonalInfo(cvParseResult.value.personalInfo)
+				.then(() => {
+					informationData.value = cvParseResult.value!.personalInfo
+					toast.success(t('profile.toast.information.saveSuccess'))
+				})
+				.catch((e) => {
+					console.error('Failed to update personal info:', e)
+					toast.error(t('profile.toast.information.saveFailed'))
+				})
+			promises.push(promise)
+		}
+		
+		// Update education (append)
+		if (selections.education && cvParseResult.value.education.data.length > 0) {
+			const newData = [...(educationData.value || []), ...cvParseResult.value.education.data]
+			const promise = updateProfileField('education', newData)
+				.then(() => {
+					educationData.value = newData
+					toast.success(t('profile.toast.education.saveSuccess'))
+				})
+				.catch((e) => {
+					console.error('Failed to update education:', e)
+					toast.error(t('profile.toast.education.saveFailed'))
+				})
+			promises.push(promise)
+		}
+		
+		// Update academic (append)
+		if (selections.academic && cvParseResult.value.academic.data.length > 0) {
+			const newData = [...(academicOutcomeData.value || []), ...cvParseResult.value.academic.data]
+			const promise = updateProfileField('academic', newData)
+				.then(() => {
+					academicOutcomeData.value = newData
+					toast.success(t('profile.toast.academic.saveSuccess'))
+				})
+				.catch((e) => {
+					console.error('Failed to update academic:', e)
+					toast.error(t('profile.toast.academic.saveFailed'))
+				})
+			promises.push(promise)
+		}
+		
+		// Update test (append)
+		if (selections.test && cvParseResult.value.test.data.length > 0) {
+			const newData = [...(standardizedTestData.value || []), ...cvParseResult.value.test.data]
+			const promise = updateProfileField('test', newData)
+				.then(() => {
+					standardizedTestData.value = newData
+					toast.success(t('profile.toast.test.saveSuccess'))
+				})
+				.catch((e) => {
+					console.error('Failed to update test:', e)
+					toast.error(t('profile.toast.test.saveFailed'))
+				})
+			promises.push(promise)
+		}
+		
+		// Update internship (append)
+		if (selections.internship && cvParseResult.value.internship.data.length > 0) {
+			const newData = [...(internshipData.value || []), ...cvParseResult.value.internship.data]
+			const promise = updateProfileField('internship', newData)
+				.then(() => {
+					internshipData.value = newData
+					toast.success(t('profile.toast.internship.saveSuccess'))
+				})
+				.catch((e) => {
+					console.error('Failed to update internship:', e)
+					toast.error(t('profile.toast.internship.saveFailed'))
+				})
+			promises.push(promise)
+		}
+		
+		// Update project (append)
+		if (selections.project && cvParseResult.value.project.data.length > 0) {
+			const newData = [...(projectData.value || []), ...cvParseResult.value.project.data]
+			const promise = updateProfileField('project', newData)
+				.then(() => {
+					projectData.value = newData
+					toast.success(t('profile.toast.project.saveSuccess'))
+				})
+				.catch((e) => {
+					console.error('Failed to update project:', e)
+					toast.error(t('profile.toast.project.saveFailed'))
+				})
+			promises.push(promise)
+		}
+		
+		// Update campus (append)
+		if (selections.campus && cvParseResult.value.campus.data.length > 0) {
+			const newData = [...(campusExpData.value || []), ...cvParseResult.value.campus.data]
+			const promise = updateProfileField('campus', newData)
+				.then(() => {
+					campusExpData.value = newData
+					toast.success(t('profile.toast.campusExp.saveSuccess'))
+				})
+				.catch((e) => {
+					console.error('Failed to update campus:', e)
+					toast.error(t('profile.toast.campusExp.saveFailed'))
+				})
+			promises.push(promise)
+		}
+		
+		// Update award (append)
+		if (selections.award && cvParseResult.value.award.data.length > 0) {
+			const newData = [...(awardData.value || []), ...cvParseResult.value.award.data]
+			const promise = updateProfileField('award', newData)
+				.then(() => {
+					awardData.value = newData
+					toast.success(t('profile.toast.award.saveSuccess'))
+				})
+				.catch((e) => {
+					console.error('Failed to update award:', e)
+					toast.error(t('profile.toast.award.saveFailed'))
+				})
+			promises.push(promise)
+		}
+		
+		// Wait for all updates to complete
+		await Promise.all(promises)
+		
+		if (promises.length > 0) {
+			toast.success(t('profile.cvParser.importSuccess') || 'CV data imported successfully!')
+		}
+		
+	} catch (e) {
+		console.error('Failed to import CV data:', e)
+		toast.error(t('profile.cvParser.importFailed') || 'Failed to import CV data')
+	} finally {
+		// Clean up
+		cvParseResult.value = null
+	}
+}
+
+// Handle CV result cancel
+function handleCVResultCancel() {
+	cvParseResult.value = null
+}
+
 </script>
 
 <template>
@@ -321,6 +478,17 @@ onBeforeUnmount(() => {
 		</div>
 		
 		<!-- CV Parser Dialog -->
-		<CVParserDialog v-model:open="showCVParserDialog" />
+		<CVParserDialog 
+			v-model:open="showCVParserDialog"
+			@parse-complete="handleCVParseComplete"
+		/>
+		
+		<!-- CV Parse Result Review Dialog -->
+		<CVParseResultReview
+			v-model:open="showCVResultReview"
+			:data="cvParseResult"
+			@confirm="handleCVResultConfirm"
+			@cancel="handleCVResultCancel"
+		/>
 	</div>
 </template>

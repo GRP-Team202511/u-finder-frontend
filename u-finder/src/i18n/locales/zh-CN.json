@@ -126,6 +126,17 @@
             "parsing": "正在解析简历...",
             "parseSuccess": "简历解析成功！",
             "selectData": "选择要导入的数据",
+            "reviewTitle": "查看解析结果",
+            "reviewDescription": "选择要导入到个人资料的部分。",
+            "selectAll": "全选",
+            "noData": "未找到数据",
+            "confirmImport": "确认导入",
+            "importSuccess": "简历数据导入成功！",
+            "importFailed": "导入简历数据失败",
+            "actions": {
+                "overwrite": "覆盖",
+                "append": "追加"
+            },
             "errors": {
                 "invalidFormat": "文件格式无效。仅支持 PDF、DOCX 和 DOC 格式。",
                 "fileTooLarge": "文件大小超过 10MB 限制。",
@@ -244,8 +255,8 @@
         "selectType": "选择类型",
         "selectTypeHint": "选择类型以输入详细信息。",
         "empty": "暂无学术成果",
-        "add": "添加学术成果",
-        "type": {
+        "add": "添加学术成果",        "paper": "论文",
+        "patent": "专利",        "type": {
             "title": "类型",
             "researchPaper": "研究论文",
             "patent": "专利"

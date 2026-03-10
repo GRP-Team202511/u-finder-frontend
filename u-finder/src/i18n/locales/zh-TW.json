@@ -126,6 +126,17 @@
             "parsing": "正在解析履歷...",
             "parseSuccess": "履歷解析成功！",
             "selectData": "選擇要匯入的資料",
+            "reviewTitle": "查看解析結果",
+            "reviewDescription": "選擇要匯入到個人資料的部分。",
+            "selectAll": "全選",
+            "noData": "未找到資料",
+            "confirmImport": "確認匯入",
+            "importSuccess": "履歷資料匯入成功！",
+            "importFailed": "匯入履歷資料失敗",
+            "actions": {
+                "overwrite": "覆蓋",
+                "append": "追加"
+            },
             "errors": {
                 "invalidFormat": "檔案格式無效。僅支援 PDF、DOCX 和 DOC 格式。",
                 "fileTooLarge": "檔案大小超過 10MB 限制。",
@@ -244,8 +255,8 @@
         "selectType": "選擇類型",
         "selectTypeHint": "選擇類型以輸入詳細資訊。",
         "empty": "目前無學術成果",
-        "add": "新增學術成果",
-        "type": {
+        "add": "新增學術成果",        "paper": "論文",
+        "patent": "專利",        "type": {
             "title": "類型",
             "researchPaper": "研究論文",
             "patent": "專利"
