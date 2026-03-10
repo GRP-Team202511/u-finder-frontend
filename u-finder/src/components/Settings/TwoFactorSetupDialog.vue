@@ -204,8 +204,8 @@ const totpSecret = computed(() => {
         </div>
         <div v-else class="space-y-4">
           <!-- QR Code Display -->
-          <div class="flex justify-center p-6 bg-white rounded-lg">
-            <img :src="qrCodeBase64" alt="2FA QR Code" class="max-w-full h-auto" />
+          <div class="flex justify-center p-4 bg-white rounded-lg">
+            <img :src="qrCodeBase64" alt="2FA QR Code" class="w-40 h-40 object-contain" />
           </div>
           
           <!-- Manual Entry Option -->
