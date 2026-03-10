@@ -272,3 +272,23 @@ export interface AllProfile {
   campus: { data: CampusItem[] }
   award: { data: AwardItem[] }
 }
+
+// ─── CV Parse Response ────────────────────────────────────────────────────────
+
+/**
+ * Response structure for POST /profile/cv (CV upload and parsing)
+ * 
+ * The AI service extracts structured information from the uploaded CV file.
+ * The structure mirrors AllProfile but data may be incomplete depending on
+ * what information is present in the CV.
+ */
+export interface CVParseResponse {
+  personalInfo: PersonalInfo
+  education: { data: EducationItem[] }
+  academic: { data: AcademicItem[] }
+  test: { data: TestItem[] }
+  internship: { data: InternshipItem[] }
+  project: { data: ProjectItem[] }
+  campus: { data: CampusItem[] }
+  award: { data: AwardItem[] }
+}

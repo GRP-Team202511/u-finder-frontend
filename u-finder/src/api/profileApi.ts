@@ -4,6 +4,7 @@ import type {
   AllProfile,
   ProfileFieldName,
   ProfileFieldTypeMap,
+  CVParseResponse,
 } from '../types/profileTypes'
 
 // ─── Personal Info ────────────────────────────────────────────────────────────
@@ -51,4 +52,26 @@ export const getAllProfile = () => {
 /** PUT /profile — Replace all profile sections in a single request */
 export const updateAllProfile = (data: AllProfile) => {
   return http.put<{ message: string }>('/profile', data)
+}
+
+// ─── CV Upload ────────────────────────────────────────────────────────────────
+
+/**
+ * POST /profile/cv — Upload a CV file (PDF or DOCX) for AI parsing.
+ * 
+ * The server forwards the file to Dify AI service for information extraction
+ * and returns the structured result.
+ * 
+ * @param file - The CV file to upload (PDF or DOCX, max 10MB)
+ * @returns Parsed CV data structured by profile sections
+ */
+export const uploadCV = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  
+  return http.post<CVParseResponse>('/profile/cv', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
 }
