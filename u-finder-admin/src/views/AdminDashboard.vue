@@ -67,7 +67,7 @@
               <div>
                 <h2 class="panel-title">Recent Users</h2>
                 <p class="panel-sub">
-                  Quick view for checking user pages, status, and last active time.
+                  Quick view for checking user page and status.
                 </p>
               </div>
 
@@ -244,7 +244,35 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+
+import { computed,onMounted, ref } from 'vue'
+import { getAdminUsers } from '@/api/admin'
+
+const users = ref([])
+const loadingUsers = ref(false)
+const usersError = ref('')
+
+async function loadUsers() {
+  loadingUsers.value = true
+  usersError.value = ''
+
+  try {
+    const data = await getAdminUsers()
+    users.value = data
+    console.log('users:', data)
+  } catch (error) {
+    console.error(error)
+    usersError.value = 'Failed to load users.'
+  } finally {
+    loadingUsers.value = false
+  }
+}
+
+onMounted(() => {
+  loadUsers()
+})
+
+
 
 const today = new Date()
 const selectedDate = ref(
