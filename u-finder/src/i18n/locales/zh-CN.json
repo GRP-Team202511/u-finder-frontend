@@ -115,6 +115,18 @@
         "add": "添加",
         "remove": "删除",
         "retry": "重试",
+        "cvParser": {
+            "button": "导入简历",
+            "title": "导入简历",
+            "description": "上传您的简历，自动填充个人资料信息。",
+            "uploadPrompt": "将简历拖放到此处，或点击选择文件",
+            "supportedFormats": "支持的格式：PDF、DOCX、DOC",
+            "maxSize": "最大文件大小：10MB",
+            "uploading": "正在上传...",
+            "parsing": "正在解析简历...",
+            "parseSuccess": "简历解析成功！",
+            "selectData": "选择要导入的数据"
+        },
         "errors": {
             "loadFailed": "哎呀，出错了……",
             "loadFailedDescription": "无法加载您的个人资料数据，请尝试刷新页面。"

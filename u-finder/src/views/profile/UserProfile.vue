@@ -10,9 +10,11 @@ import Internship from '@/components/Profile/Internship.vue'
 import Project from '@/components/Profile/Project.vue'
 import CampusExperience from '@/components/Profile/CampusExperience.vue'
 import Award from '@/components/Profile/Award.vue'
+import CVParserDialog from '@/components/Profile/CVParserDialog.vue'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Spinner } from '@/components/ui/spinner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { getAllProfile, updateProfileField } from '@/api/profileApi'
 import type { PersonalInfo } from '@/types/profileTypes'
 import { useUserStore } from '@/stores/userStore'
@@ -27,6 +29,9 @@ const loadError = ref(false)
 
 // Track how many components are currently in edit mode
 const editingComponentsCount = ref(0)
+
+// CV Parser Dialog state
+const showCVParserDialog = ref(false)
 
 // Profile section data — undefined means not yet loaded
 const informationData = ref<PersonalInfo | undefined>(undefined)
@@ -208,6 +213,9 @@ onBeforeUnmount(() => {
 	<div class="p-4">
 		<div class="flex items-center justify-between mb-6">
 			<h1 class="text-3xl font-bold">{{ t('profile.title') || 'Profile' }}</h1>
+			<Button @click="showCVParserDialog = true">
+				{{ t('profile.cvParser.button') || 'Import from CV' }}
+			</Button>
 		</div>
 		
 		<!-- Loading State -->
@@ -311,5 +319,8 @@ onBeforeUnmount(() => {
 				@edit-complete="onComponentEndEdit"
 			/>
 		</div>
+		
+		<!-- CV Parser Dialog -->
+		<CVParserDialog v-model:open="showCVParserDialog" />
 	</div>
 </template>

@@ -115,6 +115,18 @@
         "add": "新增",
         "remove": "刪除",
         "retry": "重試",
+        "cvParser": {
+            "button": "匯入履歷",
+            "title": "匯入履歷",
+            "description": "上傳您的履歷，自動填入個人資料。",
+            "uploadPrompt": "將履歷拖放到此處，或點擊選擇檔案",
+            "supportedFormats": "支援格式：PDF、DOCX、DOC",
+            "maxSize": "最大檔案大小：10MB",
+            "uploading": "正在上傳...",
+            "parsing": "正在解析履歷...",
+            "parseSuccess": "履歷解析成功！",
+            "selectData": "選擇要匯入的資料"
+        },
         "errors": {
             "loadFailed": "哎呀，出錯啦……",
             "loadFailedDescription": "無法載入您的個人資料，請嘗試重新整理頁面。"

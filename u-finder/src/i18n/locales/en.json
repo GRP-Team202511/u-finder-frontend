@@ -117,6 +117,18 @@
         "add": "Add",
         "remove": "Remove",
         "retry": "Retry",
+        "cvParser": {
+            "button": "Import from CV",
+            "title": "Import from CV",
+            "description": "Upload your CV to automatically fill in your profile information.",
+            "uploadPrompt": "Drag and drop your CV here, or click to select a file",
+            "supportedFormats": "Supported formats: PDF, DOCX, DOC",
+            "maxSize": "Maximum file size: 10MB",
+            "uploading": "Uploading...",
+            "parsing": "Parsing your CV...",
+            "parseSuccess": "CV parsed successfully!",
+            "selectData": "Select the data you want to import"
+        },
         "errors": {
             "loadFailed": "Ops, something went wrong...",
             "loadFailedDescription": "Unable to load your profile data. Please try refreshing the page."
