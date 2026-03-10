@@ -500,7 +500,7 @@ const filteredLogs = computed(() => {
 
 .content {
   display: grid;
-  grid-template-columns: 1.55fr 1fr;
+  grid-template-columns: 1fr;
   gap: 18px;
   align-items: start;
 }
