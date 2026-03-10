@@ -205,8 +205,8 @@ function save(e?: Event) {
   if (fieldErrors.name || fieldErrors.gender || fieldErrors.birthday) return
 
   isLoading.value = true
-  const payload = {
-    ...info,
+  // Explicitly construct payload with only the three required fields per API spec
+  const payload: PersonalInfo = {
     name: nameValue,
     gender: genderValue,
     birthday: birthdayValue,
