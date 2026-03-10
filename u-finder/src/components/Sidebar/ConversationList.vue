@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { MoreVertical, Pencil, Trash2 } from 'lucide-vue-next'
 import type { ConversationItem } from '@/types/chat'
@@ -33,6 +33,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const router = useRouter()
+const route = useRoute()
 
 const activeConversationId = ref<string | null>(null)
 const hoveredConversationId = ref<string | null>(null)
@@ -40,7 +41,7 @@ const loadMoreTrigger = ref<HTMLElement | null>(null)
 let observer: IntersectionObserver | null = null
 
 const isActive = (conversationId: string) => {
-  return activeConversationId.value === conversationId
+  return route.name === 'AIChat' && activeConversationId.value === conversationId
 }
 
 const isHovered = (conversationId: string) => {
@@ -72,10 +73,20 @@ const onConversationChanged = (event: CustomEvent) => {
   activeConversationId.value = conversationId
 }
 
+watch(
+  () => route.name,
+  (name) => {
+    if (name !== 'AIChat') {
+      activeConversationId.value = null
+      return
+    }
+
+    activeConversationId.value = sessionStorage.getItem('currentConversationId')
+  },
+  { immediate: true }
+)
+
 onMounted(() => {
-  // Read currently active conversation from sessionStorage
-  activeConversationId.value = sessionStorage.getItem('currentConversationId')
-  
   // Listen to conversation switching event
   window.addEventListener('conversation-changed', onConversationChanged as EventListener)
   
