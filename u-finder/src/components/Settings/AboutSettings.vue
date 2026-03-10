@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
@@ -32,9 +32,7 @@ function openLink(url: string) {
           <Info class="size-5 text-muted-foreground" />
           <CardTitle>{{ t('settings.about.title') }}</CardTitle>
         </div>
-        <CardDescription>
-          {{ t('settings.about.description') }}
-        </CardDescription>
+        
       </CardHeader>
       <CardContent class="space-y-4">
         <!-- Version Info -->
@@ -55,7 +53,6 @@ function openLink(url: string) {
     <Card>
       <CardHeader>
         <CardTitle>{{ t('settings.about.legalTitle') }}</CardTitle>
-        <CardDescription>{{ t('settings.about.legalDesc') }}</CardDescription>
       </CardHeader>
       <CardContent class="space-y-3">
         <!-- Terms of Service -->

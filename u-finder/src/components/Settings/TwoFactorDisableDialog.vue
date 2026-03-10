@@ -5,7 +5,6 @@ import { toast } from 'vue-sonner'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -77,9 +76,6 @@ async function handleDisable() {
     <DialogContent class="max-w-md">
       <DialogHeader>
         <DialogTitle>{{ t('settings.account.twoFactor.disable.title') }}</DialogTitle>
-        <DialogDescription>
-          {{ t('settings.account.twoFactor.disable.description') }}
-        </DialogDescription>
       </DialogHeader>
 
       <div class="space-y-4">

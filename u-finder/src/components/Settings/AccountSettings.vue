@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -86,7 +86,7 @@ function handle2FASuccess() {
           <Mail class="size-5 text-muted-foreground" />
           <CardTitle>{{ t('settings.account.email') }}</CardTitle>
         </div>
-        <CardDescription>{{ t('settings.account.emailDesc') }}</CardDescription>
+        
       </CardHeader>
       <CardContent>
         <div class="flex items-center gap-4">
@@ -106,7 +106,7 @@ function handle2FASuccess() {
           <KeyRound class="size-5 text-muted-foreground" />
           <CardTitle>{{ t('settings.account.password') }}</CardTitle>
         </div>
-        <CardDescription>{{ t('settings.account.resetPasswordDesc') }}</CardDescription>
+        
       </CardHeader>
       <CardContent>
         <Button @click="handleResetPassword" variant="outline">
@@ -122,7 +122,7 @@ function handle2FASuccess() {
           <Shield class="size-5 text-muted-foreground" />
           <CardTitle>{{ t('settings.account.twoFactor.title') }}</CardTitle>
         </div>
-        <CardDescription>{{ t('settings.account.twoFactor.description') }}</CardDescription>
+        
       </CardHeader>
       <CardContent class="space-y-4">
         <!-- 2FA Status and Action -->

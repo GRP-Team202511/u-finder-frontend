@@ -5,7 +5,6 @@ import { toast } from 'vue-sonner'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -105,12 +104,6 @@ function handleClose() {
             : t('settings.account.twoFactor.regenerate.newCodesTitle') 
           }}
         </DialogTitle>
-        <DialogDescription>
-          {{ currentStep === 'verify'
-            ? t('settings.account.twoFactor.regenerate.verifyDesc')
-            : t('settings.account.twoFactor.regenerate.newCodesDesc')
-          }}
-        </DialogDescription>
       </DialogHeader>
 
       <!-- Step 1: Verify TOTP Code -->

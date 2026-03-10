@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
@@ -55,7 +55,7 @@ function toggleDarkMode(checked: boolean) {
     <Card>
       <CardHeader>
         <CardTitle>{{ t('settings.general.appearance') }}</CardTitle>
-        <CardDescription>{{ t('settings.general.appearanceDesc') }}</CardDescription>
+        
       </CardHeader>
       <CardContent class="space-y-4">
         <!-- Dark Mode Toggle -->
@@ -89,7 +89,7 @@ function toggleDarkMode(checked: boolean) {
           <Languages class="size-5 text-muted-foreground" />
           <CardTitle>{{ t('settings.general.language') }}</CardTitle>
         </div>
-        <CardDescription>{{ t('settings.general.languageDesc') }}</CardDescription>
+        
       </CardHeader>
       <CardContent>
         <div class="max-w-xs">

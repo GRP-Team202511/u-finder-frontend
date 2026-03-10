@@ -5,7 +5,6 @@ import { toast } from 'vue-sonner'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -163,16 +162,7 @@ const dialogTitle = computed(() => {
   }
 })
 
-const dialogDescription = computed(() => {
-  switch (currentStep.value) {
-    case 1:
-      return t('settings.account.twoFactor.setup.step1Desc')
-    case 2:
-      return t('settings.account.twoFactor.setup.step2Desc')
-    default:
-      return ''
-  }
-})
+// dialogDescription removed per requirements: no descriptions shown in Settings
 
 // Extract secret from TOTP URI for manual entry
 const totpSecret = computed(() => {
@@ -192,9 +182,6 @@ const totpSecret = computed(() => {
     <DialogContent class="max-w-2xl max-h-[90vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle>{{ dialogTitle }}</DialogTitle>
-        <DialogDescription>
-          {{ dialogDescription }}
-        </DialogDescription>
       </DialogHeader>
 
       <!-- Step 1: QR Code + Verify -->
