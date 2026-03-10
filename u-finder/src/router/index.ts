@@ -28,6 +28,18 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../views/auth/Login.vue'),
     meta: { requiresAuth: false }
   },
+  {
+    path: '/terms-of-service',
+    name: 'TermsOfService',
+    component: () => import('../views/legal/TermsOfService.vue'),
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/privacy-policy',
+    name: 'PrivacyPolicy',
+    component: () => import('../views/legal/PrivacyPolicy.vue'),
+    meta: { requiresAuth: false }
+  },
   {  
     path: '/login/reset',
     name: 'ResetPassword',
@@ -51,6 +63,12 @@ const routes: RouteRecordRaw[] = [
         meta: { requiresAuth: true }
       },
       {
+        path: 'favourite',
+        name: 'Favourite',
+        component: () => import('../views/favourite/Favourite.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: 'settings',
         name: 'Settings',
         component: () => import('../views/settings/Settings.vue'),
@@ -62,7 +80,18 @@ const routes: RouteRecordRaw[] = [
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior(to, _from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    }
+
+    if (to.hash) {
+      return { el: to.hash, top: 0 }
+    }
+
+    return { top: 0 }
+  }
 })
 
 // Navigation guard to check authentication

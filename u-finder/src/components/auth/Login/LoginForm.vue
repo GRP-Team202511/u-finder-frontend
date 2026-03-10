@@ -21,16 +21,19 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { toast } from 'vue-sonner'
-import http from "@/api/http"
+import { login } from "@/api/userApi"
 import { useUserStore } from "@/stores/userStore"
 import { useRouter } from "vue-router"
 
 const { t } = useI18n()
 const userStore = useUserStore()
 const router = useRouter()
-
 const props = defineProps<{
   class?: HTMLAttributes["class"]
+}>()
+
+const emit = defineEmits<{
+  (event: "two-factor", tempToken: string): void
 }>()
 
 const logging = ref(false)
@@ -48,13 +51,21 @@ const handleLogin = async() => {
   notFound.value = false
 
   try {
-    const response = await http.post('/auth/login', form.value)
-    console.log(response.status)
-    if (response.status == 200) {
-      // Save info to userStore
+    const response = await login(form.value)
+    if (response.status === 200) {
       userStore.setUser(response.data)
-        router.push({ name: 'UserProfile' })
+      router.push({ name: 'UserProfile' })
+      return
     }
+    if (response.status === 202) {
+      const tempToken = response.data.temp_token
+      if (tempToken) {
+        toast.info(t("login.twoFactorRequired"))
+        emit("two-factor", tempToken)
+        return
+      }
+    }
+    throw new Error("Unexpected login response")
   } catch (error: any) {
     if (error.response?.status === 401) {
       console.log("Wrong password")

@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
+import { toast } from "vue-sonner";
 import {
 	Card,
 	CardContent,
@@ -15,6 +17,7 @@ import {
 	TabsTrigger,
 } from "@/components/ui/tabs";
 import { Star } from "lucide-vue-next"
+import { extractProgram, programKey, useFavouriteStore } from "@/stores/favouriteStore";
 
 import type { ProgramCardData } from "@/types/chat";
 
@@ -22,6 +25,13 @@ const props = defineProps<{ program: ProgramCardData }>();
 
 const selectedView = ref("program");
 const { t, locale } = useI18n();
+const favouriteStore = useFavouriteStore();
+const { items } = storeToRefs(favouriteStore);
+
+const isFavourite = computed(() => {
+	const key = programKey(props.program);
+	return items.value.some((item) => programKey(extractProgram(item)) === key);
+});
 
 const locationLabel = () => {
 	const parts = [props.program.university.city, props.program.university.country].filter(
@@ -59,6 +69,25 @@ const formatVerifiedDate = () => {
 		day: "2-digit",
 	}).format(parsed);
 };
+
+const handleToggleFavourite = async () => {
+	const wasFavourite = isFavourite.value;
+	try {
+		if (wasFavourite) {
+			await favouriteStore.remove(props.program);
+			toast.success(t("favourites.toast.removeSuccess"));
+			return;
+		}
+		await favouriteStore.add(props.program);
+		toast.success(t("favourites.toast.addSuccess"));
+	} catch (error) {
+		const messageKey = wasFavourite
+			? "favourites.toast.removeFailed"
+			: "favourites.toast.addFailed";
+		toast.error(t(messageKey));
+		console.error("Failed to update favourite", error);
+	}
+};
 </script>
 
 <template>
@@ -75,10 +104,14 @@ const formatVerifiedDate = () => {
 				</div>
 				<button
 					type="button"
-					class="rounded-md p-2 text-muted-foreground transition hover:text-foreground"
-					aria-label="Add to favorites"
+					class="rounded-md p-2 transition"
+					:class="isFavourite ? 'text-yellow-500 hover:text-yellow-400' : 'text-muted-foreground hover:text-foreground'"
+					:aria-label="isFavourite ? t('favourites.actions.remove') : t('favourites.actions.add')"
+					:aria-pressed="isFavourite"
+					:title="isFavourite ? t('favourites.actions.remove') : t('favourites.actions.add')"
+					@click="void handleToggleFavourite()"
 				>
-					<Star class="h-5 w-5" />
+					<Star class="h-5 w-5" :fill="isFavourite ? 'currentColor' : 'none'" />
 				</button>
 			</div>
 		</CardHeader>
