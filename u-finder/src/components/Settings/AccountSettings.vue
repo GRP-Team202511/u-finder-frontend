@@ -13,7 +13,7 @@ import { useUserStore } from '@/stores/userStore'
 import TwoFactorSetupDialog from './TwoFactorSetupDialog.vue'
 import TwoFactorDisableDialog from './TwoFactorDisableDialog.vue'
 import RegenerateBackupCodesDialog from './RegenerateBackupCodesDialog.vue'
-// import { get2FAStatus } from '@/api/userApi'
+import { get2FAStatus } from '@/api/userApi'
 
 const { t } = useI18n()
 const userStore = useUserStore()
@@ -40,14 +40,9 @@ onMounted(async () => {
 async function fetch2FAStatus() {
   isLoading2FAStatus.value = true
   try {
-    // TODO: Uncomment when API is implemented
-    // const response = await get2FAStatus()
-    // is2FAEnabled.value = response.is_2fa_enabled
-    // backupCodesRemaining.value = response.backup_codes_remaining
-    
-    // Mock data for now
-    is2FAEnabled.value = false
-    backupCodesRemaining.value = 0
+    const response = await get2FAStatus()
+    is2FAEnabled.value = response.data.is_2fa_enabled
+    backupCodesRemaining.value = response.data.backup_codes_remaining
   } catch (error) {
     console.error('Failed to fetch 2FA status:', error)
     toast.error(t('settings.account.twoFactor.fetchError'))

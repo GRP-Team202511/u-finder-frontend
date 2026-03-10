@@ -17,7 +17,7 @@ import { Separator } from '@/components/ui/separator'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { Spinner } from '@/components/ui/spinner'
 import { Copy, CheckCircle2, AlertTriangle } from 'lucide-vue-next'
-// import { setup2FA, confirm2FA } from '@/api/userApi'
+import { setup2FA, confirm2FA } from '@/api/userApi'
 
 const { t } = useI18n()
 
@@ -73,17 +73,18 @@ function resetDialog() {
 async function initiate2FASetup() {
   isLoading.value = true
   try {
-    // TODO: Uncomment when API is ready
-    // const response = await setup2FA()
-    // qrCodeBase64.value = response.qr_code_base64
-    // totpUri.value = response.totp_uri
-    
-    // Mock data for development
-    qrCodeBase64.value = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
-    totpUri.value = 'otpauth://totp/U-Finder:user@example.com?secret=JBSWY3DPEHPK3PXP&issuer=U-Finder'
-  } catch (error) {
+    const response = await setup2FA()
+    qrCodeBase64.value = response.data.qr_code_base64
+    totpUri.value = response.data.totp_uri
+    // Store backup codes but don't show them until after verification
+    backupCodes.value = response.data.backup_codes
+  } catch (error: any) {
     console.error('Failed to setup 2FA:', error)
-    toast.error(t('settings.account.twoFactor.setup.error'))
+    if (error.response?.status === 409) {
+      toast.error(t('settings.account.twoFactor.setup.alreadyEnabled'))
+    } else {
+      toast.error(t('settings.account.twoFactor.setup.error'))
+    }
     emit('update:open', false)
   } finally {
     isLoading.value = false
@@ -100,31 +101,21 @@ async function nextStep() {
     
     isVerifying.value = true
     try {
-      // TODO: Uncomment when API is ready
-      // const response = await confirm2FA({ code: verificationCode.value })
-      // backupCodes.value = response.backup_codes
+      await confirm2FA({ code: verificationCode.value })
       
-      // Mock success for development
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Mock backup codes returned from API
-      backupCodes.value = [
-        'A1B2C3D4',
-        'E5F6G7H8',
-        'I9J0K1L2',
-        'M3N4O5P6',
-        'Q7R8S9T0',
-        'U1V2W3X4',
-        'Y5Z6A7B8',
-        'C9D0E1F2'
-      ]
-      
-      // Move to next step (show backup codes)
+      // Verification successful, move to step 2 to show backup codes
       currentStep.value = 2
     } catch (error: any) {
       console.error('Failed to verify 2FA:', error)
       if (error.response?.status === 400) {
-        toast.error(t('settings.account.twoFactor.setup.wrongCode'))
+        const message = error.response?.data?.message
+        if (message && message.includes('expired')) {
+          toast.error(t('settings.account.twoFactor.setup.setupExpired'))
+        } else {
+          toast.error(t('settings.account.twoFactor.setup.wrongCode'))
+        }
+      } else if (error.response?.status === 409) {
+        toast.error(t('settings.account.twoFactor.setup.alreadyEnabled'))
       } else {
         toast.error(t('settings.account.twoFactor.setup.verifyError'))
       }

@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Spinner } from '@/components/ui/spinner'
 import { AlertTriangle } from 'lucide-vue-next'
-// import { disable2FA } from '@/api/userApi'
+import { disable2FA } from '@/api/userApi'
 
 const { t } = useI18n()
 
@@ -47,19 +47,20 @@ async function handleDisable() {
 
   isDisabling.value = true
   try {
-    // TODO: Uncomment when API is ready
-    // await disable2FA({ password: password.value })
-    
-    // Mock success for development
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await disable2FA({ password: password.value })
     
     toast.success(t('settings.account.twoFactor.disable.success'))
     emit('success')
     emit('update:open', false)
   } catch (error: any) {
     console.error('Failed to disable 2FA:', error)
+    const message = error.response?.data?.message
     if (error.response?.status === 401) {
-      toast.error(t('settings.account.twoFactor.disable.wrongPassword'))
+      if (message && message.includes('password')) {
+        toast.error(t('settings.account.twoFactor.disable.wrongPassword'))
+      } else {
+        toast.error(t('settings.account.twoFactor.disable.error'))
+      }
     } else if (error.response?.status === 400) {
       toast.error(t('settings.account.twoFactor.disable.notEnabled'))
     } else {

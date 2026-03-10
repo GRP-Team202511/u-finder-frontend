@@ -519,9 +519,11 @@
                     "back": "Back",
                     "next": "Next",
                     "cancel": "Cancel",
-                    "verify": "Verify",
+                    "done": "Done",
                     "success": "2FA enabled successfully!",
                     "error": "Failed to setup 2FA",
+                    "alreadyEnabled": "2FA is already enabled",
+                    "setupExpired": "2FA setup expired, please try again",
                     "invalidCode": "Please enter a 6-digit code",
                     "wrongCode": "Invalid verification code",
                     "verifyError": "Failed to verify code. Please try again."
@@ -558,6 +560,7 @@
                     "done": "Done",
                     "invalidCode": "Please enter a 6-digit code",
                     "wrongCode": "Invalid TOTP code",
+                    "notEnabled": "2FA is not enabled",
                     "error": "Failed to regenerate backup codes"
                 }
             }

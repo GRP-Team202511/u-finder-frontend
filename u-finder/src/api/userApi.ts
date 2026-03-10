@@ -236,3 +236,73 @@ export const updateFullProfile = (data: FullProfile, token: string) => {
 export const logoutUser = () => {
   return http.post<{ message: string }>('/auth/logout')
 }
+
+// ==================== Two-Factor Authentication APIs ====================
+
+// 2FA Status Response
+export interface TwoFAStatusResponse {
+  is_2fa_enabled: boolean
+  backup_codes_remaining: number
+}
+
+// Setup 2FA Response
+export interface Setup2FAResponse {
+  totp_uri: string
+  qr_code_base64: string
+  backup_codes: string[]
+}
+
+// Confirm 2FA Request
+export interface Confirm2FARequest {
+  code: string
+}
+
+// Confirm 2FA Response
+export interface Confirm2FAResponse {
+  message: string
+}
+
+// Disable 2FA Request
+export interface Disable2FARequest {
+  password: string
+}
+
+// Disable 2FA Response
+export interface Disable2FAResponse {
+  message: string
+}
+
+// Regenerate Backup Codes Request
+export interface RegenerateBackupCodesRequest {
+  code: string
+}
+
+// Regenerate Backup Codes Response
+export interface RegenerateBackupCodesResponse {
+  backup_codes: string[]
+}
+
+// Get 2FA status for the current user
+export const get2FAStatus = () => {
+  return http.get<TwoFAStatusResponse>('/auth/2fa/status')
+}
+
+// Setup 2FA - Generate TOTP secret and QR code
+export const setup2FA = () => {
+  return http.post<Setup2FAResponse>('/auth/2fa/setup')
+}
+
+// Confirm 2FA binding - Verify initial TOTP code
+export const confirm2FA = (data: Confirm2FARequest) => {
+  return http.post<Confirm2FAResponse>('/auth/2fa/confirm', data)
+}
+
+// Disable 2FA
+export const disable2FA = (data: Disable2FARequest) => {
+  return http.post<Disable2FAResponse>('/auth/2fa/disable', data)
+}
+
+// Regenerate backup recovery codes
+export const regenerateBackupCodes = (data: RegenerateBackupCodesRequest) => {
+  return http.post<RegenerateBackupCodesResponse>('/auth/2fa/backup-codes/regenerate', data)
+}

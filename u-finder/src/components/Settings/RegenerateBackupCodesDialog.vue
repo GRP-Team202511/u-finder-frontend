@@ -16,7 +16,7 @@ import { Separator } from '@/components/ui/separator'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
 import { Spinner } from '@/components/ui/spinner'
 import { Copy, CheckCircle2, AlertTriangle } from 'lucide-vue-next'
-// import { regenerateBackupCodes } from '@/api/userApi'
+import { regenerateBackupCodes } from '@/api/userApi'
 
 const { t } = useI18n()
 
@@ -54,28 +54,19 @@ async function handleVerify() {
 
   isVerifying.value = true
   try {
-    // TODO: Uncomment when API is ready
-    // const response = await regenerateBackupCodes({ code: verificationCode.value })
-    // newBackupCodes.value = response.backup_codes
-    
-    // Mock success for development
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    newBackupCodes.value = [
-      'X1Y2Z3A4',
-      'B5C6D7E8',
-      'F9G0H1I2',
-      'J3K4L5M6',
-      'N7O8P9Q0',
-      'R1S2T3U4',
-      'V5W6X7Y8',
-      'Z9A0B1C2'
-    ]
+    const response = await regenerateBackupCodes({ code: verificationCode.value })
+    newBackupCodes.value = response.data.backup_codes
     
     currentStep.value = 'show'
   } catch (error: any) {
     console.error('Failed to regenerate backup codes:', error)
+    const message = error.response?.data?.message
     if (error.response?.status === 400) {
-      toast.error(t('settings.account.twoFactor.regenerate.wrongCode'))
+      if (message && message.includes('not enabled')) {
+        toast.error(t('settings.account.twoFactor.regenerate.notEnabled'))
+      } else {
+        toast.error(t('settings.account.twoFactor.regenerate.wrongCode'))
+      }
     } else {
       toast.error(t('settings.account.twoFactor.regenerate.error'))
     }
