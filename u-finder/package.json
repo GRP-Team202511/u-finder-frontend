@@ -16,6 +16,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dompurify": "^3.3.1",
+    "embla-carousel-vue": "^8.6.0",
     "highlight.js": "^11.11.1",
     "lucide-vue-next": "^0.553.0",
     "markdown-it": "^14.1.0",
