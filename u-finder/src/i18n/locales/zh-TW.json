@@ -115,6 +115,42 @@
         "add": "新增",
         "remove": "刪除",
         "retry": "重試",
+        "cvParser": {
+            "button": "匯入履歷",
+            "title": "匯入履歷",
+            "description": "上傳您的履歷，自動填入個人資料。",
+            "uploadPrompt": "將履歷拖放到此處，或點擊選擇檔案",
+            "supportedFormats": "支援格式：PDF、DOCX、DOC",
+            "maxSize": "最大檔案大小：10MB",
+            "uploading": "正在上傳...",
+            "parsing": "正在解析履歷...",
+            "parseSuccess": "履歷解析成功！",
+            "selectData": "選擇要匯入的資料",
+            "reviewTitle": "查看解析結果",
+            "reviewDescription": "選擇要匯入到個人資料的部分。",
+            "selectAll": "全選",
+            "noData": "未找到資料",
+            "item": "項",
+            "items": "項",
+            "more": "更多...",
+            "confirmImport": "確認匯入",
+            "importSuccess": "履歷資料匯入成功！",
+            "importFailed": "匯入履歷資料失敗",
+            "actions": {
+                "overwrite": "覆蓋",
+                "append": "追加"
+            },
+            "errors": {
+                "invalidFormat": "檔案格式無效。僅支援 PDF、DOCX 和 DOC 格式。",
+                "fileTooLarge": "檔案大小超過 10MB 限制。",
+                "uploadFailed": "上傳履歷失敗。請重試。",
+                "noFile": "未上傳檔案或檔案為空。",
+                "unauthorized": "您未獲授權。請重新登入。",
+                "parseFailed": "無法從上傳的檔案中提取資訊。",
+                "serviceUnavailable": "AI 服務暫時不可用。請稍後重試。",
+                "serverError": "伺服器內部錯誤。請重試。"
+            }
+        },
         "errors": {
             "loadFailed": "哎呀，出錯啦……",
             "loadFailedDescription": "無法載入您的個人資料，請嘗試重新整理頁面。"
@@ -222,8 +258,8 @@
         "selectType": "選擇類型",
         "selectTypeHint": "選擇類型以輸入詳細資訊。",
         "empty": "目前無學術成果",
-        "add": "新增學術成果",
-        "type": {
+        "add": "新增學術成果",        "paper": "論文",
+        "patent": "專利",        "type": {
             "title": "類型",
             "researchPaper": "研究論文",
             "patent": "專利"

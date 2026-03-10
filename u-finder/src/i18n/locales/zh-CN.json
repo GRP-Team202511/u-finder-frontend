@@ -115,6 +115,42 @@
         "add": "添加",
         "remove": "删除",
         "retry": "重试",
+        "cvParser": {
+            "button": "导入简历",
+            "title": "导入简历",
+            "description": "上传您的简历，自动填充个人资料信息。",
+            "uploadPrompt": "将简历拖放到此处，或点击选择文件",
+            "supportedFormats": "支持的格式：PDF、DOCX、DOC",
+            "maxSize": "最大文件大小：10MB",
+            "uploading": "正在上传...",
+            "parsing": "正在解析简历...",
+            "parseSuccess": "简历解析成功！",
+            "selectData": "选择要导入的数据",
+            "reviewTitle": "查看解析结果",
+            "reviewDescription": "选择要导入到个人资料的部分。",
+            "selectAll": "全选",
+            "noData": "未找到数据",
+            "item": "项",
+            "items": "项",
+            "more": "更多...",
+            "confirmImport": "确认导入",
+            "importSuccess": "简历数据导入成功！",
+            "importFailed": "导入简历数据失败",
+            "actions": {
+                "overwrite": "覆盖",
+                "append": "追加"
+            },
+            "errors": {
+                "invalidFormat": "文件格式无效。仅支持 PDF、DOCX 和 DOC 格式。",
+                "fileTooLarge": "文件大小超过 10MB 限制。",
+                "uploadFailed": "上传简历失败。请重试。",
+                "noFile": "未上传文件或文件为空。",
+                "unauthorized": "您未获授权。请重新登录。",
+                "parseFailed": "无法从上传的文件中提取信息。",
+                "serviceUnavailable": "AI 服务暂时不可用。请稍后重试。",
+                "serverError": "服务器内部错误。请重试。"
+            }
+        },
         "errors": {
             "loadFailed": "哎呀，出错了……",
             "loadFailedDescription": "无法加载您的个人资料数据，请尝试刷新页面。"
@@ -222,8 +258,8 @@
         "selectType": "选择类型",
         "selectTypeHint": "选择类型以输入详细信息。",
         "empty": "暂无学术成果",
-        "add": "添加学术成果",
-        "type": {
+        "add": "添加学术成果",        "paper": "论文",
+        "patent": "专利",        "type": {
             "title": "类型",
             "researchPaper": "研究论文",
             "patent": "专利"

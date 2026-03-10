@@ -195,18 +195,16 @@ function save(e?: Event) {
 
   const info = information.value || { name: '', gender: '', birthday: '' }
   const tz = getLocalTimeZone()
-  const birthdayValue = birthday.value ? formatToDate(birthday.value, tz) : info.birthday
+  const birthdayValue = birthday.value ? formatToDate(birthday.value, tz) : (info.birthday || '')
   const nameValue = (info.name || '').trim()
   const genderValue = info.gender || ''
 
   if (!nameValue) fieldErrors.name = t('info.errors.nameRequired') || 'Name is required.'
-  if (!genderValue) fieldErrors.gender = t('info.errors.genderRequired') || 'Gender is required.'
-  if (!birthdayValue) fieldErrors.birthday = t('info.errors.birthdayRequired') || 'Birthday is required.'
-  if (fieldErrors.name || fieldErrors.gender || fieldErrors.birthday) return
+  if (fieldErrors.name) return
 
   isLoading.value = true
-  const payload = {
-    ...info,
+  // Explicitly construct payload with only the three required fields per API spec
+  const payload: PersonalInfo = {
     name: nameValue,
     gender: genderValue,
     birthday: birthdayValue,
