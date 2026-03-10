@@ -52,6 +52,13 @@ watch(() => props.open, (newValue) => {
   }
 })
 
+// Auto-submit when 6-digit code is entered on step 1
+watch(verificationCode, (newValue) => {
+  if (currentStep.value === 1 && newValue.length === 6 && !isVerifying.value) {
+    nextStep()
+  }
+})
+
 function resetDialog() {
   currentStep.value = 1
   isLoading.value = false
