@@ -11,6 +11,9 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Mail, KeyRound, Shield, RefreshCw } from 'lucide-vue-next'
 import { useUserStore } from '@/stores/userStore'
+import TwoFactorSetupDialog from './TwoFactorSetupDialog.vue'
+import TwoFactorDisableDialog from './TwoFactorDisableDialog.vue'
+import RegenerateBackupCodesDialog from './RegenerateBackupCodesDialog.vue'
 // import { get2FAStatus } from '@/api/userApi'
 
 const { t } = useI18n()
@@ -71,9 +74,12 @@ function handleToggle2FA() {
 }
 
 function handleRegenerateCodes() {
-  // TODO: Implement regenerate codes dialog
   showRegenerateCodesDialog.value = true
-  toast.info('Regenerate codes feature coming soon')
+}
+
+function handle2FASuccess() {
+  // Refresh 2FA status after successful operation
+  fetch2FAStatus()
 }
 </script>
 
@@ -165,11 +171,20 @@ function handleRegenerateCodes() {
       </CardContent>
     </Card>
 
-    <!-- TODO: Add dialogs for:
-      - Reset Password
-      - 2FA Setup (multi-step)
-      - 2FA Disable
-      - Regenerate Backup Codes
-    -->
+    <!-- Dialogs -->
+    <TwoFactorSetupDialog 
+      v-model:open="show2FASetupDialog"
+      @success="handle2FASuccess"
+    />
+    <TwoFactorDisableDialog 
+      v-model:open="show2FADisableDialog"
+      @success="handle2FASuccess"
+    />
+    <RegenerateBackupCodesDialog 
+      v-model:open="showRegenerateCodesDialog"
+      @success="handle2FASuccess"
+    />
+
+    <!-- TODO: Add Reset Password Dialog -->
   </div>
 </template>

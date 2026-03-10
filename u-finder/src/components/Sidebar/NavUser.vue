@@ -135,7 +135,7 @@ const handleLogout = async () => {
         </DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem as-child>
-            <RouterLink :to="{ name: 'Cover' }"> <!--to be updated when the page is being developed-->
+            <RouterLink :to="{ name: 'Settings' }">
               <Settings class="size-4" />
               {{ t('sidebar.settings') }}
             </RouterLink>
