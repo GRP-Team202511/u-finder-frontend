@@ -125,7 +125,17 @@
             "uploading": "正在上傳...",
             "parsing": "正在解析履歷...",
             "parseSuccess": "履歷解析成功！",
-            "selectData": "選擇要匯入的資料"
+            "selectData": "選擇要匯入的資料",
+            "errors": {
+                "invalidFormat": "檔案格式無效。僅支援 PDF、DOCX 和 DOC 格式。",
+                "fileTooLarge": "檔案大小超過 10MB 限制。",
+                "uploadFailed": "上傳履歷失敗。請重試。",
+                "noFile": "未上傳檔案或檔案為空。",
+                "unauthorized": "您未獲授權。請重新登入。",
+                "parseFailed": "無法從上傳的檔案中提取資訊。",
+                "serviceUnavailable": "AI 服務暫時不可用。請稍後重試。",
+                "serverError": "伺服器內部錯誤。請重試。"
+            }
         },
         "errors": {
             "loadFailed": "哎呀，出錯啦……",

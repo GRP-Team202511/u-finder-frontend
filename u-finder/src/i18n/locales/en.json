@@ -127,7 +127,17 @@
             "uploading": "Uploading...",
             "parsing": "Parsing your CV...",
             "parseSuccess": "CV parsed successfully!",
-            "selectData": "Select the data you want to import"
+            "selectData": "Select the data you want to import",
+            "errors": {
+                "invalidFormat": "Invalid file format. Only PDF, DOCX, and DOC are supported.",
+                "fileTooLarge": "File size exceeds 10MB limit.",
+                "uploadFailed": "Failed to upload CV. Please try again.",
+                "noFile": "No file uploaded or file is empty.",
+                "unauthorized": "You are not authorized. Please login again.",
+                "parseFailed": "Failed to extract information from the uploaded file.",
+                "serviceUnavailable": "AI service is temporarily unavailable. Please try again later.",
+                "serverError": "Internal server error. Please try again."
+            }
         },
         "errors": {
             "loadFailed": "Ops, something went wrong...",
