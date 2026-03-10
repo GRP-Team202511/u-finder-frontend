@@ -13,6 +13,7 @@ import { useUserStore } from '@/stores/userStore'
 import TwoFactorSetupDialog from './TwoFactorSetupDialog.vue'
 import TwoFactorDisableDialog from './TwoFactorDisableDialog.vue'
 import RegenerateBackupCodesDialog from './RegenerateBackupCodesDialog.vue'
+import ResetPasswordDialog from './ResetPasswordDialog.vue'
 import { get2FAStatus, getUserInfo } from '@/api/userApi'
 
 const { t } = useI18n()
@@ -79,9 +80,7 @@ async function fetch2FAStatus() {
 }
 
 function handleResetPassword() {
-  // TODO: Implement reset password dialog
   showResetPasswordDialog.value = true
-  toast.info('Reset password feature coming soon')
 }
 
 function handleToggle2FA() {
@@ -233,6 +232,9 @@ function handle2FASuccess() {
     </Card>
 
     <!-- Dialogs -->
+    <ResetPasswordDialog
+      v-model:open="showResetPasswordDialog"
+    />
     <TwoFactorSetupDialog 
       v-model:open="show2FASetupDialog"
       @success="handle2FASuccess"
@@ -245,7 +247,5 @@ function handle2FASuccess() {
       v-model:open="showRegenerateCodesDialog"
       @success="handle2FASuccess"
     />
-
-    <!-- TODO: Add Reset Password Dialog -->
   </div>
 </template>

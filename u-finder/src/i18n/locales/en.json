@@ -498,6 +498,17 @@
             "security": "Security",
             "resetPassword": "Reset Password",
             "resetPasswordDesc": "Reset your password via email verification",
+            "resetPasswordDialog": {
+                "title": "Reset Password",
+                "step1Desc": "Confirm your email address to receive a verification code",
+                "step2Desc": "Enter the verification code sent to your email and set your new password",
+                "emailConfirmHint": "A verification code will be sent to this email address",
+                "confirmPassword": "Confirm New Password",
+                "passwordMismatch": "Passwords do not match",
+                "passwordTooShort": "Password must be at least 8 characters",
+                "success": "Password reset successfully",
+                "warning": "You will be logged out after resetting your password and need to log in again with your new password"
+            },
             "twoFactor": {
                 "title": "Two-Factor Authentication",
                 "description": "Add an extra layer of security to your account",
