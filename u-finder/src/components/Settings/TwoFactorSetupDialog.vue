@@ -11,7 +11,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'
@@ -174,6 +173,18 @@ const dialogDescription = computed(() => {
       return ''
   }
 })
+
+// Extract secret from TOTP URI for manual entry
+const totpSecret = computed(() => {
+  if (!totpUri.value) return ''
+  try {
+    const url = new URL(totpUri.value)
+    return url.searchParams.get('secret') || ''
+  } catch (error) {
+    console.error('Failed to parse TOTP URI:', error)
+    return ''
+  }
+})
 </script>
 
 <template>
@@ -202,7 +213,9 @@ const dialogDescription = computed(() => {
             <Label class="text-sm text-muted-foreground">
               {{ t('settings.account.twoFactor.setup.manualEntry') }}
             </Label>
-            <Input :value="totpUri" readonly class="font-mono text-xs" />
+            <p class="font-mono text-sm font-bold break-all px-3 py-2 rounded-md border bg-muted/50">
+              {{ totpSecret }}
+            </p>
           </div>
 
           <Separator />
