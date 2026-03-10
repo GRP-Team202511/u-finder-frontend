@@ -473,6 +473,134 @@
                 "facultySite": "學院官網"
             }
         }
+    },
+    "settings": {
+        "title": "設定",
+        "tabs": {
+            "account": "帳戶",
+            "general": "通用",
+            "about": "關於"
+        },
+        "account": {
+            "accountInformation": "帳戶資訊",
+            "username": "使用者名稱",
+            "email": "電子郵件",
+            "plan": "計劃",
+            "changeAvatar": "更換頭像",
+            "fetchUserInfoError": "獲取使用者資訊失敗",
+            "plans": {
+                "free": "免費計劃"
+            },
+            "security": "安全",
+            "resetPassword": "重設密碼",
+            "resetPasswordDesc": "透過電子郵件驗證重設密碼",
+            "resetPasswordDialog": {
+                "title": "重設密碼",
+                "step1Desc": "確認您的電子郵件地址以接收驗證碼",
+                "step2Desc": "輸入發送到您電子郵件的驗證碼並設定新密碼",
+                "emailConfirmHint": "驗證碼將發送到此電子郵件地址",
+                "confirmPassword": "確認新密碼",
+                "passwordMismatch": "密碼不符合",
+                "passwordTooShort": "密碼長度至少為8個字元",
+                "success": "密碼重設成功",
+                "warning": "重設密碼後您將登出，需要使用新密碼重新登入"
+            },
+            "twoFactor": {
+                "title": "兩步驟驗證",
+                "description": "為您的帳戶添加額外的安全保護",
+                "enabled": "已啟用",
+                "disabled": "已停用",
+                "backupCodes": "剩餘備用碼",
+                "enable": "啟用",
+                "disableButton": "停用",
+                "regenerateButton": "重新產生備用碼",
+                "fetchError": "獲取兩步驟驗證狀態失敗",
+                "setup": {
+                    "step1Title": "掃描 QR 碼",
+                    "step1Desc": "使用 Google Authenticator 或任何 TOTP 應用程式掃描此 QR 碼",
+                    "step2Title": "儲存備用碼",
+                    "step2Desc": "將這些備用碼儲存在安全的地方。每個代碼只能使用一次。",
+                    "step3Title": "驗證",
+                    "step3Desc": "輸入您的驗證應用程式中的6位數代碼",
+                    "manualEntry": "或在您的應用程式中手動輸入此代碼：",
+                    "backupCodesWarning": "重要：請妥善儲存這些備用碼！",
+                    "backupCodesWarning2": "如果您無法存取驗證裝置，這些代碼是恢復帳戶的唯一方法。",
+                    "enterCode": "輸入驗證碼",
+                    "codeFromApp": "輸入您的驗證應用程式中的6位數代碼",
+                    "copyAll": "全部複製",
+                    "copied": "已複製！",
+                    "copiedCodes": "備用碼已複製到剪貼簿",
+                    "back": "返回",
+                    "next": "下一步",
+                    "cancel": "取消",
+                    "done": "完成",
+                    "success": "兩步驟驗證啟用成功！",
+                    "error": "設定兩步驟驗證失敗",
+                    "alreadyEnabled": "兩步驟驗證已啟用",
+                    "setupExpired": "兩步驟驗證設定已過期，請重試",
+                    "invalidCode": "請輸入6位數代碼",
+                    "wrongCode": "驗證碼無效",
+                    "verifyError": "驗證失敗，請重試。"
+                },
+                "disable": {
+                    "title": "停用兩步驟驗證",
+                    "description": "停用兩步驟驗證將降低您的帳戶安全性",
+                    "warning": "警告：安全風險",
+                    "warningDesc": "停用兩步驟驗證將使您的帳戶安全性降低。",
+                    "enterPassword": "輸入您的密碼以確認",
+                    "passwordPlaceholder": "您的密碼",
+                    "passwordRequired": "密碼為必填項",
+                    "cancel": "取消",
+                    "confirm": "停用",
+                    "success": "兩步驟驗證已成功停用",
+                    "wrongPassword": "密碼錯誤",
+                    "notEnabled": "兩步驟驗證未啟用",
+                    "error": "停用兩步驟驗證失敗"
+                },
+                "regenerate": {
+                    "verifyTitle": "驗證身分",
+                    "verifyDesc": "輸入您目前的 TOTP 代碼以重新產生備用碼",
+                    "newCodesTitle": "新備用碼",
+                    "newCodesDesc": "您的舊備用碼現已失效。請妥善儲存這些新代碼。",
+                    "enterCode": "輸入 TOTP 代碼",
+                    "codeFromApp": "輸入您的驗證應用程式中的6位數代碼",
+                    "warning": "所有之前的備用碼現已失效",
+                    "warningDesc": "請確保儲存這些新備用碼。您的舊代碼將不再有效。",
+                    "copyAll": "全部複製",
+                    "copied": "已複製！",
+                    "copiedCodes": "備用碼已複製到剪貼簿",
+                    "cancel": "取消",
+                    "verify": "驗證",
+                    "done": "完成",
+                    "invalidCode": "請輸入6位數代碼",
+                    "wrongCode": "TOTP 代碼無效",
+                    "notEnabled": "兩步驟驗證未啟用",
+                    "error": "重新產生備用碼失敗"
+                }
+            }
+        },
+        "general": {
+            "appearance": "外觀",
+            "appearanceDesc": "自訂 U-Finder 在您裝置上的外觀",
+            "darkMode": "深色模式",
+            "darkModeDesc": "在淺色和深色主題之間切換",
+            "language": "語言",
+            "languageDesc": "選擇您偏好的語言"
+        },
+        "about": {
+            "title": "關於 U-Finder",
+            "description": "由 AI 驅動的智慧大學查找工具",
+            "version": "版本",
+            "legalTitle": "法律與政策",
+            "legalDesc": "服務條款、隱私和授權資訊",
+            "terms": "服務條款",
+            "termsDesc": "檢視我們的條款和條件",
+            "privacy": "隱私政策",
+            "privacyDesc": "了解我們如何處理您的資料",
+            "license": "開源授權",
+            "licenseDesc": "檢視開源授權資訊",
+            "footer": "由 U-Finder 團隊用 ❤️ 製作"
+        }
     }
 
 }
