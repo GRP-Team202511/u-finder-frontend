@@ -29,13 +29,13 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/termsOfService',
+    path: '/terms-of-service',
     name: 'TermsOfService',
     component: () => import('../views/legal/TermsOfService.vue'),
     meta: { requiresAuth: false }
   },
   {
-    path: '/privacyPolicy',
+    path: '/privacy-policy',
     name: 'PrivacyPolicy',
     component: () => import('../views/legal/PrivacyPolicy.vue'),
     meta: { requiresAuth: false }

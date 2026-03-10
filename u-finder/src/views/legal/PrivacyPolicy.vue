@@ -9,9 +9,8 @@ const router = useRouter()
 <template>
   <div class="min-h-svh bg-muted/30 px-4 py-8 md:px-8 md:py-12">
     <div class="mx-auto w-full max-w-4xl">
-      <div class="mb-4 flex items-center justify-between">
-        <Button variant="outline" type="button" @click="router.push('/signup')">Back to Sign Up</Button>
-        <Button type="button" @click="router.push('/termsOfService')">View Terms of Service</Button>
+      <div class="mb-4 flex justify-end">
+        <Button type="button" @click="router.push('/terms-of-service')">View Terms of Service</Button>
       </div>
       <Card>
         <CardHeader>
