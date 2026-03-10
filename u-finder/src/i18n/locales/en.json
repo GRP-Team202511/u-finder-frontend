@@ -497,8 +497,8 @@
                 "enabled": "Enabled",
                 "disabled": "Disabled",
                 "backupCodes": "Backup codes remaining",
-                "enable": "Enable 2FA",
-                "disableButton": "Disable 2FA",
+                "enable": "Enable",
+                "disableButton": "Disable",
                 "regenerateButton": "Regenerate Backup Codes",
                 "fetchError": "Failed to fetch 2FA status",
                 "setup": {
