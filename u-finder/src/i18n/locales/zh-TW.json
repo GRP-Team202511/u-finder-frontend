@@ -589,16 +589,15 @@
         },
         "about": {
             "title": "關於 U-Finder",
-            "description": "由 AI 驅動的智慧大學查找工具",
+            "description": "由 AI 驅動的智慧大學查找工具。本專案以 Apache 2.0 授權條款開源，是寧波諾丁漢大學 COMP2043 GRP 課程的小組作業。",
             "version": "版本",
-            "legalTitle": "法律與政策",
-            "legalDesc": "服務條款、隱私和授權資訊",
+            "license": "授權條款",
+            "course": "課程",
+            "team": "團隊",
+            "university": "大學",
+            "github": "GitHub 儲存庫",
             "terms": "服務條款",
-            "termsDesc": "檢視我們的條款和條件",
             "privacy": "隱私政策",
-            "privacyDesc": "了解我們如何處理您的資料",
-            "license": "開源授權",
-            "licenseDesc": "檢視開源授權資訊",
             "footer": "由 U-Finder 團隊用 ❤️ 製作"
         }
     }

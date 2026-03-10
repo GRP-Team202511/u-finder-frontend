@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
-import { Moon, Sun, FileText, Shield, Scale, ExternalLink, Info } from 'lucide-vue-next'
+import { Moon, Sun, FileText, Shield, Scale, ExternalLink, Info, Github } from 'lucide-vue-next'
 
 const { t } = useI18n()
 
@@ -106,101 +106,75 @@ function openLink(url: string) {
         </div>
       </CardHeader>
       <CardContent class="space-y-4">
-        <!-- Version Info -->
-        <div class="flex items-center justify-between rounded-lg border p-4">
-          <div class="space-y-0.5">
-            <Label class="text-base font-medium">
-              {{ t('settings.about.version') }}
-            </Label>
-            <p class="text-sm text-muted-foreground">
-              v{{ version }}
-            </p>
+        <!-- Description -->
+        <p class="text-sm text-muted-foreground">
+          {{ t('settings.about.description') }}
+        </p>
+
+        <!-- Project Info -->
+        <div class="space-y-3 rounded-lg border p-4">
+          <div class="flex items-center justify-between">
+            <Label class="text-sm text-muted-foreground">{{ t('settings.about.version') }}</Label>
+            <span class="text-sm font-medium">v{{ version }}</span>
           </div>
+          <Separator />
+          <div class="flex items-center justify-between">
+            <Label class="text-sm text-muted-foreground">{{ t('settings.about.license') }}</Label>
+            <span class="text-sm font-medium">Apache 2.0</span>
+          </div>
+          <Separator />
+          <div class="flex items-center justify-between">
+            <Label class="text-sm text-muted-foreground">{{ t('settings.about.course') }}</Label>
+            <span class="text-sm font-medium">COMP2043 GRP</span>
+          </div>
+          <Separator />
+          <div class="flex items-center justify-between">
+            <Label class="text-sm text-muted-foreground">{{ t('settings.about.team') }}</Label>
+            <span class="text-sm font-medium">Team2025.11</span>
+          </div>
+          <Separator />
+          <div class="flex items-center justify-between">
+            <Label class="text-sm text-muted-foreground">{{ t('settings.about.university') }}</Label>
+            <span class="text-sm font-medium text-right">University of Nottingham Ningbo China</span>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div class="space-y-2">
+          <button
+            @click="openLink('https://github.com/GRP-Team202511/u-finder')"
+            class="flex w-full items-center justify-between rounded-lg border p-3 transition-colors hover:bg-accent hover:text-accent-foreground"
+          >
+            <div class="flex items-center gap-3">
+              <Github class="size-4 text-foreground" />
+              <span class="text-sm font-medium">{{ t('settings.about.github') }}</span>
+            </div>
+            <ExternalLink class="size-4 text-muted-foreground" />
+          </button>
+
+          <button
+            @click="openLink(links.terms)"
+            class="flex w-full items-center justify-between rounded-lg border p-3 transition-colors hover:bg-accent hover:text-accent-foreground"
+          >
+            <div class="flex items-center gap-3">
+              <FileText class="size-4 text-foreground" />
+              <span class="text-sm font-medium">{{ t('settings.about.terms') }}</span>
+            </div>
+            <ExternalLink class="size-4 text-muted-foreground" />
+          </button>
+
+          <button
+            @click="openLink(links.privacy)"
+            class="flex w-full items-center justify-between rounded-lg border p-3 transition-colors hover:bg-accent hover:text-accent-foreground"
+          >
+            <div class="flex items-center gap-3">
+              <Shield class="size-4 text-foreground" />
+              <span class="text-sm font-medium">{{ t('settings.about.privacy') }}</span>
+            </div>
+            <ExternalLink class="size-4 text-muted-foreground" />
+          </button>
         </div>
       </CardContent>
     </Card>
-
-    <!-- Legal & Policies -->
-    <Card>
-      <CardHeader>
-        <div class="flex items-center gap-2">
-          <Scale class="size-5 text-muted-foreground" />
-          <CardTitle>{{ t('settings.about.legalTitle') }}</CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent class="space-y-3">
-        <!-- Terms of Service -->
-        <button
-          @click="openLink(links.terms)"
-          class="flex w-full items-center justify-between rounded-lg border p-4 transition-colors hover:bg-accent hover:text-accent-foreground"
-        >
-          <div class="flex items-center gap-3">
-            <div class="rounded-md bg-muted p-2">
-              <FileText class="size-5 text-foreground" />
-            </div>
-            <div class="text-left space-y-0.5">
-              <p class="text-base font-medium">
-                {{ t('settings.about.terms') }}
-              </p>
-              <p class="text-sm text-muted-foreground">
-                {{ t('settings.about.termsDesc') }}
-              </p>
-            </div>
-          </div>
-          <ExternalLink class="size-4 text-muted-foreground" />
-        </button>
-
-        <Separator />
-
-        <!-- Privacy Policy -->
-        <button
-          @click="openLink(links.privacy)"
-          class="flex w-full items-center justify-between rounded-lg border p-4 transition-colors hover:bg-accent hover:text-accent-foreground"
-        >
-          <div class="flex items-center gap-3">
-            <div class="rounded-md bg-muted p-2">
-              <Shield class="size-5 text-foreground" />
-            </div>
-            <div class="text-left space-y-0.5">
-              <p class="text-base font-medium">
-                {{ t('settings.about.privacy') }}
-              </p>
-              <p class="text-sm text-muted-foreground">
-                {{ t('settings.about.privacyDesc') }}
-              </p>
-            </div>
-          </div>
-          <ExternalLink class="size-4 text-muted-foreground" />
-        </button>
-
-        <Separator />
-
-        <!-- Open Source License -->
-        <button
-          @click="openLink(links.license)"
-          class="flex w-full items-center justify-between rounded-lg border p-4 transition-colors hover:bg-accent hover:text-accent-foreground"
-        >
-          <div class="flex items-center gap-3">
-            <div class="rounded-md bg-muted p-2">
-              <Scale class="size-5 text-foreground" />
-            </div>
-            <div class="text-left space-y-0.5">
-              <p class="text-base font-medium">
-                {{ t('settings.about.license') }}
-              </p>
-              <p class="text-sm text-muted-foreground">
-                {{ t('settings.about.licenseDesc') }}
-              </p>
-            </div>
-          </div>
-          <ExternalLink class="size-4 text-muted-foreground" />
-        </button>
-      </CardContent>
-    </Card>
-
-    <!-- Footer Note -->
-    <div class="text-center text-sm text-muted-foreground">
-      <p>{{ t('settings.about.footer') }}</p>
-    </div>
   </div>
 </template>

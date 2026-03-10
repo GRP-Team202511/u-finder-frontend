@@ -589,16 +589,15 @@
         },
         "about": {
             "title": "关于 U-Finder",
-            "description": "由 AI 驱动的智能大学查找工具",
+            "description": "由 AI 驱动的智能大学查找工具。本项目以 Apache 2.0 许可证开源，是宁波诺丁汉大学 COMP2043 GRP 课程的小组作业。",
             "version": "版本",
-            "legalTitle": "法律与政策",
-            "legalDesc": "服务条款、隐私和许可信息",
+            "license": "许可证",
+            "course": "课程",
+            "team": "团队",
+            "university": "大学",
+            "github": "GitHub 仓库",
             "terms": "服务条款",
-            "termsDesc": "查看我们的条款和条件",
             "privacy": "隐私政策",
-            "privacyDesc": "了解我们如何处理您的数据",
-            "license": "开源许可",
-            "licenseDesc": "查看开源许可信息",
             "footer": "由 U-Finder 团队用 ❤️ 制作"
         }
     }

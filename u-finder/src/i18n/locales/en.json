@@ -593,16 +593,15 @@
         },
         "about": {
             "title": "About U-Finder",
-            "description": "An intelligent university finder tool powered by AI",
+            "description": "An intelligent university finder tool powered by AI. This project is open-sourced under the Apache 2.0 License as a group project for COMP2043 GRP at University of Nottingham Ningbo China.",
             "version": "Version",
-            "legalTitle": "Legal & Policies",
-            "legalDesc": "Terms, privacy and licensing information",
+            "license": "License",
+            "course": "Course",
+            "team": "Team",
+            "university": "University",
+            "github": "GitHub Repository",
             "terms": "Terms of Service",
-            "termsDesc": "View our terms and conditions",
             "privacy": "Privacy Policy",
-            "privacyDesc": "Learn how we handle your data",
-            "license": "Open Source License",
-            "licenseDesc": "View open source licensing information",
             "footer": "Made with ❤️ by the U-Finder Team"
         }
     }
