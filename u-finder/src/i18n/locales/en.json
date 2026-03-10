@@ -12,6 +12,7 @@
         "password": "Password",
         "forgot": "Forgot your password?",
         "submit": "Log In",
+        "twoFactorRequired": "Two-factor verification required",
         "no account": "Not have an account?",
         "signup": "Sign up",
         "unauth": "The password is incorrect",
@@ -47,6 +48,20 @@
                 "passwordReset": "Password reset successfully! Redirecting to login..."
             }
         }
+    },
+    "twofa": {
+        "title": "Two-factor Authentication",
+        "description": "Enter your verification code to continue.",
+        "totpLabel": "Authenticator code",
+        "recoveryLabel": "Recovery code",
+        "totpHint": "Enter the 6-digit code from your authentication app.",
+        "recoveryHint": "Enter your 8-character recovery code.",
+        "verify": "Verify",
+        "switchToRecovery": "Use recovery code",
+        "switchToTotp": "Use authenticator code",
+        "invalid": "Invalid verification code",
+        "failed": "Verification failed",
+        "success": "Verification successful"
     },
     "signup":{
         "title": "Sign Up",

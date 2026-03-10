@@ -13,6 +13,20 @@ export interface LoginResponse {
   token: string
 }
 
+export interface LoginTwoFactorResponse {
+  temp_token: string | null
+}
+
+export type LoginApiResponse =
+  | {
+      status: 200
+      data: LoginResponse
+    }
+  | {
+      status: 202
+      data: LoginTwoFactorResponse
+    }
+
 // Signup request payload structure
 export interface SignupRequest {
   name: string
@@ -38,8 +52,43 @@ export interface VerifySignupResponse {
 }
 
 // Sends a login request to the server
-export const login = (data: LoginRequest) => {
-  return http.post<LoginResponse>('/auth/login', data)
+export const login = async (data: LoginRequest): Promise<LoginApiResponse> => {
+  const response = await http.post<LoginResponse | LoginTwoFactorResponse>('/auth/login', data)
+
+  if (response.status === 200) {
+    return {
+      status: 200,
+      data: response.data as LoginResponse
+    }
+  }
+
+  if (response.status === 202) {
+    return {
+      status: 202,
+      data: response.data as LoginTwoFactorResponse
+    }
+  }
+
+  throw new Error(`Unexpected login response status: ${response.status}`)
+}
+
+export interface TwoFactorVerifyRequest {
+  code: string
+  type: 'totp' | 'recovery'
+}
+
+export interface TwoFactorVerifyResponse {
+  id: number
+  name: string
+  token: string
+}
+
+export const verifyTwoFactor = (data: TwoFactorVerifyRequest, tempToken: string) => {
+  return http.post<TwoFactorVerifyResponse>('/auth/2fa/verify', data, {
+    headers: {
+      'Temp-Token': tempToken
+    }
+  })
 }
 
 // Sends a signup request to the server
