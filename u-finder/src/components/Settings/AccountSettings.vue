@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Mail, KeyRound, Shield, RefreshCw } from 'lucide-vue-next'
@@ -131,7 +130,7 @@ function handle2FASuccess() {
         <CardDescription>{{ t('settings.account.twoFactor.description') }}</CardDescription>
       </CardHeader>
       <CardContent class="space-y-4">
-        <!-- 2FA Toggle -->
+        <!-- 2FA Status and Action -->
         <div class="flex items-center justify-between rounded-lg border p-4">
           <div class="space-y-0.5">
             <div class="flex items-center gap-2">
@@ -151,13 +150,16 @@ function handle2FASuccess() {
             </p>
           </div>
           <div v-if="isLoading2FAStatus">
-            <Skeleton class="h-6 w-12" />
+            <Skeleton class="h-9 w-20" />
           </div>
-          <Switch 
+          <Button 
             v-else
-            :checked="is2FAEnabled"
-            @update:checked="handleToggle2FA"
-          />
+            @click="handleToggle2FA"
+            :variant="is2FAEnabled ? 'outline' : 'default'"
+            :class="is2FAEnabled ? 'text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-400' : ''"
+          >
+            {{ is2FAEnabled ? t('settings.account.twoFactor.disable') : t('settings.account.twoFactor.enable') }}
+          </Button>
         </div>
 
         <!-- Regenerate Backup Codes Button (only show when 2FA is enabled) -->
