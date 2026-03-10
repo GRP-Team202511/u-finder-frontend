@@ -92,8 +92,8 @@ const toggleMode = () => {
       <form @submit.prevent="handleVerify">
         <FieldGroup>
           <Field>
-            <FieldLabel class="text-center">
-              {{ isTotp ? t("twofa.totpLabel") : t("twofa.recoveryLabel") }}
+            <FieldLabel class="block w-full text-center">
+                {{ isTotp ? t("twofa.totpLabel") : t("twofa.recoveryLabel") }}
             </FieldLabel>
             <div v-if="isTotp" class="flex justify-center">
               <InputOTP id="totp" v-model="codeValue" :maxlength="6" required>
