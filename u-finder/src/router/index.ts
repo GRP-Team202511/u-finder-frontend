@@ -28,6 +28,18 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../views/auth/Login.vue'),
     meta: { requiresAuth: false }
   },
+  {
+    path: '/termsOfService',
+    name: 'TermsOfService',
+    component: () => import('../views/legal/TermsOfService.vue'),
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/privacyPolicy',
+    name: 'PrivacyPolicy',
+    component: () => import('../views/legal/PrivacyPolicy.vue'),
+    meta: { requiresAuth: false }
+  },
   {  
     path: '/login/reset',
     name: 'ResetPassword',

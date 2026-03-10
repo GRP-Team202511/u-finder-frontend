@@ -124,7 +124,10 @@ const handleSignup = async() => {
       </CardContent>
     </Card>
     <FieldDescription class="px-6 text-center">
-      {{ t("signup.continue") }}<a href="#">{{ t("signup.termOfUse") }}</a>{{ t("signup.and") }}<a href="#">{{ t("signup.privacy") }}</a>.
+      {{ t("signup.continue") }}
+      <router-link to="termsOfService" class="text-primary underline hover:text-primary/80">{{ t("signup.termOfUse") }}</router-link>
+      {{ t("signup.and") }}
+      <router-link to="privacyPolicy" class="text-primary underline hover:text-primary/80">{{ t("signup.privacy") }}</router-link>.
     </FieldDescription>
   </div>
 </template>
