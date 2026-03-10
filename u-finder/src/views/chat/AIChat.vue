@@ -4,7 +4,7 @@ import { useI18n } from "vue-i18n";
 import { toast } from 'vue-sonner';
 import ChatWindow from "@/components/Chat/ChatWindow.vue";
 import MessageInput from "@/components/Chat/InputMessage.vue";
-import { streamChat, getConversationMessages } from "@/api/chatApi";
+import { streamChat, getConversationMessages, stopChat } from "@/api/chatApi";
 import { useUserStore } from "@/stores/userStore";
 import type { ChatMessageData } from "@/types/chat";
 import type { ProgramCardData } from "@/types/chat";
@@ -18,6 +18,8 @@ const streamController = ref<AbortController | null>(null);
 const activeStreamToken = ref<number | null>(null);
 const conversationId = ref<string | null>(null);
 const activeMessageId = ref<string | null>(null);
+const activeTaskId = ref<string | null>(null);
+const isStopping = ref(false);
 const { t } = useI18n();
 const addNewConversation = inject<((conversationId: string) => void) | undefined>('addNewConversation');
 const hasRefreshedConversations = ref(false);
@@ -125,6 +127,23 @@ const stopStream = () => {
 	streamController.value?.abort();
 	streamController.value = null;
 	activeStreamToken.value = null;
+	activeTaskId.value = null;
+};
+
+const handleStop = async () => {
+	if (isStopping.value || !isSending.value) return;
+	isStopping.value = true;
+	try {
+		if (activeTaskId.value) {
+			await stopChat(activeTaskId.value);
+		}
+	} catch (error) {
+		console.error("Failed to stop chat task", error);
+		toast.error(t("chat.errors.stopFailed"));
+	} finally {
+		stopStream();
+		isStopping.value = false;
+	}
 };
 
 const updateMessage = (
@@ -187,6 +206,18 @@ const handleSsePayload = (messageId: string, payload: string) => {
 		}
 	}
 
+	const taskIdFromPayload =
+		typeof parsed.task_id === "string"
+			? parsed.task_id
+			: typeof parsed.taskId === "string"
+				? parsed.taskId
+				: typeof parsed?.data?.task_id === "string"
+					? parsed.data.task_id
+					: null;
+	if (taskIdFromPayload) {
+		activeTaskId.value = taskIdFromPayload;
+	}
+
 	if (parsed.event === "message_end" || parsed.done === true) {
 		flushMessageBuffer(messageId);
 		return;
@@ -218,6 +249,7 @@ const handleSsePayload = (messageId: string, payload: string) => {
 
 const startStream = async (prompt: string, messageId: string) => {
 	stopStream();
+	activeTaskId.value = null;
 	activeMessageId.value = messageId;
 	updateMessage(messageId, { isLoading: true });
 	const streamToken = (activeStreamToken.value ?? 0) + 1;
@@ -249,6 +281,8 @@ const startStream = async (prompt: string, messageId: string) => {
 			activeMessageId.value = null;
 			streamController.value = null;
 			activeStreamToken.value = null;
+			activeTaskId.value = null;
+			isStopping.value = false;
 		}
 	}
 };
@@ -411,8 +445,11 @@ onBeforeUnmount(() => {
 			<div class="w-full max-w-xl">
 				<MessageInput
 					:disabled="isSending"
+					:is-sending="isSending"
+					:stop-disabled="isStopping"
 					:placeholder="t('chat.input.placeholder')"
 					@send="handleSend"
+					@stop="handleStop"
 				/>
 			</div>
 		</div>
@@ -429,8 +466,11 @@ onBeforeUnmount(() => {
 			<div class="pb-4 pt-2">
 				<MessageInput
 					:disabled="isSending"
+					:is-sending="isSending"
+					:stop-disabled="isStopping"
 					:placeholder="t('chat.input.placeholder')"
 					@send="handleSend"
+					@stop="handleStop"
 				/>
 				<p class="mt-2 text-xs text-muted-foreground">
 					{{ t("chat.input.disclaimer") }}
