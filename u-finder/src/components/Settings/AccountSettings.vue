@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Mail, KeyRound, Shield, RefreshCw } from 'lucide-vue-next'
+import { Mail, KeyRound, Shield, RefreshCw, User as UserIcon } from 'lucide-vue-next'
 import { useUserStore } from '@/stores/userStore'
 import TwoFactorSetupDialog from './TwoFactorSetupDialog.vue'
 import TwoFactorDisableDialog from './TwoFactorDisableDialog.vue'
@@ -18,8 +18,10 @@ import { get2FAStatus } from '@/api/userApi'
 const { t } = useI18n()
 const userStore = useUserStore()
 
-// User email - TODO: Add email to User interface when available from API
+// User info - TODO: Add email and user type to User interface when available from API
 const userEmail = ref('user@example.com') // Placeholder
+const userType = ref('Student') // Placeholder
+const userAvatar = ref('') // Placeholder - will be fetched from API
 
 // 2FA state
 const is2FAEnabled = ref(false)
@@ -79,52 +81,81 @@ function handle2FASuccess() {
 
 <template>
   <div class="space-y-6">
-    <!-- Email Section -->
+    <!-- Account Information Section -->
     <Card>
       <CardHeader>
         <div class="flex items-center gap-2">
-          <Mail class="size-5 text-muted-foreground" />
-          <CardTitle>{{ t('settings.account.email') }}</CardTitle>
+          <UserIcon class="size-5 text-muted-foreground" />
+          <CardTitle>{{ t('settings.account.accountInformation') }}</CardTitle>
         </div>
-        
       </CardHeader>
       <CardContent>
-        <div class="flex items-center gap-4">
-          <Input
-            :value="userEmail"
-            disabled
-            class="max-w-md"
-          />
+        <div class="flex flex-col md:flex-row gap-6">
+          <!-- User Info -->
+          <div class="flex-1 space-y-4">
+            <div class="space-y-2">
+              <Label for="username" class="text-sm font-medium">{{ t('settings.account.username') }}</Label>
+              <Input
+                id="username"
+                :value="userStore.user?.name"
+                disabled
+                class="bg-muted"
+              />
+            </div>
+            <div class="space-y-2">
+              <Label for="email" class="text-sm font-medium">{{ t('settings.account.email') }}</Label>
+              <Input
+                id="email"
+                :value="userEmail"
+                disabled
+                class="bg-muted"
+              />
+            </div>
+            <div class="space-y-2">
+              <Label for="usertype" class="text-sm font-medium">{{ t('settings.account.userType') }}</Label>
+              <Input
+                id="usertype"
+                :value="userType"
+                disabled
+                class="bg-muted"
+              />
+            </div>
+          </div>
+
+          <!-- Avatar Section -->
+          <div class="flex flex-col items-center justify-center md:justify-start gap-4 md:border-l md:pl-6">
+            <div class="w-24 h-24 rounded-full bg-muted border-2 border-dashed border-muted-foreground/30 flex items-center justify-center">
+              <UserIcon v-if="!userAvatar" class="size-12 text-muted-foreground" />
+              <img v-else :src="userAvatar" alt="User avatar" class="w-full h-full rounded-full object-cover" />
+            </div>
+            <Button variant="outline" size="sm" class="text-xs">{{ t('settings.account.changeAvatar') }}</Button>
+          </div>
         </div>
       </CardContent>
     </Card>
 
-    <!-- Password Section -->
-    <Card>
-      <CardHeader>
-        <div class="flex items-center gap-2">
-          <KeyRound class="size-5 text-muted-foreground" />
-          <CardTitle>{{ t('settings.account.password') }}</CardTitle>
-        </div>
-        
-      </CardHeader>
-      <CardContent>
-        <Button @click="handleResetPassword" variant="outline">
-          {{ t('settings.account.resetPassword') }}
-        </Button>
-      </CardContent>
-    </Card>
-
-    <!-- Two-Factor Authentication Section -->
+    <!-- Security Section -->
     <Card>
       <CardHeader>
         <div class="flex items-center gap-2">
           <Shield class="size-5 text-muted-foreground" />
-          <CardTitle>{{ t('settings.account.twoFactor.title') }}</CardTitle>
+          <CardTitle>{{ t('settings.account.security') }}</CardTitle>
         </div>
-        
       </CardHeader>
       <CardContent class="space-y-4">
+        <!-- Reset Password -->
+        <div class="rounded-lg border p-4">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="space-y-1">
+              <Label class="text-base font-medium">{{ t('settings.account.resetPassword') }}</Label>
+              <p class="text-sm text-muted-foreground">{{ t('settings.account.resetPasswordDesc') }}</p>
+            </div>
+            <Button @click="handleResetPassword" variant="outline" class="w-full md:w-auto shrink-0">
+              {{ t('settings.account.resetPassword') }}
+            </Button>
+          </div>
+        </div>
+
         <!-- 2FA Status and Action -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 rounded-lg border p-4">
           <div class="space-y-0.5">

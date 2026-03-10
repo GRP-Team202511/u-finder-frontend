@@ -5,8 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card } from '@/components/ui/card'
 import AccountSettings from '@/components/Settings/AccountSettings.vue'
 import GeneralSettings from '@/components/Settings/GeneralSettings.vue'
-import AboutSettings from '@/components/Settings/AboutSettings.vue'
-import { User, Settings as SettingsIcon, Info } from 'lucide-vue-next'
+import { User, Settings as SettingsIcon } from 'lucide-vue-next'
 
 const { t } = useI18n()
 
@@ -33,10 +32,6 @@ const activeTab = ref('account')
           <SettingsIcon class="size-4" />
           {{ t('settings.tabs.general') }}
         </TabsTrigger>
-        <TabsTrigger value="about" class="gap-2">
-          <Info class="size-4" />
-          {{ t('settings.tabs.about') }}
-        </TabsTrigger>
       </TabsList>
 
       <!-- Account Settings Tab -->
@@ -47,11 +42,6 @@ const activeTab = ref('account')
       <!-- General Settings Tab -->
       <TabsContent value="general" class="mt-6">
         <GeneralSettings />
-      </TabsContent>
-
-      <!-- About Tab -->
-      <TabsContent value="about" class="mt-6">
-        <AboutSettings />
       </TabsContent>
     </Tabs>
   </div>

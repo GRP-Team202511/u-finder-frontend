@@ -486,9 +486,12 @@
             "about": "About"
         },
         "account": {
+            "accountInformation": "Account Information",
+            "username": "Username",
             "email": "Email",
-            "emailDesc": "Your login email address",
-            "password": "Password",
+            "userType": "User Type",
+            "changeAvatar": "Change Avatar",
+            "security": "Security",
             "resetPassword": "Reset Password",
             "resetPasswordDesc": "Reset your password via email verification",
             "twoFactor": {
