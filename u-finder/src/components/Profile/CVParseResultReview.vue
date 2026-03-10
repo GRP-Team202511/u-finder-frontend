@@ -112,15 +112,6 @@ function hasPersonalInfo(): boolean {
   return !!(info.name || info.gender || info.birthday)
 }
 
-// Computed
-const allSelected = computed(() => {
-  return Object.values(selections.value).every(v => v)
-})
-
-const someSelected = computed(() => {
-  return Object.values(selections.value).some(v => v)
-})
-
 const sectionsData = computed(() => {
   if (!props.data) return []
   
@@ -200,6 +191,27 @@ const sectionsData = computed(() => {
   ]
 })
 
+const selectableSectionKeys = computed<(keyof FieldSelections)[]>(() => {
+  return sectionsData.value
+    .filter(section => section.hasData)
+    .map(section => section.key as keyof FieldSelections)
+})
+
+const allSelected = computed(() => {
+  if (selectableSectionKeys.value.length === 0) return false
+  return selectableSectionKeys.value.every(key => selections.value[key])
+})
+
+const someSelected = computed(() => {
+  return selectableSectionKeys.value.some(key => selections.value[key])
+})
+
+const selectAllChecked = computed<boolean | 'indeterminate'>(() => {
+  if (allSelected.value) return true
+  if (someSelected.value) return 'indeterminate'
+  return false
+})
+
 // Format functions for preview
 function formatPersonalInfo(): string[] {
   if (!props.data) return []
@@ -261,14 +273,10 @@ function formatAward(): string[] {
 }
 
 // Toggle all selections
-function toggleAll() {
-  const newValue = !allSelected.value
-  Object.keys(selections.value).forEach(key => {
-    const sectionKey = key as keyof FieldSelections
-    const section = sectionsData.value.find(s => s.key === sectionKey)
-    if (section?.hasData) {
-      selections.value[sectionKey] = newValue
-    }
+function toggleAll(checked: boolean | 'indeterminate') {
+  const newValue = checked === true
+  selectableSectionKeys.value.forEach(sectionKey => {
+    selections.value[sectionKey] = newValue
   })
 }
 
@@ -365,9 +373,8 @@ function formatItemDetails(item: any, sectionKey: string): { label: string; valu
         <div class="flex items-center space-x-2 mb-4 pb-4 border-b">
           <Checkbox
             :id="'select-all'"
-            :checked="allSelected"
-            :indeterminate="someSelected && !allSelected"
-            @update:checked="toggleAll"
+            :model-value="selectAllChecked"
+            @update:model-value="toggleAll"
           />
           <Label
             :for="'select-all'"
@@ -396,7 +403,7 @@ function formatItemDetails(item: any, sectionKey: string): { label: string; valu
                     <div class="flex items-center space-x-2 flex-1">
                       <Checkbox
                         :id="`select-${section.key}`"
-                        v-model:checked="selections[section.key as keyof FieldSelections]"
+                        v-model="selections[section.key as keyof FieldSelections]"
                         :disabled="!section.hasData"
                         class="mt-0.5"
                       />
