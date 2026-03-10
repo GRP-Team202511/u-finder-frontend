@@ -30,21 +30,19 @@ const emit = defineEmits<{
   'success': []
 }>()
 
-// Setup steps: 1 = QR Code, 2 = Backup Codes, 3 = Verify
+// Setup steps: 1 = QR Code + Verify, 2 = Backup Codes
 const currentStep = ref(1)
 const isLoading = ref(false)
 
 // Step 1 data
 const qrCodeBase64 = ref('')
 const totpUri = ref('')
+const verificationCode = ref('')
+const isVerifying = ref(false)
 
 // Step 2 data
 const backupCodes = ref<string[]>([])
 const copiedAll = ref(false)
-
-// Step 3 data
-const verificationCode = ref('')
-const isVerifying = ref(false)
 
 // Watch dialog open state to reset
 watch(() => props.open, (newValue) => {
@@ -72,21 +70,10 @@ async function initiate2FASetup() {
     // const response = await setup2FA()
     // qrCodeBase64.value = response.qr_code_base64
     // totpUri.value = response.totp_uri
-    // backupCodes.value = response.backup_codes
     
     // Mock data for development
     qrCodeBase64.value = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
     totpUri.value = 'otpauth://totp/U-Finder:user@example.com?secret=JBSWY3DPEHPK3PXP&issuer=U-Finder'
-    backupCodes.value = [
-      'A1B2C3D4',
-      'E5F6G7H8',
-      'I9J0K1L2',
-      'M3N4O5P6',
-      'Q7R8S9T0',
-      'U1V2W3X4',
-      'Y5Z6A7B8',
-      'C9D0E1F2'
-    ]
   } catch (error) {
     console.error('Failed to setup 2FA:', error)
     toast.error(t('settings.account.twoFactor.setup.error'))
@@ -96,9 +83,48 @@ async function initiate2FASetup() {
   }
 }
 
-function nextStep() {
-  if (currentStep.value < 3) {
-    currentStep.value++
+async function nextStep() {
+  // If on step 1, verify the code first
+  if (currentStep.value === 1) {
+    if (verificationCode.value.length !== 6) {
+      toast.error(t('settings.account.twoFactor.setup.invalidCode'))
+      return
+    }
+    
+    isVerifying.value = true
+    try {
+      // TODO: Uncomment when API is ready
+      // const response = await confirm2FA({ code: verificationCode.value })
+      // backupCodes.value = response.backup_codes
+      
+      // Mock success for development
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // Mock backup codes returned from API
+      backupCodes.value = [
+        'A1B2C3D4',
+        'E5F6G7H8',
+        'I9J0K1L2',
+        'M3N4O5P6',
+        'Q7R8S9T0',
+        'U1V2W3X4',
+        'Y5Z6A7B8',
+        'C9D0E1F2'
+      ]
+      
+      // Move to next step (show backup codes)
+      currentStep.value = 2
+    } catch (error: any) {
+      console.error('Failed to verify 2FA:', error)
+      if (error.response?.status === 400) {
+        toast.error(t('settings.account.twoFactor.setup.wrongCode'))
+      } else {
+        toast.error(t('settings.account.twoFactor.setup.verifyError'))
+      }
+      verificationCode.value = ''
+    } finally {
+      isVerifying.value = false
+    }
   }
 }
 
@@ -119,40 +145,14 @@ function copyAllCodes() {
   }, 3000)
 }
 
-async function handleVerify() {
-  if (verificationCode.value.length !== 6) {
-    toast.error(t('settings.account.twoFactor.setup.invalidCode'))
-    return
-  }
-  
-  isVerifying.value = true
-  try {
-    // TODO: Uncomment when API is ready
-    // await confirm2FA({ code: verificationCode.value })
-    
-    // Mock success for development
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    toast.success(t('settings.account.twoFactor.setup.success'))
-    emit('success')
-    emit('update:open', false)
-  } catch (error: any) {
-    console.error('Failed to confirm 2FA:', error)
-    if (error.response?.status === 400) {
-      toast.error(t('settings.account.twoFactor.setup.wrongCode'))
-    } else {
-      toast.error(t('settings.account.twoFactor.setup.verifyError'))
-    }
-    verificationCode.value = ''
-  } finally {
-    isVerifying.value = false
-  }
+function handleFinish() {
+  toast.success(t('settings.account.twoFactor.setup.success'))
+  emit('success')
+  emit('update:open', false)
 }
 
 function closeDialog() {
-  if (currentStep.value === 3 || currentStep.value === 1) {
-    emit('update:open', false)
-  }
+  emit('update:open', false)
 }
 
 const dialogTitle = computed(() => {
@@ -161,8 +161,6 @@ const dialogTitle = computed(() => {
       return t('settings.account.twoFactor.setup.step1Title')
     case 2:
       return t('settings.account.twoFactor.setup.step2Title')
-    case 3:
-      return t('settings.account.twoFactor.setup.step3Title')
     default:
       return ''
   }
@@ -174,8 +172,6 @@ const dialogDescription = computed(() => {
       return t('settings.account.twoFactor.setup.step1Desc')
     case 2:
       return t('settings.account.twoFactor.setup.step2Desc')
-    case 3:
-      return t('settings.account.twoFactor.setup.step3Desc')
     default:
       return ''
   }
@@ -192,7 +188,7 @@ const dialogDescription = computed(() => {
         </DialogDescription>
       </DialogHeader>
 
-      <!-- Step 1: QR Code -->
+      <!-- Step 1: QR Code + Verify -->
       <div v-if="currentStep === 1" class="space-y-4">
         <div v-if="isLoading" class="flex justify-center py-8">
           <Spinner class="animate-spin size-8" />
@@ -209,6 +205,34 @@ const dialogDescription = computed(() => {
               {{ t('settings.account.twoFactor.setup.manualEntry') }}
             </Label>
             <Input :value="totpUri" readonly class="font-mono text-xs" />
+          </div>
+
+          <Separator />
+
+          <!-- Verification Code Input -->
+          <div class="space-y-2">
+            <Label for="verification-code">
+              {{ t('settings.account.twoFactor.setup.enterCode') }}
+            </Label>
+            <div class="flex justify-center">
+              <InputOTP
+                id="verification-code"
+                v-model="verificationCode"
+                :maxlength="6"
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot :index="0" />
+                  <InputOTPSlot :index="1" />
+                  <InputOTPSlot :index="2" />
+                  <InputOTPSlot :index="3" />
+                  <InputOTPSlot :index="4" />
+                  <InputOTPSlot :index="5" />
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
+            <p class="text-sm text-muted-foreground text-center">
+              {{ t('settings.account.twoFactor.setup.codeFromApp') }}
+            </p>
           </div>
         </div>
       </div>
@@ -247,40 +271,11 @@ const dialogDescription = computed(() => {
         </Button>
       </div>
 
-      <!-- Step 3: Verify -->
-      <div v-if="currentStep === 3" class="space-y-4">
-        <div class="space-y-2">
-          <Label for="verification-code">
-            {{ t('settings.account.twoFactor.setup.enterCode') }}
-          </Label>
-          <div class="flex justify-center">
-            <InputOTP
-              id="verification-code"
-              v-model="verificationCode"
-              :maxlength="6"
-              @complete="handleVerify"
-            >
-              <InputOTPGroup class="gap-2.5">
-                <InputOTPSlot :index="0" />
-                <InputOTPSlot :index="1" />
-                <InputOTPSlot :index="2" />
-                <InputOTPSlot :index="3" />
-                <InputOTPSlot :index="4" />
-                <InputOTPSlot :index="5" />
-              </InputOTPGroup>
-            </InputOTP>
-          </div>
-          <p class="text-sm text-muted-foreground text-center">
-            {{ t('settings.account.twoFactor.setup.codeFromApp') }}
-          </p>
-        </div>
-      </div>
-
       <DialogFooter class="flex-row gap-2 sm:gap-2">
         <!-- Step indicator -->
         <div class="flex-1 flex items-center gap-1">
           <div
-            v-for="step in 3"
+            v-for="step in 2"
             :key="step"
             class="h-1.5 flex-1 rounded-full transition-colors"
             :class="step <= currentStep ? 'bg-primary' : 'bg-muted'"
@@ -290,33 +285,26 @@ const dialogDescription = computed(() => {
         <!-- Navigation Buttons -->
         <div class="flex gap-2">
           <Button
-            v-if="currentStep > 1 && currentStep < 3"
-            @click="previousStep"
-            variant="outline"
-          >
-            {{ t('settings.account.twoFactor.setup.back') }}
-          </Button>
-          <Button
             v-if="currentStep === 1"
             @click="closeDialog"
             variant="outline"
+            :disabled="isVerifying"
           >
             {{ t('settings.account.twoFactor.setup.cancel') }}
           </Button>
           <Button
-            v-if="currentStep < 3"
+            v-if="currentStep === 1"
             @click="nextStep"
-            :disabled="isLoading"
+            :disabled="isLoading || isVerifying || verificationCode.length !== 6"
           >
+            <Spinner v-if="isVerifying" class="animate-spin mr-2" />
             {{ t('settings.account.twoFactor.setup.next') }}
           </Button>
           <Button
-            v-if="currentStep === 3"
-            @click="handleVerify"
-            :disabled="isVerifying || verificationCode.length !== 6"
+            v-if="currentStep === 2"
+            @click="handleFinish"
           >
-            <Spinner v-if="isVerifying" class="animate-spin mr-2" />
-            {{ t('settings.account.twoFactor.setup.verify') }}
+            {{ t('settings.account.twoFactor.setup.done') }}
           </Button>
         </div>
       </DialogFooter>
