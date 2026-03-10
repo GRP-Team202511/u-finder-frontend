@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
@@ -8,19 +9,13 @@ import { Separator } from '@/components/ui/separator'
 import { Moon, Sun, FileText, Shield, Scale, ExternalLink, Info, Github } from 'lucide-vue-next'
 
 const { t } = useI18n()
+const router = useRouter()
 
 // Dark mode state
 const isDarkMode = ref(false)
 
 // Version info from environment variable
 const version = import.meta.env.VITE_APP_VERSION || '0.0.0'
-
-// Links from environment variables
-const links = {
-  terms: import.meta.env.VITE_TERMS_URL || 'https://u-finder.com/terms',
-  privacy: import.meta.env.VITE_PRIVACY_URL || 'https://u-finder.com/privacy',
-  license: import.meta.env.VITE_LICENSE_URL || 'https://github.com/u-finder/u-finder/blob/main/LICENSE',
-}
 
 // Initialize dark mode from document class
 onMounted(() => {
@@ -57,8 +52,18 @@ function toggleDarkMode(checked: boolean) {
   }
 }
 
-function openLink(url: string) {
+function openExternalLink(url: string) {
   window.open(url, '_blank', 'noopener,noreferrer')
+}
+
+function navigateToTerms() {
+  const route = router.resolve({ name: 'TermsOfService' })
+  window.open(route.href, '_blank', 'noopener,noreferrer')
+}
+
+function navigateToPrivacy() {
+  const route = router.resolve({ name: 'PrivacyPolicy' })
+  window.open(route.href, '_blank', 'noopener,noreferrer')
 }
 </script>
 
@@ -142,7 +147,7 @@ function openLink(url: string) {
         <!-- Links -->
         <div class="space-y-2">
           <button
-            @click="openLink('https://github.com/GRP-Team202511/u-finder')"
+            @click="openExternalLink('https://github.com/GRP-Team202511/u-finder')"
             class="flex w-full items-center justify-between rounded-lg border p-3 transition-colors hover:bg-accent hover:text-accent-foreground"
           >
             <div class="flex items-center gap-3">
@@ -153,7 +158,7 @@ function openLink(url: string) {
           </button>
 
           <button
-            @click="openLink(links.terms)"
+            @click="navigateToTerms"
             class="flex w-full items-center justify-between rounded-lg border p-3 transition-colors hover:bg-accent hover:text-accent-foreground"
           >
             <div class="flex items-center gap-3">
@@ -164,7 +169,7 @@ function openLink(url: string) {
           </button>
 
           <button
-            @click="openLink(links.privacy)"
+            @click="navigateToPrivacy"
             class="flex w-full items-center justify-between rounded-lg border p-3 transition-colors hover:bg-accent hover:text-accent-foreground"
           >
             <div class="flex items-center gap-3">
