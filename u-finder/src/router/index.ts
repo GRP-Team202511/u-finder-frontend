@@ -49,6 +49,12 @@ const routes: RouteRecordRaw[] = [
         name: 'AIChat',
         component: () => import('../views/chat/AIChat.vue'),
         meta: { requiresAuth: true }
+      },
+      {
+        path: 'favourite',
+        name: 'Favourite',
+        component: () => import('../views/favourite/Favourite.vue'),
+        meta: { requiresAuth: true }
       }
     ]
   }

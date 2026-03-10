@@ -13,6 +13,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { useFavouriteStore } from "@/stores/favouriteStore"
+
+useFavouriteStore().startStorageSync()
 
 const sidebarRef = ref<InstanceType<typeof AppSidebar>>()
 

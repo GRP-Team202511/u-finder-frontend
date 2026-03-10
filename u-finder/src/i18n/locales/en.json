@@ -477,5 +477,30 @@
                 "facultySite": "Faculty site"
             }
         }
+    },
+    "favourites": {
+        "title": "Favourite Universities",
+        "subtitle": "Keep the university you want to revisit.",
+        "empty": {
+            "title": "No favourites yet",
+            "description": "Add a university from AI Chat to see it here."
+        },
+        "toast": {
+            "addSuccess": "Added university to favourites",
+            "addFailed": "Failed to add university to favourites",
+            "removeSuccess": "Removed university from favourites",
+            "removeFailed": "Failed to remove university from favourites",
+            "loadFailed": "Failed to load favourites"
+        },
+        "errors": {
+            "loadFailed": "Failed to load favourites"
+        },
+        "actions": {
+            "showDetails": "Show details",
+            "remove": "Remove",
+            "add": "Add to favourites",
+            "close": "Close",
+            "retry": "Retry"
+        }
     }
 }
