@@ -14,8 +14,6 @@ const userStore = useUserStore();
 const { t } = useI18n();
 const token = computed(() => userStore.user?.token || "");
 
-const useMockFavourites = import.meta.env.VITE_USE_MOCK_FAVOURITES === "true";
-
 const isLoading = ref(false);
 const loadError = ref(false);
 
@@ -31,7 +29,7 @@ const closeDetails = () => {
 };
 
 const loadFavourites = async () => {
-	if (useMockFavourites || !token.value) {
+	if (!token.value) {
 		isLoading.value = false;
 		loadError.value = false;
 		return;

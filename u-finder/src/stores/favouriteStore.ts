@@ -11,14 +11,17 @@ import {
 export const programKey = (program: ProgramCardData) =>
 	program.official_program_url || `${program.university.name}-${program.degree_program.name}`;
 
-const useMockFavourites = import.meta.env.VITE_USE_MOCK_FAVOURITES === "true";
-
 let storageSyncBound = false;
 
-type StoredItem = ProgramCardData | FavouriteItem;
+type StoredItem = FavouriteItem;
 
-export const extractProgram = (item: StoredItem): ProgramCardData =>
-	(item as FavouriteItem).program ?? (item as ProgramCardData);
+export const extractProgram = (item: StoredItem): ProgramCardData => item.program;
+
+const isFavouriteItem = (item: unknown): item is FavouriteItem => {
+	if (!item || typeof item !== "object") return false;
+	const candidate = item as FavouriteItem;
+	return Boolean(candidate.unit_id && candidate.program);
+};
 
 const extractUnitId = (payload: unknown) => {
 	if (!payload || typeof payload !== "object") return null;
@@ -50,7 +53,7 @@ export const useFavouriteStore = defineStore("favourite", {
 						items?: StoredItem[];
 					};
 					if (Array.isArray(parsed.items)) {
-						this.items = parsed.items;
+						this.items = parsed.items.filter((item) => isFavouriteItem(item));
 					}
 				} catch {
 					// Ignore malformed persisted data.
@@ -58,7 +61,6 @@ export const useFavouriteStore = defineStore("favourite", {
 			});
 		},
 		async fetchAll() {
-			if (useMockFavourites) return;
 			const response = await getFavouriteUniversities();
 			this.items = response.data?.data ?? [];
 		},
@@ -80,10 +82,6 @@ export const useFavouriteStore = defineStore("favourite", {
 		},
 		async add(program: ProgramCardData) {
 			if (this.isFavourite(program)) return;
-			if (useMockFavourites) {
-				this.items.unshift(program);
-				return;
-			}
 			const unitId = await this.resolveUnitId(program);
 			if (!unitId) return;
 			await addFavouriteUniversity(unitId);
@@ -91,10 +89,6 @@ export const useFavouriteStore = defineStore("favourite", {
 		},
 		async remove(program: ProgramCardData) {
 			const key = programKey(program);
-			if (useMockFavourites) {
-				this.items = this.items.filter((item) => programKey(extractProgram(item)) !== key);
-				return;
-			}
 			const existing = this.findItem(program) as FavouriteItem | null;
 			if (!existing?.unit_id) return;
 			await deleteFavouriteUniversity(existing.unit_id);
