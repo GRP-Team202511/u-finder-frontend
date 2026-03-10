@@ -126,44 +126,49 @@ function handle2FASuccess() {
       </CardHeader>
       <CardContent class="space-y-4">
         <!-- 2FA Status and Action -->
-        <div class="flex items-center justify-between rounded-lg border p-4">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 rounded-lg border p-4">
           <div class="space-y-0.5">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 flex-wrap">
               <Label class="text-base font-medium">
                 {{ t('settings.account.twoFactor.title') }}
               </Label>
               <span 
                 v-if="!isLoading2FAStatus"
-                class="text-xs font-medium px-2 py-0.5 rounded-full"
+                class="text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap"
                 :class="is2FAEnabled ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400'"
               >
                 {{ is2FAEnabled ? t('settings.account.twoFactor.enabled') : t('settings.account.twoFactor.disabled') }}
               </span>
             </div>
-            <p v-if="!isLoading2FAStatus && is2FAEnabled" class="text-sm text-muted-foreground">
+            <!-- <p v-if="!isLoading2FAStatus && is2FAEnabled" class="text-sm text-muted-foreground">
               {{ t('settings.account.twoFactor.backupCodes') }}: {{ backupCodesRemaining }}
-            </p>
+            </p> -->
           </div>
           <div v-if="isLoading2FAStatus">
             <Skeleton class="h-9 w-20" />
           </div>
-          <Button 
-            v-else
-            @click="handleToggle2FA"
-            :variant="is2FAEnabled ? 'outline' : 'default'"
-            :class="is2FAEnabled ? 'text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-400' : ''"
-          >
-            {{ is2FAEnabled ? t('settings.account.twoFactor.disable') : t('settings.account.twoFactor.enable') }}
-          </Button>
-        </div>
-
-        <!-- Regenerate Backup Codes Button (only show when 2FA is enabled) -->
-        <div v-if="!isLoading2FAStatus && is2FAEnabled" class="pt-2">
-          <Separator class="mb-4" />
-          <Button @click="handleRegenerateCodes" variant="outline" class="gap-2">
-            <RefreshCw class="size-4" />
-            {{ t('settings.account.twoFactor.regenerate') }}
-          </Button>
+          <div v-else class="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+            <Button 
+              v-if="is2FAEnabled"
+              @click="handleRegenerateCodes" 
+              variant="outline" 
+              size="default"
+              class="gap-2 w-full md:w-auto shrink-0"
+            >
+              <RefreshCw class="size-4" />
+              <span class="truncate">{{ t('settings.account.twoFactor.regenerateButton') }}</span>
+            </Button>
+            <Button 
+              @click="handleToggle2FA"
+              :variant="is2FAEnabled ? 'outline' : 'default'"
+              :class="[
+                is2FAEnabled ? 'text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-400' : '',
+                'w-full md:w-auto shrink-0'
+              ]"
+            >
+              <span class="truncate">{{ is2FAEnabled ? t('settings.account.twoFactor.disableButton') : t('settings.account.twoFactor.enable') }}</span>
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>

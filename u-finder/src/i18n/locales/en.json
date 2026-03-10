@@ -498,8 +498,8 @@
                 "disabled": "Disabled",
                 "backupCodes": "Backup codes remaining",
                 "enable": "Enable 2FA",
-                "disable": "Disable 2FA",
-                "regenerate": "Regenerate Backup Codes",
+                "disableButton": "Disable 2FA",
+                "regenerateButton": "Regenerate Backup Codes",
                 "fetchError": "Failed to fetch 2FA status",
                 "setup": {
                     "step1Title": "Scan QR Code",
