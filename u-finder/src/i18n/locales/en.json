@@ -73,8 +73,8 @@
         "button": "Sign Up",
         "haveAccount": "Already have an account?",
         "login": "Log In",
-        "continue": "By clicking \"Sing Up\", you agree to our ",
-        "termOfUse": "Term of Service",
+        "continue": "By clicking \"Sign Up\", you agree to our ",
+        "termOfUse": "Terms of Service",
         "and": " and ",
         "privacy": "Privacy Policy",
         "occupied": "This email has been registered.",
@@ -96,6 +96,127 @@
             "tokenExpired": "Verification session expired. Please sign up again.",
             "tooMany": "Too many requests. Please wait {seconds} seconds before trying again.",
             "resendError": "Failed to resend code. Please try again."
+        }
+    },
+    "legal": {
+        "lastUpdatedLabel": "Last Updated:",
+        "lastUpdatedValue": "March 2026",
+        "terms": {
+            "title": "Terms of Service",
+            "switchToPrivacy": "View Privacy Policy",
+            "intro": "Welcome to the University Finder System. By accessing or using this platform, you agree to be bound by the following Terms of Service. If you do not agree with these terms, please do not use the platform.",
+            "sections": {
+                "descriptionOfService": {
+                    "title": "1. Description of Service",
+                    "body": "The University Finder System is a platform designed to help users explore and discover universities based on their academic background, interests, and preferences. The platform includes an AI-powered recommendation system that provides university suggestions and informational responses through an interactive chat interface."
+                },
+                "userAccounts": {
+                    "title": "2. User Accounts",
+                    "body": "To access certain features of the platform, users may be required to create an account. Users are responsible for maintaining the confidentiality of their login credentials and for all activities that occur under their account."
+                },
+                "userInformation": {
+                    "title": "3. User Information",
+                    "body": "Users may provide personal and academic information including educational background, academic achievements, internship experience, project experience, and other relevant details. This information is used to generate personalized university recommendations."
+                },
+                "aiRecommendations": {
+                    "title": "4. AI Recommendations",
+                    "body": "The platform uses Artificial Intelligence (AI) to provide recommendations and suggestions for universities. These recommendations are intended for informational purposes only and should not be considered official admission advice or guarantees of acceptance."
+                },
+                "cvUploadAndParsing": {
+                    "title": "5. CV Upload and Parsing",
+                    "body": "Users may upload their curriculum vitae (CV) for automated analysis. The system may extract relevant information such as education, skills, projects, and experience in order to populate the user's profile and improve recommendation accuracy."
+                },
+                "acceptableUse": {
+                    "title": "6. Acceptable Use",
+                    "body": "Users agree not to misuse the platform. Prohibited activities include:",
+                    "items": {
+                        "unauthorizedAccess": "Attempting to gain unauthorized access to the system",
+                        "maliciousContent": "Uploading malicious files or harmful content",
+                        "unlawfulUse": "Using the platform for unlawful purposes",
+                        "systemDisruption": "Attempting to disrupt or damage the system"
+                    }
+                },
+                "savedUniversities": {
+                    "title": "7. Saved Universities",
+                    "body": "Users may save recommended universities as favorites for future reference. These saved items are stored within the user's account and can be managed through the user dashboard."
+                },
+                "limitationOfLiability": {
+                    "title": "8. Limitation of Liability",
+                    "body": "The University Finder System is provided for educational and informational purposes. The platform does not guarantee the accuracy, completeness, or suitability of recommendations. The developers are not responsible for any decisions made based on the information provided by the system."
+                },
+                "changesToService": {
+                    "title": "9. Changes to the Service",
+                    "body": "The system developers may update or modify the platform and its features at any time without prior notice."
+                },
+                "contact": {
+                    "title": "10. Contact",
+                    "body": "If you have any questions about these Terms of Service, please contact the system administrators or development team."
+                }
+            }
+        },
+        "privacy": {
+            "title": "Privacy Policy",
+            "switchToTerms": "View Terms of Service",
+            "intro": "This Privacy Policy explains how the University Finder System collects, uses, and protects user information when using the platform.",
+            "sections": {
+                "informationWeCollect": {
+                    "title": "1. Information We Collect",
+                    "body": "The system may collect the following information:",
+                    "items": {
+                        "account": "Email address and account credentials",
+                        "profile": "Personal profile information",
+                        "education": "Educational background",
+                        "academic": "Academic results and achievements",
+                        "internshipAndProject": "Internship and project experience",
+                        "cv": "Uploaded curriculum vitae (CV)",
+                        "favorites": "Saved universities and preferences",
+                        "chat": "Interactions with the AI chat system"
+                    }
+                },
+                "howWeUse": {
+                    "title": "2. How We Use Your Information",
+                    "body": "The collected information is used to:",
+                    "items": {
+                        "recommendations": "Provide personalized university recommendations",
+                        "aiImprovement": "Improve the accuracy of the AI recommendation system",
+                        "profileManagement": "Allow users to manage their profiles",
+                        "cvParsing": "Enable CV parsing and automatic profile population",
+                        "platformImprovement": "Improve the overall functionality of the platform"
+                    }
+                },
+                "aiProcessing": {
+                    "title": "3. AI Processing",
+                    "body": "Information provided by users, including profile data and uploaded CV documents, may be processed by Artificial Intelligence models to generate recommendations and suggestions. These models analyze user information to provide more relevant university options."
+                },
+                "dataStorage": {
+                    "title": "4. Data Storage",
+                    "body": "User information is stored within the system database and is used solely for the operation of the University Finder System."
+                },
+                "dataSecurity": {
+                    "title": "5. Data Security",
+                    "body": "Reasonable technical and organizational measures are implemented to protect user data from unauthorized access, misuse, or disclosure."
+                },
+                "dataSharing": {
+                    "title": "6. Data Sharing",
+                    "body": "The University Finder System does not sell, trade, or rent users' personal information to third parties. Data is used only within the platform to provide services and recommendations."
+                },
+                "userControl": {
+                    "title": "7. User Control",
+                    "body": "Users may update or modify their profile information through the account settings page. Users may also remove saved universities from their favorites list."
+                },
+                "uploadedDocuments": {
+                    "title": "8. Uploaded Documents",
+                    "body": "When a user uploads a CV, the document may be processed by the system to extract relevant information such as education, experience, and skills. This information may be added to the user's profile automatically."
+                },
+                "changesToPolicy": {
+                    "title": "9. Changes to This Policy",
+                    "body": "This Privacy Policy may be updated periodically to reflect changes in system functionality or data practices."
+                },
+                "contact": {
+                    "title": "10. Contact",
+                    "body": "If you have any questions about this Privacy Policy or how your data is handled, please contact the system administrators."
+                }
+            }
         }
     },
     "sidebar": {
