@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, inject } from "vue";
 import { useI18n } from "vue-i18n";
+import { toast } from 'vue-sonner';
 import ChatWindow from "@/components/Chat/ChatWindow.vue";
 import MessageInput from "@/components/Chat/InputMessage.vue";
-import { streamChat } from "@/api/chatApi";
+import { streamChat, getConversationMessages } from "@/api/chatApi";
 import { useUserStore } from "@/stores/userStore";
 import type { ChatMessageData } from "@/types/chat";
 import type { ProgramCardData } from "@/types/chat";
@@ -18,6 +19,8 @@ const activeStreamToken = ref<number | null>(null);
 const conversationId = ref<string | null>(null);
 const activeMessageId = ref<string | null>(null);
 const { t } = useI18n();
+const addNewConversation = inject<((conversationId: string) => void) | undefined>('addNewConversation');
+const hasRefreshedConversations = ref(false);
 let messageCounter = 1;
 const programCardStart = "<<__CARD__>>";
 const programCardEnd = "<<__END__>>";
@@ -171,6 +174,17 @@ const handleSsePayload = (messageId: string, payload: string) => {
 
 	if (typeof parsed.conversation_id === "string" && !conversationId.value) {
 		conversationId.value = parsed.conversation_id;
+		// Save to sessionStorage
+		sessionStorage.setItem('currentConversationId', parsed.conversation_id);
+		// Trigger event to notify ConversationList to update highlight state
+		window.dispatchEvent(new CustomEvent('conversation-changed', { 
+			detail: { conversationId: parsed.conversation_id } 
+		}));
+		// Add new conversation locally only on first conversationId received
+		if (!hasRefreshedConversations.value) {
+			hasRefreshedConversations.value = true;
+			addNewConversation?.(parsed.conversation_id);
+		}
 	}
 
 	if (parsed.event === "message_end" || parsed.done === true) {
@@ -239,6 +253,78 @@ const startStream = async (prompt: string, messageId: string) => {
 	}
 };
 
+const loadHistoryMessages = async (convId: string) => {
+	try {
+		const response = await getConversationMessages({
+			conversationId: convId,
+		});
+		
+		// Clear current messages
+		messages.value = [];
+		messageCounter = 1;
+		
+		// Convert history message format
+		for (const msg of response.data) {
+			// Add user message
+			messages.value.push({
+				id: `m${messageCounter++}`,
+				role: "user",
+				type: "text",
+				content: msg.query,
+			});
+			
+			// Add AI reply
+			const aiMessage: ChatMessageData = {
+				id: `m${messageCounter++}`,
+				role: "ai",
+				type: "text",
+				content: "",
+			};
+			
+			// Get AI reply content: prefer `answer`; if empty, fall back to `agent_thoughts`
+			let aiContent = msg.answer;
+			if (!aiContent || aiContent.trim() === '') {
+				// `answer` is empty — attempt to extract from `agent_thoughts`
+				if (msg.agent_thoughts && msg.agent_thoughts.length > 0) {
+					// Sort by `position` and concatenate contents
+					const sortedThoughts = [...msg.agent_thoughts].sort((a, b) => a.position - b.position);
+					aiContent = sortedThoughts
+						.map(thought => {
+							const parts: string[] = [];
+							if (thought.thought) parts.push(thought.thought);
+							if (thought.observation) parts.push(thought.observation);
+							return parts.join('\n');
+						})
+						.filter(content => content.trim())
+						.join('\n\n');
+				}
+			}
+			
+			// Parse program card
+			const { text, cards } = extractProgramCards(aiContent || '');
+			
+			if (cards.length > 0) {
+				aiMessage.type = "cards";
+				aiMessage.cards = cards;
+				if (text.trim()) {
+					aiMessage.tailContent = text;
+				}
+			} else {
+				aiMessage.type = "text";
+				aiMessage.content = text || aiContent || '';
+			}
+			
+			messages.value.push(aiMessage);
+		}
+		
+		// Set current conversationId
+		conversationId.value = convId;
+	} catch (error) {
+		console.error('Failed to load conversation history:', error);
+		toast.error(t('chat.errors.loadHistoryFailed'));
+	}
+};
+
 const handleSend = (text: string) => {
 	const trimmed = text.trim();
 	if (!trimmed || isSending.value) return;
@@ -263,8 +349,46 @@ const handleSend = (text: string) => {
 	void startStream(trimmed, aiMessageId);
 };
 
+// Handle conversation switching
+const handleConversationChange = (convId: string | null) => {
+	// Ignore if same as current conversationId
+	if (convId && convId === conversationId.value) return;
+	
+	// Stop current stream
+	stopStream();
+	
+	if (convId) {
+		// Load history conversation
+		void loadHistoryMessages(convId);
+	} else {
+		// New conversation: clear messages and reset refresh flag
+		messages.value = [];
+		conversationId.value = null;
+		messageCounter = 1;
+		hasRefreshedConversations.value = false;
+	}
+};
+
+// Listen to custom event (triggered from Sidebar)
+const onConversationChanged = (event: CustomEvent) => {
+	const { conversationId: newConvId } = event.detail;
+	handleConversationChange(newConvId);
+};
+
+onMounted(() => {
+	// Read current conversation from sessionStorage
+	const savedConvId = sessionStorage.getItem('currentConversationId');
+	if (savedConvId) {
+		handleConversationChange(savedConvId);
+	}
+	
+	// Listen to conversation change events
+	window.addEventListener('conversation-changed', onConversationChanged as EventListener);
+});
+
 onBeforeUnmount(() => {
 	stopStream();
+	window.removeEventListener('conversation-changed', onConversationChanged as EventListener);
 });
 </script>
 

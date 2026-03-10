@@ -84,13 +84,30 @@
         }
     },
     "sidebar": {
-        "aiChat": "AI Chat",
+        "newChat": "New Chat",
+        "newConversation": "New Conversation",
+        "conversations": "Conversations",
+        "noConversations": "No conversations yet",
+        "loadMore": "Load more...",
+        "loading": "Loading...",
         "favourite": "Favourite",
-        "history": "History",
         "profile": "Profile",
         "settings": "Settings",
         "language": "Language",
-        "logout": "Log out"
+        "logout": "Log out",
+        "deleteConversation": "Delete Conversation",
+        "deleteConfirm": "Are you sure you want to delete this conversation? This action cannot be undone.",
+        "renameConversation": "Edit conversation name",
+        "conversationName": "Enter conversation name",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "rename": "Rename",
+        "save": "Save",
+        "confirm": "Confirm",
+        "renameSuccess": "Conversation renamed successfully",
+        "renameFailed": "Failed to rename conversation",
+        "deleteSuccess": "Conversation deleted successfully",
+        "deleteFailed": "Failed to delete conversation"
     },
     "profile": {
         "title": "Profile",
@@ -100,6 +117,42 @@
         "add": "Add",
         "remove": "Remove",
         "retry": "Retry",
+        "cvParser": {
+            "button": "Import from CV",
+            "title": "Import from CV",
+            "description": "Upload your CV to automatically fill in your profile information.",
+            "uploadPrompt": "Drag and drop your CV here, or click to select a file",
+            "supportedFormats": "Supported formats: PDF, DOCX, DOC",
+            "maxSize": "Maximum file size: 10MB",
+            "uploading": "Uploading...",
+            "parsing": "Parsing your CV...",
+            "parseSuccess": "CV parsed successfully!",
+            "selectData": "Select the data you want to import",
+            "reviewTitle": "Review Parsed Data",
+            "reviewDescription": "Select the sections you want to import to your profile.",
+            "selectAll": "Select All",
+            "noData": "No data found",
+            "item": "item",
+            "items": "items",
+            "more": "more...",
+            "confirmImport": "Confirm Import",
+            "importSuccess": "CV data imported successfully!",
+            "importFailed": "Failed to import CV data",
+            "actions": {
+                "overwrite": "Overwrite",
+                "append": "Append"
+            },
+            "errors": {
+                "invalidFormat": "Invalid file format. Only PDF, DOCX, and DOC are supported.",
+                "fileTooLarge": "File size exceeds 10MB limit.",
+                "uploadFailed": "Failed to upload CV. Please try again.",
+                "noFile": "No file uploaded or file is empty.",
+                "unauthorized": "You are not authorized. Please login again.",
+                "parseFailed": "Failed to extract information from the uploaded file.",
+                "serviceUnavailable": "AI service is temporarily unavailable. Please try again later.",
+                "serverError": "Internal server error. Please try again."
+            }
+        },
         "errors": {
             "loadFailed": "Ops, something went wrong...",
             "loadFailedDescription": "Unable to load your profile data. Please try refreshing the page."
@@ -208,6 +261,8 @@
         "selectTypeHint": "Select a type to enter details.",
         "empty": "No academic outcomes",
         "add": "Add academic outcome",
+        "paper": "Paper",
+        "patent": "Patent",
         "type": {
             "title": "Type",
             "researchPaper": "Research Paper",
@@ -383,7 +438,8 @@
             "disclaimer": "U-Finder can make mistakes. Check important info."
         },
         "errors": {
-            "streamFailed": "Sorry, I could not complete that request."
+            "streamFailed": "Sorry, I could not complete that request.",
+            "loadHistoryFailed": "Failed to load conversation history"
         },
         "card": {
             "locationNotSpecified": "Location not specified",

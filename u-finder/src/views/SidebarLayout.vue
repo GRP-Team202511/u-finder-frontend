@@ -6,6 +6,7 @@ export const containerClass = "w-full h-full"
 </script>
 
 <script setup lang="ts">
+import { ref, provide } from 'vue'
 import AppSidebar from "@/components/Sidebar/AppSidebar.vue"
 import {
   SidebarInset,
@@ -15,11 +16,18 @@ import {
 import { useFavouriteStore } from "@/stores/favouriteStore"
 
 useFavouriteStore().startStorageSync()
+
+const sidebarRef = ref<InstanceType<typeof AppSidebar>>()
+
+// Provide function to add new conversation locally
+provide('addNewConversation', (conversationId: string) => {
+  sidebarRef.value?.addNewConversation(conversationId)
+})
 </script>
 
 <template>
   <SidebarProvider class="h-dvh">
-    <AppSidebar />
+    <AppSidebar ref="sidebarRef" />
     <SidebarInset>
       <div class="flex h-full min-h-0 flex-1 flex-col gap-4 overflow-auto p-4 pt-0">
         <router-view />

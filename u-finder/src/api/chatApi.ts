@@ -1,3 +1,6 @@
+import type { ConversationsResponse, ConversationMessagesResponse, DeleteConversationResponse, RenameConversationResponse } from '@/types/chat'
+import http from './http'
+
 type StreamOptions = {
   message: string
   conversationId: string | null
@@ -74,4 +77,52 @@ export const streamChat = (options: StreamOptions) => {
   })()
 
   return { controller, done }
+}
+
+export const getConversations = async (params?: {
+  last_id?: string
+  limit?: number
+}): Promise<ConversationsResponse> => {
+  const response = await http.get<ConversationsResponse>('/chat/conversations', {
+    params: {
+      last_id: params?.last_id,
+      limit: params?.limit,
+    },
+  })
+  
+  return response.data
+}
+
+export const getConversationMessages = async (params: {
+  conversationId: string
+  first_id?: string
+  limit?: number
+}): Promise<ConversationMessagesResponse> => {
+  const response = await http.get<ConversationMessagesResponse>('/chat/messages', {
+    params: {
+      conversationId: params.conversationId,
+      first_id: params.first_id,
+      limit: params.limit,
+    },
+  })
+  
+  return response.data
+}
+
+export const deleteConversation = async (conversationId: string): Promise<DeleteConversationResponse> => {
+  const response = await http.delete<DeleteConversationResponse>(`/chat/conversations/${conversationId}`)
+  
+  return response.data
+}
+
+export const renameConversation = async (params: {
+  conversationId: string
+  name: string
+}): Promise<RenameConversationResponse> => {
+  const response = await http.post<RenameConversationResponse>(
+    `/chat/conversations/${params.conversationId}/name`,
+    { name: params.name }
+  )
+  
+  return response.data
 }
