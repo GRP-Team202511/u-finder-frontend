@@ -287,7 +287,10 @@ const loadHistoryMessages = async (convId: string) => {
 				// `answer` is empty — attempt to extract from `agent_thoughts`
 				if (msg.agent_thoughts && msg.agent_thoughts.length > 0) {
 					// Sort by `position` and concatenate contents
-					const sortedThoughts = [...msg.agent_thoughts].sort((a, b) => a.position - b.position);
+					// Filter out tool use thoughts (those with non-empty `tool` property)
+					const sortedThoughts = [...msg.agent_thoughts]
+						.filter(thought => !thought.tool || thought.tool.trim() === '')
+						.sort((a, b) => a.position - b.position);
 					aiContent = sortedThoughts
 						.map(thought => {
 							const parts: string[] = [];
