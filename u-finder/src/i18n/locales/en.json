@@ -1,4 +1,9 @@
 {
+    "common": {
+        "errors": {
+            "sessionExpired": "Session expired. Please log in again."
+        }
+    },
     "cover": {
         "title": "U-Finder",
         "description": "Discover your perfect university match with our intelligent finder tool.",

@@ -11,9 +11,15 @@ const i18n = createI18n<[MessageSchema], 'en' | 'zh-CN' | 'zh-TW'>({
   fallbackLocale: 'en',
   messages: {
     'en': en,
-    'zh-CN': zhCN,
-    'zh-TW': zhTW
+    'zh-CN': zhCN as any,
+    'zh-TW': zhTW as any
   }
 })
 
 export default i18n
+
+// Export a typed t function for use outside Vue components
+export const t = (key: string): string => {
+  const translation = i18n.global.t(key)
+  return typeof translation === 'string' ? translation : String(translation)
+}

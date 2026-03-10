@@ -1,4 +1,9 @@
 {
+    "common": {
+        "errors": {
+            "sessionExpired": "会话已过期，请重新登录。"
+        }
+    },
     "cover": {
         "title": "U-Finder",
         "description": "使用我们的智能查找工具，发现您完美的大学匹配。",
