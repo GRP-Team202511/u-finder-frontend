@@ -582,8 +582,11 @@
         "general": {
             "appearance": "外觀",
             "appearanceDesc": "自訂 U-Finder 在您裝置上的外觀",
-            "darkMode": "深色模式",
-            "darkModeDesc": "在淺色和深色主題之間切換",
+            "theme": "主題",
+            "themeDesc": "選擇您偏好的主題",
+            "system": "跟隨系統",
+            "light": "淺色",
+            "dark": "深色",
             "language": "語言",
             "languageDesc": "選擇您偏好的語言"
         },

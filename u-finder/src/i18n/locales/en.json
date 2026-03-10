@@ -747,8 +747,11 @@
         "general": {
             "appearance": "Appearance",
             "appearanceDesc": "Customize how U-Finder looks on your device",
-            "darkMode": "Dark Mode",
-            "darkModeDesc": "Toggle between light and dark themes",
+            "theme": "Theme",
+            "themeDesc": "Choose your preferred theme",
+            "system": "System",
+            "light": "Light",
+            "dark": "Dark",
             "language": "Language",
             "languageDesc": "Choose your preferred language"
         },

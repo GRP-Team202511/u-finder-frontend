@@ -1,49 +1,33 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Switch } from '@/components/ui/switch'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
-import { Moon, Sun, FileText, Shield, Scale, ExternalLink, Info, Github } from 'lucide-vue-next'
+import { Moon, Sun, Monitor, FileText, Shield, Scale, ExternalLink, Info, Github } from 'lucide-vue-next'
 
 const { t } = useI18n()
 const router = useRouter()
 
-// Dark mode state
-const isDarkMode = ref(false)
+// Theme mode: 'system' | 'light' | 'dark'
+const themeMode = ref<'system' | 'light' | 'dark'>('light')
 
 // Version info from environment variable
 const version = import.meta.env.VITE_APP_VERSION || '0.0.0'
 
-// Initialize dark mode from document class
-onMounted(() => {
-  // Check if dark class is present on html element
-  isDarkMode.value = document.documentElement.classList.contains('dark')
-  
-  // Or check localStorage if you're using it
-  const savedTheme = localStorage.getItem('theme')
-  if (savedTheme === 'dark') {
-    isDarkMode.value = true
-    document.documentElement.classList.add('dark')
-  } else if (savedTheme === 'light') {
-    isDarkMode.value = false
-    document.documentElement.classList.remove('dark')
-  } else {
-    // System preference
+// Apply theme based on mode
+function applyTheme(mode: 'system' | 'light' | 'dark') {
+  if (mode === 'system') {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    isDarkMode.value = prefersDark
     if (prefersDark) {
       document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
     }
-  }
-})
-
-function toggleDarkMode(checked: boolean) {
-  isDarkMode.value = checked
-  
-  if (checked) {
+    localStorage.removeItem('theme')
+  } else if (mode === 'dark') {
     document.documentElement.classList.add('dark')
     localStorage.setItem('theme', 'dark')
   } else {
@@ -51,6 +35,35 @@ function toggleDarkMode(checked: boolean) {
     localStorage.setItem('theme', 'light')
   }
 }
+
+// Initialize theme from localStorage or default to light
+onMounted(() => {
+  const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
+  
+  if (savedTheme === 'dark') {
+    themeMode.value = 'dark'
+  } else if (savedTheme === 'light') {
+    themeMode.value = 'light'
+  } else {
+    themeMode.value = 'light'
+  }
+  
+  applyTheme(themeMode.value)
+  
+  // Listen for system theme changes when in system mode
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+  const handleChange = () => {
+    if (themeMode.value === 'system') {
+      applyTheme('system')
+    }
+  }
+  mediaQuery.addEventListener('change', handleChange)
+})
+
+// Watch for theme mode changes
+watch(themeMode, (newMode) => {
+  applyTheme(newMode)
+})
 
 function openExternalLink(url: string) {
   window.open(url, '_blank', 'noopener,noreferrer')
@@ -78,26 +91,48 @@ function navigateToPrivacy() {
         </div>
       </CardHeader>
       <CardContent class="space-y-4">
-        <!-- Dark Mode Toggle -->
+        <!-- Theme Mode Selector -->
         <div class="flex items-center justify-between rounded-lg border p-4">
           <div class="flex items-center gap-3">
             <div class="rounded-md bg-muted p-2">
-              <Moon v-if="isDarkMode" class="size-5 text-foreground" />
+              <Monitor v-if="themeMode === 'system'" class="size-5 text-foreground" />
+              <Moon v-else-if="themeMode === 'dark'" class="size-5 text-foreground" />
               <Sun v-else class="size-5 text-foreground" />
             </div>
             <div class="space-y-0.5">
               <Label class="text-base font-medium">
-                {{ t('settings.general.darkMode') }}
+                {{ t('settings.general.theme') }}
               </Label>
               <p class="text-sm text-muted-foreground">
-                {{ t('settings.general.darkModeDesc') }}
+                {{ t('settings.general.themeDesc') }}
               </p>
             </div>
           </div>
-          <Switch 
-            :checked="isDarkMode"
-            @update:checked="toggleDarkMode"
-          />
+          <Select v-model="themeMode">
+            <SelectTrigger class="w-35">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="system">
+                <div class="flex items-center gap-2">
+                  <Monitor class="size-4" />
+                  {{ t('settings.general.system') }}
+                </div>
+              </SelectItem>
+              <SelectItem value="light">
+                <div class="flex items-center gap-2">
+                  <Sun class="size-4" />
+                  {{ t('settings.general.light') }}
+                </div>
+              </SelectItem>
+              <SelectItem value="dark">
+                <div class="flex items-center gap-2">
+                  <Moon class="size-4" />
+                  {{ t('settings.general.dark') }}
+                </div>
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </CardContent>
     </Card>
