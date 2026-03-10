@@ -638,5 +638,135 @@
             "close": "Close",
             "retry": "Retry"
         }
+    },
+    "settings": {
+        "title": "Settings",
+        "tabs": {
+            "account": "Account",
+            "general": "General",
+            "about": "About"
+        },
+        "account": {
+            "accountInformation": "Account Information",
+            "username": "Username",
+            "email": "Email",
+            "plan": "Plan",
+            "changeAvatar": "Change Avatar",
+            "fetchUserInfoError": "Failed to fetch user information",
+            "plans": {
+                "free": "Free Plan"
+            },
+            "security": "Security",
+            "resetPassword": "Reset Password",
+            "resetPasswordDesc": "Reset your password via email verification",
+            "resetPasswordDialog": {
+                "title": "Reset Password",
+                "step1Desc": "Confirm your email address to receive a verification code",
+                "step2Desc": "Enter the verification code sent to your email and set your new password",
+                "emailConfirmHint": "A verification code will be sent to this email address",
+                "confirmPassword": "Confirm New Password",
+                "passwordMismatch": "Passwords do not match",
+                "passwordTooShort": "Password must be at least 8 characters",
+                "success": "Password reset successfully",
+                "warning": "You will be logged out after resetting your password and need to log in again with your new password"
+            },
+            "twoFactor": {
+                "title": "Two-Factor Authentication",
+                "description": "Add an extra layer of security to your account",
+                "enabled": "Enabled",
+                "disabled": "Disabled",
+                "backupCodes": "Backup codes remaining",
+                "enable": "Enable",
+                "disableButton": "Disable",
+                "regenerateButton": "Regenerate Backup Codes",
+                "fetchError": "Failed to fetch 2FA status",
+                "setup": {
+                    "step1Title": "Scan QR Code",
+                    "step1Desc": "Scan this QR code with Google Authenticator or any TOTP app",
+                    "step2Title": "Save Backup Codes",
+                    "step2Desc": "Save these backup codes in a secure place. Each code can only be used once.",
+                    "step3Title": "Verify",
+                    "step3Desc": "Enter the 6-digit code from your authenticator app",
+                    "manualEntry": "Or enter this code manually in your app:",
+                    "backupCodesWarning": "Important: Save these backup codes securely!",
+                    "backupCodesWarning2": "If you lose access to your authenticator device, these codes are the only way to recover your account.",
+                    "enterCode": "Enter verification code",
+                    "codeFromApp": "Enter the 6-digit code from your authenticator app",
+                    "copyAll": "Copy All",
+                    "copied": "Copied!",
+                    "copiedCodes": "Backup codes copied to clipboard",
+                    "back": "Back",
+                    "next": "Next",
+                    "cancel": "Cancel",
+                    "done": "Done",
+                    "success": "2FA enabled successfully!",
+                    "error": "Failed to setup 2FA",
+                    "alreadyEnabled": "2FA is already enabled",
+                    "setupExpired": "2FA setup expired, please try again",
+                    "invalidCode": "Please enter a 6-digit code",
+                    "wrongCode": "Invalid verification code",
+                    "verifyError": "Failed to verify code. Please try again."
+                },
+                "disable": {
+                    "title": "Disable Two-Factor Authentication",
+                    "description": "Disabling 2FA will reduce the security of your account",
+                    "warning": "Warning: Security Risk",
+                    "warningDesc": "Disabling two-factor authentication will make your account less secure.",
+                    "enterPassword": "Enter your password to confirm",
+                    "passwordPlaceholder": "Your password",
+                    "passwordRequired": "Password is required",
+                    "cancel": "Cancel",
+                    "confirm": "Disable",
+                    "success": "2FA disabled successfully",
+                    "wrongPassword": "Incorrect password",
+                    "notEnabled": "2FA is not enabled",
+                    "error": "Failed to disable 2FA"
+                },
+                "regenerate": {
+                    "verifyTitle": "Verify Identity",
+                    "verifyDesc": "Enter your current TOTP code to regenerate backup codes",
+                    "newCodesTitle": "New Backup Codes",
+                    "newCodesDesc": "Your old backup codes are now invalid. Save these new codes securely.",
+                    "enterCode": "Enter TOTP code",
+                    "codeFromApp": "Enter the 6-digit code from your authenticator app",
+                    "warning": "All previous backup codes are now invalid",
+                    "warningDesc": "Make sure to save these new backup codes. Your old codes will no longer work.",
+                    "copyAll": "Copy All",
+                    "copied": "Copied!",
+                    "copiedCodes": "Backup codes copied to clipboard",
+                    "cancel": "Cancel",
+                    "verify": "Verify",
+                    "done": "Done",
+                    "invalidCode": "Please enter a 6-digit code",
+                    "wrongCode": "Invalid TOTP code",
+                    "notEnabled": "2FA is not enabled",
+                    "error": "Failed to regenerate backup codes"
+                }
+            }
+        },
+        "general": {
+            "appearance": "Appearance",
+            "appearanceDesc": "Customize how U-Finder looks on your device",
+            "theme": "Theme",
+            "themeDesc": "Choose your preferred theme",
+            "system": "System",
+            "light": "Light",
+            "dark": "Dark",
+            "language": "Language",
+            "languageDesc": "Choose your preferred language"
+        },
+        "about": {
+            "title": "About U-Finder",
+            "description": "An intelligent university finder tool powered by AI. This project is open-sourced under the Apache 2.0 License as a group project for COMP2043 GRP at University of Nottingham Ningbo China.",
+            "version": "Version",
+            "license": "License",
+            "course": "Course",
+            "team": "Team",
+            "university": "University",
+            "github": "GitHub Repository",
+            "terms": "Terms of Service",
+            "privacy": "Privacy Policy",
+            "footer": "Made with ❤️ by the U-Finder Team"
+        }
     }
 }

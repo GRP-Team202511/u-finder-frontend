@@ -14,19 +14,19 @@ const routes: RouteRecordRaw[] = [
     path: '/cover',
     name: 'Cover',
     component: () => import('../views/Cover.vue'),
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: false, guestOnly: true }
   },
   {
     path: '/signup',
     name: 'Signup',
     component: () => import('../views/auth/Signup.vue'),
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: false, guestOnly: true }
   },
   {
     path: '/login',
     name: 'Login',
     component: () => import('../views/auth/Login.vue'),
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: false, guestOnly: true }
   },
   {
     path: '/terms-of-service',
@@ -44,7 +44,7 @@ const routes: RouteRecordRaw[] = [
     path: '/login/reset',
     name: 'ResetPassword',
     component: () => import('../views/auth/Reset.vue'),
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: false, guestOnly: true }
   },
   {
     path: '/app',
@@ -66,6 +66,12 @@ const routes: RouteRecordRaw[] = [
         path: 'favourite',
         name: 'Favourite',
         component: () => import('../views/favourite/Favourite.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'settings',
+        name: 'Settings',
+        component: () => import('../views/settings/Settings.vue'),
         meta: { requiresAuth: true }
       }
     ]
@@ -92,12 +98,13 @@ const router = createRouter({
 router.beforeEach((to, _from, next) => {
   const userStore = useUserStore()
   const requiresAuth = to.meta.requiresAuth
+  const guestOnly = to.meta.guestOnly
 
   if (requiresAuth && !userStore.isLoggedIn) {
     // Redirect to cover page if not authenticated
     next({ name: 'Cover' })
-  } else if (!requiresAuth && userStore.isLoggedIn) {
-    // Redirect to home if already logged in and trying to access login/signup
+  } else if (guestOnly && userStore.isLoggedIn) {
+    // Redirect to home if already logged in and trying to access guest-only pages
     next({ name: 'UserProfile' })
   } else {
     next()
