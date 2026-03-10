@@ -13,15 +13,17 @@ import { useUserStore } from '@/stores/userStore'
 import TwoFactorSetupDialog from './TwoFactorSetupDialog.vue'
 import TwoFactorDisableDialog from './TwoFactorDisableDialog.vue'
 import RegenerateBackupCodesDialog from './RegenerateBackupCodesDialog.vue'
-import { get2FAStatus } from '@/api/userApi'
+import { get2FAStatus, getUserInfo } from '@/api/userApi'
 
 const { t } = useI18n()
 const userStore = useUserStore()
 
 // User info - TODO: Add email and user type to User interface when available from API
-const userEmail = ref('user@example.com') // Placeholder
-const userType = ref('Student') // Placeholder
+const userName = ref('')
+const userEmail = ref('')
+const userType = ref<number>(0)
 const userAvatar = ref('') // Placeholder - will be fetched from API
+const isLoadingUserInfo = ref(false)
 
 // 2FA state
 const is2FAEnabled = ref(false)
@@ -36,7 +38,30 @@ const showRegenerateCodesDialog = ref(false)
 
 // Fetch 2FA status on mount
 onMounted(async () => {
-  await fetch2FAStatus()
+  await Promise.all([fetch2FAStatus(), fetchUserInfo()])
+})
+
+async function fetchUserInfo() {
+  isLoadingUserInfo.value = true
+  try {
+    const response = await getUserInfo()
+    userName.value = response.data.name
+    userEmail.value = response.data.email
+    userType.value = response.data.user_type
+  } catch (error) {
+    console.error('Failed to fetch user info:', error)
+    toast.error(t('settings.account.fetchUserInfoError'))
+  } finally {
+    isLoadingUserInfo.value = false
+  }
+}
+
+const userPlanDisplay = computed(() => {
+  if (String(userType.value) === '1') {
+    return t('settings.account.plans.free')
+  }
+  // Add more plan types as needed
+  return String(userType.value)
 })
 
 async function fetch2FAStatus() {
@@ -94,31 +119,34 @@ function handle2FASuccess() {
           <!-- User Info -->
           <div class="flex-1 space-y-4">
             <div class="space-y-2">
-              <Label for="username" class="text-sm font-medium">{{ t('settings.account.username') }}</Label>
-              <Input
-                id="username"
-                :value="userStore.user?.name"
-                disabled
-                class="bg-muted"
-              />
+              <Label class="text-sm font-medium">{{ t('settings.account.username') }}</Label>
+              <div
+                v-if="!isLoadingUserInfo"
+                class="h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm text-black dark:bg-white dark:text-black flex items-center"
+              >
+                {{ userName }}
+              </div>
+              <Skeleton v-else class="h-10 w-full" />
             </div>
             <div class="space-y-2">
-              <Label for="email" class="text-sm font-medium">{{ t('settings.account.email') }}</Label>
-              <Input
-                id="email"
-                :value="userEmail"
-                disabled
-                class="bg-muted"
-              />
+              <Label class="text-sm font-medium">{{ t('settings.account.email') }}</Label>
+              <div
+                v-if="!isLoadingUserInfo"
+                class="h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm text-black dark:bg-white dark:text-black flex items-center"
+              >
+                {{ userEmail }}
+              </div>
+              <Skeleton v-else class="h-10 w-full" />
             </div>
             <div class="space-y-2">
-              <Label for="usertype" class="text-sm font-medium">{{ t('settings.account.userType') }}</Label>
-              <Input
-                id="usertype"
-                :value="userType"
-                disabled
-                class="bg-muted"
-              />
+              <Label class="text-sm font-medium">{{ t('settings.account.plan') }}</Label>
+              <div
+                v-if="!isLoadingUserInfo"
+                class="h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm text-black dark:bg-white dark:text-black flex items-center"
+              >
+                {{ userPlanDisplay }}
+              </div>
+              <Skeleton v-else class="h-10 w-full" />
             </div>
           </div>
 

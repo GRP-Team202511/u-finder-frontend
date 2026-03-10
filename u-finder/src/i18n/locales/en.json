@@ -489,8 +489,12 @@
             "accountInformation": "Account Information",
             "username": "Username",
             "email": "Email",
-            "userType": "User Type",
+            "plan": "Plan",
             "changeAvatar": "Change Avatar",
+            "fetchUserInfoError": "Failed to fetch user information",
+            "plans": {
+                "free": "Free Plan"
+            },
             "security": "Security",
             "resetPassword": "Reset Password",
             "resetPasswordDesc": "Reset your password via email verification",

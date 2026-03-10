@@ -306,3 +306,17 @@ export const disable2FA = (data: Disable2FARequest) => {
 export const regenerateBackupCodes = (data: RegenerateBackupCodesRequest) => {
   return http.post<RegenerateBackupCodesResponse>('/auth/2fa/backup-codes/regenerate', data)
 }
+
+// ==================== User Settings APIs ====================
+
+// User Info Response
+export interface UserInfoResponse {
+  name: string
+  email: string
+  user_type: number
+}
+
+// Get current user information
+export const getUserInfo = () => {
+  return http.get<UserInfoResponse>('/auth/settings/info')
+}
