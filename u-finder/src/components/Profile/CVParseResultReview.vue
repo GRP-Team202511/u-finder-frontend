@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Info } from 'lucide-vue-next'
 import {
   Dialog,
   DialogContent,
@@ -20,6 +21,11 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import type { CVParseResponse } from '@/types/profileTypes'
 
 const { t } = useI18n()
@@ -126,6 +132,7 @@ const sectionsData = computed(() => {
       hasData: hasPersonalInfo(),
       count: hasPersonalInfo() ? 1 : 0,
       preview: formatPersonalInfo(),
+      items: hasPersonalInfo() ? [props.data.personalInfo] : [],
     },
     {
       key: 'education',
@@ -134,6 +141,7 @@ const sectionsData = computed(() => {
       hasData: props.data.education.data.length > 0,
       count: props.data.education.data.length,
       preview: formatEducation(),
+      items: props.data.education.data,
     },
     {
       key: 'academic',
@@ -142,6 +150,7 @@ const sectionsData = computed(() => {
       hasData: props.data.academic.data.length > 0,
       count: props.data.academic.data.length,
       preview: formatAcademic(),
+      items: props.data.academic.data,
     },
     {
       key: 'test',
@@ -150,6 +159,7 @@ const sectionsData = computed(() => {
       hasData: props.data.test.data.length > 0,
       count: props.data.test.data.length,
       preview: formatTest(),
+      items: props.data.test.data,
     },
     {
       key: 'internship',
@@ -158,6 +168,7 @@ const sectionsData = computed(() => {
       hasData: props.data.internship.data.length > 0,
       count: props.data.internship.data.length,
       preview: formatInternship(),
+      items: props.data.internship.data,
     },
     {
       key: 'project',
@@ -166,6 +177,7 @@ const sectionsData = computed(() => {
       hasData: props.data.project.data.length > 0,
       count: props.data.project.data.length,
       preview: formatProject(),
+      items: props.data.project.data,
     },
     {
       key: 'campus',
@@ -174,6 +186,7 @@ const sectionsData = computed(() => {
       hasData: props.data.campus.data.length > 0,
       count: props.data.campus.data.length,
       preview: formatCampus(),
+      items: props.data.campus.data,
     },
     {
       key: 'award',
@@ -182,6 +195,7 @@ const sectionsData = computed(() => {
       hasData: props.data.award.data.length > 0,
       count: props.data.award.data.length,
       preview: formatAward(),
+      items: props.data.award.data,
     },
   ]
 })
@@ -269,6 +283,71 @@ function cancel() {
   emit('cancel')
   isOpen.value = false
 }
+
+// Format detailed information for popover
+function formatItemDetails(item: any, sectionKey: string): { label: string; value: string }[] {
+  const details: { label: string; value: string }[] = []
+  
+  if (sectionKey === 'personalInfo') {
+    if (item.name) details.push({ label: t('info.name') || 'Name', value: item.name })
+    if (item.gender) details.push({ label: t('info.gender.title') || 'Gender', value: item.gender })
+    if (item.birthday) details.push({ label: t('info.birthday') || 'Birthday', value: item.birthday })
+  } else if (sectionKey === 'education') {
+    details.push({ label: t('edu.type') || 'Type', value: item.type })
+    details.push({ label: t('edu.institution') || 'Institution', value: item.name })
+    details.push({ label: t('edu.major') || 'Major', value: item.major })
+    details.push({ label: t('edu.time.start') || 'Start', value: item.time.start })
+    details.push({ label: t('edu.time.end') || 'End', value: item.time.end })
+    if (item.ranking) details.push({ label: t('edu.ranking') || 'Ranking', value: item.ranking })
+    details.push({ label: t('edu.GPA') || 'GPA', value: `${item.GPA} / ${item['GPA-base']}` })
+  } else if (sectionKey === 'academic') {
+    if (item.type === 'research paper') {
+      details.push({ label: t('academic.type.title') || 'Type', value: t('academic.type.researchPaper') || 'Research Paper' })
+      details.push({ label: t('academic.researchPaper.title') || 'Title', value: item.title })
+      if (item.doi) details.push({ label: t('academic.researchPaper.doi') || 'DOI', value: item.doi })
+      if (item.abstract) details.push({ label: t('academic.researchPaper.abstract') || 'Abstract', value: item.abstract })
+    } else {
+      details.push({ label: t('academic.type.title') || 'Type', value: t('academic.type.patent') || 'Patent' })
+      details.push({ label: t('academic.patent.title') || 'Title', value: item.title })
+      if (item.patentNumber) details.push({ label: t('academic.patent.number') || 'Patent Number', value: item.patentNumber })
+      if (item.region) details.push({ label: t('academic.patent.region') || 'Region', value: item.region })
+      if (item.description) details.push({ label: t('academic.patent.description') || 'Description', value: item.description })
+    }
+  } else if (sectionKey === 'test') {
+    details.push({ label: t('test.type') || 'Test Type', value: item.type })
+    if (item.test_date) {
+      details.push({ label: t('test.testDate') || 'Test Date', value: item.test_date })
+    }
+    // Add scores
+    Object.entries(item.scores).forEach(([key, value]) => {
+      if (value && value !== '') {
+        details.push({ label: key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()), value: String(value) })
+      }
+    })
+  } else if (sectionKey === 'internship') {
+    details.push({ label: t('internship.company') || 'Company', value: item.company })
+    details.push({ label: t('internship.role') || 'Role', value: item.role })
+    details.push({ label: t('internship.time.start') || 'Start', value: item.time.start })
+    details.push({ label: t('internship.time.end') || 'End', value: item.time.end })
+    if (item.time.till_now) details.push({ label: '', value: t('internship.time.till now') || 'Till Now' })
+    if (item.description) details.push({ label: t('internship.description') || 'Description', value: item.description })
+  } else if (sectionKey === 'project') {
+    details.push({ label: t('project.name') || 'Project Name', value: item.name })
+    details.push({ label: t('project.role') || 'Role', value: item.role })
+    details.push({ label: t('project.time.start') || 'Start', value: item.time.start })
+    details.push({ label: t('project.time.end') || 'End', value: item.time.end })
+    if (item.time.till_now) details.push({ label: '', value: t('project.time.till now') || 'Till Now' })
+    if (item.description) details.push({ label: t('project.description') || 'Description', value: item.description })
+  } else if (sectionKey === 'campus') {
+    details.push({ label: t('campusExp.name') || 'Name', value: item.name })
+    if (item.description) details.push({ label: t('campusExp.description') || 'Description', value: item.description })
+  } else if (sectionKey === 'award') {
+    details.push({ label: t('award.name') || 'Award Name', value: item.name })
+    if (item.description) details.push({ label: t('award.description') || 'Description', value: item.description })
+  }
+  
+  return details
+}
 </script>
 
 <template>
@@ -338,7 +417,7 @@ function cancel() {
                             {{ section.action }}
                           </span> -->
                           <span class="text-sm text-muted-foreground">
-                            {{ section.count }} {{ section.count === 1 ? 'item' : 'items' }}
+                            {{ section.count }} {{ section.count === 1 ? t('profile.cvParser.item') : t('profile.cvParser.items') }}
                           </span>
                         </div>
                       </div>
@@ -347,18 +426,36 @@ function cancel() {
                 </CardHeader>
                 <CardContent class="pt-0">
                   <div v-if="section.hasData" class="space-y-2">
-                    <p
-                      v-for="(item, idx) in section.preview.slice(0, 3)"
+                    <Popover
+                      v-for="(item, idx) in section.items.slice(0, 3)"
                       :key="idx"
-                      class="text-sm text-muted-foreground truncate"
                     >
-                      {{ item }}
-                    </p>
+                      <PopoverTrigger class="w-full">
+                        <div class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer p-2 rounded-md hover:bg-accent">
+                          <Info class="h-4 w-4 shrink-0" />
+                          <span class="truncate text-left flex-1">
+                            {{ section.preview[idx] }}
+                          </span>
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent class="w-80 max-h-96 overflow-y-auto">
+                        <div class="space-y-3">
+                          <div
+                            v-for="(detail, detailIdx) in formatItemDetails(item, section.key)"
+                            :key="detailIdx"
+                            class="space-y-1"
+                          >
+                            <div class="text-xs font-medium text-muted-foreground">{{ detail.label }}</div>
+                            <div class="text-sm">{{ detail.value }}</div>
+                          </div>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                     <p
-                      v-if="section.preview.length > 3"
-                      class="text-sm text-muted-foreground italic"
+                      v-if="section.items.length > 3"
+                      class="text-sm text-muted-foreground italic pl-2"
                     >
-                      +{{ section.preview.length - 3 }} more...
+                      +{{ section.items.length - 3 }} {{ t('profile.cvParser.more') }}
                     </p>
                   </div>
                   <p v-else class="text-sm text-muted-foreground italic">
