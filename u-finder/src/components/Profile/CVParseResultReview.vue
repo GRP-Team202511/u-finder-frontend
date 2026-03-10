@@ -314,16 +314,17 @@ function cancel() {
               >
                 <CardHeader class="pb-4">
                   <div class="flex items-start justify-between gap-2">
-                    <div class="flex items-start space-x-2 flex-1">
+                    <div class="flex items-center space-x-2 flex-1">
                       <Checkbox
                         :id="`select-${section.key}`"
                         v-model:checked="selections[section.key as keyof FieldSelections]"
                         :disabled="!section.hasData"
+                        class="mt-0.5"
                       />
                       <div class="flex-1 min-w-0">
                         <Label
                           :for="`select-${section.key}`"
-                          class="text-base font-semibold cursor-pointer leading-tight"
+                          class="text-base font-semibold cursor-pointer leading-none"
                         >
                           {{ section.title }}
                         </Label>
