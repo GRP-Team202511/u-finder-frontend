@@ -4,7 +4,7 @@ import { useI18n } from "vue-i18n";
 import { toast } from 'vue-sonner';
 import ChatWindow from "@/components/Chat/ChatWindow.vue";
 import MessageInput from "@/components/Chat/InputMessage.vue";
-import { streamChat, getConversationMessages } from "@/api/chatApi";
+import { streamChat, getConversationMessages, stopChat } from "@/api/chatApi";
 import { useUserStore } from "@/stores/userStore";
 import type { ChatMessageData } from "@/types/chat";
 import type { ProgramCardData } from "@/types/chat";
@@ -18,6 +18,8 @@ const streamController = ref<AbortController | null>(null);
 const activeStreamToken = ref<number | null>(null);
 const conversationId = ref<string | null>(null);
 const activeMessageId = ref<string | null>(null);
+const activeTaskId = ref<string | null>(null);
+const isStopping = ref(false);
 const { t } = useI18n();
 const addNewConversation = inject<((conversationId: string) => void) | undefined>('addNewConversation');
 const hasRefreshedConversations = ref(false);
@@ -26,6 +28,18 @@ const programCardStart = "<<__CARD__>>";
 const programCardEnd = "<<__END__>>";
 const messageBuffers = new Map<string, string>();
 const searchingMarker = "<<__SEARCHING__>>";
+
+const ensureStoppedPlaceholder = (messageId: string) => {
+	const message = messages.value.find((item) => item.id === messageId);
+	if (!message) return;
+	const hasContent =
+		Boolean(message.content?.trim()) ||
+		Boolean(message.tailContent?.trim()) ||
+		Boolean(message.cards?.length);
+	if (hasContent) return;
+	message.type = "text";
+	message.content = t("chat.stopped");
+};
 
 const stripControlMarkers = (value: string) =>
 	value.split(searchingMarker).join("");
@@ -87,10 +101,13 @@ const extractProgramCards = (buffer: string) => {
 	return { text, cards, remainder: remaining };
 };
 
-const flushMessageBuffer = (messageId: string) => {
+const flushMessageBuffer = (messageId: string, options?: { discardIncompleteCards?: boolean }) => {
 	const remainder = messageBuffers.get(messageId);
 	if (!remainder) return;
 	messageBuffers.delete(messageId);
+	if (options?.discardIncompleteCards && remainder.includes(programCardStart)) {
+		return;
+	}
 	const sanitizedRemainder = stripControlMarkers(
 		remainder.split(programCardStart).join("").split(programCardEnd).join("")
 	);
@@ -119,12 +136,30 @@ const flushMessageBuffer = (messageId: string) => {
 
 const stopStream = () => {
 	if (activeMessageId.value) {
+		ensureStoppedPlaceholder(activeMessageId.value);
 		updateMessage(activeMessageId.value, { isLoading: false });
 		activeMessageId.value = null;
 	}
 	streamController.value?.abort();
 	streamController.value = null;
 	activeStreamToken.value = null;
+	activeTaskId.value = null;
+};
+
+const handleStop = async () => {
+	if (isStopping.value || !isSending.value) return;
+	isStopping.value = true;
+	try {
+		if (activeTaskId.value) {
+			await stopChat(activeTaskId.value);
+		}
+	} catch (error) {
+		console.error("Failed to stop chat task", error);
+		toast.error(t("chat.errors.stopFailed"));
+	} finally {
+		stopStream();
+		isStopping.value = false;
+	}
 };
 
 const updateMessage = (
@@ -187,6 +222,18 @@ const handleSsePayload = (messageId: string, payload: string) => {
 		}
 	}
 
+	const taskIdFromPayload =
+		typeof parsed.task_id === "string"
+			? parsed.task_id
+			: typeof parsed.taskId === "string"
+				? parsed.taskId
+				: typeof parsed?.data?.task_id === "string"
+					? parsed.data.task_id
+					: null;
+	if (taskIdFromPayload) {
+		activeTaskId.value = taskIdFromPayload;
+	}
+
 	if (parsed.event === "message_end" || parsed.done === true) {
 		flushMessageBuffer(messageId);
 		return;
@@ -218,6 +265,7 @@ const handleSsePayload = (messageId: string, payload: string) => {
 
 const startStream = async (prompt: string, messageId: string) => {
 	stopStream();
+	activeTaskId.value = null;
 	activeMessageId.value = messageId;
 	updateMessage(messageId, { isLoading: true });
 	const streamToken = (activeStreamToken.value ?? 0) + 1;
@@ -243,12 +291,15 @@ const startStream = async (prompt: string, messageId: string) => {
 			});
 		}
 	} finally {
-		flushMessageBuffer(messageId);
+		const streamWasAborted = controller.signal.aborted;
+		flushMessageBuffer(messageId, { discardIncompleteCards: streamWasAborted });
 		if (activeStreamToken.value === streamToken) {
 			updateMessage(messageId, { isLoading: false });
 			activeMessageId.value = null;
 			streamController.value = null;
 			activeStreamToken.value = null;
+			activeTaskId.value = null;
+			isStopping.value = false;
 		}
 	}
 };
@@ -314,7 +365,8 @@ const loadHistoryMessages = async (convId: string) => {
 				}
 			} else {
 				aiMessage.type = "text";
-				aiMessage.content = text || aiContent || '';
+				const finalText = (text || aiContent || '').trim();
+				aiMessage.content = finalText || t("chat.stopped");
 			}
 			
 			messages.value.push(aiMessage);
@@ -411,8 +463,11 @@ onBeforeUnmount(() => {
 			<div class="w-full max-w-xl">
 				<MessageInput
 					:disabled="isSending"
+					:is-sending="isSending"
+					:stop-disabled="isStopping"
 					:placeholder="t('chat.input.placeholder')"
 					@send="handleSend"
+					@stop="handleStop"
 				/>
 			</div>
 		</div>
@@ -429,8 +484,11 @@ onBeforeUnmount(() => {
 			<div class="pb-4 pt-2">
 				<MessageInput
 					:disabled="isSending"
+					:is-sending="isSending"
+					:stop-disabled="isStopping"
 					:placeholder="t('chat.input.placeholder')"
 					@send="handleSend"
+					@stop="handleStop"
 				/>
 				<p class="mt-2 text-xs text-muted-foreground">
 					{{ t("chat.input.disclaimer") }}

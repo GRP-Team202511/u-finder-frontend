@@ -126,3 +126,8 @@ export const renameConversation = async (params: {
   
   return response.data
 }
+
+export const stopChat = async (taskId: string): Promise<{ result?: string}> => {
+  const response = await http.post<{ result?: string}>(`/chat/${taskId}/stop`)
+  return response.data
+}

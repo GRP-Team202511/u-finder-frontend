@@ -9,11 +9,19 @@ import {
 	FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { SendHorizontal } from 'lucide-vue-next';
+import { CircleStop, SendHorizontal } from 'lucide-vue-next';
 
 
-const props = defineProps<{ placeholder?: string; disabled?: boolean }>();
-const emit = defineEmits<{ (event: "send", value: string): void }>();
+const props = defineProps<{
+	placeholder?: string;
+	disabled?: boolean;
+	isSending?: boolean;
+	stopDisabled?: boolean;
+}>();
+const emit = defineEmits<{
+	(event: "send", value: string): void;
+	(event: "stop"): void;
+}>();
 const { t } = useI18n();
 
 const draft = ref("");
@@ -28,8 +36,17 @@ const submit = () => {
 const handleKeydown = (event: KeyboardEvent) => {
 	if (event.key === "Enter" && !event.shiftKey) {
 		event.preventDefault();
+		if (props.isSending) {
+			emit("stop");
+			return;
+		}
 		submit();
 	}
+};
+
+const stop = () => {
+	if (props.stopDisabled) return;
+	emit("stop");
 };
 </script>
 
@@ -48,6 +65,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 							@keydown="handleKeydown"
 						/>
 						<Button
+							v-if="!isSending"
 							variant="ghost"
 							size="icon"
 							type="submit"
@@ -55,6 +73,18 @@ const handleKeydown = (event: KeyboardEvent) => {
 							class="h-12 w-12"
 						>
 							<SendHorizontal class="size-5" />
+						</Button>
+						<Button
+							v-else
+							variant="ghost"
+							size="icon"
+							type="button"
+							:disabled="stopDisabled"
+							:aria-label="t('chat.input.stop')"
+							class="h-12 w-12"
+							@click="stop"
+						>
+							<CircleStop class="size-7" />
 						</Button>
 					</div>
 				</FieldContent>
