@@ -87,6 +87,7 @@
         "unprocessable": "Invalid signup input.",
         "error": "An error occurred during signup. Please try again.",
         "codeSent": "The verification code has been sent",
+        "passwordError": "Password must be 8-20 characters, with at least one letter and one digit.",
         "verification": {
             "enter": "Enter verification code",
             "sent": "We sent a 6-digit code to your email.",

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useI18n } from 'vue-i18n'
@@ -30,6 +30,8 @@ const signing = ref(false)
 
 const occupied = ref(false)
 
+const passwordTouched = ref(false)
+
 const props = defineProps<{
   class?: HTMLAttributes["class"]
 }>()
@@ -52,10 +54,29 @@ type ValidationDetail = {
   msg: string
   type: string
 }
+// Password validation: 8-20 chars, at least one letter and one digit
+const isPasswordValid = computed(() => {
+  const password = formData.value.password
+  if (!password) return false
+  
+  const lengthValid = password.length >= 8 && password.length <= 20
+  const hasLetter = /[a-zA-Z]/.test(password)
+  const hasDigit = /\d/.test(password)
+  
+  return lengthValid && hasLetter && hasDigit
+})
 
 const handleSignup = async() => {
   signing.value = true
   occupied.value = false
+  passwordTouched.value = true
+
+  // Validate password format
+  if (!isPasswordValid.value) {
+    toast.error(t('signup.passwordError'))
+    signing.value = false
+    return
+  }
 
   try {
     const response = await signup(formData.value)
@@ -115,7 +136,19 @@ const handleSignup = async() => {
 
             <Field>
               <FieldLabel for="password">{{ t("signup.password") }}</FieldLabel>
-              <Input v-model="formData.password" id="password" type="password" :class="{ 'border-red-500 ': formData.password != repeatPassword }" required/>
+              <Input 
+                v-model="formData.password" 
+                id="password" 
+                type="password" 
+                :class="{ 
+                  'border-red-500': (passwordTouched && !isPasswordValid) || formData.password != repeatPassword 
+                }" 
+                @blur="passwordTouched = true"
+                required
+              />
+              <FieldDescription v-if="passwordTouched && !isPasswordValid" class="text-red-500 text-sm">
+                {{ t("signup.passwordError") }}
+              </FieldDescription>
             </Field>
 
             <Field>
