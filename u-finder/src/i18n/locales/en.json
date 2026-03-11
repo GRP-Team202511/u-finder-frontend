@@ -22,6 +22,7 @@
         "signup": "Sign up",
         "unauth": "The password is incorrect",
         "not_found": "The account doesn't exist",
+        "unprocessable": "Invalid login input.",
         "reset": {
             "title": "Reset Password",
             "description": "Reset password with your email",
