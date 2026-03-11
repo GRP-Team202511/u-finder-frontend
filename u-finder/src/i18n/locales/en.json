@@ -84,6 +84,7 @@
         "and": " and ",
         "privacy": "Privacy Policy",
         "occupied": "This email has been registered.",
+        "unprocessable": "Invalid signup input.",
         "error": "An error occurred during signup. Please try again.",
         "codeSent": "The verification code has been sent",
         "verification": {
