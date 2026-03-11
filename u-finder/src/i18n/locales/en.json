@@ -568,6 +568,7 @@
     "chat": {
         "title": "U-Finder",
         "tagline": "Find your best-fit university — powered by AI.",
+        "stopped": "Response generation stopped.",
         "input": {
             "label": "Message",
             "placeholder": "Chat with U-Finder...",

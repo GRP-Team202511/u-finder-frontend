@@ -29,6 +29,18 @@ const programCardEnd = "<<__END__>>";
 const messageBuffers = new Map<string, string>();
 const searchingMarker = "<<__SEARCHING__>>";
 
+const ensureStoppedPlaceholder = (messageId: string) => {
+	const message = messages.value.find((item) => item.id === messageId);
+	if (!message) return;
+	const hasContent =
+		Boolean(message.content?.trim()) ||
+		Boolean(message.tailContent?.trim()) ||
+		Boolean(message.cards?.length);
+	if (hasContent) return;
+	message.type = "text";
+	message.content = t("chat.stopped");
+};
+
 const stripControlMarkers = (value: string) =>
 	value.split(searchingMarker).join("");
 
@@ -124,6 +136,7 @@ const flushMessageBuffer = (messageId: string, options?: { discardIncompleteCard
 
 const stopStream = () => {
 	if (activeMessageId.value) {
+		ensureStoppedPlaceholder(activeMessageId.value);
 		updateMessage(activeMessageId.value, { isLoading: false });
 		activeMessageId.value = null;
 	}
@@ -352,7 +365,8 @@ const loadHistoryMessages = async (convId: string) => {
 				}
 			} else {
 				aiMessage.type = "text";
-				aiMessage.content = text || aiContent || '';
+				const finalText = (text || aiContent || '').trim();
+				aiMessage.content = finalText || t("chat.stopped");
 			}
 			
 			messages.value.push(aiMessage);
