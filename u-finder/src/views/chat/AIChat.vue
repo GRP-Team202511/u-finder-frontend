@@ -89,10 +89,13 @@ const extractProgramCards = (buffer: string) => {
 	return { text, cards, remainder: remaining };
 };
 
-const flushMessageBuffer = (messageId: string) => {
+const flushMessageBuffer = (messageId: string, options?: { discardIncompleteCards?: boolean }) => {
 	const remainder = messageBuffers.get(messageId);
 	if (!remainder) return;
 	messageBuffers.delete(messageId);
+	if (options?.discardIncompleteCards && remainder.includes(programCardStart)) {
+		return;
+	}
 	const sanitizedRemainder = stripControlMarkers(
 		remainder.split(programCardStart).join("").split(programCardEnd).join("")
 	);
@@ -275,7 +278,8 @@ const startStream = async (prompt: string, messageId: string) => {
 			});
 		}
 	} finally {
-		flushMessageBuffer(messageId);
+		const streamWasAborted = controller.signal.aborted;
+		flushMessageBuffer(messageId, { discardIncompleteCards: streamWasAborted });
 		if (activeStreamToken.value === streamToken) {
 			updateMessage(messageId, { isLoading: false });
 			activeMessageId.value = null;
