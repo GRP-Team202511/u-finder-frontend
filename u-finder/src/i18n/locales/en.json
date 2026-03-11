@@ -571,10 +571,12 @@
         "input": {
             "label": "Message",
             "placeholder": "Chat with U-Finder...",
+            "stop": "Stop generating",
             "disclaimer": "U-Finder can make mistakes. Check important info."
         },
         "errors": {
             "streamFailed": "Sorry, I could not complete that request.",
+            "stopFailed": "Failed to stop response generation",
             "loadHistoryFailed": "Failed to load conversation history"
         },
         "card": {
