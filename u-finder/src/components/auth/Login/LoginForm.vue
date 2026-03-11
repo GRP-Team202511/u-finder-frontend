@@ -71,7 +71,7 @@ const handleLogin = async() => {
       console.log("Wrong password")
       unauth.value = true
       toast.error(t("login.unauth"))
-    } else if(error.response?.status === 409) {
+    } else if(error.response?.status === 404) {
       console.log("User not found")
       notFound.value = true
       toast.error(t("login.not_found"))
