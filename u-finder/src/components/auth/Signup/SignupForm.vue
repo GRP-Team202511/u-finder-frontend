@@ -49,6 +49,11 @@ const formData = ref({
 
 const repeatPassword = ref("")
 
+type ValidationDetail = {
+  loc: Array<string | number>
+  msg: string
+  type: string
+}
 // Password validation: 8-20 chars, at least one letter and one digit
 const isPasswordValid = computed(() => {
   const password = formData.value.password
@@ -84,6 +89,17 @@ const handleSignup = async() => {
       console.log('Account already exists')
       toast.error(t('signup.occupied'))
       occupied.value = true
+    } else if (error.response?.status === 422) {
+      const details = error?.response?.data?.detail as ValidationDetail[] | undefined
+      if (Array.isArray(details)) {
+        const fields = details
+          .flatMap((item) => Array.isArray(item.loc) ? item.loc : [])
+          .map((item) => String(item))
+        if (fields.includes("email")) {
+          occupied.value = true
+        }
+      }
+      toast.error(t('signup.unprocessable'))
     } else {
       console.error('Sign up error:', error)
       toast.error(t('signup.error'))

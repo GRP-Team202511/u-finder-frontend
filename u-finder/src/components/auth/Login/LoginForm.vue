@@ -45,6 +45,12 @@ const form = ref({
   password: '',
 })
 
+type ValidationDetail = {
+  loc: Array<string | number>
+  msg: string
+  type: string
+}
+
 const handleLogin = async() => {
   logging.value = true
   unauth.value = false
@@ -71,10 +77,24 @@ const handleLogin = async() => {
       console.log("Wrong password")
       unauth.value = true
       toast.error(t("login.unauth"))
-    } else if(error.response?.status === 409) {
+    } else if(error.response?.status === 404) {
       console.log("User not found")
       notFound.value = true
       toast.error(t("login.not_found"))
+    } else if (error.response?.status === 422) {
+      const details = error?.response?.data?.detail as ValidationDetail[] | undefined
+      if (Array.isArray(details)) {
+        const fields = details
+          .flatMap((item) => Array.isArray(item.loc) ? item.loc : [])
+          .map((item) => String(item))
+        if (fields.includes("email")) {
+          notFound.value = true
+        }
+        if (fields.includes("password")) {
+          unauth.value = true
+        }
+      }
+      toast.error(t("login.unprocessable"))
     } else {
       console.error("Login error:", error)
     }
