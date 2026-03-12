@@ -14,6 +14,7 @@ import TwoFactorSetupDialog from './TwoFactorSetupDialog.vue'
 import TwoFactorDisableDialog from './TwoFactorDisableDialog.vue'
 import RegenerateBackupCodesDialog from './RegenerateBackupCodesDialog.vue'
 import ResetPasswordDialog from './ResetPasswordDialog.vue'
+import DeviceManagementDialog from './DeviceManagementDialog.vue'
 import { get2FAStatus, getUserInfo } from '@/api/userApi'
 
 const { t } = useI18n()
@@ -33,6 +34,7 @@ const isLoading2FAStatus = ref(false)
 
 // Dialogs state
 const showResetPasswordDialog = ref(false)
+const showDeviceManagementDialog = ref(false)
 const show2FASetupDialog = ref(false)
 const show2FADisableDialog = ref(false)
 const showRegenerateCodesDialog = ref(false)
@@ -77,6 +79,10 @@ async function fetch2FAStatus() {
   } finally {
     isLoading2FAStatus.value = false
   }
+}
+
+function handleManageDevices() {
+  showDeviceManagementDialog.value = true
 }
 
 function handleResetPassword() {
@@ -170,6 +176,19 @@ function handle2FASuccess() {
         </div>
       </CardHeader>
       <CardContent class="space-y-4">
+        <!-- Device Management -->
+        <div class="rounded-lg border p-4">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="space-y-1">
+              <Label class="text-base font-medium">{{ t('settings.account.devices.title') }}</Label>
+              <!-- <p class="text-sm text-muted-foreground">{{ t('settings.account.devices.description') }}</p> -->
+            </div>
+            <Button @click="handleManageDevices" variant="outline" class="w-full md:w-auto shrink-0">
+              {{ t('settings.account.devices.title') }}
+            </Button>
+          </div>
+        </div>
+
         <!-- Reset Password -->
         <div class="rounded-lg border p-4">
           <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -232,6 +251,9 @@ function handle2FASuccess() {
     </Card>
 
     <!-- Dialogs -->
+    <DeviceManagementDialog
+      v-model:open="showDeviceManagementDialog"
+    />
     <ResetPasswordDialog
       v-model:open="showResetPasswordDialog"
     />
