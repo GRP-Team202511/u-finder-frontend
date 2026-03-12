@@ -583,6 +583,26 @@
                     "notEnabled": "兩步驟驗證未啟用",
                     "error": "重新產生備用碼失敗"
                 }
+            },
+            "devices": {
+                "title": "登入裝置",
+                "description": "管理目前已登入您帳戶的所有裝置",
+                "currentDevice": "目前裝置",
+                "logoutButton": "登出",
+                "logoutAllButton": "登出所有裝置",
+                "loginTime": "登入時間",
+                "fetchError": "獲取裝置清單失敗",
+                "logoutSuccess": "裝置已成功登出",
+                "logoutError": "登出該裝置失敗",
+                "logoutAllSuccess": "所有裝置已登出",
+                "logoutAllError": "登出所有裝置失敗",
+                "deviceTypes": {
+                    "PC": "電腦",
+                    "Mobile": "手機",
+                    "Tablet": "平板",
+                    "Bot": "機器人",
+                    "Unknown": "未知"
+                }
             }
         },
         "general": {

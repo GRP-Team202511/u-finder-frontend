@@ -583,6 +583,26 @@
                     "notEnabled": "两步验证未启用",
                     "error": "重新生成备用码失败"
                 }
+            },
+            "devices": {
+                "title": "登录设备",
+                "description": "管理当前已登录您账户的所有设备",
+                "currentDevice": "当前设备",
+                "logoutButton": "退出登录",
+                "logoutAllButton": "退出所有设备",
+                "loginTime": "登录时间",
+                "fetchError": "获取设备列表失败",
+                "logoutSuccess": "设备已成功退出登录",
+                "logoutError": "退出该设备失败",
+                "logoutAllSuccess": "所有设备已退出登录",
+                "logoutAllError": "退出所有设备失败",
+                "deviceTypes": {
+                    "PC": "电脑",
+                    "Mobile": "手机",
+                    "Tablet": "平板",
+                    "Bot": "机器人",
+                    "Unknown": "未知"
+                }
             }
         },
         "general": {
