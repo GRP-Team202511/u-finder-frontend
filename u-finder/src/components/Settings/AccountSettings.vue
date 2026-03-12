@@ -175,7 +175,7 @@ function handle2FASuccess() {
           <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div class="space-y-1">
               <Label class="text-base font-medium">{{ t('settings.account.resetPassword') }}</Label>
-              <p class="text-sm text-muted-foreground">{{ t('settings.account.resetPasswordDesc') }}</p>
+              <!-- <p class="text-sm text-muted-foreground">{{ t('settings.account.resetPasswordDesc') }}</p> -->
             </div>
             <Button @click="handleResetPassword" variant="outline" class="w-full md:w-auto shrink-0">
               {{ t('settings.account.resetPassword') }}
