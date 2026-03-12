@@ -751,6 +751,26 @@
                     "notEnabled": "2FA is not enabled",
                     "error": "Failed to regenerate backup codes"
                 }
+            },
+            "devices": {
+                "title": "Login Devices",
+                "description": "Manage all devices currently logged into your account",
+                "currentDevice": "Current Device",
+                "logoutButton": "Log Out",
+                "logoutAllButton": "Log Out All Devices",
+                "loginTime": "Logged in at",
+                "fetchError": "Failed to fetch device list",
+                "logoutSuccess": "Device logged out successfully",
+                "logoutError": "Failed to log out device",
+                "logoutAllSuccess": "All devices have been logged out",
+                "logoutAllError": "Failed to log out all devices",
+                "deviceTypes": {
+                    "PC": "PC",
+                    "Mobile": "Mobile",
+                    "Tablet": "Tablet",
+                    "Bot": "Bot",
+                    "Unknown": "Unknown"
+                }
             }
         },
         "general": {
