@@ -369,3 +369,51 @@ export interface UserInfoResponse {
 export const getUserInfo = () => {
   return http.get<UserInfoResponse>('/auth/settings/info')
 }
+
+// ==================== Device Session Management APIs ====================
+
+// Device type categories returned by the server
+export type DeviceType = 'PC' | 'Mobile' | 'Tablet' | 'Bot' | 'Unknown'
+
+// A single active login session / device record
+export interface Device {
+  session_id: number
+  browser: string
+  os: string
+  device_type: DeviceType
+  created_at: string   // ISO 8601 date-time string
+  is_current: boolean
+}
+
+// Response from GET /auth/settings/devices
+export interface DevicesResponse {
+  devices: Device[]
+  total: number
+}
+
+// Response from POST /auth/settings/logout-all
+export interface LogoutAllDevicesResponse {
+  message: string
+  revoked_count: number
+}
+
+// Response from DELETE /auth/settings/devices/{session_id}
+export interface LogoutDeviceResponse {
+  message: string
+}
+
+// Fetch all active login sessions for the current user
+export const getDevices = () => {
+  return http.get<DevicesResponse>('/auth/settings/devices')
+}
+
+// Log out a specific device session by its session_id
+// Note: cannot be used to log out the current session
+export const logoutDevice = (sessionId: number) => {
+  return http.delete<LogoutDeviceResponse>(`/auth/settings/devices/${sessionId}`)
+}
+
+// Log out all devices (including the current one); client should redirect to login after calling this
+export const logoutAllDevices = () => {
+  return http.post<LogoutAllDevicesResponse>('/auth/settings/logout-all')
+}
