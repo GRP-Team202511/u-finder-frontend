@@ -2,7 +2,7 @@
 import type { CalendarRootEmits, CalendarRootProps, DateValue } from "reka-ui"
 import type { HTMLAttributes, Ref } from "vue"
 import type { LayoutTypes } from "."
-import { getLocalTimeZone, today } from "@internationalized/date"
+import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date"
 import { createReusableTemplate, reactiveOmit, useVModel } from "@vueuse/core"
 import { CalendarRoot, useDateFormatter, useForwardPropsEmits } from "reka-ui"
 import { createYear, createYearRange, toDate } from "reka-ui/date"
@@ -11,13 +11,22 @@ import { cn } from "@/lib/utils"
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { CalendarCell, CalendarCellTrigger, CalendarGrid, CalendarGridBody, CalendarGridHead, CalendarGridRow, CalendarHeadCell, CalendarHeader, CalendarHeading, CalendarNextButton, CalendarPrevButton } from "."
 
-const props = withDefaults(defineProps<CalendarRootProps & { class?: HTMLAttributes["class"], layout?: LayoutTypes, yearRange?: DateValue[] }>(), {
+const props = withDefaults(defineProps<CalendarRootProps & {
+  class?: HTMLAttributes["class"]
+  layout?: LayoutTypes
+  yearRange?: DateValue[]
+  /** Override the earliest selectable year in the dropdown */
+  minYear?: number
+  /** Override the latest selectable year in the dropdown */
+  maxYear?: number
+}>(), {
   modelValue: undefined,
   layout: undefined,
 })
 const emits = defineEmits<CalendarRootEmits>()
 
-const delegatedProps = reactiveOmit(props, "class", "layout", "placeholder")
+// Exclude custom props so they are not forwarded to CalendarRoot
+const delegatedProps = reactiveOmit(props, "class", "layout", "placeholder", "minYear", "maxYear")
 
 const placeholder = useVModel(props, "placeholder", emits, {
   passive: true,
@@ -27,13 +36,21 @@ const placeholder = useVModel(props, "placeholder", emits, {
 const formatter = useDateFormatter(props.locale ?? "en")
 
 const yearRange = computed(() => {
-  return props.yearRange ?? createYearRange({
-    start: props?.minValue ?? (toRaw(props.placeholder) ?? props.defaultPlaceholder ?? today(getLocalTimeZone()))
-      .cycle("year", -100),
+  if (props.yearRange) return props.yearRange
 
-    end: props?.maxValue ?? (toRaw(props.placeholder) ?? props.defaultPlaceholder ?? today(getLocalTimeZone()))
-      .cycle("year", 10),
-  })
+  const anchor = toRaw(props.placeholder) ?? props.defaultPlaceholder ?? today(getLocalTimeZone())
+
+  // Prefer explicit minYear/maxYear number props; fall back to minValue/maxValue DateValue props;
+  // finally default to a 50-year lookback and 10-year lookahead from the anchor date.
+  const start: DateValue = props.minYear
+    ? new CalendarDate(props.minYear, 1, 1)
+    : (props.minValue ?? anchor.cycle("year", -50))
+
+  const end: DateValue = props.maxYear
+    ? new CalendarDate(props.maxYear, 12, 31)
+    : (props.maxValue ?? anchor.cycle("year", 10))
+
+  return createYearRange({ start, end })
 })
 
 const [DefineMonthTemplate, ReuseMonthTemplate] = createReusableTemplate<{ date: DateValue }>()
@@ -49,15 +66,15 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
         <div class="absolute inset-0 flex h-full items-center text-sm pl-2 pointer-events-none">
           {{ formatter.custom(toDate(date), { month: 'short' }) }}
         </div>
+        <!-- Bind model-value so the native <select> reflects the currently viewed month -->
         <NativeSelect
           class="text-xs h-8 pr-6 pl-2 text-transparent relative"
+          :model-value="date.month"
           @change="(e: Event) => {
-            placeholder = placeholder.set({
-              month: Number((e?.target as any)?.value),
-            })
+            placeholder = placeholder.set({ month: Number((e?.target as HTMLSelectElement)?.value) })
           }"
         >
-          <NativeSelectOption v-for="(month) in createYear({ dateObj: date })" :key="month.toString()" :value="month.month" :selected="date.month === month.month">
+          <NativeSelectOption v-for="(month) in createYear({ dateObj: date })" :key="month.toString()" :value="month.month">
             {{ formatter.custom(toDate(month), { month: 'short' }) }}
           </NativeSelectOption>
         </NativeSelect>
@@ -71,15 +88,15 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
         <div class="absolute inset-0 flex h-full items-center text-sm pl-2 pointer-events-none">
           {{ formatter.custom(toDate(date), { year: 'numeric' }) }}
         </div>
+        <!-- Bind model-value so the native <select> reflects the currently viewed year -->
         <NativeSelect
           class="text-xs h-8 pr-6 pl-2 text-transparent relative"
+          :model-value="date.year"
           @change="(e: Event) => {
-            placeholder = placeholder.set({
-              year: Number((e?.target as any)?.value),
-            })
+            placeholder = placeholder.set({ year: Number((e?.target as HTMLSelectElement)?.value) })
           }"
         >
-          <NativeSelectOption v-for="(year) in yearRange" :key="year.toString()" :value="year.year" :selected="date.year === year.year">
+          <NativeSelectOption v-for="(year) in yearRange" :key="year.toString()" :value="year.year">
             {{ formatter.custom(toDate(year), { year: 'numeric' }) }}
           </NativeSelectOption>
         </NativeSelect>

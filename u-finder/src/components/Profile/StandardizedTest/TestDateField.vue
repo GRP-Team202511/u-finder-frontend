@@ -16,6 +16,10 @@ const props = defineProps<{
   idBase: string
   label?: string
   mode?: 'date' | 'month'
+  /** Earliest year shown in the year dropdown (passed through to Calendar) */
+  minYear?: number
+  /** Latest year shown in the year dropdown (passed through to Calendar) */
+  maxYear?: number
 }>()
 
 const emit = defineEmits<{
@@ -131,6 +135,8 @@ function handleUpdate(dv: any, close?: () => void) {
             v-model="dateValue"
             :default-placeholder="defaultPlaceholder"
             :max-value="maxValue"
+            :min-year="props.minYear"
+            :max-year="props.maxYear"
             layout="month-and-year"
             initial-focus
             @update:model-value="(val) => handleUpdate(val, close)"
