@@ -130,6 +130,7 @@
             "maxSize": "最大文件大小：10MB",
             "uploading": "正在上传...",
             "parsing": "正在解析简历...",
+            "parsingHint": "复杂文档最长可能需要 1 分钟，请耐心等待。",
             "parseSuccess": "简历解析成功！",
             "selectData": "选择要导入的数据",
             "reviewTitle": "查看解析结果",
@@ -154,7 +155,8 @@
                 "unauthorized": "您未获授权。请重新登录。",
                 "parseFailed": "无法从上传的文件中提取信息。",
                 "serviceUnavailable": "AI 服务暂时不可用。请稍后重试。",
-                "serverError": "服务器内部错误。请重试。"
+                "serverError": "服务器内部错误。请重试。",
+                "timeout": "解析超时，文件可能过于复杂，请重试。"
             }
         },
         "errors": {

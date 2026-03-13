@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
+import axios from 'axios'
 import {
   Dialog,
   DialogContent,
@@ -41,6 +42,8 @@ const isUploading = ref(false)
 const isParsing = ref(false)
 const selectedFile = ref<File | null>(null)
 const fileInputRef = ref<HTMLInputElement | null>(null)
+// Holds the controller for the current in-flight upload so we can abort it on demand
+const abortController = ref<AbortController | null>(null)
 
 // Accepted file types
 const ACCEPTED_TYPES = [
@@ -70,13 +73,21 @@ function resetState() {
   isUploading.value = false
   isParsing.value = false
   isDragging.value = false
+  abortController.value = null
 }
 
-// Close dialog
+// Abort the in-flight request and return to the file-selection state
+function cancelUpload() {
+  abortController.value?.abort()
+  // resetState is called in the catch block once the CanceledError is received
+}
+
+// Close dialog — abort any in-flight request first so it doesn't linger
 function closeDialog() {
-  if (!isUploading.value && !isParsing.value) {
-    isOpen.value = false
+  if (isUploading.value || isParsing.value) {
+    cancelUpload()
   }
+  isOpen.value = false
 }
 
 // Trigger file input
@@ -133,36 +144,56 @@ async function validateAndUploadFile(file: File) {
 
 // Upload file
 async function uploadFile(file: File) {
+  // Create a fresh controller for this upload so previous aborts don't carry over
+  abortController.value = new AbortController()
+
   isUploading.value = true
   isParsing.value = false
-  
+
   try {
-    // Start parsing state
+    // File is already in the browser — transition straight to the AI-parsing wait state
     isUploading.value = false
     isParsing.value = true
-    
-    const response = await uploadCV(file)
-    
+
+    const response = await uploadCV(file, abortController.value.signal)
+
     // Success
     isParsing.value = false
     toast.success(t('profile.cvParser.parseSuccess') || 'CV parsed successfully!')
-    
+
     // Emit parse complete event with data
     emit('parse-complete', response.data)
-    
+
     // Close dialog after success
     setTimeout(() => {
       isOpen.value = false
     }, 500)
-    
+
   } catch (error: any) {
     isUploading.value = false
     isParsing.value = false
-    
-    // Handle different error codes
+
+    // User explicitly cancelled — reset silently without an error toast
+    if (axios.isCancel(error)) {
+      console.info('CV upload cancelled by user')
+      resetState()
+      return
+    }
+
+    // Client-side timeout (ECONNABORTED) — different message from a generic server error
+    if (error.code === 'ECONNABORTED') {
+      toast.error(
+        t('profile.cvParser.errors.timeout') ||
+        'Parsing timed out. The file may be too complex — please try again.'
+      )
+      console.error('CV upload timed out:', error)
+      return
+    }
+
+    // HTTP error — map status codes to user-friendly messages
     const status = error.response?.status
     let errorMessage = t('profile.cvParser.errors.uploadFailed') || 'Failed to upload CV. Please try again.'
-    
+
     switch (status) {
       case 400:
         errorMessage = t('profile.cvParser.errors.noFile') || 'No file uploaded or file is empty.'
@@ -187,7 +218,7 @@ async function uploadFile(file: File) {
         errorMessage = t('profile.cvParser.errors.serverError') || 'Internal server error. Please try again.'
         break
     }
-    
+
     toast.error(errorMessage)
     console.error('Failed to upload CV:', error)
   }
@@ -278,15 +309,16 @@ function formatFileSize(bytes: number): string {
           {{ t('profile.cvParser.parsing') || 'Parsing your CV...' }}
         </p>
         <p class="mt-2 text-xs text-muted-foreground">
-          This may take a few moments
+          {{ t('profile.cvParser.parsingHint') || 'This may take up to 1 minute for complex documents.' }}
         </p>
       </div>
 
       <DialogFooter>
-        <Button 
-          variant="outline" 
-          @click="closeDialog"
-          :disabled="isUploading || isParsing"
+        <!-- During parsing the button cancels the in-flight request instead of just closing -->
+        <Button
+          variant="outline"
+          @click="isParsing || isUploading ? cancelUpload() : closeDialog()"
+          :disabled="false"
         >
           {{ t('profile.cancel') || 'Cancel' }}
         </Button>
