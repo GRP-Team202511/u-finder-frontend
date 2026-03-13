@@ -273,6 +273,7 @@
             "maxSize": "Maximum file size: 10MB",
             "uploading": "Uploading...",
             "parsing": "Parsing your CV...",
+            "parsingHint": "This may take up to 1 minute for complex documents.",
             "parseSuccess": "CV parsed successfully!",
             "selectData": "Select the data you want to import",
             "reviewTitle": "Review Parsed Data",
@@ -297,7 +298,8 @@
                 "unauthorized": "You are not authorized. Please login again.",
                 "parseFailed": "Failed to extract information from the uploaded file.",
                 "serviceUnavailable": "AI service is temporarily unavailable. Please try again later.",
-                "serverError": "Internal server error. Please try again."
+                "serverError": "Internal server error. Please try again.",
+                "timeout": "Parsing timed out. The file may be too complex — please try again."
             }
         },
         "errors": {
