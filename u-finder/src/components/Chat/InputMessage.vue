@@ -25,6 +25,7 @@ const emit = defineEmits<{
 const { t } = useI18n();
 
 const draft = ref("");
+const composing = ref(false);
 
 const submit = () => {
 	const value = draft.value.trim();
@@ -35,6 +36,9 @@ const submit = () => {
 
 const handleKeydown = (event: KeyboardEvent) => {
 	if (event.key === "Enter" && !event.shiftKey) {
+		// Prevent send during IME composition (covers old Safari via ref flag,
+		// modern browsers via event.isComposing)
+		if (event.isComposing || composing.value) return;
 		event.preventDefault();
 		if (props.isSending) {
 			emit("stop");
@@ -57,13 +61,15 @@ const stop = () => {
 				<FieldLabel class="sr-only">{{ t("chat.input.label") }}</FieldLabel>
 				<FieldContent>
 					<div class="flex w-full items-center gap-3">
-						<Input
-							v-model="draft"
-							:placeholder="placeholder"
-							:disabled="disabled"
-							class="flex-1 h-12 text-lg placeholder:text-lg"
-							@keydown="handleKeydown"
-						/>
+					<Input
+						v-model="draft"
+						:placeholder="placeholder"
+						:disabled="disabled"
+						class="flex-1 h-12 text-lg placeholder:text-lg"
+						@keydown="handleKeydown"
+					@compositionstart="() => (composing = true)"
+					@compositionend="() => (composing = false)"
+					/>
 						<Button
 							v-if="!isSending"
 							variant="ghost"
