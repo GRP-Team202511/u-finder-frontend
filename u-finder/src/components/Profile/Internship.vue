@@ -330,11 +330,10 @@ onMounted(() => {
                   <Input 
                     :id="`role-${idx}`" 
                     v-model="intern.role" 
-                    :placeholder="t('internship.placeholders.role') || 'Software Engineer'" 
+                    :placeholder="t('internship.placeholders.role') || 'Position / Role'" 
                     :class="validationErrors.role[idx] && 'border-red-500'"
                     @input="clearError(idx, 'role')"
                   />
-                  <Input :id="`role-${idx}`" v-model="intern.role" :placeholder="t('internship.placeholders.role') || 'Position / Role'" />
                 </Field>
 
                 <div class="grid grid-cols-2 gap-4">
