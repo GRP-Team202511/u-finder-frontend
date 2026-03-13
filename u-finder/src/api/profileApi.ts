@@ -57,21 +57,34 @@ export const updateAllProfile = (data: AllProfile) => {
 // ─── CV Upload ────────────────────────────────────────────────────────────────
 
 /**
+ * Timeout for CV upload requests in milliseconds.
+ * AI parsing can take significantly longer than the global 8 s default,
+ * so we use a dedicated per-request timeout here instead of touching the
+ * global axios instance.
+ */
+const CV_UPLOAD_TIMEOUT_MS = 60_000
+
+/**
  * POST /profile/cv — Upload a CV file (PDF or DOCX) for AI parsing.
- * 
+ *
  * The server forwards the file to Dify AI service for information extraction
  * and returns the structured result.
- * 
- * @param file - The CV file to upload (PDF or DOCX, max 10MB)
+ *
+ * @param file   - The CV file to upload (PDF or DOCX, max 10 MB)
+ * @param signal - Optional AbortSignal so the caller can cancel the request
  * @returns Parsed CV data structured by profile sections
  */
-export const uploadCV = (file: File) => {
+export const uploadCV = (file: File, signal?: AbortSignal) => {
   const formData = new FormData()
   formData.append('file', file)
-  
+
   return http.post<CVParseResponse>('/profile/cv', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+    // Override the global 8 s timeout — AI parsing can legitimately take up to ~1 min
+    timeout: CV_UPLOAD_TIMEOUT_MS,
+    // Allow the caller (e.g. a cancel button) to abort the in-flight request
+    signal,
   })
 }
