@@ -54,6 +54,34 @@ export const updateAllProfile = (data: AllProfile) => {
   return http.put<{ message: string }>('/profile', data)
 }
 
+// ─── Avatar ───────────────────────────────────────────────────────────────────
+
+/** GET /profile/avatar — Fetch the avatar URL for the authenticated user.
+ *  Returns null for avatar_url when the user has not uploaded an avatar yet. */
+export const getAvatar = () => {
+  return http.get<{ avatar_url: string | null }>('/profile/avatar')
+}
+
+/**
+ * PUT /profile/avatar — Upload or replace the user's avatar image.
+ *
+ * Accepted formats: JPEG, PNG, WebP.  Maximum file size: 2 MB.
+ * The server automatically removes the previous avatar when a new one is uploaded.
+ *
+ * @param file - The cropped image file to upload
+ * @returns Updated avatar URL and a success message
+ */
+export const uploadAvatar = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return http.put<{ message: string; avatar_url: string }>('/profile/avatar', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+}
+
 // ─── CV Upload ────────────────────────────────────────────────────────────────
 
 /**
