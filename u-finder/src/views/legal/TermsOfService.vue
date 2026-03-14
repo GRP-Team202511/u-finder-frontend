@@ -9,7 +9,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="min-h-svh bg-muted/30 px-4 py-8 md:px-8 md:py-12">
+  <div class="min-h-svh bg-muted/30 px-8 py-8 md:py-12">
     <div class="mx-auto w-full max-w-4xl">
       <div class="mb-4 flex justify-end">
         <Button type="button" @click="router.push('/privacy-policy')">{{ t("legal.terms.switchToPrivacy") }}</Button>
