@@ -668,6 +668,19 @@
             "email": "Email",
             "plan": "Plan",
             "changeAvatar": "Change Avatar",
+            "avatarDialog": {
+                "title": "Change Avatar",
+                "description": "Select an image and crop it to a square before uploading.",
+                "selectImage": "Select Image",
+                "reselect": "Reselect",
+                "uploadAndSave": "Upload & Save",
+                "cancel": "Cancel",
+                "uploading": "Uploading...",
+                "uploadSuccess": "Avatar updated successfully",
+                "uploadError": "Failed to upload avatar",
+                "fileTooLarge": "File size must not exceed 2 MB",
+                "invalidFileType": "Only JPEG, PNG, and WebP images are accepted"
+            },
             "fetchUserInfoError": "Failed to fetch user information",
             "plans": {
                 "free": "Free Plan"

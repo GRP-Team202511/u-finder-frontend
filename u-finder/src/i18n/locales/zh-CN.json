@@ -495,6 +495,19 @@
             "email": "邮箱",
             "plan": "计划",
             "changeAvatar": "更换头像",
+            "avatarDialog": {
+                "title": "更换头像",
+                "description": "选择图片并裁剪为正方形后上传。",
+                "selectImage": "选择图片",
+                "reselect": "重新选择",
+                "uploadAndSave": "上传并保存",
+                "cancel": "取消",
+                "uploading": "上传中…",
+                "uploadSuccess": "头像更新成功",
+                "uploadError": "头像上传失败",
+                "fileTooLarge": "文件大小不能超过 2 MB",
+                "invalidFileType": "仅支持 JPEG、PNG 和 WebP 格式"
+            },
             "fetchUserInfoError": "获取用户信息失败",
             "plans": {
                 "free": "免费计划"
