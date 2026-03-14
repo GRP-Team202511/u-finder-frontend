@@ -33,8 +33,13 @@ U-Finder 前端是一個使用 Vue.js 3 和 TypeScript 建置的現代化、響�
 
 ## 功能特性
 
-- 🔐 **使用者認證** - 安全的登入和註冊功能
-- 👤 **使用者資料管理** - 管理個人資訊和教育背景
+- 🔐 **使用者認證** - 安全的登入和註冊功能，支援電子郵件 OTP 驗證
+- 🔒 **雙重驗證** - 基於 TOTP 的兩步驟驗證，強化帳戶安全性
+- 👤 **使用者資料管理** - 完整的個人資料，包含教育背景、標準化考試、獎項、實習經歷、專案、校園活動及學術成果
+- 📄 **CV 解析** - AI 驅動的履歷解析，自動填入個人資料
+- 💬 **AI 對話** - 基於大型語言模型的對話介面，提供個人化大學推薦
+- ❤️ **收藏管理** - 儲存、查看和管理收藏的大學
+- ⚙️ **帳戶設定** - 管理帳戶偏好、安全性設定及已連線裝置
 - 🌍 **多語言支援** - 支援英語、簡體中文和繁體中文
 - 🎨 **現代化 UI/UX** - 使用 Tailwind CSS 打造簡潔且響應式的設計
 - 📱 **行動端響應式** - 針對所有裝置尺寸進行最佳化
@@ -72,9 +77,14 @@ npm install -g pnpm
 1. 複製儲存庫（如果您還沒有複製主 U-Finder 專案）：
 
 ```bash
-git clone <repository-url>
+git clone --recursive https://github.com/GRP-Team202511/u-finder
 cd frontend
 ```
+
+> 若已克隆但未加 `--recursive`，可手動初始化子模組：
+> ```bash
+> git submodule update --init --recursive
+> ```
 
 2. 進入 u-finder 目錄並安裝相依套件：
 
@@ -124,18 +134,38 @@ frontend/
     ├── public/              # 靜態資源
     ├── src/
     │   ├── api/            # API 整合層
+    │   │   ├── chatApi.ts       # 對話與會話 API
+    │   │   ├── favouriteApi.ts  # 收藏功能 API
+    │   │   ├── http.ts          # HTTP 用戶端配置
+    │   │   ├── profileApi.ts    # 使用者資料 API
+    │   │   └── userApi.ts       # 使用者認證 API
     │   ├── assets/         # 圖片、字型等
     │   ├── components/     # 可複用的 Vue 元件
-    │   │   ├── auth/       # 認證元件
-    │   │   ├── Profile/    # 資料管理元件
-    │   │   ├── Sidebar/    # 導覽元件
-    │   │   └── ui/         # UI 元件庫
+    │   │   ├── Chat/           # 對話介面元件
+    │   │   ├── Favourite/      # 收藏清單元件
+    │   │   ├── Profile/        # 資料管理元件
+    │   │   │   ├── AcademicOutcome/    # 學術成果（論文、專利）
+    │   │   │   └── StandardizedTest/  # 標準化考試分數欄位（TOEFL、IELTS、GRE 等）
+    │   │   ├── Settings/       # 帳戶設定元件
+    │   │   ├── Sidebar/        # 導覽側邊欄元件
+    │   │   └── ui/             # 基礎 UI 元件庫（shadcn-vue）
     │   ├── i18n/           # 國際化
-    │   │   └── locales/    # 翻譯檔案
+    │   │   └── locales/    # 翻譯檔案（en、zh-CN、zh-TW）
     │   ├── lib/            # 工具函式
     │   ├── router/         # Vue Router 配置
     │   ├── stores/         # Pinia 狀態管理
+    │   │   ├── favouriteStore.ts  # 收藏狀態
+    │   │   └── userStore.ts      # 使用者認證狀態
+    │   ├── types/          # TypeScript 型別定義
     │   ├── views/          # 頁面元件
+    │   │   ├── auth/       # 登入、註冊、密碼重設
+    │   │   ├── chat/       # AI 對話頁面
+    │   │   ├── favourite/  # 已收藏大學頁面
+    │   │   ├── legal/      # 隱私權政策與服務條款
+    │   │   ├── profile/    # 使用者資料頁面
+    │   │   ├── settings/   # 帳戶設定頁面
+    │   │   ├── Cover.vue        # 首頁 / 封面頁
+    │   │   └── SidebarLayout.vue # 主應用程式版面
     │   ├── App.vue         # 根元件
     │   ├── main.ts         # 應用程式進入點
     │   └── style.css       # 全域樣式
