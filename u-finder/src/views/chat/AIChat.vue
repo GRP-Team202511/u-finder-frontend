@@ -448,7 +448,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<div class="flex h-full min-h-0 w-full flex-col gap-6 p-2">
+	<div class="flex h-dvh w-full flex-col gap-6 p-2">
 		<div
 			v-if="!messages.length"
 			class="flex flex-1 flex-col items-center justify-center gap-6 text-center"
@@ -490,7 +490,7 @@ onBeforeUnmount(() => {
 					@send="handleSend"
 					@stop="handleStop"
 				/>
-				<p class="mt-2 text-xs text-muted-foreground">
+				<p class="mt-2 text-center text-xs text-muted-foreground">
 					{{ t("chat.input.disclaimer") }}
 				</p>
 			</div>

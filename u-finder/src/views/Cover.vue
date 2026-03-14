@@ -17,7 +17,7 @@ function goLogin() {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col px-8">
     <header class="p-4 md:px-8 flex justify-end">
       <LanguageSelector />
     </header>
