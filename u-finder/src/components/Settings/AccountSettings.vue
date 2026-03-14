@@ -15,16 +15,18 @@ import TwoFactorDisableDialog from './TwoFactorDisableDialog.vue'
 import RegenerateBackupCodesDialog from './RegenerateBackupCodesDialog.vue'
 import ResetPasswordDialog from './ResetPasswordDialog.vue'
 import DeviceManagementDialog from './DeviceManagementDialog.vue'
+import AvatarCropDialog from './AvatarCropDialog.vue'
 import { get2FAStatus, getUserInfo } from '@/api/userApi'
+import { getAvatar } from '@/api/profileApi'
 
 const { t } = useI18n()
 const userStore = useUserStore()
 
-// User info - TODO: Add email and user type to User interface when available from API
+// User info
 const userName = ref('')
 const userEmail = ref('')
 const userType = ref<number>(0)
-const userAvatar = ref('') // Placeholder - will be fetched from API
+const userAvatar = ref<string | null>(null)
 const isLoadingUserInfo = ref(false)
 
 // 2FA state
@@ -38,10 +40,11 @@ const showDeviceManagementDialog = ref(false)
 const show2FASetupDialog = ref(false)
 const show2FADisableDialog = ref(false)
 const showRegenerateCodesDialog = ref(false)
+const showAvatarCropDialog = ref(false)
 
-// Fetch 2FA status on mount
+// Fetch all account data on mount
 onMounted(async () => {
-  await Promise.all([fetch2FAStatus(), fetchUserInfo()])
+  await Promise.all([fetch2FAStatus(), fetchUserInfo(), fetchAvatar()])
 })
 
 async function fetchUserInfo() {
@@ -57,6 +60,23 @@ async function fetchUserInfo() {
   } finally {
     isLoadingUserInfo.value = false
   }
+}
+
+/** Fetch the current avatar URL and sync it into the store */
+async function fetchAvatar() {
+  try {
+    const response = await getAvatar()
+    userAvatar.value = response.data.avatar_url
+    userStore.setAvatarUrl(response.data.avatar_url)
+  } catch (error) {
+    console.error('Failed to fetch avatar:', error)
+  }
+}
+
+/** Called after AvatarCropDialog reports a successful upload */
+function handleAvatarSuccess(newAvatarUrl: string) {
+  userAvatar.value = newAvatarUrl
+  userStore.setAvatarUrl(newAvatarUrl)
 }
 
 const userPlanDisplay = computed(() => {
@@ -157,11 +177,18 @@ function handle2FASuccess() {
 
           <!-- Avatar Section -->
           <div class="flex flex-col items-center justify-center md:justify-start gap-4 md:border-l md:pl-6">
-            <div class="w-24 h-24 rounded-full bg-muted border-2 border-dashed border-muted-foreground/30 flex items-center justify-center">
+            <div class="w-24 h-24 rounded-full bg-muted border-2 border-dashed border-muted-foreground/30 flex items-center justify-center overflow-hidden">
               <UserIcon v-if="!userAvatar" class="size-12 text-muted-foreground" />
-              <img v-else :src="userAvatar" alt="User avatar" class="w-full h-full rounded-full object-cover" />
+              <img v-else :src="userAvatar" alt="User avatar" class="w-full h-full object-cover" />
             </div>
-            <Button variant="outline" size="sm" class="text-xs">{{ t('settings.account.changeAvatar') }}</Button>
+            <Button
+              variant="outline"
+              size="sm"
+              class="text-xs"
+              @click="showAvatarCropDialog = true"
+            >
+              {{ t('settings.account.changeAvatar') }}
+            </Button>
           </div>
         </div>
       </CardContent>
@@ -251,6 +278,10 @@ function handle2FASuccess() {
     </Card>
 
     <!-- Dialogs -->
+    <AvatarCropDialog
+      v-model:open="showAvatarCropDialog"
+      @success="handleAvatarSuccess"
+    />
     <DeviceManagementDialog
       v-model:open="showDeviceManagementDialog"
     />
