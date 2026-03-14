@@ -33,8 +33,13 @@ U-Finder Frontend is a modern, responsive web application built with Vue.js 3 an
 
 ## Features
 
-- 🔐 **User Authentication** - Secure login and signup functionality
-- 👤 **User Profile Management** - Manage personal information and educational background
+- 🔐 **User Authentication** - Secure login and signup functionality with email OTP verification
+- 🔒 **Two-Factor Authentication** - Enhanced account security with TOTP-based 2FA
+- 👤 **User Profile Management** - Comprehensive profile with education background, standardized tests, awards, internships, projects, campus experiences, and academic outcomes
+- 📄 **CV Parser** - AI-powered CV parsing to automatically populate your profile
+- 💬 **AI Chat** - LLM-powered conversational interface for personalized university recommendations
+- ❤️ **Favourites Management** - Save, view, and manage favourite universities
+- ⚙️ **Account Settings** - Manage account preferences, security settings, and connected devices
 - 🌍 **Multi-language Support** - Available in English, Simplified Chinese, and Traditional Chinese
 - 🎨 **Modern UI/UX** - Clean and responsive design with Tailwind CSS
 - 📱 **Mobile Responsive** - Optimized for all device sizes
@@ -72,9 +77,14 @@ npm install -g pnpm
 1. Clone the repository (if you haven't already cloned the main U-Finder project):
 
 ```bash
-git clone <repository-url>
+git clone --recursive https://github.com/GRP-Team202511/u-finder
 cd frontend
 ```
+
+> If you have already cloned without `--recursive`, initialize the submodules manually:
+> ```bash
+> git submodule update --init --recursive
+> ```
 
 2. Navigate to the u-finder directory and install dependencies:
 
@@ -124,18 +134,38 @@ frontend/
     ├── public/              # Static assets
     ├── src/
     │   ├── api/            # API integration layer
+    │   │   ├── chatApi.ts       # Chat & conversation API
+    │   │   ├── favouriteApi.ts  # Favourites API
+    │   │   ├── http.ts          # HTTP client configuration
+    │   │   ├── profileApi.ts    # User profile API
+    │   │   └── userApi.ts       # User authentication API
     │   ├── assets/         # Images, fonts, etc.
     │   ├── components/     # Reusable Vue components
-    │   │   ├── auth/       # Authentication components
-    │   │   ├── Profile/    # Profile management components
-    │   │   ├── Sidebar/    # Navigation components
-    │   │   └── ui/         # UI component library
+    │   │   ├── Chat/           # Chat interface components
+    │   │   ├── Favourite/      # Favourites list components
+    │   │   ├── Profile/        # Profile management components
+    │   │   │   ├── AcademicOutcome/    # Research papers & patents
+    │   │   │   └── StandardizedTest/  # Test score fields (TOEFL, IELTS, GRE, etc.)
+    │   │   ├── Settings/       # Account settings components
+    │   │   ├── Sidebar/        # Navigation sidebar components
+    │   │   └── ui/             # Base UI component library (shadcn-vue)
     │   ├── i18n/           # Internationalization
-    │   │   └── locales/    # Translation files
+    │   │   └── locales/    # Translation files (en, zh-CN, zh-TW)
     │   ├── lib/            # Utility functions
     │   ├── router/         # Vue Router configuration
     │   ├── stores/         # Pinia state management
+    │   │   ├── favouriteStore.ts  # Favourites state
+    │   │   └── userStore.ts      # User authentication state
+    │   ├── types/          # TypeScript type definitions
     │   ├── views/          # Page components
+    │   │   ├── auth/       # Login, Signup, Password Reset
+    │   │   ├── chat/       # AI chat page
+    │   │   ├── favourite/  # Saved universities page
+    │   │   ├── legal/      # Privacy Policy & Terms of Service
+    │   │   ├── profile/    # User profile page
+    │   │   ├── settings/   # Account settings page
+    │   │   ├── Cover.vue        # Landing / cover page
+    │   │   └── SidebarLayout.vue # Main application layout
     │   ├── App.vue         # Root component
     │   ├── main.ts         # Application entry point
     │   └── style.css       # Global styles
