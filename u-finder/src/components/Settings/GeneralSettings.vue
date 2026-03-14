@@ -14,8 +14,7 @@ const router = useRouter()
 // Theme mode: 'system' | 'light' | 'dark'
 const themeMode = ref<'system' | 'light' | 'dark'>('light')
 
-// Version info from environment variable
-const version = import.meta.env.VITE_APP_VERSION || '0.0.0'
+import { version } from '../../../package.json'
 
 // Apply theme based on mode
 function applyTheme(mode: 'system' | 'light' | 'dark') {

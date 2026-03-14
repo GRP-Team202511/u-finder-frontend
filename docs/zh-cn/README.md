@@ -182,7 +182,7 @@ frontend/
 在 `u-finder` 目录中创建 `.env` 文件进行环境特定配置：
 
 ```env
-VITE_API_BASE_URL=http://localhost:8000
+VITE_BASE_URL=http://localhost:8000
 ```
 
 ### 国际化
