@@ -497,7 +497,11 @@
             "changeAvatar": "更換頭像",
             "avatarDialog": {
                 "title": "更換頭像",
-                "description": "選擇圖片並裁剪為正方形後上傳。",
+                "descriptionSelect": "拖曳圖片至此處，或點擊選擇檔案。",
+                "descriptionCrop": "拖動裁剪框選擇要使用的區域。",
+                "dropPrompt": "拖曳圖片至此處，或點擊選擇",
+                "supportedFormats": "支援格式：JPEG、PNG、WebP",
+                "maxSize": "最大檔案大小：2 MB",
                 "selectImage": "選擇圖片",
                 "reselect": "重新選擇",
                 "uploadAndSave": "上傳並儲存",
