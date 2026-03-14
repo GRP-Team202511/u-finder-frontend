@@ -182,7 +182,7 @@ frontend/
 Create a `.env` file in the `u-finder` directory for environment-specific configuration:
 
 ```env
-VITE_API_BASE_URL=http://localhost:8000
+VITE_BASE_URL=http://localhost:8000
 ```
 
 ### Internationalization
