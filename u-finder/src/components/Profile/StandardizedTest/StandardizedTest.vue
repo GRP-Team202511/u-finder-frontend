@@ -188,6 +188,28 @@ function removeEntry(index: number) {
 
 function save(e?: Event) {
 	if (e && e.preventDefault) e.preventDefault()
+
+	const isBlankValue = (value: unknown) => typeof value !== 'string' || !value.trim()
+	const hasNonEmptyScores = (scores?: Record<string, string>) =>
+		!!scores && Object.values(scores).some(v => !isBlankValue(v))
+	const hasNonEmptySubjects = (subjects?: Array<{ subject: string; grade?: string; score?: string }>) =>
+		!!subjects && subjects.some(s => !isBlankValue(s.subject) || !isBlankValue(s.grade) || !isBlankValue(s.score))
+
+	// Remove untouched blank entries so users don't need to manually click Remove.
+	standardizedTests.value = standardizedTests.value.filter((test) => {
+		if (!test) return false
+		if (test.type) return true
+		const hasAnyField =
+			!isBlankValue(test.test_date) ||
+			!isBlankValue(test.registration_number) ||
+			!isBlankValue(test.CEFR_level) ||
+			!isBlankValue(test.exam_session) ||
+			!isBlankValue(test.exam_year) ||
+			!isBlankValue(test.overall_predicted) ||
+			hasNonEmptyScores(test.scores) ||
+			hasNonEmptySubjects(test.subjects)
+		return hasAnyField
+	})
 	
 	// Clear all validation errors first
 	validationErrors.type = standardizedTests.value.map(() => false)
