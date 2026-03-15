@@ -258,7 +258,15 @@
         "validation": {
             "typeRequired": "教育类型为必填项",
             "nameRequired": "学校名称为必填项",
-            "startRequired": "开始日期为必填项"
+            "startRequired": "开始日期为必填项",
+            "rankingFormat": "教育经历 #{index}：排名格式必须为 X/Y，例如 5/200",
+            "rankingRange": "教育经历 #{index}：排名必须为正整数，且 X <= Y",
+            "gpaBaseInvalid": "教育经历 #{index}：GPA 满分必须为正数",
+            "gpaBaseMin": "教育经历 #{index}：GPA 满分必须大于 0",
+            "gpaBaseMax": "教育经历 #{index}：GPA 满分不能大于 100",
+            "gpaInvalid": "教育经历 #{index}：GPA 必须为正数",
+            "gpaNegative": "教育经历 #{index}：GPA 不能为负数",
+            "gpaExceedsBase": "教育经历 #{index}：GPA 不能大于 GPA 满分"
         }
     },
     "academic": {
@@ -266,8 +274,8 @@
         "selectType": "选择类型",
         "selectTypeHint": "选择类型以输入详细信息。",
         "empty": "暂无学术成果",
-        "add": "添加学术成果",        "paper": "论文",
-        "patent": "专利",        "type": {
+        "add": "添加学术成果",
+        "type": {
             "title": "类型",
             "researchPaper": "研究论文",
             "patent": "专利"

@@ -293,7 +293,10 @@ function save(e?: Event) {
       if (!rankingPattern.test(rankingValue)) {
         validationErrors.ranking[i] = true
         hasError = true
-        setFirstError(`Education #${i + 1}: Ranking must use format X/Y, e.g. 5/200`)
+        setFirstError(
+          t('edu.validation.rankingFormat', { index: i + 1 }) ||
+          `Education #${i + 1}: Ranking must use format X/Y, e.g. 5/200`
+        )
       } else {
         const parts = rankingValue.split('/')
         const left = Number(parts[0]?.trim() ?? '')
@@ -301,7 +304,10 @@ function save(e?: Event) {
         if (!Number.isInteger(left) || !Number.isInteger(right) || left <= 0 || right <= 0 || left > right) {
           validationErrors.ranking[i] = true
           hasError = true
-          setFirstError(`Education #${i + 1}: Ranking must be positive integers with X <= Y`)
+          setFirstError(
+            t('edu.validation.rankingRange', { index: i + 1 }) ||
+            `Education #${i + 1}: Ranking must be positive integers with X <= Y`
+          )
         }
       }
     }
@@ -312,32 +318,50 @@ function save(e?: Event) {
     if (typeof gpaBase === 'number' && Number.isNaN(gpaBase)) {
       validationErrors.gpaBase[i] = true
       hasError = true
-      setFirstError(`Education #${i + 1}: GPA base must be a positive number`)
+      setFirstError(
+        t('edu.validation.gpaBaseInvalid', { index: i + 1 }) ||
+        `Education #${i + 1}: GPA base must be a positive number`
+      )
     } else if (typeof gpaBase === 'number' && gpaBase <= 0) {
       validationErrors.gpaBase[i] = true
       hasError = true
-      setFirstError(`Education #${i + 1}: GPA base must be greater than 0`)
+      setFirstError(
+        t('edu.validation.gpaBaseMin', { index: i + 1 }) ||
+        `Education #${i + 1}: GPA base must be greater than 0`
+      )
     } else if (typeof gpaBase === 'number' && gpaBase > 100) {
       validationErrors.gpaBase[i] = true
       hasError = true
-      setFirstError(`Education #${i + 1}: GPA base must be 100 or below`)
+      setFirstError(
+        t('edu.validation.gpaBaseMax', { index: i + 1 }) ||
+        `Education #${i + 1}: GPA base must be 100 or below`
+      )
     }
 
     if (typeof gpa === 'number' && Number.isNaN(gpa)) {
       validationErrors.gpa[i] = true
       hasError = true
-      setFirstError(`Education #${i + 1}: GPA must be a positive number`)
+      setFirstError(
+        t('edu.validation.gpaInvalid', { index: i + 1 }) ||
+        `Education #${i + 1}: GPA must be a positive number`
+      )
     } else if (typeof gpa === 'number' && gpa < 0) {
       validationErrors.gpa[i] = true
       hasError = true
-      setFirstError(`Education #${i + 1}: GPA cannot be negative`)
+      setFirstError(
+        t('edu.validation.gpaNegative', { index: i + 1 }) ||
+        `Education #${i + 1}: GPA cannot be negative`
+      )
     }
 
     if (typeof gpa === 'number' && typeof gpaBase === 'number' && !Number.isNaN(gpa) && !Number.isNaN(gpaBase) && gpa > gpaBase) {
       validationErrors.gpa[i] = true
       validationErrors.gpaBase[i] = true
       hasError = true
-      setFirstError(`Education #${i + 1}: GPA cannot be greater than GPA base`)
+      setFirstError(
+        t('edu.validation.gpaExceedsBase', { index: i + 1 }) ||
+        `Education #${i + 1}: GPA cannot be greater than GPA base`
+      )
     }
   }
   
