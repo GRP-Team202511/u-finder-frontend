@@ -37,6 +37,7 @@ const qrCodeBase64 = ref('')
 const totpUri = ref('')
 const verificationCode = ref('')
 const isVerifying = ref(false)
+const verificationCodeValid = computed(() => /^\d{6}$/.test(verificationCode.value))
 
 // Step 2 data
 const backupCodes = ref<string[]>([])
@@ -52,6 +53,12 @@ watch(() => props.open, (newValue) => {
 
 // Auto-submit when 6-digit code is entered on step 1
 watch(verificationCode, (newValue) => {
+  const digitsOnly = newValue.replace(/\D/g, '').slice(0, 6)
+  if (digitsOnly !== newValue) {
+    verificationCode.value = digitsOnly
+    return
+  }
+
   if (currentStep.value === 1 && newValue.length === 6 && !isVerifying.value) {
     nextStep()
   }
@@ -92,7 +99,7 @@ async function initiate2FASetup() {
 async function nextStep() {
   // If on step 1, verify the code first
   if (currentStep.value === 1) {
-    if (verificationCode.value.length !== 6) {
+    if (!verificationCodeValid.value) {
       toast.error(t('settings.account.twoFactor.setup.invalidCode'))
       return
     }
@@ -293,7 +300,7 @@ const totpSecret = computed(() => {
           <Button
             v-if="currentStep === 1"
             @click="nextStep"
-            :disabled="isLoading || isVerifying || verificationCode.length !== 6"
+            :disabled="isLoading || isVerifying || !verificationCodeValid"
           >
             <Spinner v-if="isVerifying" class="animate-spin mr-2" />
             {{ t('settings.account.twoFactor.setup.next') }}

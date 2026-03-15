@@ -41,6 +41,7 @@ const isLoadingEmail = ref(false)
 const isSendingCode = ref(false)
 const countdown = ref(0)
 let countdownTimer: number | null = null
+const otpCodeValid = computed(() => /^\d{6}$/.test(otpCode.value))
 
 // Watch dialog open state to reset and fetch user info
 watch(() => props.open, (newValue) => {
@@ -57,6 +58,12 @@ watch(() => props.open, (newValue) => {
 
 // Auto-submit when 6-digit code is entered on step 2
 watch(otpCode, (newValue) => {
+  const digitsOnly = newValue.replace(/\D/g, '').slice(0, 6)
+  if (digitsOnly !== newValue) {
+    otpCode.value = digitsOnly
+    return
+  }
+
   if (currentStep.value === 2 && newValue.length === 6 && !isLoading.value) {
     // Optionally auto-submit or just wait for user to click button
   }
@@ -179,6 +186,11 @@ const handleResetPassword = async () => {
 
   if (!otpCode.value || !newPassword.value) {
     toast.error(t('login.reset.errors.fieldsRequired'))
+    return
+  }
+
+  if (!otpCodeValid.value) {
+    toast.error(t('login.reset.errors.wrongCode'))
     return
   }
 
@@ -391,7 +403,7 @@ const resendButtonText = computed(() => {
           v-else-if="currentStep === 2"
           type="button"
           @click="handleResetPassword"
-          :disabled="isLoading || !otpCode || !newPassword || !confirmPassword"
+          :disabled="isLoading || !otpCodeValid || !newPassword || !confirmPassword"
         >
           <Spinner v-if="isLoading" class="mr-2" />
           {{ t('login.reset.send') }}
