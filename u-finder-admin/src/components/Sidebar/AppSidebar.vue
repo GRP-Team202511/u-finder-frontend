@@ -24,7 +24,7 @@ const user = computed(() => ({
 
 const navMain = [
   {
-    title: 'Dashboard',
+    titleKey: "sidebar.dashboard",
     to: { name: 'Dashboard' },
     icon: LayoutDashboard,
   },
