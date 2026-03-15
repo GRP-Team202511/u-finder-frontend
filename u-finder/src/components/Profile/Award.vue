@@ -105,6 +105,14 @@ function removeEntry(index: number) {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
+
+  const isBlankValue = (value: unknown) => typeof value !== 'string' || !value.trim()
+
+  // Remove untouched blank entries so users don't need to manually click Remove.
+  awards.value = awards.value.filter((award) => {
+    if (!award) return false
+    return !isBlankValue(award.name) || !isBlankValue(award.description)
+  })
   
   // Clear all validation errors first
   validationErrors.name = awards.value.map(() => false)

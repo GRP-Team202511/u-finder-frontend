@@ -105,6 +105,14 @@ function removeEntry(index: number) {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
+
+  const isBlankValue = (value: unknown) => typeof value !== 'string' || !value.trim()
+
+  // Remove untouched blank entries so users don't need to manually click Remove.
+  campusExperience.value = campusExperience.value.filter((exp) => {
+    if (!exp) return false
+    return !isBlankValue(exp.name) || !isBlankValue(exp.description)
+  })
   
   // Clear all validation errors first
   validationErrors.name = campusExperience.value.map(() => false)

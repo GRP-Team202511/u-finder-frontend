@@ -143,6 +143,22 @@ function removeEntry(index: number) {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
+
+  const isBlankValue = (value: unknown) => typeof value !== 'string' || !value.trim()
+
+  // Remove untouched blank entries so users don't need to manually click Remove.
+  academicOutcomes.value = academicOutcomes.value.filter((outcome) => {
+    if (!outcome) return false
+    if (outcome.type) return true
+    const hasAnyField =
+      !isBlankValue(outcome.title) ||
+      !isBlankValue(outcome.doi) ||
+      !isBlankValue(outcome.abstract) ||
+      !isBlankValue(outcome.patentNumber) ||
+      !isBlankValue(outcome.region) ||
+      !isBlankValue(outcome.description)
+    return hasAnyField
+  })
   
   // Clear all validation errors first
   validationErrors.type = academicOutcomes.value.map(() => false)

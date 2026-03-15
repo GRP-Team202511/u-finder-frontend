@@ -222,6 +222,36 @@ function typeLabel(type: string) {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
+
+  const isBlankValue = (value: unknown) => typeof value !== 'string' || !value.trim()
+
+  // Remove untouched blank entries so users don't need to manually click Remove.
+  const keptEducation: EducationEntry[] = []
+  const keptStartDates: any[] = []
+  const keptEndDates: any[] = []
+  for (let i = 0; i < education.value.length; i++) {
+    const edu = education.value[i]
+    if (!edu) continue
+    const hasAnyField =
+      !isBlankValue(edu.type) ||
+      !isBlankValue(edu.name) ||
+      !isBlankValue(edu.major) ||
+      !isBlankValue(edu.ranking) ||
+      !isBlankValue(edu.GPA) ||
+      !isBlankValue(edu.GPA_base) ||
+      !isBlankValue(edu.time?.start) ||
+      !isBlankValue(edu.time?.end) ||
+      !!startDates[i] ||
+      !!endDates[i]
+    if (hasAnyField) {
+      keptEducation.push(edu)
+      keptStartDates.push(startDates[i])
+      keptEndDates.push(endDates[i])
+    }
+  }
+  education.value = keptEducation
+  startDates.splice(0, startDates.length, ...keptStartDates)
+  endDates.splice(0, endDates.length, ...keptEndDates)
   
   // Clear all validation errors first
   validationErrors.type = education.value.map(() => false)
