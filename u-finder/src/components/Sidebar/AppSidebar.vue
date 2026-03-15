@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
@@ -39,6 +39,7 @@ import { Input } from "@/components/ui/input"
 
 import { useUserStore } from "@/stores/userStore"
 import { getConversations, deleteConversation, renameConversation } from '@/api/chatApi'
+import { getAvatar, buildAvatarUrl } from '@/api/profileApi'
 
 const props = defineProps<SidebarProps>()
 
@@ -61,23 +62,36 @@ const showRenameDialog = ref(false)
 const renameConversationId = ref<string>()
 const newConversationName = ref('')
 
-const data = {
-  user: {
-    name: userStore.user?.name,
-    avatar: "/avatars/shadcn.jpg",
+const navMain = [
+  {
+    titleKey: "sidebar.favourite",
+    to: { name: 'Favourite' },
+    icon: Star,
   },
-  navMain: [
-    {
-      titleKey: "sidebar.favourite",
-      to: { name: 'Favourite' },
-      icon: Star,
-    },
-    {
-      titleKey: "sidebar.profile",
-      to: { name: 'UserProfile' },
-      icon: User,
-    },
-  ],
+  {
+    titleKey: "sidebar.profile",
+    to: { name: 'UserProfile' },
+    icon: User,
+  },
+]
+
+const navUser = computed(() => ({
+  name: userStore.user?.name,
+  // Use the store avatar URL so the sidebar stays in sync with Settings.
+  // Empty string will fall back to AvatarFallback UI.
+  avatar: userStore.avatarUrl ?? '',
+}))
+
+async function fetchAvatar() {
+  try {
+    const response = await getAvatar('64x64')
+    userStore.setAvatarUrl(buildAvatarUrl(response.data.url))
+  } catch (error: any) {
+    // 404 means user has no avatar, which is expected
+    if (error?.response?.status !== 404) {
+      console.error('Failed to fetch avatar:', error)
+    }
+  }
 }
 
 // Load conversations
@@ -197,6 +211,8 @@ const addNewConversation = (conversationId: string) => {
 
 onMounted(() => {
   loadConversations()
+  // Ensure avatar is synced when the authenticated shell mounts.
+  fetchAvatar()
 })
 
 // Expose for parent component
@@ -226,7 +242,7 @@ defineExpose({
     <SidebarContent class="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <div class="pt-4">
         <!-- Other Navigation Items -->
-        <NavMain :items="data.navMain" />
+        <NavMain :items="navMain" />
 
         <SidebarSeparator class="my-4 group-data-[collapsible=icon]:hidden" />
 
@@ -245,7 +261,7 @@ defineExpose({
     </SidebarContent>
     
     <SidebarFooter>
-      <NavUser :user="data.user" />
+      <NavUser :user="navUser" />
     </SidebarFooter>
     
     <SidebarRail />

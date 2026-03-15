@@ -25,15 +25,15 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   'update:open': [value: boolean]
-  /** Emitted after a successful upload; carries the new avatar URL */
-  'success': [avatarUrl: string]
+  /** Emitted after a successful upload; carries the avatar URLs map */
+  'success': [avatarUrls: { original: string; webp_original: string; webp_256: string; webp_64: string }]
 }>()
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const { t } = useI18n()
 
-const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif']
 const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024 // 2 MB
 
 // ─── State ────────────────────────────────────────────────────────────────────
@@ -198,7 +198,7 @@ async function handleUpload() {
     const response = await uploadAvatar(croppedFile)
 
     toast.success(t('settings.account.avatarDialog.uploadSuccess'))
-    emit('success', response.data.avatar_url)
+    emit('success', response.data.avatar_urls)
     emit('update:open', false)
   } catch (error: any) {
     const status = error?.response?.status
@@ -237,7 +237,7 @@ function handleCancel() {
       <input
         ref="fileInputRef"
         type="file"
-        accept="image/jpeg,image/png,image/webp"
+        accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
         class="hidden"
         @change="onFileInputChange"
       />
