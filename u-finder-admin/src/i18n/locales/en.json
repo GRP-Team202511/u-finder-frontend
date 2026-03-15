@@ -1,10 +1,212 @@
 {
-  "welcome": "Welcome",
-  "login": "Login",
-  "logout": "Logout",
-  "dashboard": "Dashboard",
-  "settings": "Settings",
-  "profile": "Profile",
-  "users": "Users",
-  "adminPanel": "Admin Panel"
+  "common": {
+    "errors": {
+      "sessionExpired": "Session expired. Please log in again."
+    }
+  },
+  "login": {
+    "title": "Log In",
+    "welcome": "Welcome back! Please enter your email.",
+    "email": "Email",
+    "password": "Password",
+    "forgot": "Forgot your password?",
+    "submit": "Log In",
+    "twoFactorRequired": "Two-factor verification required",
+    "unauth": "The password is incorrect",
+    "not_found": "The account doesn't exist",
+    "unprocessable": "Invalid login input.",
+    "reset": {
+      "title": "Reset Password",
+      "description": "Reset password with your email",
+      "sendCode": "Send Code",
+      "send": "Reset Password",
+      "otp": "Verification Code",
+      "newPassword": "New Password",
+      "resendCode": "Resend",
+      "errors": {
+        "emailRequired": "Email is required",
+        "emailNotFound": "No account found with this email",
+        "invalidEmail": "Invalid email format",
+        "sendFailed": "Failed to send verification code",
+        "tokenMissing": "Please request a verification code first",
+        "tokenExpired": "Verification token expired. Please request a new code.",
+        "rateLimited": "Too many requests. Please wait {seconds} seconds.",
+        "resendFailed": "Failed to resend verification code",
+        "sendCodeFirst": "Please send verification code first",
+        "fieldsRequired": "All fields are required",
+        "wrongCode": "Incorrect verification code",
+        "unauthorized": "Unauthorized request",
+        "invalidInput": "Invalid input provided",
+        "resetFailed": "Failed to reset password. Please try again."
+      },
+      "success": {
+        "codeSent": "Verification code sent to your email",
+        "codeResent": "Verification code resent successfully",
+        "passwordReset": "Password reset successfully! Redirecting to login..."
+      }
+    }
+  },
+  "twofa": {
+    "title": "Two-factor Authentication",
+    "description": "Enter your verification code to continue.",
+    "totpLabel": "Authenticator code",
+    "recoveryLabel": "Recovery code",
+    "totpHint": "Enter the 6-digit code from your authentication app.",
+    "recoveryHint": "Enter your 8-character recovery code.",
+    "verify": "Verify",
+    "switchToRecovery": "Use recovery code",
+    "switchToTotp": "Use authenticator code",
+    "invalid": "Invalid verification code",
+    "failed": "Verification failed",
+    "success": "Verification successful"
+  },
+  "sidebar": {
+    "settings": "Settings",
+    "language": "Language",
+    "logout": "Log out",
+    "logoutUnauthorized": "Your session has expired. You have been logged out.",
+    "logoutServerError": "Server error while logging out. Local session was cleared.",
+    "logoutFailed": "Logout failed. Please try again.",
+    "dashboard": "Dashboard"
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "account": "Account",
+      "general": "General"
+    },
+    "account": {
+      "accountInformation": "Account Information",
+      "username": "Username",
+      "email": "Email",
+      "plan": "Plan",
+      "changeAvatar": "Change Avatar",
+      "fetchUserInfoError": "Failed to fetch user information",
+      "plans": {
+        "free": "Free Plan"
+      },
+      "security": "Security",
+      "resetPassword": "Reset Password",
+      "resetPasswordDesc": "Reset your password via email verification",
+      "resetPasswordDialog": {
+        "title": "Reset Password",
+        "step1Desc": "Confirm your email address to receive a verification code",
+        "step2Desc": "Enter the verification code sent to your email and set your new password",
+        "emailConfirmHint": "A verification code will be sent to this email address",
+        "confirmPassword": "Confirm New Password",
+        "passwordMismatch": "Passwords do not match",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "success": "Password reset successfully",
+        "warning": "You will be logged out after resetting your password and need to log in again with your new password"
+      },
+      "twoFactor": {
+        "title": "Two-Factor Authentication",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "backupCodes": "Backup codes remaining",
+        "enable": "Enable",
+        "disableButton": "Disable",
+        "regenerateButton": "Regenerate Backup Codes",
+        "fetchError": "Failed to fetch 2FA status",
+        "setup": {
+          "step1Title": "Scan QR Code",
+          "step2Title": "Save Backup Codes",
+          "manualEntry": "Or enter this code manually in your app:",
+          "backupCodesWarning": "Important: Save these backup codes securely!",
+          "backupCodesWarning2": "If you lose access to your authenticator device, these codes are the only way to recover your account.",
+          "enterCode": "Enter verification code",
+          "codeFromApp": "Enter the 6-digit code from your authenticator app",
+          "copyAll": "Copy All",
+          "copied": "Copied!",
+          "copiedCodes": "Backup codes copied to clipboard",
+          "back": "Back",
+          "next": "Next",
+          "cancel": "Cancel",
+          "done": "Done",
+          "success": "2FA enabled successfully!",
+          "error": "Failed to setup 2FA",
+          "alreadyEnabled": "2FA is already enabled",
+          "setupExpired": "2FA setup expired, please try again",
+          "invalidCode": "Please enter a 6-digit code",
+          "wrongCode": "Invalid verification code",
+          "verifyError": "Failed to verify code. Please try again."
+        },
+        "disable": {
+          "title": "Disable Two-Factor Authentication",
+          "warning": "Warning: Security Risk",
+          "warningDesc": "Disabling two-factor authentication will make your account less secure.",
+          "enterPassword": "Enter your password to confirm",
+          "passwordPlaceholder": "Your password",
+          "passwordRequired": "Password is required",
+          "cancel": "Cancel",
+          "confirm": "Disable",
+          "success": "2FA disabled successfully",
+          "wrongPassword": "Incorrect password",
+          "notEnabled": "2FA is not enabled",
+          "error": "Failed to disable 2FA"
+        },
+        "regenerate": {
+          "verifyTitle": "Verify Identity",
+          "newCodesTitle": "New Backup Codes",
+          "enterCode": "Enter TOTP code",
+          "codeFromApp": "Enter the 6-digit code from your authenticator app",
+          "warning": "All previous backup codes are now invalid",
+          "warningDesc": "Make sure to save these new backup codes. Your old codes will no longer work.",
+          "copyAll": "Copy All",
+          "copied": "Copied!",
+          "copiedCodes": "Backup codes copied to clipboard",
+          "cancel": "Cancel",
+          "verify": "Verify",
+          "done": "Done",
+          "invalidCode": "Please enter a 6-digit code",
+          "wrongCode": "Invalid TOTP code",
+          "notEnabled": "2FA is not enabled",
+          "error": "Failed to regenerate backup codes"
+        }
+      },
+      "devices": {
+        "title": "Login Devices",
+        "description": "Manage all devices currently logged into your account",
+        "currentDevice": "Current Device",
+        "logoutButton": "Log Out",
+        "logoutAllButton": "Log Out All Devices",
+        "loginTime": "Logged in at",
+        "fetchError": "Failed to fetch device list",
+        "logoutSuccess": "Device logged out successfully",
+        "logoutError": "Failed to log out device",
+        "logoutAllSuccess": "All devices have been logged out",
+        "logoutAllError": "Failed to log out all devices",
+        "deviceTypes": {
+          "PC": "PC",
+          "Mobile": "Mobile",
+          "Tablet": "Tablet",
+          "Bot": "Bot",
+          "Unknown": "Unknown"
+        }
+      }
+    },
+    "general": {
+      "appearance": "Appearance",
+      "theme": "Theme",
+      "themeDesc": "Choose your preferred theme",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "about": {
+      "title": "About U-Finder",
+      "description": "An intelligent university finder tool powered by AI. This project is open-sourced under the Apache 2.0 License as a group project for COMP2043 GRP at University of Nottingham Ningbo China.",
+      "version": "Version",
+      "license": "License",
+      "course": "Course",
+      "team": "Team",
+      "university": "University",
+      "github": "GitHub Repository",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard"
+  }
 }

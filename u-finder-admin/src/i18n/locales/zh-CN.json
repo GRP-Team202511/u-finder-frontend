@@ -1,10 +1,212 @@
 {
-  "welcome": "欢迎",
-  "login": "登录",
-  "logout": "登出",
-  "dashboard": "仪表盘",
-  "settings": "设置",
-  "profile": "个人资料",
-  "users": "用户",
-  "adminPanel": "管理面板"
+  "common": {
+    "errors": {
+      "sessionExpired": "会话已过期，请重新登录。"
+    }
+  },
+  "login": {
+    "title": "登录",
+    "welcome": "欢迎回来！请输入你的电子邮箱。",
+    "email": "电子邮箱",
+    "password": "密码",
+    "forgot": "忘记密码？",
+    "submit": "登录",
+    "twoFactorRequired": "需要进行两步验证",
+    "unauth": "密码不正确",
+    "not_found": "该账户不存在",
+    "unprocessable": "登录输入无效。",
+    "reset": {
+      "title": "重置密码",
+      "description": "使用您的电子邮箱重置密码",
+      "sendCode": "发送验证码",
+      "send": "重置密码",
+      "otp": "验证码",
+      "newPassword": "新密码",
+      "resendCode": "重发",
+      "errors": {
+        "emailRequired": "请输入电子邮箱",
+        "emailNotFound": "未找到该邮箱对应的账户",
+        "invalidEmail": "邮箱格式不正确",
+        "sendFailed": "发送验证码失败",
+        "tokenMissing": "请先请求验证码",
+        "tokenExpired": "验证令牌已过期，请重新请求验证码。",
+        "rateLimited": "请求过于频繁，请等待 {seconds} 秒。",
+        "resendFailed": "重新发送验证码失败",
+        "sendCodeFirst": "请先发送验证码",
+        "fieldsRequired": "所有字段都是必填的",
+        "wrongCode": "验证码不正确",
+        "unauthorized": "未授权的请求",
+        "invalidInput": "输入的数据无效",
+        "resetFailed": "重置密码失败，请重试。"
+      },
+      "success": {
+        "codeSent": "验证码已发送至您的邮箱",
+        "codeResent": "验证码已重新发送",
+        "passwordReset": "密码重置成功！正在跳转到登录页面..."
+      }
+    }
+  },
+  "twofa": {
+    "title": "两步验证",
+    "description": "请输入验证码以继续。",
+    "totpLabel": "身份验证器验证码",
+    "recoveryLabel": "恢复码",
+    "totpHint": "请输入身份验证器应用中的 6 位验证码。",
+    "recoveryHint": "请输入 8 位恢复码。",
+    "verify": "验证",
+    "switchToRecovery": "使用恢复码",
+    "switchToTotp": "使用身份验证器验证码",
+    "invalid": "验证码无效",
+    "failed": "验证失败",
+    "success": "验证成功"
+  },
+  "sidebar": {
+    "settings": "设置",
+    "language": "语言",
+    "logout": "登出",
+    "logoutUnauthorized": "您的会话已过期，您已被登出。",
+    "logoutServerError": "登出时服务器错误。本地会话已清除。",
+    "logoutFailed": "登出失败，请重试。",
+    "dashboard": "数据看板"
+  },
+  "settings": {
+    "title": "设置",
+    "tabs": {
+      "account": "账户",
+      "general": "通用"
+    },
+    "account": {
+      "accountInformation": "账户信息",
+      "username": "用户名",
+      "email": "邮箱",
+      "plan": "计划",
+      "changeAvatar": "更换头像",
+      "fetchUserInfoError": "获取用户信息失败",
+      "plans": {
+        "free": "免费计划"
+      },
+      "security": "安全",
+      "resetPassword": "重置密码",
+      "resetPasswordDesc": "通过邮箱验证重置密码",
+      "resetPasswordDialog": {
+        "title": "重置密码",
+        "step1Desc": "确认您的邮箱地址以接收验证码",
+        "step2Desc": "输入发送到您邮箱的验证码并设置新密码",
+        "emailConfirmHint": "验证码将发送到此邮箱地址",
+        "confirmPassword": "确认新密码",
+        "passwordMismatch": "密码不匹配",
+        "passwordTooShort": "密码长度至少为8个字符",
+        "success": "密码重置成功",
+        "warning": "重置密码后您将退出登录，需要使用新密码重新登录"
+      },
+      "twoFactor": {
+        "title": "两步验证",
+        "enabled": "已启用",
+        "disabled": "已禁用",
+        "backupCodes": "剩余备用码",
+        "enable": "启用",
+        "disableButton": "禁用",
+        "regenerateButton": "重新生成备用码",
+        "fetchError": "获取两步验证状态失败",
+        "setup": {
+          "step1Title": "扫描二维码",
+          "step2Title": "保存备用码",
+          "manualEntry": "或在您的应用中手动输入此代码：",
+          "backupCodesWarning": "重要：请妥善保存这些备用码！",
+          "backupCodesWarning2": "如果您无法访问认证设备，这些代码是恢复账户的唯一方法。",
+          "enterCode": "输入验证码",
+          "codeFromApp": "输入您的认证应用中的6位数代码",
+          "copyAll": "全部复制",
+          "copied": "已复制！",
+          "copiedCodes": "备用码已复制到剪贴板",
+          "back": "返回",
+          "next": "下一步",
+          "cancel": "取消",
+          "done": "完成",
+          "success": "两步验证启用成功！",
+          "error": "设置两步验证失败",
+          "alreadyEnabled": "两步验证已启用",
+          "setupExpired": "两步验证设置已过期，请重试",
+          "invalidCode": "请输入6位数代码",
+          "wrongCode": "验证码无效",
+          "verifyError": "验证失败，请重试。"
+        },
+        "disable": {
+          "title": "禁用两步验证",
+          "warning": "警告：安全风险",
+          "warningDesc": "禁用两步验证将使您的账户安全性降低。",
+          "enterPassword": "输入您的密码以确认",
+          "passwordPlaceholder": "您的密码",
+          "passwordRequired": "密码为必填项",
+          "cancel": "取消",
+          "confirm": "禁用",
+          "success": "两步验证已成功禁用",
+          "wrongPassword": "密码错误",
+          "notEnabled": "两步验证未启用",
+          "error": "禁用两步验证失败"
+        },
+        "regenerate": {
+          "verifyTitle": "验证身份",
+          "newCodesTitle": "新备用码",
+          "enterCode": "输入 TOTP 代码",
+          "codeFromApp": "输入您的认证应用中的6位数代码",
+          "warning": "所有之前的备用码现已失效",
+          "warningDesc": "请确保保存这些新备用码。您的旧代码将不再有效。",
+          "copyAll": "全部复制",
+          "copied": "已复制！",
+          "copiedCodes": "备用码已复制到剪贴板",
+          "cancel": "取消",
+          "verify": "验证",
+          "done": "完成",
+          "invalidCode": "请输入6位数代码",
+          "wrongCode": "TOTP 代码无效",
+          "notEnabled": "两步验证未启用",
+          "error": "重新生成备用码失败"
+        }
+      },
+      "devices": {
+        "title": "登录设备",
+        "description": "管理当前已登录您账户的所有设备",
+        "currentDevice": "当前设备",
+        "logoutButton": "退出登录",
+        "logoutAllButton": "退出所有设备",
+        "loginTime": "登录时间",
+        "fetchError": "获取设备列表失败",
+        "logoutSuccess": "设备已成功退出登录",
+        "logoutError": "退出该设备失败",
+        "logoutAllSuccess": "所有设备已退出登录",
+        "logoutAllError": "退出所有设备失败",
+        "deviceTypes": {
+          "PC": "电脑",
+          "Mobile": "手机",
+          "Tablet": "平板",
+          "Bot": "机器人",
+          "Unknown": "未知"
+        }
+      }
+    },
+    "general": {
+      "appearance": "外观",
+      "theme": "主题",
+      "themeDesc": "选择您偏好的主题",
+      "system": "跟随系统",
+      "light": "浅色",
+      "dark": "深色"
+    },
+    "about": {
+      "title": "关于 U-Finder",
+      "description": "由 AI 驱动的智能大学查找工具。本项目以 Apache 2.0 许可证开源，是宁波诺丁汉大学 COMP2043 GRP 课程的小组作业。",
+      "version": "版本",
+      "license": "许可证",
+      "course": "课程",
+      "team": "团队",
+      "university": "大学",
+      "github": "GitHub 仓库",
+      "terms": "服务条款",
+      "privacy": "隐私政策"
+    }
+  },
+  "dashboard": {
+    "title": "数据看板"
+  }
 }
