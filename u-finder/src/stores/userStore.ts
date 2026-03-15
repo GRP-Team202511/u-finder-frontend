@@ -12,6 +12,8 @@ export const useUserStore = defineStore('user', {
   state: () => ({
     // The current user object, or null if no user is logged in
     user: null as User | null,
+    // The current user's avatar URL, or null if no avatar has been uploaded
+    avatarUrl: null as string | null,
   }),
   
   getters: {
@@ -24,9 +26,14 @@ export const useUserStore = defineStore('user', {
     setUser(user: User) {
       this.user = user
     },
-    // Clear the user object, effectively logging out the user
+    // Store the avatar URL so all components can reactively display it
+    setAvatarUrl(url: string | null) {
+      this.avatarUrl = url
+    },
+    // Clear the user object and avatar, effectively logging out the user
     logout() {
       this.user = null
+      this.avatarUrl = null
     },
   },
   // Enable persistence for the store, so the user state is saved across sessions

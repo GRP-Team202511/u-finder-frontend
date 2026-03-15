@@ -15,16 +15,19 @@ import TwoFactorDisableDialog from './TwoFactorDisableDialog.vue'
 import RegenerateBackupCodesDialog from './RegenerateBackupCodesDialog.vue'
 import ResetPasswordDialog from './ResetPasswordDialog.vue'
 import DeviceManagementDialog from './DeviceManagementDialog.vue'
+import AvatarCropDialog from './AvatarCropDialog.vue'
 import { get2FAStatus, getUserInfo } from '@/api/userApi'
+import { getAvatar, buildAvatarUrl } from '@/api/profileApi'
 
 const { t } = useI18n()
 const userStore = useUserStore()
 
-// User info - TODO: Add email and user type to User interface when available from API
+// User info
 const userName = ref('')
 const userEmail = ref('')
 const userType = ref<number>(0)
-const userAvatar = ref('') // Placeholder - will be fetched from API
+const userAvatar = ref<string | null>(userStore.avatarUrl)
+const isLoadingAvatar = ref(false)
 const isLoadingUserInfo = ref(false)
 
 // 2FA state
@@ -38,10 +41,11 @@ const showDeviceManagementDialog = ref(false)
 const show2FASetupDialog = ref(false)
 const show2FADisableDialog = ref(false)
 const showRegenerateCodesDialog = ref(false)
+const showAvatarCropDialog = ref(false)
 
-// Fetch 2FA status on mount
+// Fetch all account data on mount
 onMounted(async () => {
-  await Promise.all([fetch2FAStatus(), fetchUserInfo()])
+  await Promise.all([fetch2FAStatus(), fetchUserInfo(), fetchAvatar()])
 })
 
 async function fetchUserInfo() {
@@ -57,6 +61,34 @@ async function fetchUserInfo() {
   } finally {
     isLoadingUserInfo.value = false
   }
+}
+
+/** Fetch the current avatar URL and sync it into the store */
+async function fetchAvatar() {
+  isLoadingAvatar.value = true
+  try {
+    const response = await getAvatar('256x256')
+    const fullUrl = buildAvatarUrl(response.data.url)
+    userAvatar.value = fullUrl
+    userStore.setAvatarUrl(fullUrl)
+  } catch (error: any) {
+    // 404 means user has no avatar — clear the local ref
+    if (error?.response?.status === 404) {
+      userAvatar.value = null
+      userStore.setAvatarUrl(null)
+    } else {
+      console.error('Failed to fetch avatar:', error)
+    }
+  } finally {
+    isLoadingAvatar.value = false
+  }
+}
+
+/** Called after AvatarCropDialog reports a successful upload */
+function handleAvatarSuccess(avatarUrls: { webp_256: string; webp_64: string }) {
+  const fullUrl = buildAvatarUrl(avatarUrls.webp_256)
+  userAvatar.value = fullUrl
+  userStore.setAvatarUrl(fullUrl)
 }
 
 const userPlanDisplay = computed(() => {
@@ -157,11 +189,19 @@ function handle2FASuccess() {
 
           <!-- Avatar Section -->
           <div class="flex flex-col items-center justify-center md:justify-start gap-4 md:border-l md:pl-6">
-            <div class="w-24 h-24 rounded-full bg-muted border-2 border-dashed border-muted-foreground/30 flex items-center justify-center">
-              <UserIcon v-if="!userAvatar" class="size-12 text-muted-foreground" />
-              <img v-else :src="userAvatar" alt="User avatar" class="w-full h-full rounded-full object-cover" />
+            <div class="w-24 h-24 rounded-full bg-muted border-2 border-dashed border-muted-foreground/30 flex items-center justify-center overflow-hidden">
+              <Skeleton v-if="isLoadingAvatar && !userAvatar" class="w-full h-full rounded-full" />
+              <img v-else-if="userAvatar" :src="userAvatar" alt="User avatar" class="w-full h-full object-cover" />
+              <UserIcon v-else class="size-12 text-muted-foreground" />
             </div>
-            <Button variant="outline" size="sm" class="text-xs">{{ t('settings.account.changeAvatar') }}</Button>
+            <Button
+              variant="outline"
+              size="sm"
+              class="text-xs"
+              @click="showAvatarCropDialog = true"
+            >
+              {{ t('settings.account.changeAvatar') }}
+            </Button>
           </div>
         </div>
       </CardContent>
@@ -251,6 +291,10 @@ function handle2FASuccess() {
     </Card>
 
     <!-- Dialogs -->
+    <AvatarCropDialog
+      v-model:open="showAvatarCropDialog"
+      @success="handleAvatarSuccess"
+    />
     <DeviceManagementDialog
       v-model:open="showDeviceManagementDialog"
     />

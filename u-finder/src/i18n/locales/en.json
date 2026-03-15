@@ -668,6 +668,23 @@
             "email": "Email",
             "plan": "Plan",
             "changeAvatar": "Change Avatar",
+            "avatarDialog": {
+                "title": "Change Avatar",
+                "descriptionSelect": "Drag and drop an image here, or click to select a file.",
+                "descriptionCrop": "Drag the crop box to select the area you want to use.",
+                "dropPrompt": "Drag and drop your image here, or click to select",
+                "supportedFormats": "Supported formats: JPEG, PNG, WebP",
+                "maxSize": "Maximum file size: 2 MB",
+                "selectImage": "Select Image",
+                "reselect": "Reselect",
+                "uploadAndSave": "Upload & Save",
+                "cancel": "Cancel",
+                "uploading": "Uploading...",
+                "uploadSuccess": "Avatar updated successfully",
+                "uploadError": "Failed to upload avatar",
+                "fileTooLarge": "File size must not exceed 2 MB",
+                "invalidFileType": "Only JPEG, PNG, and WebP images are accepted"
+            },
             "fetchUserInfoError": "Failed to fetch user information",
             "plans": {
                 "free": "Free Plan"

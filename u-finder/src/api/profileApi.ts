@@ -54,6 +54,62 @@ export const updateAllProfile = (data: AllProfile) => {
   return http.put<{ message: string }>('/profile', data)
 }
 
+// ─── Avatar ───────────────────────────────────────────────────────────────────
+
+export type AvatarSize = 'origin' | '64x64' | '256x256'
+
+const BASE_URL = import.meta.env.VITE_BASE_URL
+
+/**
+ * Convert a relative avatar path to a full URL
+ * @param path - Relative path like '/uploads/avatars/1/256.webp' or null
+ * @returns Full URL or null if path is null
+ */
+export const buildAvatarUrl = (path: string | null): string | null => {
+  if (!path) return null
+  return `${BASE_URL}${path}`
+}
+
+/**
+ * GET /profile/avatar — Fetch the avatar URL for the authenticated user.
+ *
+ * @param size - The requested avatar size: 'origin', '64x64', or '256x256'
+ * @returns Avatar URL for the requested size, or null if user has no avatar
+ */
+export const getAvatar = (size: AvatarSize) => {
+  return http.get<{ url: string | null }>('/profile/avatar', {
+    params: { size }
+  })
+}
+
+/**
+ * PUT /profile/avatar — Upload or replace the user's avatar image.
+ *
+ * Accepted formats: JPEG, PNG, WebP, HEIC, HEIF. Maximum file size: 2 MB.
+ * Generates WebP variants at original size, 256x256, and 64x64.
+ *
+ * @param file - The cropped image file to upload
+ * @returns Success message and map of avatar URLs for all generated variants
+ */
+export const uploadAvatar = (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  return http.put<{
+    message: string
+    avatar_urls: {
+      original: string
+      webp_original: string
+      webp_256: string
+      webp_64: string
+    }
+  }>('/profile/avatar', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+}
+
 // ─── CV Upload ────────────────────────────────────────────────────────────────
 
 /**
