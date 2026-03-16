@@ -78,6 +78,13 @@ const handleSignup = async() => {
     return
   }
 
+  // Validate confirm password is filled
+  if (!repeatPassword.value) {
+    toast.error(t('signup.confirmPasswordRequired'))
+    signing.value = false
+    return
+  }
+
   // Validate passwords match
   if (formData.value.password !== repeatPassword.value) {
     toast.error(t('signup.passwordMismatch'))

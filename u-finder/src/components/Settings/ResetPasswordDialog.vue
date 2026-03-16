@@ -177,7 +177,7 @@ const handleResetPassword = async () => {
     return
   }
 
-  if (!otpCode.value || !newPassword.value) {
+  if (!otpCode.value || !newPassword.value || !confirmPassword.value) {
     toast.error(t('login.reset.errors.fieldsRequired'))
     return
   }

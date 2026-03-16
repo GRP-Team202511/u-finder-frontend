@@ -91,6 +91,7 @@
         "codeSent": "The verification code has been sent",
         "passwordError": "Password must be 8-20 characters, with at least one letter and one digit.",
         "passwordMismatch": "Passwords do not match",
+        "confirmPasswordRequired": "Please confirm your password",
         "verification": {
             "enter": "Enter verification code",
             "sent": "We sent a 6-digit code to your email.",

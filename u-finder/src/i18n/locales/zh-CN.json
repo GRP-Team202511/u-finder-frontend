@@ -74,6 +74,7 @@
         "codeSent": "验证码已发送",
         "passwordError": "密码必须为8-20个字符，至少包含一个字母和一个数字。",
         "passwordMismatch": "两次输入的密码不一致",
+        "confirmPasswordRequired": "请确认您的密码",
         "verification": {
             "enter": "输入验证码",
             "sent": "我们已将 6 位验证码发送至您的邮箱。",

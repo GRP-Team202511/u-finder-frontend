@@ -74,6 +74,7 @@
         "codeSent": "驗證碼已發送",
         "passwordError": "密碼必須為8-20個字元，至少包含一個字母和一個數字。",
         "passwordMismatch": "兩次輸入的密碼不一致",
+        "confirmPasswordRequired": "請確認您的密碼",
         "verification": {
             "enter": "輸入驗證碼",
             "sent": "我們已將 6 位驗證碼發送至您的電子郵件。",
