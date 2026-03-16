@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
@@ -45,10 +45,30 @@ const isTotp = computed(() => mode.value === "totp");
 const normalizedRecoveryCode = computed(() => codeValue.value.trim().toUpperCase());
 
 const isValidTotp = () => /^\d{6}$/.test(codeValue.value.trim());
-const isValidRecovery = () => /^[0-9A-F]{8}$/.test(normalizedRecoveryCode.value);
+const isValidRecovery = () => /^[0-9A-Fa-f]{8}$/.test(codeValue.value.trim());
+const canSubmit = computed(() => (isTotp.value ? isValidTotp() : isValidRecovery()));
+
+watch(codeValue, (newValue) => {
+  if (isTotp.value) {
+    const digitsOnly = newValue.replace(/\D/g, "").slice(0, 6);
+    if (digitsOnly !== newValue) {
+      codeValue.value = digitsOnly;
+    }
+    return;
+  }
+
+  const normalized = newValue.replace(/[^0-9A-Fa-f]/g, "").slice(0, 8);
+  if (normalized !== newValue) {
+    codeValue.value = normalized;
+  }
+});
+
+watch(mode, () => {
+  codeValue.value = "";
+});
 
 const handleVerify = async () => {
-  if (isTotp.value ? !isValidTotp() : !isValidRecovery()) {
+  if (!canSubmit.value) {
     toast.error(t("twofa.invalid"));
     return;
   }
@@ -78,7 +98,6 @@ const handleVerify = async () => {
 
 const toggleMode = () => {
   mode.value = isTotp.value ? "recovery" : "totp";
-  codeValue.value = "";
 };
 </script>
 
@@ -114,7 +133,7 @@ const toggleMode = () => {
                 maxlength="8"
                 autocomplete="one-time-code"
                 placeholder="A1B2C3D4"
-                class="text-center uppercase"
+                class="text-center"
                 required
               />
             </div>
@@ -123,7 +142,7 @@ const toggleMode = () => {
             </FieldDescription>
           </Field>
           <FieldGroup>
-            <Button type="submit" :disabled="verifying">
+            <Button type="submit" :disabled="verifying || !canSubmit">
               <Spinner v-if="verifying" class="animate-spin mr-2" />
               {{ t("twofa.verify") }}
             </Button>

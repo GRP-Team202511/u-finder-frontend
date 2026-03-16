@@ -19,7 +19,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 import { useI18n } from "vue-i18n";
-import { ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { verifySignup, resendSignupCode } from "@/api/userApi";
 import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "vue-router";
@@ -39,8 +39,21 @@ const props = defineProps<{
 }>()
 
 const otpValue = ref("")
+const otpValid = computed(() => /^\d{6}$/.test(otpValue.value))
+
+watch(otpValue, (newValue) => {
+  const digitsOnly = newValue.replace(/\D/g, "").slice(0, 6)
+  if (digitsOnly !== newValue) {
+    otpValue.value = digitsOnly
+  }
+})
 
 const handleOTP = async() => {
+  if (!otpValid.value) {
+    toast.error(t("signup.verification.incorrect"))
+    return
+  }
+
   verifying.value = true
 
   try {
@@ -119,7 +132,7 @@ const handleResend = async() => {
             </FieldDescription>
           </Field>
           <FieldGroup>
-            <Button type="submit" :disabled="verifying">
+            <Button type="submit" :disabled="verifying || !otpValid">
               <Spinner v-if="verifying" class="animate-spin mr-2" />
               {{ t("signup.verification.verify") }}
             </Button>

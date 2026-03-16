@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { cn } from "@/lib/utils"
+import { cn, isBlankValue } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useI18n } from 'vue-i18n'
 import {
@@ -105,6 +105,12 @@ function removeEntry(index: number) {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
+
+  // Remove untouched blank entries so users don't need to manually click Remove.
+  campusExperience.value = campusExperience.value.filter((exp) => {
+    if (!exp) return false
+    return !isBlankValue(exp.name) || !isBlankValue(exp.description)
+  })
   
   // Clear all validation errors first
   validationErrors.name = campusExperience.value.map(() => false)

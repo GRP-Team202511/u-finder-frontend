@@ -268,7 +268,16 @@
         "validation": {
             "typeRequired": "教育類型為必填項",
             "nameRequired": "學校名稱為必填項",
-            "startRequired": "開始日期為必填項"
+            "startRequired": "開始日期為必填項",
+            "dateRangeInvalid": "開始日期不能晚於結束日期",
+            "rankingFormat": "排名格式必須為 X/Y，例如 5/200",
+            "rankingRange": "排名必須為正整數，且 X <= Y",
+            "gpaBaseInvalid": "GPA 滿分必須為正數",
+            "gpaBaseMin": "GPA 滿分必須大於 0",
+            "gpaBaseMax": "GPA 滿分不能大於 100",
+            "gpaInvalid": "GPA 必須為正數",
+            "gpaNegative": "GPA 不能為負數",
+            "gpaExceedsBase": "GPA 不能大於 GPA 滿分"
         }
     },
     "academic": {
@@ -386,7 +395,8 @@
         },
         "validation": {
             "companyRequired": "公司名稱為必填項",
-            "roleRequired": "職位為必填項"
+            "roleRequired": "職位為必填項",
+            "dateRangeInvalid": "開始日期不能晚於結束日期"
         }
     },
     "project": {
@@ -407,7 +417,8 @@
             "description": "描述"
         },
         "validation": {
-            "nameRequired": "專案名稱為必填項"
+            "nameRequired": "專案名稱為必填項",
+            "dateRangeInvalid": "開始日期不能晚於結束日期"
         }
     },
     "campusExp": {
