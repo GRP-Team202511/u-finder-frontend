@@ -402,7 +402,7 @@
             "typeRequired": "Education type is required",
             "nameRequired": "Institution name is required",
             "startRequired": "Start date is required",
-            "dateRangeInvalid": "Start date must not be after end date"
+            "dateRangeInvalid": "Start date must not be after end date",
             "rankingFormat": "Ranking must use format X/Y, e.g. 5/200",
             "rankingRange": " Ranking must be positive integers with X <= Y",
             "gpaBaseInvalid": "GPA base must be a positive number",
