@@ -260,6 +260,8 @@
         "title": "Profile",
         "edit": "Edit",
         "save": "Save",
+        "saveAll": "Save All",
+        "savingAll": "Saving…",
         "cancel": "Cancel",
         "add": "Add",
         "remove": "Remove",

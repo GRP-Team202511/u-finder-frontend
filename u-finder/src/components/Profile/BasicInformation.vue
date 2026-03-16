@@ -96,9 +96,7 @@ const emit = defineEmits<{
 }>()
 
 // participate in global profile edit/save/cancel via optional provided API
-type ProfileEditor = {
-  register: (h: { save: () => void; cancel?: () => void }) => () => void
-}
+import type { ProfileEditor } from '@/types/profileEditor'
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 const userStore = useUserStore()
 const isLoading = ref(false)
@@ -111,6 +109,7 @@ const fieldErrors = reactive({
 
 // local edit state — used directly as the single source of truth for edit mode
 const localEditing = ref(false)
+const cardRef = ref<HTMLElement | null>(null)
 
 // local draft state used while editing
 const information: Ref<BasicInfomationEntry> = ref(
@@ -251,14 +250,14 @@ function startEdit() {
 onMounted(async () => {
   await initBirthdays()
   if (profileEditor && typeof profileEditor.register === 'function') {
-    const unregister = profileEditor.register({ save: () => save(), cancel: () => cancel() })
+    const unregister = profileEditor.register({ save: () => save(), cancel: () => cancel(), isEditing: localEditing, el: cardRef })
     onBeforeUnmount(() => unregister())
   }
 })
 </script>
 
 <template>
-  <div :class="cn('flex flex-col gap-6', props.class)">
+  <div ref="cardRef" :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-left">
         <div class="flex items-center justify-between gap-4">

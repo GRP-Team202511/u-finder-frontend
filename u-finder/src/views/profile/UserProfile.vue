@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, watch, provide, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
+import { Save } from 'lucide-vue-next'
 import BasicInformation from '@/components/Profile/BasicInformation.vue'
 import EducationBackground from '@/components/Profile/EducationBackground.vue'
 import AcademicOutcome from '@/components/Profile/AcademicOutcome/AcademicOutcome.vue'
@@ -18,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { getAllProfile, updateProfileField, updatePersonalInfo } from '@/api/profileApi'
 import type { PersonalInfo, CVParseResponse } from '@/types/profileTypes'
+import type { EditorRegistration, ProfileEditor } from '@/types/profileEditor'
 import { useUserStore } from '@/stores/userStore'
 
 const { t } = useI18n()
@@ -28,8 +30,70 @@ const token = computed(() => userStore.user?.token || '')
 const isLoading = ref(false)
 const loadError = ref(false)
 
-// Track how many components are currently in edit mode
-const editingComponentsCount = ref(0)
+// ─── Profile Editor Provider ──────────────────────────────────────────────────
+const registeredEditors = ref(new Map<number, EditorRegistration>())
+let nextEditorId = 0
+
+function registerEditor(handler: EditorRegistration): () => void {
+	const id = nextEditorId++
+	registeredEditors.value.set(id, handler)
+	return () => { registeredEditors.value.delete(id) }
+}
+
+provide<ProfileEditor>('profileEditor', { register: registerEditor })
+
+const hasEditingEditors = computed(() => {
+	for (const editor of registeredEditors.value.values()) {
+		if (editor.isEditing.value) return true
+	}
+	return false
+})
+
+const editingComponentsCount = computed(() => {
+	let count = 0
+	for (const editor of registeredEditors.value.values()) {
+		if (editor.isEditing.value) count++
+	}
+	return count
+})
+
+const isSavingAll = ref(false)
+
+async function saveAll() {
+	if (isSavingAll.value) return
+	isSavingAll.value = true
+
+	const editingEditors = [...registeredEditors.value.values()].filter(e => e.isEditing.value)
+	if (editingEditors.length === 0) {
+		isSavingAll.value = false
+		return
+	}
+
+	// Scroll the first editing card into the center of the viewport
+	const firstWithEl = editingEditors.find(e => e.el?.value)
+	if (firstWithEl?.el?.value) {
+		firstWithEl.el.value.scrollIntoView({ block: 'center', behavior: 'smooth' })
+		await new Promise(r => setTimeout(r, 350))
+	}
+
+	for (const editor of editingEditors) {
+		editor.save()
+	}
+
+	// Wait until all triggered saves settle (editors exit edit mode) or timeout.
+	await new Promise<void>((resolve) => {
+		const timeout = setTimeout(() => { stop(); resolve() }, 15_000)
+		const stop = watch(
+			() => editingEditors.every(e => !e.isEditing.value),
+			(allDone) => {
+				if (allDone) { clearTimeout(timeout); stop(); resolve() }
+			},
+			{ immediate: true },
+		)
+	})
+
+	isSavingAll.value = false
+}
 
 // CV Parser Dialog state
 const showCVParserDialog = ref(false)
@@ -180,24 +244,10 @@ async function onAwardSave(payload: any[]) {
 	}
 }
 
-// Track editing status to prevent accidental page close
-function onComponentStartEdit() {
-	editingComponentsCount.value++
-}
-
-function onComponentEndEdit() {
-	if (editingComponentsCount.value > 0) {
-		editingComponentsCount.value--
-	}
-}
-
 // Warn user before leaving page if any component is in edit mode
 function handleBeforeUnload(e: BeforeUnloadEvent) {
 	if (editingComponentsCount.value > 0) {
-		// Modern browsers (Chrome 51+, Firefox 44+, Safari 9.1+) only need preventDefault()
 		e.preventDefault()
-		// Returning any value (including undefined) is enough for legacy browsers
-		// The browser will show its own confirmation dialog
 	}
 }
 
@@ -415,67 +465,65 @@ function handleCVResultCancel() {
 				:modelValue="informationData"
 				@update:modelValue="informationData = $event"
 				@save="onInformationSave"
-				@request-edit="onComponentStartEdit"
-				@cancel="onComponentEndEdit"
-				@edit-complete="onComponentEndEdit"
 			/>
 
 			<EducationBackground
 				:modelValue="educationData"
 				@save="onEducationSave"
-				@request-edit="onComponentStartEdit"
-				@cancel="onComponentEndEdit"
-				@edit-complete="onComponentEndEdit"
 			/>
 
 			<AcademicOutcome
 				:modelValue="academicOutcomeData"
 				@save="onAcademicOutcomeSave"
-				@request-edit="onComponentStartEdit"
-				@cancel="onComponentEndEdit"
-				@edit-complete="onComponentEndEdit"
 			/>
 
 			<StandardizedTest
 				:modelValue="standardizedTestData"
 				@save="onStandardizedTestSave"
-				@request-edit="onComponentStartEdit"
-				@cancel="onComponentEndEdit"
-				@edit-complete="onComponentEndEdit"
 			/>
-			
+
 			<Internship
 				:modelValue="internshipData"
 				@save="onInternshipSave"
-				@request-edit="onComponentStartEdit"
-				@cancel="onComponentEndEdit"
-				@edit-complete="onComponentEndEdit"
 			/>
 
 			<Project
 				:modelValue="projectData"
 				@save="onProjectSave"
-				@request-edit="onComponentStartEdit"
-				@cancel="onComponentEndEdit"
-				@edit-complete="onComponentEndEdit"
 			/>
 
 			<CampusExperience
 				:modelValue="campusExpData"
 				@save="onCampusExpSave"
-				@request-edit="onComponentStartEdit"
-				@cancel="onComponentEndEdit"
-				@edit-complete="onComponentEndEdit"
 			/>
 
 			<Award
 				:modelValue="awardData"
 				@save="onAwardSave"
-				@request-edit="onComponentStartEdit"
-				@cancel="onComponentEndEdit"
-				@edit-complete="onComponentEndEdit"
 			/>
 		</div>
+
+		<!-- Floating Save All button -->
+		<Transition
+			enter-active-class="transition duration-200 ease-out"
+			enter-from-class="opacity-0 translate-y-4"
+			enter-to-class="opacity-100 translate-y-0"
+			leave-active-class="transition duration-150 ease-in"
+			leave-from-class="opacity-100 translate-y-0"
+			leave-to-class="opacity-0 translate-y-4"
+		>
+			<Button
+				v-if="hasEditingEditors"
+				class="fixed right-4 bottom-5 z-60 shadow-lg gap-2"
+				size="lg"
+				:disabled="isSavingAll"
+				@click="saveAll"
+			>
+				<Spinner v-if="isSavingAll" class="size-4" />
+				<Save v-else class="size-4" />
+				{{ isSavingAll ? t('profile.savingAll') : t('profile.saveAll') }}
+			</Button>
+		</Transition>
 		
 		<!-- CV Parser Dialog -->
 		<CVParserDialog 

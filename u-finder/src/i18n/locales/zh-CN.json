@@ -117,6 +117,8 @@
         "title": "个人资料",
         "edit": "编辑",
         "save": "保存",
+        "saveAll": "全部保存",
+        "savingAll": "保存中…",
         "cancel": "取消",
         "add": "添加",
         "remove": "删除",
