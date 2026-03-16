@@ -87,8 +87,11 @@ async function fetchAvatar() {
 /** Called after AvatarCropDialog reports a successful upload */
 function handleAvatarSuccess(avatarUrls: { webp_256: string; webp_64: string }) {
   const fullUrl = buildAvatarUrl(avatarUrls.webp_256)
-  userAvatar.value = fullUrl
-  userStore.setAvatarUrl(fullUrl)
+  // Append a cache-busting parameter so the browser fetches the new image
+  // and Vue detects a changed URL string even when the path is identical.
+  const cacheBustedUrl = fullUrl ? `${fullUrl}?t=${Date.now()}` : fullUrl
+  userAvatar.value = cacheBustedUrl
+  userStore.setAvatarUrl(cacheBustedUrl)
 }
 
 const userPlanDisplay = computed(() => {
