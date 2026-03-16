@@ -258,7 +258,8 @@
         "validation": {
             "typeRequired": "教育类型为必填项",
             "nameRequired": "学校名称为必填项",
-            "startRequired": "开始日期为必填项"
+            "startRequired": "开始日期为必填项",
+            "dateRangeInvalid": "开始日期不能晚于结束日期"
         }
     },
     "academic": {
@@ -376,7 +377,8 @@
         },
         "validation": {
             "companyRequired": "公司名称为必填项",
-            "roleRequired": "职位为必填项"
+            "roleRequired": "职位为必填项",
+            "dateRangeInvalid": "开始日期不能晚于结束日期"
         }
     },
     "project": {
@@ -397,7 +399,8 @@
             "description": "描述"
         },
         "validation": {
-            "nameRequired": "项目名称为必填项"
+            "nameRequired": "项目名称为必填项",
+            "dateRangeInvalid": "开始日期不能晚于结束日期"
         }
     },
     "campusExp": {

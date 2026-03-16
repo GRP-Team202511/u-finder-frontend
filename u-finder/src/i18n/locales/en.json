@@ -401,7 +401,8 @@
         "validation": {
             "typeRequired": "Education type is required",
             "nameRequired": "Institution name is required",
-            "startRequired": "Start date is required"
+            "startRequired": "Start date is required",
+            "dateRangeInvalid": "Start date must be before end date"
         }
     },
     "academic": {
@@ -521,7 +522,8 @@
         },
         "validation": {
             "companyRequired": "Company name is required",
-            "roleRequired": "Role is required"
+            "roleRequired": "Role is required",
+            "dateRangeInvalid": "Internship {index}: Start date must be before end date"
         }
     },
     "project": {
@@ -542,7 +544,8 @@
             "description": "Description"
         },
         "validation": {
-            "nameRequired": "Project name is required"
+            "nameRequired": "Project name is required",
+            "dateRangeInvalid": "Project {index}: Start date must be before end date"
         }
     },
     "campusExp": {
