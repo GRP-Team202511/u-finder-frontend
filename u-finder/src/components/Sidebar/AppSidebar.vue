@@ -85,7 +85,8 @@ const navUser = computed(() => ({
 async function fetchAvatar() {
   try {
     const response = await getAvatar('64x64')
-    userStore.setAvatarUrl(buildAvatarUrl(response.data.url))
+    const url = buildAvatarUrl(response.data.url)
+    userStore.setAvatarUrl(url ? `${url}?t=${Date.now()}` : url)
   } catch (error: any) {
     // 404 means user has no avatar, which is expected
     if (error?.response?.status !== 404) {

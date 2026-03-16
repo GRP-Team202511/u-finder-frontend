@@ -69,8 +69,9 @@ async function fetchAvatar() {
   try {
     const response = await getAvatar('256x256')
     const fullUrl = buildAvatarUrl(response.data.url)
-    userAvatar.value = fullUrl
-    userStore.setAvatarUrl(fullUrl)
+    const cacheBustedUrl = fullUrl ? `${fullUrl}?t=${Date.now()}` : fullUrl
+    userAvatar.value = cacheBustedUrl
+    userStore.setAvatarUrl(cacheBustedUrl)
   } catch (error: any) {
     // 404 means user has no avatar — clear the local ref
     if (error?.response?.status === 404) {
@@ -87,8 +88,11 @@ async function fetchAvatar() {
 /** Called after AvatarCropDialog reports a successful upload */
 function handleAvatarSuccess(avatarUrls: { webp_256: string; webp_64: string }) {
   const fullUrl = buildAvatarUrl(avatarUrls.webp_256)
-  userAvatar.value = fullUrl
-  userStore.setAvatarUrl(fullUrl)
+  // Append a cache-busting parameter so the browser fetches the new image
+  // and Vue detects a changed URL string even when the path is identical.
+  const cacheBustedUrl = fullUrl ? `${fullUrl}?t=${Date.now()}` : fullUrl
+  userAvatar.value = cacheBustedUrl
+  userStore.setAvatarUrl(cacheBustedUrl)
 }
 
 const userPlanDisplay = computed(() => {
