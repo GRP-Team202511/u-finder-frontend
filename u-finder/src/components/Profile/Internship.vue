@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { cn } from "@/lib/utils"
+import { cn, isBlankValue } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useI18n } from 'vue-i18n'
 import {
@@ -209,8 +209,6 @@ function formatToDate(dv: any, tz: string) {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
-
-  const isBlankValue = (value: unknown) => typeof value !== 'string' || !value.trim()
 
   // Remove untouched blank entries so users don't need to manually click Remove.
   const keptInternships: InternshipEntry[] = []

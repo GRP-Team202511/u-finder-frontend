@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { cn } from "@/lib/utils"
+import { cn, isBlankValue } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useI18n } from 'vue-i18n'
 import {
@@ -189,7 +189,6 @@ function removeEntry(index: number) {
 function save(e?: Event) {
 	if (e && e.preventDefault) e.preventDefault()
 
-	const isBlankValue = (value: unknown) => typeof value !== 'string' || !value.trim()
 	const hasNonEmptyScores = (scores?: Record<string, string>) =>
 		!!scores && Object.values(scores).some(v => !isBlankValue(v))
 	const hasNonEmptySubjects = (subjects?: Array<{ subject: string; grade?: string; score?: string }>) =>
