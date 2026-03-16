@@ -30,6 +30,7 @@
             "send": "Reset Password",
             "otp": "Verification Code",
             "newPassword": "New Password",
+            "confirmPassword": "Confirm Password",
             "codeDescription": "Code sent to your email.",
             "resendCode": "Resend",
             "errors": {
@@ -46,6 +47,7 @@
                 "wrongCode": "Incorrect verification code",
                 "unauthorized": "Unauthorized request",
                 "invalidInput": "Invalid input provided",
+                "passwordMismatch": "Passwords do not match",
                 "resetFailed": "Failed to reset password. Please try again."
             },
             "success": {
@@ -88,6 +90,7 @@
         "error": "An error occurred during signup. Please try again.",
         "codeSent": "The verification code has been sent",
         "passwordError": "Password must be 8-20 characters, with at least one letter and one digit.",
+        "passwordMismatch": "Passwords do not match",
         "verification": {
             "enter": "Enter verification code",
             "sent": "We sent a 6-digit code to your email.",

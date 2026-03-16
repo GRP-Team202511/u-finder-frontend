@@ -28,6 +28,7 @@
             "send": "重置密碼",
             "otp": "驗證碼",
             "newPassword": "新密碼",
+            "confirmPassword": "確認密碼",
             "codeDescription": "驗證碼已發送至您的郵箱。",
             "resendCode": "重發",
             "errors": {
@@ -44,6 +45,7 @@
                 "wrongCode": "驗證碼不正確",
                 "unauthorized": "未授權的請求",
                 "invalidInput": "輸入的資料無效",
+                "passwordMismatch": "兩次輸入的密碼不一致",
                 "resetFailed": "重置密碼失敗，請重試。"
             },
             "success": {
@@ -71,6 +73,7 @@
         "error": "註冊過程中發生錯誤，請重試。",
         "codeSent": "驗證碼已發送",
         "passwordError": "密碼必須為8-20個字元，至少包含一個字母和一個數字。",
+        "passwordMismatch": "兩次輸入的密碼不一致",
         "verification": {
             "enter": "輸入驗證碼",
             "sent": "我們已將 6 位驗證碼發送至您的電子郵件。",

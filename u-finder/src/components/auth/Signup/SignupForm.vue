@@ -78,6 +78,13 @@ const handleSignup = async() => {
     return
   }
 
+  // Validate passwords match
+  if (formData.value.password !== repeatPassword.value) {
+    toast.error(t('signup.passwordMismatch'))
+    signing.value = false
+    return
+  }
+
   try {
     const response = await signup(formData.value)
     emit("signup", { name: formData.value.name, email: formData.value.email })

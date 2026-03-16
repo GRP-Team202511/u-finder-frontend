@@ -34,6 +34,7 @@ const props = defineProps<{
 // Form state
 const email = ref('')
 const newPassword = ref('')
+const confirmPassword = ref('')
 const otpCode = ref('')
 const tempToken = ref('')
 const isLoading = ref(false)
@@ -134,6 +135,11 @@ const handleSubmit = async(e: Event) => {
     return
   }
 
+  if (newPassword.value !== confirmPassword.value) {
+    toast.error(t('login.reset.errors.passwordMismatch'))
+    return
+  }
+
   isLoading.value = true
   try {
     const response = await verifyResetPassword(
@@ -214,6 +220,18 @@ const handleSubmit = async(e: Event) => {
                 />
               </Field>
               <Field>
+                <FieldLabel for="confirm-password">
+                  {{ t("login.reset.confirmPassword") }}
+                </FieldLabel>
+                <Input
+                  id="confirm-password"
+                  v-model="confirmPassword"
+                  type="password"
+                  :disabled="!isEmailSent"
+                  required
+                />
+              </Field>
+              <Field>
                 <FieldLabel for="otp">
                   {{ t("login.reset.otp") }}
                 </FieldLabel>
@@ -242,7 +260,7 @@ const handleSubmit = async(e: Event) => {
               <Field>
                 <Button 
                   type="submit"
-                  :disabled="isLoading || !isEmailSent"
+                  :disabled="isLoading || !isEmailSent || !newPassword || !confirmPassword"
                   class="w-full"
                 >
                   <Spinner v-if="isLoading" class="mr-2" />

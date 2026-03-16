@@ -28,6 +28,7 @@
             "send": "重置密码",
             "otp": "验证码",
             "newPassword": "新密码",
+            "confirmPassword": "确认密码",
             "codeDescription": "验证码已发送至您的邮箱。",
             "resendCode": "重发",
             "errors": {
@@ -44,6 +45,7 @@
                 "wrongCode": "验证码不正确",
                 "unauthorized": "未授权的请求",
                 "invalidInput": "输入的数据无效",
+                "passwordMismatch": "两次输入的密码不一致",
                 "resetFailed": "重置密码失败，请重试。"
             },
             "success": {
@@ -71,6 +73,7 @@
         "error": "注册过程中发生错误，请重试。",
         "codeSent": "验证码已发送",
         "passwordError": "密码必须为8-20个字符，至少包含一个字母和一个数字。",
+        "passwordMismatch": "两次输入的密码不一致",
         "verification": {
             "enter": "输入验证码",
             "sent": "我们已将 6 位验证码发送至您的邮箱。",
