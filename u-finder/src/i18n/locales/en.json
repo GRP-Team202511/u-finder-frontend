@@ -29,6 +29,7 @@
             "sendCode": "Send Code",
             "send": "Reset Password",
             "otp": "Verification Code",
+            "otpPlaceholder": "Enter 6-digit code",
             "newPassword": "New Password",
             "confirmPassword": "Confirm Password",
             "codeDescription": "Code sent to your email.",

@@ -20,7 +20,6 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
 import { toast } from 'vue-sonner'
 import { resetPassword, verifyResetPassword, resendResetPasswordCode } from "@/api/userApi"
 import { useRouter } from "vue-router"
@@ -259,32 +258,6 @@ const resendButtonText = computed(() =>
               </div>
             </Field>
             <Field>
-              <FieldLabel for="otp">{{ t("login.reset.otp") }}</FieldLabel>
-              <div class="flex flex-col gap-2">
-                <InputOTP v-model="otpCode" :maxlength="6" class="gap-2 justify-center">
-                  <InputOTPGroup>
-                    <InputOTPSlot :index="0" />
-                    <InputOTPSlot :index="1" />
-                    <InputOTPSlot :index="2" />
-                    <InputOTPSlot :index="3" />
-                    <InputOTPSlot :index="4" />
-                    <InputOTPSlot :index="5" />
-                  </InputOTPGroup>
-                </InputOTP>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  class="h-auto p-0 text-xs self-start"
-                  :disabled="!canResend"
-                  @click="resendCode"
-                >
-                  <Spinner v-if="isSendingCode" class="mr-1 size-3" />
-                  {{ resendButtonText }}
-                </Button>
-              </div>
-            </Field>
-            <Field>
               <FieldLabel for="password">{{ t("login.reset.newPassword") }}</FieldLabel>
               <Input
                 id="password"
@@ -301,6 +274,29 @@ const resendButtonText = computed(() =>
                 type="password"
                 required
               />
+            </Field>
+            <Field>
+              <FieldLabel for="otp">{{ t("login.reset.otp") }}</FieldLabel>
+              <div class="flex w-full items-center gap-2">
+                <Input
+                  id="otp"
+                  v-model="otpCode"
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="6"
+                  :placeholder="t('login.reset.otpPlaceholder')"
+                  class="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="default"
+                  :disabled="!canResend"
+                  @click="resendCode"
+                >
+                  <Spinner v-if="isSendingCode" class="mr-2" />
+                  {{ resendButtonText }}
+                </Button>
+              </div>
             </Field>
             <FieldSeparator />
             <Field class="flex flex-col gap-2">

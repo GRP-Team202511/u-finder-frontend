@@ -27,6 +27,7 @@
             "sendCode": "發送驗證碼",
             "send": "重置密碼",
             "otp": "驗證碼",
+            "otpPlaceholder": "請輸入6位驗證碼",
             "newPassword": "新密碼",
             "confirmPassword": "確認密碼",
             "codeDescription": "驗證碼已發送至您的郵箱。",
