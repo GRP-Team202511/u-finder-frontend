@@ -131,6 +131,7 @@ const validationErrors = reactive<{
   type: boolean[]
   name: boolean[]
   startDate: boolean[]
+  endDate: boolean[]
   ranking: boolean[]
   gpa: boolean[]
   gpaBase: boolean[]
@@ -139,6 +140,7 @@ const validationErrors = reactive<{
     type: education.value.map(() => false),
     name: education.value.map(() => false),
     startDate: education.value.map(() => false),
+    endDate: education.value.map(() => false)
     ranking: education.value.map(() => false),
     gpa: education.value.map(() => false),
     gpaBase: education.value.map(() => false)
@@ -174,6 +176,7 @@ watch(
       validationErrors.type = education.value.map(() => false)
       validationErrors.name = education.value.map(() => false)
       validationErrors.startDate = education.value.map(() => false)
+      validationErrors.endDate = education.value.map(() => false)
       validationErrors.ranking = education.value.map(() => false)
       validationErrors.gpa = education.value.map(() => false)
       validationErrors.gpaBase = education.value.map(() => false)
@@ -197,6 +200,7 @@ function addEntry() {
   validationErrors.type.push(false)
   validationErrors.name.push(false)
   validationErrors.startDate.push(false)
+  validationErrors.endDate.push(false)
   validationErrors.ranking.push(false)
   validationErrors.gpa.push(false)
   validationErrors.gpaBase.push(false)
@@ -209,6 +213,7 @@ function removeEntry(index: number) {
   if (validationErrors.type.length > index) validationErrors.type.splice(index, 1)
   if (validationErrors.name.length > index) validationErrors.name.splice(index, 1)
   if (validationErrors.startDate.length > index) validationErrors.startDate.splice(index, 1)
+  if (validationErrors.endDate.length > index) validationErrors.endDate.splice(index, 1)
   if (validationErrors.ranking.length > index) validationErrors.ranking.splice(index, 1)
   if (validationErrors.gpa.length > index) validationErrors.gpa.splice(index, 1)
   if (validationErrors.gpaBase.length > index) validationErrors.gpaBase.splice(index, 1)
@@ -223,6 +228,31 @@ function formatToDate(dv: any, tz: string) {
   const m = dt.getMonth() + 1
   const d = dt.getDate()
   return `${dt.getFullYear()}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`
+}
+
+function parseDateString(value: string) {
+  const parts = value.split('-')
+  if (parts.length < 2) return null
+  const y = Number(parts[0])
+  const m = Number(parts[1])
+  const d = parts[2] ? Number(parts[2]) : 1
+  if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null
+  return new Date(y, m - 1, d)
+}
+
+function toDateOrNull(value: any, tz: string) {
+  if (!value) return null
+  if (typeof value === 'string') return parseDateString(value)
+  if (typeof value.toDate === 'function') return value.toDate(tz)
+  const dt = new Date(value)
+  return Number.isNaN(dt.getTime()) ? null : dt
+}
+
+function isStartAfterEnd(startValue: any, endValue: any, tz: string) {
+  const startDate = toDateOrNull(startValue, tz)
+  const endDate = toDateOrNull(endValue, tz)
+  if (!startDate || !endDate) return false
+  return startDate.getTime() > endDate.getTime()
 }
 
 function typeLabel(type: string) {
@@ -270,6 +300,7 @@ function save(e?: Event) {
   validationErrors.type = education.value.map(() => false)
   validationErrors.name = education.value.map(() => false)
   validationErrors.startDate = education.value.map(() => false)
+  validationErrors.endDate = education.value.map(() => false)
   validationErrors.ranking = education.value.map(() => false)
   validationErrors.gpa = education.value.map(() => false)
   validationErrors.gpaBase = education.value.map(() => false)
@@ -294,6 +325,8 @@ function save(e?: Event) {
   
   // Validate required fields
   let hasError = false
+  const tz = getLocalTimeZone()
+
   for (let i = 0; i < education.value.length; i++) {
     const edu = education.value[i]
     if (!edu) continue
@@ -340,6 +373,12 @@ function save(e?: Event) {
       }
     }
 
+    if (isStartAfterEnd(startDates[i] ?? edu.time?.start, endDates[i] ?? edu.time?.end, tz)) {
+      validationErrors.endDate[i] = true
+      hasError = true
+      toast.error(
+        t('edu.validation.dateRangeInvalid', { index: i + 1 }) ||
+        `Education #${i + 1}: Start date must be before end date`
     const gpa = parsePositiveNumber(edu.GPA ?? '')
     const gpaBase = parsePositiveNumber(edu.GPA_base ?? '')
 
@@ -398,8 +437,7 @@ function save(e?: Event) {
     return
   }
   
-  // convert DateValue to YYYY-MM strings for storage
-  const tz = getLocalTimeZone()
+  // convert DateValue to YYYY-MM-DD date strings for storage
   const formatted = education.value.map((edu, i) => ({
     ...edu,
     time: {
@@ -422,6 +460,7 @@ function cancel() {
   validationErrors.type = education.value.map(() => false)
   validationErrors.name = education.value.map(() => false)
   validationErrors.startDate = education.value.map(() => false)
+  validationErrors.endDate = education.value.map(() => false)
   validationErrors.ranking = education.value.map(() => false)
   validationErrors.gpa = education.value.map(() => false)
   validationErrors.gpaBase = education.value.map(() => false)
@@ -448,6 +487,7 @@ function startEdit() {
     validationErrors.type.push(false)
     validationErrors.name.push(false)
     validationErrors.startDate.push(false)
+    validationErrors.endDate.push(false)
     validationErrors.ranking.push(false)
     validationErrors.gpa.push(false)
     validationErrors.gpaBase.push(false)
@@ -533,9 +573,18 @@ onMounted(() => {
                           <Calendar
                             v-model="startDates[idx]"
                             :default-placeholder="defaultPlaceholder"
+                            :max-value="endDates[idx]"
                             layout="month-and-year"
                             initial-focus
-                            @update:model-value="() => { clearError(idx, 'startDate'); close(); }"
+                            @update:model-value="(val) => {
+                              clearError(idx, 'startDate')
+                              if (isStartAfterEnd(val, endDates[idx] ?? edu.time?.end, getLocalTimeZone())) {
+                                validationErrors.endDate[idx] = true
+                              } else {
+                                validationErrors.endDate[idx] = false
+                              }
+                              close()
+                            }"
                           />
                         </PopoverContent>
                       </Popover>
@@ -544,7 +593,7 @@ onMounted(() => {
                     <FieldLabel :for="`end-${idx}`">{{ t('edu.time.end') || 'End' }}</FieldLabel>
                     <Popover v-slot="{ close }">
                       <PopoverTrigger as-child>
-                        <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !edu.time.end && 'text-muted-foreground')">
+                        <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !edu.time.end && 'text-muted-foreground', validationErrors.endDate[idx] && 'border-red-500')">
                           <CalendarIcon class="mr-2 h-4 w-4" />
                           {{ endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.end || (t('date.pickEnd') || 'Pick end')) }}
                         </Button>
@@ -553,9 +602,10 @@ onMounted(() => {
                         <Calendar
                           v-model="endDates[idx]"
                           :default-placeholder="defaultPlaceholder"
+                          :min-value="startDates[idx]"
                           layout="month-and-year"
                           initial-focus
-                          @update:model-value="close"
+                          @update:model-value="() => { clearError(idx, 'endDate'); close(); }"
                         />
                       </PopoverContent>
                     </Popover>

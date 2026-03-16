@@ -402,6 +402,7 @@
             "typeRequired": "Education type is required",
             "nameRequired": "Institution name is required",
             "startRequired": "Start date is required",
+            "dateRangeInvalid": "Start date must not be after end date"
             "rankingFormat": "Ranking must use format X/Y, e.g. 5/200",
             "rankingRange": " Ranking must be positive integers with X <= Y",
             "gpaBaseInvalid": "GPA base must be a positive number",
@@ -529,7 +530,8 @@
         },
         "validation": {
             "companyRequired": "Company name is required",
-            "roleRequired": "Role is required"
+            "roleRequired": "Role is required",
+            "dateRangeInvalid": "Start date must not be after end date"
         }
     },
     "project": {
@@ -550,7 +552,8 @@
             "description": "Description"
         },
         "validation": {
-            "nameRequired": "Project name is required"
+            "nameRequired": "Project name is required",
+            "dateRangeInvalid": "Start date must not be after end date"
         }
     },
     "campusExp": {

@@ -123,10 +123,12 @@ const ongoing = reactive<boolean[]>(internships.value.map(() => false))
 const validationErrors = reactive<{
   company: boolean[]
   role: boolean[]
+  dateRange: boolean[]
 }>(
   {
     company: internships.value.map(() => false),
-    role: internships.value.map(() => false)
+    role: internships.value.map(() => false),
+    dateRange: internships.value.map(() => false)
   }
 )
 
@@ -165,6 +167,7 @@ watch(
       // Reset validation errors
       validationErrors.company = internships.value.map(() => false)
       validationErrors.role = internships.value.map(() => false)
+      validationErrors.dateRange = internships.value.map(() => false)
     } else if (pendingSave.value && nv) {
       // Save succeeded: parent updated modelValue, exit edit mode
       localEditing.value = false
@@ -185,6 +188,7 @@ function addEntry() {
   ongoing.push(false)
   validationErrors.company.push(false)
   validationErrors.role.push(false)
+  validationErrors.dateRange.push(false)
 }
 
 function removeEntry(index: number) {
@@ -194,6 +198,7 @@ function removeEntry(index: number) {
   if (ongoing.length > index) ongoing.splice(index, 1)
   if (validationErrors.company.length > index) validationErrors.company.splice(index, 1)
   if (validationErrors.role.length > index) validationErrors.role.splice(index, 1)
+  if (validationErrors.dateRange.length > index) validationErrors.dateRange.splice(index, 1)
 }
 
 function formatToDate(dv: any, tz: string) {
@@ -205,6 +210,31 @@ function formatToDate(dv: any, tz: string) {
   const m = dt.getMonth() + 1
   const d = dt.getDate()
   return `${dt.getFullYear()}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`
+}
+
+function parseDateString(value: string) {
+  const parts = value.split('-')
+  if (parts.length < 2) return null
+  const y = Number(parts[0])
+  const m = Number(parts[1])
+  const d = parts[2] ? Number(parts[2]) : 1
+  if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null
+  return new Date(y, m - 1, d)
+}
+
+function toDateOrNull(value: any, tz: string) {
+  if (!value) return null
+  if (typeof value === 'string') return parseDateString(value)
+  if (typeof value.toDate === 'function') return value.toDate(tz)
+  const dt = new Date(value)
+  return Number.isNaN(dt.getTime()) ? null : dt
+}
+
+function isStartAfterEnd(startValue: any, endValue: any, tz: string) {
+  const startDate = toDateOrNull(startValue, tz)
+  const endDate = toDateOrNull(endValue, tz)
+  if (!startDate || !endDate) return false
+  return startDate.getTime() > endDate.getTime()
 }
 
 function save(e?: Event) {
@@ -241,9 +271,12 @@ function save(e?: Event) {
   // Clear all validation errors first
   validationErrors.company = internships.value.map(() => false)
   validationErrors.role = internships.value.map(() => false)
+  validationErrors.dateRange = internships.value.map(() => false)
   
   // Validate required fields
   let hasError = false
+  const tz = getLocalTimeZone()
+
   for (let i = 0; i < internships.value.length; i++) {
     const intern = internships.value[i]
     if (!intern) continue
@@ -260,14 +293,23 @@ function save(e?: Event) {
         toast.error(t('internship.validation.roleRequired') || `Internship #${i + 1}: Role is required`)
       }
     }
+
+    const endValue = ongoing[i] ? today(tz) : (endDates[i] ?? intern.time?.end)
+    if (isStartAfterEnd(startDates[i] ?? intern.time?.start, endValue, tz)) {
+      validationErrors.dateRange[i] = true
+      hasError = true
+      toast.error(
+        t('internship.validation.dateRangeInvalid', { index: i + 1 }) ||
+        `Internship #${i + 1}: Start date must be before end date`
+      )
+    }
   }
   
   if (hasError) {
     return
   }
   
-  // convert DateValue to YYYY-MM strings for storage
-  const tz = getLocalTimeZone()
+  // convert DateValue to YYYY-MM-DD date strings for storage
   const formatted = internships.value.map((intern, i) => ({
     ...intern,
     time: {
@@ -292,6 +334,7 @@ function cancel() {
   // Clear validation errors
   validationErrors.company = internships.value.map(() => false)
   validationErrors.role = internships.value.map(() => false)
+  validationErrors.dateRange = internships.value.map(() => false)
   emit('cancel')
   pendingSave.value = false
   localEditing.value = false
@@ -307,6 +350,7 @@ function startEdit() {
     ongoing.push(false)
     validationErrors.company.push(false)
     validationErrors.role.push(false)
+    validationErrors.dateRange.push(false)
   }
   emit('request-edit')
 }
@@ -378,9 +422,17 @@ onMounted(() => {
                           <Calendar
                             v-model="startDates[idx]"
                             :default-placeholder="defaultPlaceholder"
+                            :max-value="endDates[idx]"
                             layout="month-and-year"
                             initial-focus
-                            @update:model-value="close"
+                            @update:model-value="(val) => {
+                              if (isStartAfterEnd(val, ongoing[idx] ? today(getLocalTimeZone()) : (endDates[idx] ?? intern.time?.end), getLocalTimeZone())) {
+                                validationErrors.dateRange[idx] = true
+                              } else {
+                                validationErrors.dateRange[idx] = false
+                              }
+                              close()
+                            }"
                           />
                         </PopoverContent>
                       </Popover>
@@ -389,7 +441,7 @@ onMounted(() => {
                     <FieldLabel :for="`end-${idx}`">{{ t('internship.time.end') || 'End' }}</FieldLabel>
                     <Popover v-slot="{ close }">
                       <PopoverTrigger as-child>
-                        <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !intern.time.end && 'text-muted-foreground')">
+                        <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !intern.time.end && 'text-muted-foreground', validationErrors.dateRange[idx] && 'border-red-500')">
                           <CalendarIcon class="mr-2 h-4 w-4" />
                             {{ ongoing[idx] ? (t('internship.time.till now') || 'Till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (intern.time.end || (t('date.pickEnd') || 'Pick end'))) }}
                         </Button>
@@ -398,12 +450,19 @@ onMounted(() => {
                           <Calendar
                             v-model="endDates[idx]"
                             :default-placeholder="defaultPlaceholder"
+                            :min-value="startDates[idx]"
                             layout="month-and-year"
                             initial-focus
-                            @update:model-value="(val) => (endDates[idx]=val, ongoing[idx]=false, (intern.time && (intern.time.end = formatToDate(val, getLocalTimeZone()))), close())"
+                            @update:model-value="(val) => {
+                              endDates[idx] = val
+                              ongoing[idx] = false
+                              if (intern.time) intern.time.end = formatToDate(val, getLocalTimeZone())
+                              validationErrors.dateRange[idx] = false
+                              close()
+                            }"
                           />
                           <div class="p-2 border-t">
-                            <Button type="button" variant="secondary" class="w-full" @click="(ongoing[idx]=true, endDates[idx]=today(getLocalTimeZone()), (intern.time && (intern.time.end = formatToDate(endDates[idx], getLocalTimeZone()))), close())">
+                            <Button type="button" variant="secondary" class="w-full" @click="(ongoing[idx]=true, endDates[idx]=today(getLocalTimeZone()), validationErrors.dateRange[idx]=false, (intern.time && (intern.time.end = formatToDate(endDates[idx], getLocalTimeZone()))), close())">
                               {{ t('internship.time.till now') || 'Till now' }}
                             </Button>
                           </div>

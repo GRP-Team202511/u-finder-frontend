@@ -259,6 +259,7 @@
             "typeRequired": "教育类型为必填项",
             "nameRequired": "学校名称为必填项",
             "startRequired": "开始日期为必填项",
+            "dateRangeInvalid": "开始日期不能晚于结束日期"
             "rankingFormat": "排名格式必须为 X/Y，例如 5/200",
             "rankingRange": "排名必须为正整数，且 X <= Y",
             "gpaBaseInvalid": "GPA 满分必须为正数",
@@ -384,7 +385,8 @@
         },
         "validation": {
             "companyRequired": "公司名称为必填项",
-            "roleRequired": "职位为必填项"
+            "roleRequired": "职位为必填项",
+            "dateRangeInvalid": "开始日期不能晚于结束日期"
         }
     },
     "project": {
@@ -405,7 +407,8 @@
             "description": "描述"
         },
         "validation": {
-            "nameRequired": "项目名称为必填项"
+            "nameRequired": "项目名称为必填项",
+            "dateRangeInvalid": "开始日期不能晚于结束日期"
         }
     },
     "campusExp": {
