@@ -69,8 +69,9 @@ async function fetchAvatar() {
   try {
     const response = await getAvatar('256x256')
     const fullUrl = buildAvatarUrl(response.data.url)
-    userAvatar.value = fullUrl
-    userStore.setAvatarUrl(fullUrl)
+    const cacheBustedUrl = fullUrl ? `${fullUrl}?t=${Date.now()}` : fullUrl
+    userAvatar.value = cacheBustedUrl
+    userStore.setAvatarUrl(cacheBustedUrl)
   } catch (error: any) {
     // 404 means user has no avatar — clear the local ref
     if (error?.response?.status === 404) {
