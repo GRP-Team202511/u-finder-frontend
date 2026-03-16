@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
@@ -41,6 +41,14 @@ const isSendingCode = ref(false)
 const isEmailSent = ref(false)
 const countdown = ref(0)
 let countdownTimer: number | null = null
+const otpValid = computed(() => /^\d{6}$/.test(otpCode.value))
+
+watch(otpCode, (newValue) => {
+  const digitsOnly = newValue.replace(/\D/g, '').slice(0, 6)
+  if (digitsOnly !== newValue) {
+    otpCode.value = digitsOnly
+  }
+})
 
 // Start countdown timer
 const startCountdown = (seconds: number = 60) => {
@@ -134,6 +142,11 @@ const handleSubmit = async(e: Event) => {
     return
   }
 
+  if (!otpValid.value) {
+    toast.error(t('login.reset.errors.wrongCode'))
+    return
+  }
+
   isLoading.value = true
   try {
     const response = await verifyResetPassword(
@@ -221,6 +234,9 @@ const handleSubmit = async(e: Event) => {
                   <Input 
                     id="otp"
                     v-model="otpCode"
+                    maxlength="6"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
                     :disabled="!isEmailSent"
                   />
                   <Button 
@@ -242,7 +258,7 @@ const handleSubmit = async(e: Event) => {
               <Field>
                 <Button 
                   type="submit"
-                  :disabled="isLoading || !isEmailSent"
+                  :disabled="isLoading || !isEmailSent || !otpValid"
                   class="w-full"
                 >
                   <Spinner v-if="isLoading" class="mr-2" />

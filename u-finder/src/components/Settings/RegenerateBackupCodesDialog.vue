@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import {
@@ -33,6 +33,14 @@ const verificationCode = ref('')
 const isVerifying = ref(false)
 const newBackupCodes = ref<string[]>([])
 const copiedAll = ref(false)
+const verificationCodeValid = computed(() => /^\d{6}$/.test(verificationCode.value))
+
+watch(verificationCode, (newValue) => {
+  const digitsOnly = newValue.replace(/\D/g, '').slice(0, 6)
+  if (digitsOnly !== newValue) {
+    verificationCode.value = digitsOnly
+  }
+})
 
 // Reset when dialog opens
 watch(() => props.open, (newValue) => {
@@ -46,7 +54,7 @@ watch(() => props.open, (newValue) => {
 })
 
 async function handleVerify() {
-  if (verificationCode.value.length !== 6) {
+  if (!verificationCodeValid.value) {
     toast.error(t('settings.account.twoFactor.regenerate.invalidCode'))
     return
   }
@@ -181,7 +189,7 @@ function handleClose() {
         <Button
           v-if="currentStep === 'verify'"
           @click="handleVerify"
-          :disabled="isVerifying || verificationCode.length !== 6"
+          :disabled="isVerifying || !verificationCodeValid"
         >
           <Spinner v-if="isVerifying" class="animate-spin mr-2" />
           {{ t('settings.account.twoFactor.regenerate.verify') }}
