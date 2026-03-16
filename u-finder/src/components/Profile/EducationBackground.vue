@@ -247,7 +247,7 @@ function save(e?: Event) {
   validationErrors.gpaBase = education.value.map(() => false)
 
   const rankingPattern = /^\d+\s*\/\s*\d+$/
-  const numberPattern = /^\d+(\.\d+)?$/
+  const numberPattern = /^-?\d+(\.\d+)?$/
 
   const parsePositiveNumber = (value: string) => {
     const normalized = value.trim()
