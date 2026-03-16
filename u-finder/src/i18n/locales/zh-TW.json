@@ -30,6 +30,11 @@
             "newPassword": "新密碼",
             "confirmPassword": "確認密碼",
             "codeDescription": "驗證碼已發送至您的郵箱。",
+            "step1Desc": "輸入電子郵箱以接收驗證碼",
+            "step2Desc": "輸入驗證碼並設定新密碼",
+            "step1Hint": "驗證碼將發送到此電子郵件地址",
+            "emailPlaceholder": "your@email.com",
+            "back": "返回",
             "resendCode": "重發",
             "errors": {
                 "emailRequired": "請輸入電子郵箱",

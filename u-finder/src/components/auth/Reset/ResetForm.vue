@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
@@ -20,6 +20,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
 import { toast } from 'vue-sonner'
 import { resetPassword, verifyResetPassword, resendResetPasswordCode } from "@/api/userApi"
 import { useRouter } from "vue-router"
@@ -39,7 +40,7 @@ const otpCode = ref('')
 const tempToken = ref('')
 const isLoading = ref(false)
 const isSendingCode = ref(false)
-const isEmailSent = ref(false)
+const currentStep = ref(1) // 1 = Enter email & send code, 2 = Enter OTP & new password
 const countdown = ref(0)
 let countdownTimer: number | null = null
 
@@ -69,7 +70,7 @@ const sendOTP = async() => {
   try {
     const response = await resetPassword({ email: email.value })
     tempToken.value = response.data.temp_token
-    isEmailSent.value = true
+    currentStep.value = 2
     startCountdown(60)
     toast.success(t('login.reset.success.codeSent'))
   } catch (error: any) {
@@ -105,7 +106,7 @@ const resendCode = async() => {
     if (error.response?.status === 401) {
       toast.error(t('login.reset.errors.tokenExpired'))
       // Reset form state
-      isEmailSent.value = false
+      currentStep.value = 1
       tempToken.value = ''
       countdown.value = 0
       if (countdownTimer) clearInterval(countdownTimer)
@@ -163,7 +164,7 @@ const handleSubmit = async(e: Event) => {
       } else if (errorMsg.includes('Token expired')) {
         toast.error(t('login.reset.errors.tokenExpired'))
         // Reset form state
-        isEmailSent.value = false
+        currentStep.value = 1
         tempToken.value = ''
         countdown.value = 0
         if (countdownTimer) clearInterval(countdownTimer)
@@ -179,97 +180,150 @@ const handleSubmit = async(e: Event) => {
     isLoading.value = false
   }
 }
+
+// Go back to step 1 to change email
+const goBack = () => {
+  if (currentStep.value === 2) {
+    currentStep.value = 1
+    otpCode.value = ''
+    newPassword.value = ''
+    confirmPassword.value = ''
+    tempToken.value = ''
+    countdown.value = 0
+    if (countdownTimer) {
+      clearInterval(countdownTimer)
+      countdownTimer = null
+    }
+  }
+}
+
+const canResend = computed(() => countdown.value === 0 && !isSendingCode.value)
+const resendButtonText = computed(() =>
+  countdown.value > 0 ? `${countdown.value}s` : t('login.reset.resendCode')
+)
 </script>
 
 <template>
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-center">
-          <CardTitle class="text-3xl font-bold">
-            {{ t("login.reset.title") }}
-          </CardTitle>
-          <CardDescription>
-            {{ t("login.reset.description") }}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form @submit="handleSubmit">
-            <FieldGroup>
-              <Field>
-                <FieldLabel for="email">
-                  {{ t("login.email") }}
-                </FieldLabel>
-                <Input
-                  id="email"
-                  v-model="email"
-                  type="email"
-                  :disabled="isEmailSent"
-                  required
-                />
-              </Field>
-              <Field>
-                <FieldLabel for="password">
-                  {{ t("login.reset.newPassword") }}
-                </FieldLabel>
-                <Input
-                  id="password"
-                  v-model="newPassword"
-                  type="password"
-                  :disabled="!isEmailSent"
-                  required
-                />
-              </Field>
-              <Field>
-                <FieldLabel for="confirm-password">
-                  {{ t("login.reset.confirmPassword") }}
-                </FieldLabel>
-                <Input
-                  id="confirm-password"
-                  v-model="confirmPassword"
-                  type="password"
-                  :disabled="!isEmailSent"
-                  required
-                />
-              </Field>
-              <Field>
-                <FieldLabel for="otp">
-                  {{ t("login.reset.otp") }}
-                </FieldLabel>
-                <div class="flex w-full max-w-sm items-center space-x-2">
-                  <Input 
-                    id="otp"
-                    v-model="otpCode"
-                    :disabled="!isEmailSent"
-                  />
-                  <Button 
-                    type="button"
-                    @click="isEmailSent ? resendCode() : sendOTP()"
-                    :disabled="isSendingCode || countdown > 0"
-                  >
-                    <Spinner v-if="isSendingCode" class="mr-2" />
-                    <template v-if="countdown > 0">
-                      {{ countdown }}s
-                    </template>
-                    <template v-else>
-                      {{ isEmailSent ? t("login.reset.resendCode") : t("login.reset.sendCode") }}
-                    </template>
-                  </Button>
-                </div>
-              </Field>
-              <FieldSeparator />
-              <Field>
-                <Button 
-                  type="submit"
-                  :disabled="isLoading || !isEmailSent || !newPassword || !confirmPassword"
-                  class="w-full"
+        <CardTitle class="text-3xl font-bold">
+          {{ t("login.reset.title") }}
+        </CardTitle>
+        <CardDescription>
+          {{
+            currentStep === 1
+              ? t("login.reset.step1Desc")
+              : t("login.reset.step2Desc")
+          }}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <!-- Step 1: Enter email and send verification code -->
+        <form v-if="currentStep === 1" @submit.prevent="sendOTP">
+          <FieldGroup>
+            <Field>
+              <FieldLabel for="email">{{ t("login.email") }}</FieldLabel>
+              <Input
+                id="email"
+                v-model="email"
+                type="email"
+                required
+                :placeholder="t('login.reset.emailPlaceholder')"
+              />
+              <FieldDescription class="text-muted-foreground text-sm mt-1">
+                {{ t("login.reset.step1Hint") }}
+              </FieldDescription>
+            </Field>
+            <FieldSeparator />
+            <Field>
+              <Button
+                type="submit"
+                class="w-full"
+                :disabled="isSendingCode || !email"
+              >
+                <Spinner v-if="isSendingCode" class="mr-2" />
+                {{ t("login.reset.sendCode") }}
+              </Button>
+            </Field>
+          </FieldGroup>
+        </form>
+
+        <!-- Step 2: Enter OTP and new password -->
+        <form v-else-if="currentStep === 2" @submit="handleSubmit">
+          <FieldGroup>
+            <Field>
+              <FieldLabel class="text-muted-foreground">{{ t("login.email") }}</FieldLabel>
+              <div class="rounded-md border border-input bg-muted/50 px-3 py-2 text-sm">
+                {{ email }}
+              </div>
+            </Field>
+            <Field>
+              <FieldLabel for="otp">{{ t("login.reset.otp") }}</FieldLabel>
+              <div class="flex flex-col gap-2">
+                <InputOTP v-model="otpCode" :maxlength="6" class="gap-2 justify-center">
+                  <InputOTPGroup>
+                    <InputOTPSlot :index="0" />
+                    <InputOTPSlot :index="1" />
+                    <InputOTPSlot :index="2" />
+                    <InputOTPSlot :index="3" />
+                    <InputOTPSlot :index="4" />
+                    <InputOTPSlot :index="5" />
+                  </InputOTPGroup>
+                </InputOTP>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  class="h-auto p-0 text-xs self-start"
+                  :disabled="!canResend"
+                  @click="resendCode"
                 >
-                  <Spinner v-if="isLoading" class="mr-2" />
-                  {{ t("login.reset.send") }}
+                  <Spinner v-if="isSendingCode" class="mr-1 size-3" />
+                  {{ resendButtonText }}
                 </Button>
-              </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
+              </div>
+            </Field>
+            <Field>
+              <FieldLabel for="password">{{ t("login.reset.newPassword") }}</FieldLabel>
+              <Input
+                id="password"
+                v-model="newPassword"
+                type="password"
+                required
+              />
+            </Field>
+            <Field>
+              <FieldLabel for="confirm-password">{{ t("login.reset.confirmPassword") }}</FieldLabel>
+              <Input
+                id="confirm-password"
+                v-model="confirmPassword"
+                type="password"
+                required
+              />
+            </Field>
+            <FieldSeparator />
+            <Field class="flex flex-col gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                :disabled="isLoading"
+                @click="goBack"
+              >
+                {{ t("login.reset.back") }}
+              </Button>
+              <Button
+                type="submit"
+                class="w-full"
+                :disabled="isLoading || !otpCode || !newPassword || !confirmPassword"
+              >
+                <Spinner v-if="isLoading" class="mr-2" />
+                {{ t("login.reset.send") }}
+              </Button>
+            </Field>
+          </FieldGroup>
+        </form>
+      </CardContent>
     </Card>
   </div>
 </template>

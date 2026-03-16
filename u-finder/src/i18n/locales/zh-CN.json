@@ -30,6 +30,11 @@
             "newPassword": "新密码",
             "confirmPassword": "确认密码",
             "codeDescription": "验证码已发送至您的邮箱。",
+            "step1Desc": "输入邮箱以接收验证码",
+            "step2Desc": "输入验证码并设置新密码",
+            "step1Hint": "验证码将发送到此邮箱地址",
+            "emailPlaceholder": "your@email.com",
+            "back": "返回",
             "resendCode": "重发",
             "errors": {
                 "emailRequired": "请输入电子邮箱",
