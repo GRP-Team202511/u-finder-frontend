@@ -401,7 +401,15 @@
         "validation": {
             "typeRequired": "Education type is required",
             "nameRequired": "Institution name is required",
-            "startRequired": "Start date is required"
+            "startRequired": "Start date is required",
+            "rankingFormat": "Ranking must use format X/Y, e.g. 5/200",
+            "rankingRange": " Ranking must be positive integers with X <= Y",
+            "gpaBaseInvalid": "GPA base must be a positive number",
+            "gpaBaseMin": " GPA base must be greater than 0",
+            "gpaBaseMax": "GPA base must be 100 or below",
+            "gpaInvalid": "GPA must be a positive number",
+            "gpaNegative": "GPA cannot be negative",
+            "gpaExceedsBase": "GPA cannot be greater than GPA base"
         }
     },
     "academic": {

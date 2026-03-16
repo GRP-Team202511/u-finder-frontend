@@ -131,16 +131,22 @@ const validationErrors = reactive<{
   type: boolean[]
   name: boolean[]
   startDate: boolean[]
+  ranking: boolean[]
+  gpa: boolean[]
+  gpaBase: boolean[]
 }>(
   {
     type: education.value.map(() => false),
     name: education.value.map(() => false),
-    startDate: education.value.map(() => false)
+    startDate: education.value.map(() => false),
+    ranking: education.value.map(() => false),
+    gpa: education.value.map(() => false),
+    gpaBase: education.value.map(() => false)
   }
 )
 
 // Clear validation error for a specific field
-function clearError(index: number, field: 'type' | 'name' | 'startDate') {
+function clearError(index: number, field: 'type' | 'name' | 'startDate' | 'ranking' | 'gpa' | 'gpaBase') {
   validationErrors[field][index] = false
 }
 
@@ -168,6 +174,9 @@ watch(
       validationErrors.type = education.value.map(() => false)
       validationErrors.name = education.value.map(() => false)
       validationErrors.startDate = education.value.map(() => false)
+      validationErrors.ranking = education.value.map(() => false)
+      validationErrors.gpa = education.value.map(() => false)
+      validationErrors.gpaBase = education.value.map(() => false)
     } else if (pendingSave.value && nv) {
       // Save succeeded: parent updated modelValue, exit edit mode
       localEditing.value = false
@@ -188,6 +197,9 @@ function addEntry() {
   validationErrors.type.push(false)
   validationErrors.name.push(false)
   validationErrors.startDate.push(false)
+  validationErrors.ranking.push(false)
+  validationErrors.gpa.push(false)
+  validationErrors.gpaBase.push(false)
 }
 
 function removeEntry(index: number) {
@@ -197,6 +209,9 @@ function removeEntry(index: number) {
   if (validationErrors.type.length > index) validationErrors.type.splice(index, 1)
   if (validationErrors.name.length > index) validationErrors.name.splice(index, 1)
   if (validationErrors.startDate.length > index) validationErrors.startDate.splice(index, 1)
+  if (validationErrors.ranking.length > index) validationErrors.ranking.splice(index, 1)
+  if (validationErrors.gpa.length > index) validationErrors.gpa.splice(index, 1)
+  if (validationErrors.gpaBase.length > index) validationErrors.gpaBase.splice(index, 1)
 }
 
 function formatToDate(dv: any, tz: string) {
@@ -227,6 +242,27 @@ function save(e?: Event) {
   validationErrors.type = education.value.map(() => false)
   validationErrors.name = education.value.map(() => false)
   validationErrors.startDate = education.value.map(() => false)
+  validationErrors.ranking = education.value.map(() => false)
+  validationErrors.gpa = education.value.map(() => false)
+  validationErrors.gpaBase = education.value.map(() => false)
+
+  const rankingPattern = /^\d+\s*\/\s*\d+$/
+  const numberPattern = /^-?\d+(\.\d+)?$/
+
+  const parsePositiveNumber = (value: string) => {
+    const normalized = value.trim()
+    if (!normalized) return undefined
+    if (!numberPattern.test(normalized)) return NaN
+    const parsed = Number(normalized)
+    if (!isFinite(parsed)) return NaN
+    return parsed
+  }
+
+  let firstErrorMessage = ''
+
+  const setFirstError = (msg: string) => {
+    if (!firstErrorMessage) firstErrorMessage = msg
+  }
   
   // Validate required fields
   let hasError = false
@@ -239,25 +275,98 @@ function save(e?: Event) {
     if (!edu.type) {
       validationErrors.type[i] = true
       hasError = true
-      toast.error(t('edu.validation.typeRequired') || `Education #${i + 1}: Type is required`)
+      setFirstError(t('edu.validation.typeRequired') || `Education #${i + 1}: Type is required`)
     }
     if (!edu.name || !edu.name.trim()) {
       validationErrors.name[i] = true
       hasError = true
-      if (!hasError || edu.type) { // Only show if not already showing type error
-        toast.error(t('edu.validation.nameRequired') || `Education #${i + 1}: Institution name is required`)
-      }
+      setFirstError(t('edu.validation.nameRequired') || `Education #${i + 1}: Institution name is required`)
     }
     if (!hasStartDate) {
       validationErrors.startDate[i] = true
       hasError = true
-      if (!validationErrors.type[i] && !validationErrors.name[i]) { // Only show if no previous errors
-        toast.error(t('edu.validation.startRequired') || `Education #${i + 1}: Start date is required`)
+      setFirstError(t('edu.validation.startRequired') || `Education #${i + 1}: Start date is required`)
+    }
+
+    if (edu.ranking?.trim()) {
+      const rankingValue = edu.ranking.trim()
+      if (!rankingPattern.test(rankingValue)) {
+        validationErrors.ranking[i] = true
+        hasError = true
+        setFirstError(
+          t('edu.validation.rankingFormat', { index: i + 1 }) ||
+          `Education #${i + 1}: Ranking must use format X/Y, e.g. 5/200`
+        )
+      } else {
+        const parts = rankingValue.split('/')
+        const left = Number(parts[0]?.trim() ?? '')
+        const right = Number(parts[1]?.trim() ?? '')
+        if (!Number.isInteger(left) || !Number.isInteger(right) || left <= 0 || right <= 0 || left > right) {
+          validationErrors.ranking[i] = true
+          hasError = true
+          setFirstError(
+            t('edu.validation.rankingRange', { index: i + 1 }) ||
+            `Education #${i + 1}: Ranking must be positive integers with X <= Y`
+          )
+        }
       }
+    }
+
+    const gpa = parsePositiveNumber(edu.GPA ?? '')
+    const gpaBase = parsePositiveNumber(edu.GPA_base ?? '')
+
+    if (typeof gpaBase === 'number' && Number.isNaN(gpaBase)) {
+      validationErrors.gpaBase[i] = true
+      hasError = true
+      setFirstError(
+        t('edu.validation.gpaBaseInvalid', { index: i + 1 }) ||
+        `Education #${i + 1}: GPA base must be a positive number`
+      )
+    } else if (typeof gpaBase === 'number' && gpaBase <= 0) {
+      validationErrors.gpaBase[i] = true
+      hasError = true
+      setFirstError(
+        t('edu.validation.gpaBaseMin', { index: i + 1 }) ||
+        `Education #${i + 1}: GPA base must be greater than 0`
+      )
+    } else if (typeof gpaBase === 'number' && gpaBase > 100) {
+      validationErrors.gpaBase[i] = true
+      hasError = true
+      setFirstError(
+        t('edu.validation.gpaBaseMax', { index: i + 1 }) ||
+        `Education #${i + 1}: GPA base must be 100 or below`
+      )
+    }
+
+    if (typeof gpa === 'number' && Number.isNaN(gpa)) {
+      validationErrors.gpa[i] = true
+      hasError = true
+      setFirstError(
+        t('edu.validation.gpaInvalid', { index: i + 1 }) ||
+        `Education #${i + 1}: GPA must be a positive number`
+      )
+    } else if (typeof gpa === 'number' && gpa < 0) {
+      validationErrors.gpa[i] = true
+      hasError = true
+      setFirstError(
+        t('edu.validation.gpaNegative', { index: i + 1 }) ||
+        `Education #${i + 1}: GPA cannot be negative`
+      )
+    }
+
+    if (typeof gpa === 'number' && typeof gpaBase === 'number' && !Number.isNaN(gpa) && !Number.isNaN(gpaBase) && gpa > gpaBase) {
+      validationErrors.gpa[i] = true
+      validationErrors.gpaBase[i] = true
+      hasError = true
+      setFirstError(
+        t('edu.validation.gpaExceedsBase', { index: i + 1 }) ||
+        `Education #${i + 1}: GPA cannot be greater than GPA base`
+      )
     }
   }
   
   if (hasError) {
+    if (firstErrorMessage) toast.error(firstErrorMessage)
     return
   }
   
@@ -285,6 +394,9 @@ function cancel() {
   validationErrors.type = education.value.map(() => false)
   validationErrors.name = education.value.map(() => false)
   validationErrors.startDate = education.value.map(() => false)
+  validationErrors.ranking = education.value.map(() => false)
+  validationErrors.gpa = education.value.map(() => false)
+  validationErrors.gpaBase = education.value.map(() => false)
   emit('cancel')
   pendingSave.value = false
   localEditing.value = false
@@ -308,6 +420,9 @@ function startEdit() {
     validationErrors.type.push(false)
     validationErrors.name.push(false)
     validationErrors.startDate.push(false)
+    validationErrors.ranking.push(false)
+    validationErrors.gpa.push(false)
+    validationErrors.gpaBase.push(false)
   }
   emit('request-edit')
 }
@@ -427,15 +542,35 @@ onMounted(() => {
                 <div class="grid grid-cols-3 gap-4">
                   <Field>
                     <FieldLabel :for="`ranking-${idx}`">{{ t('edu.ranking') || 'Ranking' }}</FieldLabel>
-                    <Input :id="`ranking-${idx}`" v-model="edu.ranking" :placeholder="t('edu.placeholders.ranking') || 'e.g. 5/200'" />
+                    <Input
+                      :id="`ranking-${idx}`"
+                      v-model="edu.ranking"
+                      :placeholder="t('edu.placeholders.ranking') || 'e.g. 5/200'"
+                      :class="validationErrors.ranking[idx] && 'border-red-500'"
+                      @input="clearError(idx, 'ranking')"
+                    />
                   </Field>
                   <Field>
                     <FieldLabel :for="`gpa-${idx}`">{{ t('edu.GPA') || 'GPA' }}</FieldLabel>
-                    <Input :id="`gpa-${idx}`" v-model="edu.GPA" :placeholder="t('edu.placeholders.gpa') || '3.8'" />
+                    <Input
+                      :id="`gpa-${idx}`"
+                      v-model="edu.GPA"
+                      inputmode="decimal"
+                      :placeholder="t('edu.placeholders.gpa') || '3.8'"
+                      :class="validationErrors.gpa[idx] && 'border-red-500'"
+                      @input="clearError(idx, 'gpa')"
+                    />
                   </Field>
                   <Field>
                     <FieldLabel :for="`gpa-base-${idx}`">{{ t('edu.GPA-base') || 'GPA Base' }}</FieldLabel>
-                    <Input :id="`gpa-base-${idx}`" v-model="edu.GPA_base" :placeholder="t('edu.placeholders.gpaBase') || '4.0'" />
+                    <Input
+                      :id="`gpa-base-${idx}`"
+                      v-model="edu.GPA_base"
+                      inputmode="decimal"
+                      :placeholder="t('edu.placeholders.gpaBase') || '4.0'"
+                      :class="validationErrors.gpaBase[idx] && 'border-red-500'"
+                      @input="clearError(idx, 'gpaBase')"
+                    />
                   </Field>
                 </div>
 
