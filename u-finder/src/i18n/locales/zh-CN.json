@@ -274,8 +274,8 @@
         "selectType": "选择类型",
         "selectTypeHint": "选择类型以输入详细信息。",
         "empty": "暂无学术成果",
-        "add": "添加学术成果",
-        "type": {
+        "add": "添加学术成果",        "paper": "论文",
+        "patent": "专利",        "type": {
             "title": "类型",
             "researchPaper": "研究论文",
             "patent": "专利"

@@ -418,6 +418,8 @@
         "selectTypeHint": "Select a type to enter details.",
         "empty": "No academic outcomes",
         "add": "Add academic outcome",
+        "paper": "Paper",
+        "patent": "Patent",
         "type": {
             "title": "Type",
             "researchPaper": "Research Paper",
