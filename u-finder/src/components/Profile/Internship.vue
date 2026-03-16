@@ -281,7 +281,7 @@ function save(e?: Event) {
     return
   }
   
-  // convert DateValue to YYYY-MM strings for storage
+  // convert DateValue to YYYY-MM-DD date strings for storage
   const formatted = internships.value.map((intern, i) => ({
     ...intern,
     time: {
