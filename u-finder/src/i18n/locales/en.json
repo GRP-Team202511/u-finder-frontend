@@ -402,14 +402,14 @@
             "typeRequired": "Education type is required",
             "nameRequired": "Institution name is required",
             "startRequired": "Start date is required",
-            "rankingFormat": "Education #{index}: Ranking must use format X/Y, e.g. 5/200",
-            "rankingRange": "Education #{index}: Ranking must be positive integers with X <= Y",
-            "gpaBaseInvalid": "Education #{index}: GPA base must be a positive number",
-            "gpaBaseMin": "Education #{index}: GPA base must be greater than 0",
-            "gpaBaseMax": "Education #{index}: GPA base must be 100 or below",
-            "gpaInvalid": "Education #{index}: GPA must be a positive number",
-            "gpaNegative": "Education #{index}: GPA cannot be negative",
-            "gpaExceedsBase": "Education #{index}: GPA cannot be greater than GPA base"
+            "rankingFormat": "Education {index}: Ranking must use format X/Y, e.g. 5/200",
+            "rankingRange": "Education {index}: Ranking must be positive integers with X <= Y",
+            "gpaBaseInvalid": "Education {index}: GPA base must be a positive number",
+            "gpaBaseMin": "Education {index}: GPA base must be greater than 0",
+            "gpaBaseMax": "Education {index}: GPA base must be 100 or below",
+            "gpaInvalid": "Education {index}: GPA must be a positive number",
+            "gpaNegative": "Education {index}: GPA cannot be negative",
+            "gpaExceedsBase": "Education {index}: GPA cannot be greater than GPA base"
         }
     },
     "academic": {

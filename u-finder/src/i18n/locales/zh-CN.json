@@ -259,14 +259,14 @@
             "typeRequired": "教育类型为必填项",
             "nameRequired": "学校名称为必填项",
             "startRequired": "开始日期为必填项",
-            "rankingFormat": "教育经历 #{index}：排名格式必须为 X/Y，例如 5/200",
-            "rankingRange": "教育经历 #{index}：排名必须为正整数，且 X <= Y",
-            "gpaBaseInvalid": "教育经历 #{index}：GPA 满分必须为正数",
-            "gpaBaseMin": "教育经历 #{index}：GPA 满分必须大于 0",
-            "gpaBaseMax": "教育经历 #{index}：GPA 满分不能大于 100",
-            "gpaInvalid": "教育经历 #{index}：GPA 必须为正数",
-            "gpaNegative": "教育经历 #{index}：GPA 不能为负数",
-            "gpaExceedsBase": "教育经历 #{index}：GPA 不能大于 GPA 满分"
+            "rankingFormat": "教育经历 {index}：排名格式必须为 X/Y，例如 5/200",
+            "rankingRange": "教育经历 {index}：排名必须为正整数，且 X <= Y",
+            "gpaBaseInvalid": "教育经历 {index}：GPA 满分必须为正数",
+            "gpaBaseMin": "教育经历 {index}：GPA 满分必须大于 0",
+            "gpaBaseMax": "教育经历 {index}：GPA 满分不能大于 100",
+            "gpaInvalid": "教育经历 {index}：GPA 必须为正数",
+            "gpaNegative": "教育经历 {index}：GPA 不能为负数",
+            "gpaExceedsBase": "教育经历 {index}：GPA 不能大于 GPA 满分"
         }
     },
     "academic": {
