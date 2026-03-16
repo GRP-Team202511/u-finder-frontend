@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { cn } from "@/lib/utils"
+import { cn, isBlankValue } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useI18n } from 'vue-i18n'
 import {
@@ -105,6 +105,12 @@ function removeEntry(index: number) {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
+
+  // Remove untouched blank entries so users don't need to manually click Remove.
+  awards.value = awards.value.filter((award) => {
+    if (!award) return false
+    return !isBlankValue(award.name) || !isBlankValue(award.description)
+  })
   
   // Clear all validation errors first
   validationErrors.name = awards.value.map(() => false)

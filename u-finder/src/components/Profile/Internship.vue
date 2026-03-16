@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
-import { cn } from "@/lib/utils"
+import { cn, isBlankValue } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useI18n } from 'vue-i18n'
 import {
@@ -239,6 +239,34 @@ function isStartAfterEnd(startValue: any, endValue: any, tz: string) {
 
 function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
+
+  // Remove untouched blank entries so users don't need to manually click Remove.
+  const keptInternships: InternshipEntry[] = []
+  const keptStartDates: any[] = []
+  const keptEndDates: any[] = []
+  const keptOngoing: boolean[] = []
+  for (let i = 0; i < internships.value.length; i++) {
+    const intern = internships.value[i]
+    if (!intern) continue
+    const hasAnyField =
+      !isBlankValue(intern.company) ||
+      !isBlankValue(intern.role) ||
+      !isBlankValue(intern.time?.start) ||
+      !isBlankValue(intern.time?.end) ||
+      !!startDates[i] ||
+      !!endDates[i] ||
+      !!ongoing[i]
+    if (hasAnyField) {
+      keptInternships.push(intern)
+      keptStartDates.push(startDates[i])
+      keptEndDates.push(endDates[i])
+      keptOngoing.push(!!ongoing[i])
+    }
+  }
+  internships.value = keptInternships
+  startDates.splice(0, startDates.length, ...keptStartDates)
+  endDates.splice(0, endDates.length, ...keptEndDates)
+  ongoing.splice(0, ongoing.length, ...keptOngoing)
   
   // Clear all validation errors first
   validationErrors.company = internships.value.map(() => false)
