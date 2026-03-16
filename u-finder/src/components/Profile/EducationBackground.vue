@@ -140,7 +140,7 @@ const validationErrors = reactive<{
     type: education.value.map(() => false),
     name: education.value.map(() => false),
     startDate: education.value.map(() => false),
-    endDate: education.value.map(() => false)
+    endDate: education.value.map(() => false),
     ranking: education.value.map(() => false),
     gpa: education.value.map(() => false),
     gpaBase: education.value.map(() => false)
@@ -148,7 +148,7 @@ const validationErrors = reactive<{
 )
 
 // Clear validation error for a specific field
-function clearError(index: number, field: 'type' | 'name' | 'startDate' | 'ranking' | 'gpa' | 'gpaBase') {
+function clearError(index: number, field: 'type' | 'name' | 'startDate' | 'endDate' | 'ranking' | 'gpa' | 'gpaBase') {
   validationErrors[field][index] = false
 }
 
@@ -376,9 +376,12 @@ function save(e?: Event) {
     if (isStartAfterEnd(startDates[i] ?? edu.time?.start, endDates[i] ?? edu.time?.end, tz)) {
       validationErrors.endDate[i] = true
       hasError = true
-      toast.error(
+      setFirstError(
         t('edu.validation.dateRangeInvalid', { index: i + 1 }) ||
         `Education #${i + 1}: Start date must be before end date`
+      )
+    }
+
     const gpa = parsePositiveNumber(edu.GPA ?? '')
     const gpaBase = parsePositiveNumber(edu.GPA_base ?? '')
 
