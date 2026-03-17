@@ -166,6 +166,9 @@ import {
   type AdminUser,
 } from '@/api/dashboard'
 import { extractErrorMessage } from '@/api/http'
+import { useAdminStore } from '@/stores/adminStore'
+
+const adminStore = useAdminStore()
 
 const USER_TYPE_MAP: Record<string, string> = {
   '1': 'Student',
@@ -184,6 +187,7 @@ interface UserRow {
 }
 
 function mapUser(u: AdminUser): UserRow {
+  const isSelf = u.id === adminStore.admin?.id
   return {
     id: u.id,
     name: u.name,
@@ -191,7 +195,9 @@ function mapUser(u: AdminUser): UserRow {
     role: USER_TYPE_MAP[u.type] ?? 'Unknown',
     status: u.status.charAt(0).toUpperCase() + u.status.slice(1),
     createdAt: new Date(u.created_at).toLocaleDateString(),
-    availableActions: u.available_actions,
+    availableActions: isSelf
+      ? u.available_actions.filter(a => a !== 'block' && a !== 'delete')
+      : u.available_actions,
   }
 }
 
