@@ -48,17 +48,12 @@
       </div>
     </div>
 
-    <div class="flex flex-wrap gap-[10px]">
-      <Button variant="outline" size="default" class="text-[13px] font-bold">Download</Button>
-      <Button variant="default" size="default" class="text-[13px] font-bold">Set Alert</Button>
-    </div>
   </Card>
 </template>
 
 <script setup lang="ts">
 import type { AcceptableValue } from 'reka-ui'
 import { computed, ref } from 'vue'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 

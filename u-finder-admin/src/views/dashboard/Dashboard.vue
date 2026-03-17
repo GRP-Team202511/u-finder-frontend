@@ -9,14 +9,8 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-[10px]">
-        <Button variant="outline" size="lg" class="min-h-10 text-[13px] font-semibold" @click="handleExport">
-          Export
-        </Button>
         <Button variant="outline" size="lg" class="min-h-10 text-[13px] font-semibold" @click="loadDashboard">
           Refresh
-        </Button>
-        <Button variant="default" size="lg" class="min-h-10 text-[13px] font-semibold" @click="handleSave">
-          Save
         </Button>
       </div>
     </div>
@@ -96,14 +90,6 @@ function handleLogFilterChange(params: { logs_date?: string; logs_level?: string
 function handleCostFilterChange(params: { cost_model?: string; cost_time_range?: string }) {
   filters.value = { ...filters.value, ...params }
   loadDashboard()
-}
-
-function handleExport() {
-  console.log('export dashboard')
-}
-
-function handleSave() {
-  console.log('save dashboard settings')
 }
 
 onMounted(() => {
