@@ -111,8 +111,7 @@ onBeforeUnmount(() => {
     <!-- University cards and per-card loading skeleton -->
     <div v-if="universities?.length || showUniversityCardSkeleton" class="grid gap-4">
       <UniversityCard
-        v-if="universities?.length"
-        v-for="uni in universities"
+        v-for="uni in universities ?? []"
         :key="uni.official_program_url || `${uni.university.name}-${uni.degree_program.name}`"
         :program="uni"
       />
