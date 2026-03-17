@@ -55,6 +55,18 @@ const findPartialStartSuffix = (value: string) => {
 	return 0;
 };
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+	Boolean(value) && typeof value === "object";
+
+const isString = (value: unknown): value is string =>
+	typeof value === "string";
+
+const isNullableString = (value: unknown): value is string | null =>
+	value === null || typeof value === "string";
+
+const isNullableNumber = (value: unknown): value is number | null =>
+	value === null || typeof value === "number";
+
 const parseCardPrograms = (rawPayload: string): ProgramCardData[] | null => {
 	const candidates: string[] = [];
 	const trimmed = rawPayload.trim();
@@ -109,11 +121,50 @@ const parseCardPrograms = (rawPayload: string): ProgramCardData[] | null => {
 };
 
 const isProgramCardLike = (value: unknown): value is ProgramCardData => {
-	if (!value || typeof value !== "object") return false;
-	const candidate = value as ProgramCardData;
-	if (!candidate.university || !candidate.degree_program) return false;
-	if (typeof candidate.university.name !== "string") return false;
-	if (typeof candidate.degree_program.name !== "string") return false;
+	if (!isRecord(value)) return false;
+
+	const university = value.university;
+	if (!isRecord(university)) return false;
+	if (!isString(university.name)) return false;
+	if (!isNullableString(university.country)) return false;
+	if (!isNullableString(university.city)) return false;
+	if (!isString(university.official_website)) return false;
+
+	const faculty = value.faculty;
+	if (!isRecord(faculty)) return false;
+	if (!isNullableString(faculty.name)) return false;
+	if (!isNullableString(faculty.official_website)) return false;
+
+	const degreeProgram = value.degree_program;
+	if (!isRecord(degreeProgram)) return false;
+	if (!isString(degreeProgram.name)) return false;
+	if (!isString(degreeProgram.degree_level)) return false;
+	if (!isString(degreeProgram.field)) return false;
+	if (!isNullableString(degreeProgram.track_or_specialization)) return false;
+	if (!isString(degreeProgram.program_type)) return false;
+	if (!isNullableString(degreeProgram.duration)) return false;
+	if (!isNullableString(degreeProgram.language)) return false;
+
+	const admissions = value.admissions;
+	if (!isRecord(admissions)) return false;
+	if (!isNullableString(admissions.academic_requirements)) return false;
+	if (!isNullableString(admissions.language_requirements)) return false;
+	if (!isNullableString(admissions.other_requirements)) return false;
+	if (!isNullableString(admissions.application_deadline)) return false;
+
+	const tuition = value.tuition;
+	if (!isRecord(tuition)) return false;
+	if (!isNullableNumber(tuition.amount)) return false;
+	if (!isNullableString(tuition.currency)) return false;
+	if (!isNullableString(tuition.per)) return false;
+
+	if (!(value.career_outcomes === null || (Array.isArray(value.career_outcomes) && value.career_outcomes.every(isString)))) {
+		return false;
+	}
+
+	if (!isString(value.official_program_url)) return false;
+	if (!isString(value.last_verified)) return false;
+
 	return true;
 };
 
