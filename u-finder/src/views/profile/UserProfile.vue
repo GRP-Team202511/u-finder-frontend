@@ -514,16 +514,12 @@ function handleCVResultCancel() {
 
 		<!-- Save All dock -->
 		<Transition
-			enter-active-class="transition duration-200 ease-out"
-			enter-from-class="opacity-0 translate-y-full"
-			enter-to-class="opacity-100 translate-y-0"
-			leave-active-class="transition duration-150 ease-in"
-			leave-from-class="opacity-100 translate-y-0"
-			leave-to-class="opacity-0 translate-y-full"
+			enter-from-class="translate-y-full"
+			leave-to-class="translate-y-full"
 		>
 			<div
 				v-if="hasEditingEditors"
-				class="fixed bottom-0 right-0 z-50 flex items-center justify-center border-t bg-background py-3 transition-[left] duration-200 ease-linear"
+				class="fixed bottom-0 right-0 z-50 flex items-center justify-center border-t bg-background py-3 transition-[left,translate] duration-200 ease-linear"
 				:style="{ left: !isMobile && sidebarOpen ? 'var(--sidebar-width, 16rem)' : '0' }"
 			>
 				<Button
