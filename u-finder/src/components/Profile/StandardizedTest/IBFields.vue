@@ -99,11 +99,11 @@ function removeSubject(index: number) {
 <template>
 	<div class="grid gap-4">
 		<Field>
-			<FieldLabel :for="`ib-session-${props.index}`">{{ t('test.examSession') || 'Exam session' }}</FieldLabel>
+			<FieldLabel :for="`ib-session-${props.index}`">{{ t('test.examSession') }}</FieldLabel>
 			<div v-if="props.editable" class="grid grid-cols-2 gap-4">
 				<Select v-model="selectedYear">
 					<SelectTrigger :id="`ib-year-${props.index}`" class="w-full">
-						<SelectValue :placeholder="t('test.examYear') || 'Year'" />
+						<SelectValue :placeholder="t('test.examYear')" />
 					</SelectTrigger>
 					<SelectContent>
 						<SelectItem v-for="year in examYears" :key="year" :value="String(year)">{{ year }}</SelectItem>
@@ -111,7 +111,7 @@ function removeSubject(index: number) {
 				</Select>
 				<Select v-model="selectedMonth">
 					<SelectTrigger :id="`ib-month-${props.index}`" class="w-full">
-						<SelectValue :placeholder="t('test.month') || 'Month'" />
+						<SelectValue :placeholder="t('test.month')" />
 					</SelectTrigger>
 					<SelectContent>
 						<SelectItem v-for="month in availableMonths" :key="month.value" :value="month.value">{{ month.label }}</SelectItem>
@@ -123,25 +123,25 @@ function removeSubject(index: number) {
 
 		<div class="rounded-md border p-4">
 			<div class="grid gap-2">
-			<div class="text-sm font-medium text-left">{{ t('test.scores.title') || 'Scores' }}</div>
+			<div class="text-sm font-medium text-left">{{ t('test.scores.title') }}</div>
 			<div class="grid grid-cols-2 gap-4 pt-2">
 				<Field>
-					<FieldLabel>{{ t('test.scores.total') || 'Total' }}</FieldLabel>
+					<FieldLabel>{{ t('test.scores.total') }}</FieldLabel>
 					<Input v-if="props.editable" v-model="props.entry.scores.total" />
 					<div v-else class="text-sm text-left">{{ props.entry.scores.total || '-' }}</div>
 				</Field>
 				<Field>
-					<FieldLabel>{{ t('test.scores.corePoints') || 'Core points' }}</FieldLabel>
+					<FieldLabel>{{ t('test.scores.corePoints') }}</FieldLabel>
 					<Input v-if="props.editable" v-model="props.entry.scores.core_points" />
 					<div v-else class="text-sm text-left">{{ props.entry.scores.core_points || '-' }}</div>
 				</Field>
 				<Field>
-					<FieldLabel>{{ t('test.scores.extendedEssay') || 'Extended essay grade' }}</FieldLabel>
+					<FieldLabel>{{ t('test.scores.extendedEssay') }}</FieldLabel>
 					<Input v-if="props.editable" v-model="props.entry.scores.extended_essay_grade" />
 					<div v-else class="text-sm text-left">{{ props.entry.scores.extended_essay_grade || '-' }}</div>
 				</Field>
 				<Field>
-					<FieldLabel>{{ t('test.scores.tok') || 'TOK grade' }}</FieldLabel>
+					<FieldLabel>{{ t('test.scores.tok') }}</FieldLabel>
 					<Input v-if="props.editable" v-model="props.entry.scores.tok_grade" />
 					<div v-else class="text-sm text-left">{{ props.entry.scores.tok_grade || '-' }}</div>
 				</Field>
@@ -151,10 +151,10 @@ function removeSubject(index: number) {
 
 		<div class="rounded-md border p-4">
 			<div class="grid gap-2">
-				<div class="text-sm font-medium text-left">{{ t('test.subjects') || 'Subjects' }}</div>
+				<div class="text-sm font-medium text-left">{{ t('test.subjects') }}</div>
 				<div v-for="(subject, sidx) in subjects" :key="sidx" class="grid grid-cols-2 gap-4 pt-2">
 					<Field>
-						<FieldLabel :for="`ib-subject-${props.index}-${sidx}`">{{ t('test.subject') || 'Subject' }}</FieldLabel>
+						<FieldLabel :for="`ib-subject-${props.index}-${sidx}`">{{ t('test.subject') }}</FieldLabel>
 						<Input
 							v-if="props.editable"
 							:id="`ib-subject-${props.index}-${sidx}`"
@@ -163,7 +163,7 @@ function removeSubject(index: number) {
 						<div v-else class="text-sm text-left">{{ subject.subject || '-' }}</div>
 					</Field>
 					<Field>
-						<FieldLabel :for="`ib-grade-${props.index}-${sidx}`">{{ t('test.grade') || 'Grade' }}</FieldLabel>
+						<FieldLabel :for="`ib-grade-${props.index}-${sidx}`">{{ t('test.grade') }}</FieldLabel>
 						<Input
 							v-if="props.editable"
 							:id="`ib-grade-${props.index}-${sidx}`"
@@ -172,8 +172,8 @@ function removeSubject(index: number) {
 						<div v-else class="text-sm text-left">{{ subject.grade || '-' }}</div>
 					</Field>
 					<div v-if="props.editable" class="col-span-2 flex justify-end gap-2">
-						<Button type="button" variant="secondary" @click="removeSubject(sidx)">{{ t('profile.remove') || 'Remove' }}</Button>
-						<Button type="button" @click="addSubject">{{ t('profile.add') || 'Add' }}</Button>
+						<Button type="button" variant="secondary" @click="removeSubject(sidx)">{{ t('profile.remove') }}</Button>
+						<Button type="button" @click="addSubject">{{ t('profile.add') }}</Button>
 					</div>
 				</div>
 			</div>

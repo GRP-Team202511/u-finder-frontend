@@ -347,12 +347,12 @@ async function handleCVResultConfirm(selections: any) {
 		await Promise.all(promises)
 		
 		if (promises.length > 0) {
-			toast.success(t('profile.cvParser.importSuccess') || 'CV data imported successfully!')
+			toast.success(t('profile.cvParser.importSuccess'))
 		}
 		
 	} catch (e) {
 		console.error('Failed to import CV data:', e)
-		toast.error(t('profile.cvParser.importFailed') || 'Failed to import CV data')
+		toast.error(t('profile.cvParser.importFailed'))
 	} finally {
 		// Clean up
 		cvParseResult.value = null
@@ -369,9 +369,9 @@ function handleCVResultCancel() {
 <template>
 	<div class="p-4">
 		<div class="flex items-center justify-between mb-6">
-			<h1 class="text-3xl font-bold">{{ t('profile.title') || 'Profile' }}</h1>
+			<h1 class="text-3xl font-bold">{{ t('profile.title') }}</h1>
 			<Button @click="showCVParserDialog = true">
-				{{ t('profile.cvParser.button') || 'Import from CV' }}
+				{{ t('profile.cvParser.button') }}
 			</Button>
 		</div>
 		
@@ -394,16 +394,16 @@ function handleCVResultCancel() {
 			<Card class="w-full max-w-2xl">
 				<CardHeader>
 					<CardTitle class="text-center text-destructive text-xl">
-						{{ t('profile.errors.loadFailed') || 'Failed to Load Profile' }}
+						{{ t('profile.errors.loadFailed') }}
 					</CardTitle>
 				</CardHeader>
 				<CardContent class="text-center text-muted-foreground">
-					<p class="mb-4">{{ t('profile.errors.loadFailedDescription') || 'Unable to load your profile data. Please try refreshing the page.' }}</p>
+					<p class="mb-4">{{ t('profile.errors.loadFailedDescription') }}</p>
 					<button 
 						@click="loadProfile"
 						class="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
 					>
-						{{ t('profile.retry') || 'Retry' }}
+						{{ t('profile.retry') }}
 					</button>
 				</CardContent>
 			</Card>

@@ -281,17 +281,14 @@ function save(e?: Event) {
     if (!project.name || !project.name.trim()) {
       validationErrors.name[i] = true
       hasError = true
-      toast.error(t('project.validation.nameRequired') || `Project #${i + 1}: Project name is required`)
+      toast.error(t('project.validation.nameRequired', { index: i + 1 }))
     }
 
     const endValue = ongoing[i] ? today(tz) : (endDates[i] ?? project.time?.end)
     if (isStartAfterEnd(startDates[i] ?? project.time?.start, endValue, tz)) {
       validationErrors.dateRange[i] = true
       hasError = true
-      toast.error(
-        t('project.validation.dateRangeInvalid', { index: i + 1 }) ||
-        `Project #${i + 1}: Start date must be before end date`
-      )
+      toast.error(t('project.validation.dateRangeInvalid', { index: i + 1 }))
     }
   }
   
@@ -358,14 +355,14 @@ onMounted(() => {
       <CardHeader class="text-left">
         <div class="flex items-center justify-between gap-4">
           <CardTitle class="text-3xl font-bold">
-            {{ t('project.title') || 'projects' }}
+            {{ t('project.title') }}
           </CardTitle>
           <div v-if="!localEditing">
-            <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
+            <Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
           </div>
           <div v-else class="flex gap-2">
-            <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') || 'Cancel' }}</Button>
-            <Button type="button" @click="save">{{ t('profile.save') || 'Save' }}</Button>
+            <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
+            <Button type="button" @click="save">{{ t('profile.save') }}</Button>
           </div>
         </div>
       </CardHeader>
@@ -375,29 +372,29 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(project, idx) in projects" :key="idx">
                 <Field>
-                  <FieldLabel :for="`name-${idx}`">{{ t('project.name') || 'name' }} <span class="text-red-500">*</span></FieldLabel>
+                  <FieldLabel :for="`name-${idx}`">{{ t('project.name') }} <span class="text-red-500">*</span></FieldLabel>
                   <Input 
                     :id="`name-${idx}`" 
                     v-model="project.name" 
-                    :placeholder="t('project.placeholders.name') || 'Project name'" 
+                    :placeholder="t('project.placeholders.name')" 
                     :class="validationErrors.name[idx] && 'border-red-500'"
                     @input="clearError(idx, 'name')"
                   />
                 </Field>
 
                 <Field>
-                  <FieldLabel :for="`role-${idx}`">{{ t('project.role') || 'Role' }}</FieldLabel>
-                  <Input :id="`role-${idx}`" v-model="project.role" :placeholder="t('project.placeholders.role') || 'Role'" />
+                  <FieldLabel :for="`role-${idx}`">{{ t('project.role') }}</FieldLabel>
+                  <Input :id="`role-${idx}`" v-model="project.role" :placeholder="t('project.placeholders.role')" />
                 </Field>
 
                 <div class="grid grid-cols-2 gap-4">
                   <Field>
-                    <FieldLabel :for="`start-${idx}`">{{ t('project.time.start') || 'Start' }}</FieldLabel>
+                    <FieldLabel :for="`start-${idx}`">{{ t('project.time.start') }}</FieldLabel>
                       <Popover v-slot="{ close }">
                         <PopoverTrigger as-child>
                           <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !project.time.start && 'text-muted-foreground')">
                             <CalendarIcon class="mr-2 h-4 w-4" />
-                            {{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (project.time.start || (t('date.pickStart') || 'Pick start')) }}
+                            {{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (project.time.start || t('date.pickStart')) }}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent class="w-auto p-0" align="start">
@@ -420,12 +417,12 @@ onMounted(() => {
                       </Popover>
                   </Field>
                   <Field>
-                    <FieldLabel :for="`end-${idx}`">{{ t('project.time.end') || 'End' }}</FieldLabel>
+                    <FieldLabel :for="`end-${idx}`">{{ t('project.time.end') }}</FieldLabel>
                     <Popover v-slot="{ close }">
                       <PopoverTrigger as-child>
                         <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !project.time.end && 'text-muted-foreground', validationErrors.dateRange[idx] && 'border-red-500')">
                           <CalendarIcon class="mr-2 h-4 w-4" />
-                            {{ ongoing[idx] ? (t('project.time.till now') || 'Till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (project.time.end || (t('date.pickEnd') || 'Pick end'))) }}
+                            {{ ongoing[idx] ? t('project.time.till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (project.time.end || t('date.pickEnd'))) }}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent class="w-auto p-0" align="start">
@@ -445,7 +442,7 @@ onMounted(() => {
                           />
                           <div class="p-2 border-t">
                             <Button type="button" variant="secondary" class="w-full" @click="(ongoing[idx]=true, endDates[idx]=today(getLocalTimeZone()), validationErrors.dateRange[idx]=false, (project.time && (project.time.end = formatToDate(endDates[idx], getLocalTimeZone()))), close())">
-                              {{ t('project.time.till now') || 'Till now' }}
+                              {{ t('project.time.till now') }}
                             </Button>
                           </div>
                       </PopoverContent>
@@ -454,18 +451,18 @@ onMounted(() => {
                 </div>
 
                 <Field>
-                  <FieldLabel :for="`description-${idx}`">{{ t('project.description') || 'Description' }}</FieldLabel>
+                  <FieldLabel :for="`description-${idx}`">{{ t('project.description') }}</FieldLabel>
                   <textarea
                     :id="`description-${idx}`"
                     v-model="project.description"
-                    :placeholder="t('project.placeholders.description') || 'Description'"
+                    :placeholder="t('project.placeholders.description')"
                     rows="6"
                     class="w-full rounded-md border px-3 py-2 text-sm"
                   ></textarea>
                 </Field>
 
                 <div class="flex justify-end gap-2 mt-2">
-                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
+                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') }}</Button>
                 </div>
 
                 <hr v-if="idx < projects.length - 1" class="my-6 border-t-2 border-muted-foreground/20" />
@@ -473,7 +470,7 @@ onMounted(() => {
             </FieldGroup>
             
             <div class="flex justify-end gap-2 mt-4">
-              <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+              <Button type="button" @click="addEntry">{{ t('profile.add') }}</Button>
             </div>
           </form>
         </div>
@@ -482,28 +479,28 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(project, idx) in projects" :key="idx">
                 <Field>
-                  <FieldLabel>{{ t('project.name') || 'name' }}</FieldLabel>
+                  <FieldLabel>{{ t('project.name') }}</FieldLabel>
                   <div class="text-sm text-left">{{ project.name || '-' }}</div>
                 </Field>
 
                 <Field>
-                  <FieldLabel>{{ t('project.role') || 'Role' }}</FieldLabel>
+                  <FieldLabel>{{ t('project.role') }}</FieldLabel>
                   <div class="text-sm text-left">{{ project.role || '-' }}</div>
                 </Field>
 
                 <div class="grid grid-cols-2 gap-4">
                   <Field>
-                    <FieldLabel>{{ t('project.time.start') || 'Start' }}</FieldLabel>
+                    <FieldLabel>{{ t('project.time.start') }}</FieldLabel>
                     <div class="text-sm text-left">{{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (project.time.start || '-') }}</div>
                   </Field>
                   <Field>
-                    <FieldLabel>{{ t('project.time.end') || 'End' }}</FieldLabel>
-                    <div class="text-sm text-left">{{ ongoing[idx] ? (t('project.time.till now') || 'Till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (project.time.end || '-')) }}</div>
+                    <FieldLabel>{{ t('project.time.end') }}</FieldLabel>
+                    <div class="text-sm text-left">{{ ongoing[idx] ? t('project.time.till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (project.time.end || '-')) }}</div>
                   </Field>
                 </div>
 
                 <Field>
-                  <FieldLabel>{{ t('project.description') || 'Description' }}</FieldLabel>
+                  <FieldLabel>{{ t('project.description') }}</FieldLabel>
                   <div class="text-sm text-left whitespace-pre-wrap break-words">{{ project.description || '-' }}</div>
                 </Field>
 
@@ -513,8 +510,8 @@ onMounted(() => {
             </FieldGroup>
           </div>
           <div v-else class="text-center text-muted-foreground">
-            <div class="mb-2">{{ t('project.empty') || 'No projects' }}</div>
-            <Button type="button" @click="startEdit">{{ t('project.add') || 'Add project' }}</Button>
+            <div class="mb-2">{{ t('project.empty') }}</div>
+            <Button type="button" @click="startEdit">{{ t('project.add') }}</Button>
           </div>
         </div>
       </CardContent>

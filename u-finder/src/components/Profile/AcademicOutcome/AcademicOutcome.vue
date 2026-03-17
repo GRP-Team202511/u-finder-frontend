@@ -124,8 +124,8 @@ function resetFieldsForType(index: number, nextType: AcademicEntry["type"]) {
 }
 
 function typeLabel(type: AcademicEntry["type"]) {
-  if (type === 'research paper') return t('academic.type.researchPaper') || 'Research Paper'
-  if (type === 'patent') return t('academic.type.patent') || 'Patent'
+  if (type === 'research paper') return t('academic.type.researchPaper')
+  if (type === 'patent') return t('academic.type.patent')
   return '-'
 }
 
@@ -171,12 +171,12 @@ function save(e?: Event) {
     if (!outcome.type) {
       validationErrors.type[i] = true
       hasError = true
-      toast.error(t('academic.validation.typeRequired') || `Academic Outcome #${i + 1}: Type is required`)
+      toast.error(t('academic.validation.typeRequired', { index: i + 1 }))
     } else if (!outcome.title || !outcome.title.trim()) {
       validationErrors.title[i] = true
       hasError = true
       if (!validationErrors.type[i]) {
-        toast.error(t('academic.validation.titleRequired') || `Academic Outcome #${i + 1}: Title is required`)
+        toast.error(t('academic.validation.titleRequired', { index: i + 1 }))
       }
     }
   }
@@ -226,14 +226,14 @@ onMounted(() => {
       <CardHeader class="text-left">
         <div class="flex items-center justify-between gap-4">
           <CardTitle class="text-3xl font-bold">
-            {{ t('academic.title') || 'Academic Outcome' }}
+            {{ t('academic.title') }}
           </CardTitle>
           <div v-if="!localEditing">
-            <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
+            <Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
           </div>
           <div v-else class="flex gap-2">
-            <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') || 'Cancel' }}</Button>
-            <Button type="button" @click="save">{{ t('profile.save') || 'Save' }}</Button>
+            <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
+            <Button type="button" @click="save">{{ t('profile.save') }}</Button>
           </div>
         </div>
       </CardHeader>
@@ -243,14 +243,14 @@ onMounted(() => {
             <FieldGroup>
                 <template v-for="(aca, idx) in academicOutcomes" :key="idx">
                 <Field>
-                    <FieldLabel :for="`type-${idx}`">{{ t('academic.type.title') || 'Type' }} <span class="text-red-500">*</span></FieldLabel>
+                    <FieldLabel :for="`type-${idx}`">{{ t('academic.type.title') }} <span class="text-red-500">*</span></FieldLabel>
                     <Select v-model="aca.type" @update:model-value="(val) => { resetFieldsForType(idx, (val ?? '') as AcademicEntry['type']); clearError(idx, 'type') }">
                     <SelectTrigger :id="`type-${idx}`" :class="cn('w-full', validationErrors.type[idx] && 'border-red-500')">
-                        <SelectValue :placeholder="t('academic.selectType') || 'Select type'" />
+                        <SelectValue :placeholder="t('academic.selectType')" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="research paper">{{ t('academic.type.researchPaper') || 'Research paper' }}</SelectItem>
-                        <SelectItem value="patent">{{ t('academic.type.patent') || 'Patent' }}</SelectItem>
+                        <SelectItem value="research paper">{{ t('academic.type.researchPaper') }}</SelectItem>
+                        <SelectItem value="patent">{{ t('academic.type.patent') }}</SelectItem>
                     </SelectContent>
                   </Select>
                 </Field>
@@ -262,11 +262,11 @@ onMounted(() => {
                     <PatentFields :entry="aca" :index="idx" :editable="true" :has-title-error="validationErrors.title[idx]" @clear-title-error="clearError(idx, 'title')" />
                   </div>
                   <div v-else class="text-sm text-muted-foreground">
-                    {{ t('academic.selectTypeHint') || 'Select a type to enter details.' }}
+                    {{ t('academic.selectTypeHint') }}
                   </div>
 
                 <div class="flex justify-end gap-2 mt-2">
-                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
+                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') }}</Button>
                 </div>
 
                 <hr v-if="idx < academicOutcomes.length - 1" class="my-6 border-t-2 border-muted-foreground/20" />
@@ -274,7 +274,7 @@ onMounted(() => {
             </FieldGroup>
             
             <div class="flex justify-end gap-2 mt-4">
-              <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+              <Button type="button" @click="addEntry">{{ t('profile.add') }}</Button>
             </div>
           </form>
         </div>
@@ -283,7 +283,7 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(aca, idx) in academicOutcomes" :key="idx">
                 <Field>
-                  <FieldLabel>{{ t('academic.type.title') || 'Type' }}</FieldLabel>
+                  <FieldLabel>{{ t('academic.type.title') }}</FieldLabel>
                   <div class="text-sm text-left">{{ typeLabel(aca.type) }}</div>
                 </Field>
 
@@ -303,8 +303,8 @@ onMounted(() => {
             </FieldGroup>
           </div>
           <div v-else class="text-center text-muted-foreground">
-            <div class="mb-2">{{ t('academic.empty') || 'No academic outcomes' }}</div>
-            <Button type="button" @click="startEdit">{{ t('academic.add') || 'Add academic outcome' }}</Button>
+            <div class="mb-2">{{ t('academic.empty') }}</div>
+            <Button type="button" @click="startEdit">{{ t('academic.add') }}</Button>
           </div>
         </div>
       </CardContent>

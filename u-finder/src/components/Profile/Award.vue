@@ -124,7 +124,7 @@ function save(e?: Event) {
     if (!award.name || !award.name.trim()) {
       validationErrors.name[i] = true
       hasError = true
-      toast.error(t('award.validation.nameRequired') || `Award #${i + 1}: Award name is required`)
+      toast.error(t('award.validation.nameRequired', { index: i + 1 }))
     }
   }
   
@@ -171,14 +171,14 @@ onMounted(() => {
       <CardHeader class="text-left">
         <div class="flex items-center justify-between gap-4">
           <CardTitle class="text-3xl font-bold">
-            {{ t('award.title') || 'award' }}
+            {{ t('award.title') }}
           </CardTitle>
           <div v-if="!localEditing">
-            <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
+            <Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
           </div>
           <div v-else class="flex gap-2">
-            <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') || 'Cancel' }}</Button>
-            <Button type="button" @click="save">{{ t('profile.save') || 'Save' }}</Button>
+            <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
+            <Button type="button" @click="save">{{ t('profile.save') }}</Button>
           </div>
         </div>
       </CardHeader>
@@ -188,27 +188,27 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(award, idx) in awards" :key="idx">
                 <Field>
-                  <FieldLabel :for="`name-${idx}`">{{ t('award.name') || 'name' }} <span class="text-red-500">*</span></FieldLabel>
+                  <FieldLabel :for="`name-${idx}`">{{ t('award.name') }} <span class="text-red-500">*</span></FieldLabel>
                   <Input 
                     :id="`name-${idx}`" 
                     v-model="award.name" 
-                    :placeholder="t('award.placeholders.name') || 'Award name'" 
+                    :placeholder="t('award.placeholders.name')" 
                     :class="validationErrors.name[idx] && 'border-red-500'"
                     @input="clearError(idx, 'name')"
                   />
                 </Field>
                 <Field>
-                  <FieldLabel :for="`description-${idx}`">{{ t('award.description') || 'Description' }}</FieldLabel>
+                  <FieldLabel :for="`description-${idx}`">{{ t('award.description') }}</FieldLabel>
                   <textarea
                     :id="`description-${idx}`"
                     v-model="award.description"
-                    :placeholder="t('award.placeholders.description') || 'Description'"
+                    :placeholder="t('award.placeholders.description')"
                     rows="6"
                     class="w-full rounded-md border px-3 py-2 text-sm"
                   ></textarea>   
                 </Field>
                 <div class="flex justify-end gap-2 mt-2">
-                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
+                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') }}</Button>
                 </div>
 
                 <hr v-if="idx < awards.length - 1" class="my-6 border-t-2 border-muted-foreground/20" />
@@ -216,7 +216,7 @@ onMounted(() => {
             </FieldGroup>
             
             <div class="flex justify-end gap-2 mt-4">
-              <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+              <Button type="button" @click="addEntry">{{ t('profile.add') }}</Button>
             </div>
           </form>
         </div>
@@ -225,11 +225,11 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(award, idx) in awards" :key="idx">
                 <Field>
-                  <FieldLabel>{{ t('award.name') || 'name' }}</FieldLabel>
+                  <FieldLabel>{{ t('award.name') }}</FieldLabel>
                   <div class="text-sm text-left">{{ award.name || '-' }}</div>
                 </Field>
                 <Field>
-                  <FieldLabel>{{ t('award.description') || 'Description' }}</FieldLabel>
+                  <FieldLabel>{{ t('award.description') }}</FieldLabel>
                   <div class="text-sm text-left whitespace-pre-wrap break-words">{{ award.description || '-' }}</div>
                 </Field>
                 <hr v-if="idx < awards.length - 1" class="my-6 border-t-2 border-muted-foreground/20" />
@@ -237,8 +237,8 @@ onMounted(() => {
             </FieldGroup>
           </div>
           <div v-else class="text-center text-muted-foreground">
-            <div class="mb-2">{{ t('award.empty') || 'No award' }}</div>
-            <Button type="button" @click="startEdit">{{ t('award.add') || 'Add award' }}</Button>
+            <div class="mb-2">{{ t('award.empty') }}</div>
+            <Button type="button" @click="startEdit">{{ t('award.add') }}</Button>
           </div>
         </div>
       </CardContent>

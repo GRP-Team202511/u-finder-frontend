@@ -257,10 +257,10 @@ function isStartAfterEnd(startValue: any, endValue: any, tz: string) {
 
 function typeLabel(type: string) {
   if (!type) return '-'
-  if (type === 'highSchool' || type === 'high school') return t('edu.types.highSchool') || 'High School'
-  if (type === 'undergraduate') return t('edu.types.undergraduate') || 'Undergraduate'
-  if (type === 'master') return t('edu.types.master') || 'Master'
-  if (type === 'doctoral') return t('edu.types.doctoral') || 'Doctoral'
+  if (type === 'highSchool' || type === 'high school') return t('edu.types.highSchool')
+  if (type === 'undergraduate') return t('edu.types.undergraduate')
+  if (type === 'master') return t('edu.types.master')
+  if (type === 'doctoral') return t('edu.types.doctoral')
   // Fallback: capitalize first letter of each word
   return type.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
 }
@@ -336,17 +336,17 @@ function save(e?: Event) {
     if (!edu.type) {
       validationErrors.type[i] = true
       hasError = true
-      setFirstError(t('edu.validation.typeRequired') || `Education #${i + 1}: Type is required`)
+      setFirstError(t('edu.validation.typeRequired', { index: i + 1 }))
     }
     if (!edu.name || !edu.name.trim()) {
       validationErrors.name[i] = true
       hasError = true
-      setFirstError(t('edu.validation.nameRequired') || `Education #${i + 1}: Institution name is required`)
+      setFirstError(t('edu.validation.nameRequired', { index: i + 1 }))
     }
     if (!hasStartDate) {
       validationErrors.startDate[i] = true
       hasError = true
-      setFirstError(t('edu.validation.startRequired') || `Education #${i + 1}: Start date is required`)
+      setFirstError(t('edu.validation.startRequired', { index: i + 1 }))
     }
 
     if (edu.ranking?.trim()) {
@@ -354,10 +354,7 @@ function save(e?: Event) {
       if (!rankingPattern.test(rankingValue)) {
         validationErrors.ranking[i] = true
         hasError = true
-        setFirstError(
-          t('edu.validation.rankingFormat', { index: i + 1 }) ||
-          `Education #${i + 1}: Ranking must use format X/Y, e.g. 5/200`
-        )
+        setFirstError(t('edu.validation.rankingFormat', { index: i + 1 }))
       } else {
         const parts = rankingValue.split('/')
         const left = Number(parts[0]?.trim() ?? '')
@@ -365,10 +362,7 @@ function save(e?: Event) {
         if (!Number.isInteger(left) || !Number.isInteger(right) || left <= 0 || right <= 0 || left > right) {
           validationErrors.ranking[i] = true
           hasError = true
-          setFirstError(
-            t('edu.validation.rankingRange', { index: i + 1 }) ||
-            `Education #${i + 1}: Ranking must be positive integers with X <= Y`
-          )
+          setFirstError(t('edu.validation.rankingRange', { index: i + 1 }))
         }
       }
     }
@@ -376,10 +370,7 @@ function save(e?: Event) {
     if (isStartAfterEnd(startDates[i] ?? edu.time?.start, endDates[i] ?? edu.time?.end, tz)) {
       validationErrors.endDate[i] = true
       hasError = true
-      setFirstError(
-        t('edu.validation.dateRangeInvalid', { index: i + 1 }) ||
-        `Education #${i + 1}: Start date must be before end date`
-      )
+      setFirstError(t('edu.validation.dateRangeInvalid', { index: i + 1 }))
     }
 
     const gpa = parsePositiveNumber(edu.GPA ?? '')
@@ -388,50 +379,32 @@ function save(e?: Event) {
     if (typeof gpaBase === 'number' && Number.isNaN(gpaBase)) {
       validationErrors.gpaBase[i] = true
       hasError = true
-      setFirstError(
-        t('edu.validation.gpaBaseInvalid', { index: i + 1 }) ||
-        `Education #${i + 1}: GPA base must be a positive number`
-      )
+      setFirstError(t('edu.validation.gpaBaseInvalid', { index: i + 1 }))
     } else if (typeof gpaBase === 'number' && gpaBase <= 0) {
       validationErrors.gpaBase[i] = true
       hasError = true
-      setFirstError(
-        t('edu.validation.gpaBaseMin', { index: i + 1 }) ||
-        `Education #${i + 1}: GPA base must be greater than 0`
-      )
+      setFirstError(t('edu.validation.gpaBaseMin', { index: i + 1 }))
     } else if (typeof gpaBase === 'number' && gpaBase > 100) {
       validationErrors.gpaBase[i] = true
       hasError = true
-      setFirstError(
-        t('edu.validation.gpaBaseMax', { index: i + 1 }) ||
-        `Education #${i + 1}: GPA base must be 100 or below`
-      )
+      setFirstError(t('edu.validation.gpaBaseMax', { index: i + 1 }))
     }
 
     if (typeof gpa === 'number' && Number.isNaN(gpa)) {
       validationErrors.gpa[i] = true
       hasError = true
-      setFirstError(
-        t('edu.validation.gpaInvalid', { index: i + 1 }) ||
-        `Education #${i + 1}: GPA must be a positive number`
-      )
+      setFirstError(t('edu.validation.gpaInvalid', { index: i + 1 }))
     } else if (typeof gpa === 'number' && gpa < 0) {
       validationErrors.gpa[i] = true
       hasError = true
-      setFirstError(
-        t('edu.validation.gpaNegative', { index: i + 1 }) ||
-        `Education #${i + 1}: GPA cannot be negative`
-      )
+      setFirstError(t('edu.validation.gpaNegative', { index: i + 1 }))
     }
 
     if (typeof gpa === 'number' && typeof gpaBase === 'number' && !Number.isNaN(gpa) && !Number.isNaN(gpaBase) && gpa > gpaBase) {
       validationErrors.gpa[i] = true
       validationErrors.gpaBase[i] = true
       hasError = true
-      setFirstError(
-        t('edu.validation.gpaExceedsBase', { index: i + 1 }) ||
-        `Education #${i + 1}: GPA cannot be greater than GPA base`
-      )
+      setFirstError(t('edu.validation.gpaExceedsBase', { index: i + 1 }))
     }
   }
   
@@ -516,11 +489,11 @@ onMounted(() => {
             {{ t("edu.title") }}
           </CardTitle>
           <div v-if="!localEditing">
-            <Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
+            <Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
           </div>
           <div v-else class="flex gap-2">
-            <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') || 'Cancel' }}</Button>
-            <Button type="button" @click="save">{{ t('profile.save') || 'Save' }}</Button>
+            <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
+            <Button type="button" @click="save">{{ t('profile.save') }}</Button>
           </div>
         </div>
       </CardHeader>
@@ -530,26 +503,26 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(edu, idx) in education" :key="idx">
                 <Field>
-                  <FieldLabel :for="`type-${idx}`">{{ t('edu.type') || 'Type' }} <span class="text-red-500">*</span></FieldLabel>
+                  <FieldLabel :for="`type-${idx}`">{{ t('edu.type') }} <span class="text-red-500">*</span></FieldLabel>
                   <Select v-model="edu.type" @update:model-value="clearError(idx, 'type')">
                     <SelectTrigger :id="`type-${idx}`" :class="cn('w-full', validationErrors.type[idx] && 'border-red-500')">
-                      <SelectValue :placeholder="t('edu.placeholders.type') || 'Select Education type'" />
+                      <SelectValue :placeholder="t('edu.placeholders.type')" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="high school">{{ t('edu.types.highSchool') || 'High School' }}</SelectItem>
-                      <SelectItem value="undergraduate">{{ t('edu.types.undergraduate') || 'Undergraduate' }}</SelectItem>
-                      <SelectItem value="master">{{ t('edu.types.master') || 'Master' }}</SelectItem>
-                      <SelectItem value="doctoral">{{ t('edu.types.doctoral') || 'Doctoral' }}</SelectItem>
+                      <SelectItem value="high school">{{ t('edu.types.highSchool') }}</SelectItem>
+                      <SelectItem value="undergraduate">{{ t('edu.types.undergraduate') }}</SelectItem>
+                      <SelectItem value="master">{{ t('edu.types.master') }}</SelectItem>
+                      <SelectItem value="doctoral">{{ t('edu.types.doctoral') }}</SelectItem>
                     </SelectContent>
                   </Select>
                 </Field>
 
                 <Field>
-                  <FieldLabel :for="`name-${idx}`">{{ t('edu.institution') || 'Institution' }} <span class="text-red-500">*</span></FieldLabel>
+                  <FieldLabel :for="`name-${idx}`">{{ t('edu.institution') }} <span class="text-red-500">*</span></FieldLabel>
                   <Input 
                     :id="`name-${idx}`" 
                     v-model="edu.name" 
-                    :placeholder="t('edu.placeholders.institution') || 'University name'" 
+                    :placeholder="t('edu.placeholders.institution')" 
                     :class="validationErrors.name[idx] && 'border-red-500'"
                     @input="clearError(idx, 'name')"
                   />
@@ -557,7 +530,7 @@ onMounted(() => {
 
                 <div class="grid grid-cols-2 gap-4">
                   <Field>
-                    <FieldLabel :for="`start-${idx}`">{{ t('edu.time.start') || 'Start' }} <span class="text-red-500">*</span></FieldLabel>
+                    <FieldLabel :for="`start-${idx}`">{{ t('edu.time.start') }} <span class="text-red-500">*</span></FieldLabel>
                       <Popover v-slot="{ close }">
                         <PopoverTrigger as-child>
                           <Button 
@@ -569,7 +542,7 @@ onMounted(() => {
                             )"
                           >
                             <CalendarIcon class="mr-2 h-4 w-4" />
-                            {{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.start || (t('date.pickStart') || 'Pick start')) }}
+                            {{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.start || t('date.pickStart')) }}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent class="w-auto p-0" align="start">
@@ -593,12 +566,12 @@ onMounted(() => {
                       </Popover>
                   </Field>
                   <Field>
-                    <FieldLabel :for="`end-${idx}`">{{ t('edu.time.end') || 'End' }}</FieldLabel>
+                    <FieldLabel :for="`end-${idx}`">{{ t('edu.time.end') }}</FieldLabel>
                     <Popover v-slot="{ close }">
                       <PopoverTrigger as-child>
                         <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !edu.time.end && 'text-muted-foreground', validationErrors.endDate[idx] && 'border-red-500')">
                           <CalendarIcon class="mr-2 h-4 w-4" />
-                          {{ endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.end || (t('date.pickEnd') || 'Pick end')) }}
+                          {{ endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.end || t('date.pickEnd')) }}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent class="w-auto p-0" align="start">
@@ -616,39 +589,39 @@ onMounted(() => {
                 </div>
 
                 <Field>
-                  <FieldLabel :for="`major-${idx}`">{{ t('edu.major') || 'Major' }}</FieldLabel>
-                  <Input :id="`major-${idx}`" v-model="edu.major" :placeholder="t('edu.placeholders.major') || 'Computer Science'" />
+                  <FieldLabel :for="`major-${idx}`">{{ t('edu.major') }}</FieldLabel>
+                  <Input :id="`major-${idx}`" v-model="edu.major" :placeholder="t('edu.placeholders.major')" />
                 </Field>
 
                 <div class="grid grid-cols-3 gap-4">
                   <Field>
-                    <FieldLabel :for="`ranking-${idx}`">{{ t('edu.ranking') || 'Ranking' }}</FieldLabel>
+                    <FieldLabel :for="`ranking-${idx}`">{{ t('edu.ranking') }}</FieldLabel>
                     <Input
                       :id="`ranking-${idx}`"
                       v-model="edu.ranking"
-                      :placeholder="t('edu.placeholders.ranking') || 'e.g. 5/200'"
+                      :placeholder="t('edu.placeholders.ranking')"
                       :class="validationErrors.ranking[idx] && 'border-red-500'"
                       @input="clearError(idx, 'ranking')"
                     />
                   </Field>
                   <Field>
-                    <FieldLabel :for="`gpa-${idx}`">{{ t('edu.GPA') || 'GPA' }}</FieldLabel>
+                    <FieldLabel :for="`gpa-${idx}`">{{ t('edu.GPA') }}</FieldLabel>
                     <Input
                       :id="`gpa-${idx}`"
                       v-model="edu.GPA"
                       inputmode="decimal"
-                      :placeholder="t('edu.placeholders.gpa') || '3.8'"
+                      :placeholder="t('edu.placeholders.gpa')"
                       :class="validationErrors.gpa[idx] && 'border-red-500'"
                       @input="clearError(idx, 'gpa')"
                     />
                   </Field>
                   <Field>
-                    <FieldLabel :for="`gpa-base-${idx}`">{{ t('edu.GPA-base') || 'GPA Base' }}</FieldLabel>
+                    <FieldLabel :for="`gpa-base-${idx}`">{{ t('edu.GPA-base') }}</FieldLabel>
                     <Input
                       :id="`gpa-base-${idx}`"
                       v-model="edu.GPA_base"
                       inputmode="decimal"
-                      :placeholder="t('edu.placeholders.gpaBase') || '4.0'"
+                      :placeholder="t('edu.placeholders.gpaBase')"
                       :class="validationErrors.gpaBase[idx] && 'border-red-500'"
                       @input="clearError(idx, 'gpaBase')"
                     />
@@ -656,7 +629,7 @@ onMounted(() => {
                 </div>
 
                 <div class="flex justify-end gap-2 mt-2">
-                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
+                  <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') }}</Button>
                 </div>
 
                 <hr v-if="idx < education.length - 1" class="my-6 border-t-2 border-muted-foreground/20" />
@@ -664,7 +637,7 @@ onMounted(() => {
             </FieldGroup>
             
             <div class="flex justify-end gap-2 mt-4">
-              <Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+              <Button type="button" @click="addEntry">{{ t('profile.add') }}</Button>
             </div>
           </form>
         </div>
@@ -673,42 +646,42 @@ onMounted(() => {
             <FieldGroup>
               <template v-for="(edu, idx) in education" :key="idx">
                 <Field>
-                  <FieldLabel>{{ t('edu.type') || 'Type' }}</FieldLabel>
+                  <FieldLabel>{{ t('edu.type') }}</FieldLabel>
                   <div class="text-sm text-left">{{ typeLabel(edu.type) }}</div>
                 </Field>
 
                 <Field>
-                  <FieldLabel>{{ t('edu.institution') || 'Institution' }}</FieldLabel>
+                  <FieldLabel>{{ t('edu.institution') }}</FieldLabel>
                   <div class="text-sm text-left">{{ edu.name || '-' }}</div>
                 </Field>
 
                 <div class="grid grid-cols-2 gap-4">
                   <Field>
-                    <FieldLabel>{{ t('edu.time.start') || 'Start' }}</FieldLabel>
+                    <FieldLabel>{{ t('edu.time.start') }}</FieldLabel>
                     <div class="text-sm text-left">{{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.start || '-') }}</div>
                   </Field>
                   <Field>
-                    <FieldLabel>{{ t('edu.time.end') || 'End' }}</FieldLabel>
+                    <FieldLabel>{{ t('edu.time.end') }}</FieldLabel>
                     <div class="text-sm text-left">{{ endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.end || '-') }}</div>
                   </Field>
                 </div>
 
                 <Field>
-                  <FieldLabel>{{ t('edu.major') || 'Major' }}</FieldLabel>
+                  <FieldLabel>{{ t('edu.major') }}</FieldLabel>
                   <div class="text-sm text-left">{{ edu.major || '-' }}</div>
                 </Field>
 
                 <div class="grid grid-cols-3 gap-4">
                   <Field>
-                    <FieldLabel>{{ t('edu.ranking') || 'Ranking' }}</FieldLabel>
+                    <FieldLabel>{{ t('edu.ranking') }}</FieldLabel>
                     <div class="text-sm text-left">{{ edu.ranking || '-' }}</div>
                   </Field>
                   <Field>
-                    <FieldLabel>{{ t('edu.GPA') || 'GPA' }}</FieldLabel>
+                    <FieldLabel>{{ t('edu.GPA') }}</FieldLabel>
                     <div class="text-sm text-left">{{ edu.GPA || '-' }}</div>
                   </Field>
                   <Field>
-                    <FieldLabel>{{ t('edu.GPA-base') || 'GPA Base' }}</FieldLabel>
+                    <FieldLabel>{{ t('edu.GPA-base') }}</FieldLabel>
                     <div class="text-sm text-left">{{ edu.GPA_base || '-' }}</div>
                   </Field>
                 </div>
@@ -719,8 +692,8 @@ onMounted(() => {
             </FieldGroup>
           </div>
           <div v-else class="text-center text-muted-foreground">
-            <div class="mb-2">{{ t('edu.empty') || 'No education records' }}</div>
-            <Button type="button" @click="startEdit">{{ t('edu.add') || 'Add education' }}</Button>
+            <div class="mb-2">{{ t('edu.empty') }}</div>
+            <Button type="button" @click="startEdit">{{ t('edu.add') }}</Button>
           </div>
         </div>
       </CardContent>

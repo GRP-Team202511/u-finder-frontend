@@ -162,17 +162,17 @@ function resetFieldsForType(index: number, nextType: StandardizedType) {
 }
 
 function typeLabel(type: StandardizedType) {
-	if (type === 'IELTS') return t('test.types.ielts') || 'IELTS'
-	if (type === 'TOEFL iBT') return t('test.types.toeflIbt') || 'TOEFL iBT'
-	if (type === 'Duolingo English Test') return t('test.types.duolingo') || 'Duolingo English Test'
-	if (type === 'GRE') return t('test.types.gre') || 'GRE'
-	if (type === 'GMAT') return t('test.types.gmat') || 'GMAT'
-	if (type === 'SAT') return t('test.types.sat') || 'SAT'
-	if (type === 'ACT') return t('test.types.act') || 'ACT'
-	if (type === 'A-Level') return t('test.types.aLevel') || 'A-Level'
-	if (type === 'AP') return t('test.types.ap') || 'AP'
-	if (type === 'IB Diploma') return t('test.types.ibDiploma') || 'IB Diploma'
-	if (type === 'Cambridge English C1 Advanced (CAE)') return t('test.types.cae') || 'Cambridge English C1 Advanced (CAE)'
+	if (type === 'IELTS') return t('test.types.ielts')
+	if (type === 'TOEFL iBT') return t('test.types.toeflIbt')
+	if (type === 'Duolingo English Test') return t('test.types.duolingo')
+	if (type === 'GRE') return t('test.types.gre')
+	if (type === 'GMAT') return t('test.types.gmat')
+	if (type === 'SAT') return t('test.types.sat')
+	if (type === 'ACT') return t('test.types.act')
+	if (type === 'A-Level') return t('test.types.aLevel')
+	if (type === 'AP') return t('test.types.ap')
+	if (type === 'IB Diploma') return t('test.types.ibDiploma')
+	if (type === 'Cambridge English C1 Advanced (CAE)') return t('test.types.cae')
 	return '-'
 }
 
@@ -235,7 +235,7 @@ function save(e?: Event) {
 		if (!test.type) {
 			validationErrors.type[i] = true
 			hasError = true
-			toast.error(t('test.validation.typeRequired') || `Test #${i + 1}: Type is required`)
+			toast.error(t('test.validation.typeRequired', { index: i + 1 }))
 			continue
 		}
 		
@@ -244,7 +244,7 @@ function save(e?: Event) {
 			const subjects = test.subjects || []
 			if (subjects.length === 0) {
 				hasError = true
-				toast.error(t('test.validation.subjectRequired') || `Test #${i + 1}: At least one subject is required`)
+				toast.error(t('test.validation.subjectRequired', { index: i + 1 }))
 			}
 		}
 	}
@@ -291,14 +291,14 @@ onMounted(() => {
 			<CardHeader class="text-left">
 				<div class="flex items-center justify-between gap-4">
 					<CardTitle class="text-3xl font-bold">
-						{{ t('test.title') || 'Standardized Test' }}
+						{{ t('test.title') }}
 					</CardTitle>
 				<div v-if="!localEditing">
-						<Button type="button" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
+						<Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
 					</div>
 					<div v-else class="flex gap-2">
-						<Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') || 'Cancel' }}</Button>
-						<Button type="button" @click="save">{{ t('profile.save') || 'Save' }}</Button>
+						<Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
+						<Button type="button" @click="save">{{ t('profile.save') }}</Button>
 					</div>
 				</div>
 			</CardHeader>
@@ -308,23 +308,23 @@ onMounted(() => {
 						<FieldGroup>
 							<template v-for="(test, idx) in standardizedTests" :key="idx">
 								<Field>
-									<FieldLabel :for="`standardized-type-${idx}`">{{ t('test.type') || 'Type' }} <span class="text-red-500">*</span></FieldLabel>
+									<FieldLabel :for="`standardized-type-${idx}`">{{ t('test.type') }} <span class="text-red-500">*</span></FieldLabel>
 									<Select v-model="test.type" @update:model-value="(val) => { resetFieldsForType(idx, (val ?? '') as StandardizedType); clearError(idx, 'type') }">
 										<SelectTrigger :id="`standardized-type-${idx}`" :class="cn('w-full', validationErrors.type[idx] && 'border-red-500')">
-											<SelectValue :placeholder="t('test.selectType') || 'Select test type'" />
+											<SelectValue :placeholder="t('test.selectType')" />
 										</SelectTrigger>
 										<SelectContent>
-											<SelectItem value="IELTS">{{ t('test.types.ielts') || 'IELTS' }}</SelectItem>
-											<SelectItem value="TOEFL iBT">{{ t('test.types.toeflIbt') || 'TOEFL iBT' }}</SelectItem>
-											<SelectItem value="Duolingo English Test">{{ t('test.types.duolingo') || 'Duolingo English Test' }}</SelectItem>
-											<SelectItem value="GRE">{{ t('test.types.gre') || 'GRE' }}</SelectItem>
-											<SelectItem value="GMAT">{{ t('test.types.gmat') || 'GMAT' }}</SelectItem>
-											<SelectItem value="SAT">{{ t('test.types.sat') || 'SAT' }}</SelectItem>
-											<SelectItem value="ACT">{{ t('test.types.act') || 'ACT' }}</SelectItem>
-											<SelectItem value="A-Level">{{ t('test.types.aLevel') || 'A-Level' }}</SelectItem>
-											<SelectItem value="AP">{{ t('test.types.ap') || 'AP' }}</SelectItem>
-											<SelectItem value="IB Diploma">{{ t('test.types.ibDiploma') || 'IB Diploma' }}</SelectItem>
-											<SelectItem value="Cambridge English C1 Advanced (CAE)">{{ t('test.types.cae') || 'Cambridge English C1 Advanced (CAE)' }}</SelectItem>
+											<SelectItem value="IELTS">{{ t('test.types.ielts') }}</SelectItem>
+											<SelectItem value="TOEFL iBT">{{ t('test.types.toeflIbt') }}</SelectItem>
+											<SelectItem value="Duolingo English Test">{{ t('test.types.duolingo') }}</SelectItem>
+											<SelectItem value="GRE">{{ t('test.types.gre') }}</SelectItem>
+											<SelectItem value="GMAT">{{ t('test.types.gmat') }}</SelectItem>
+											<SelectItem value="SAT">{{ t('test.types.sat') }}</SelectItem>
+											<SelectItem value="ACT">{{ t('test.types.act') }}</SelectItem>
+											<SelectItem value="A-Level">{{ t('test.types.aLevel') }}</SelectItem>
+											<SelectItem value="AP">{{ t('test.types.ap') }}</SelectItem>
+											<SelectItem value="IB Diploma">{{ t('test.types.ibDiploma') }}</SelectItem>
+											<SelectItem value="Cambridge English C1 Advanced (CAE)">{{ t('test.types.cae') }}</SelectItem>
 										</SelectContent>
 									</Select>
 								</Field>
@@ -363,11 +363,11 @@ onMounted(() => {
 									<CAEFields :entry="test" :index="idx" :editable="true" />
 								</div>
 								<div v-else class="text-sm text-muted-foreground">
-									{{ t('test.selectTypeHint') || 'Select a type to enter details.' }}
+									{{ t('test.selectTypeHint') }}
 								</div>
 
 							<div class="flex justify-end gap-2 mt-2">
-								<Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
+								<Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') }}</Button>
 							</div>
 
 							<hr v-if="idx < standardizedTests.length - 1" class="my-6 border-t-2 border-muted-foreground/20" />
@@ -375,7 +375,7 @@ onMounted(() => {
 						</FieldGroup>
 						
 						<div class="flex justify-end gap-2 mt-4">
-							<Button type="button" @click="addEntry">{{ t('profile.add') || 'Add' }}</Button>
+							<Button type="button" @click="addEntry">{{ t('profile.add') }}</Button>
 						</div>
 					</form>
 				</div>
@@ -384,7 +384,7 @@ onMounted(() => {
 						<FieldGroup>
 							<template v-for="(test, idx) in standardizedTests" :key="idx">
 								<Field>
-									<FieldLabel>{{ t('test.type') || 'Type' }}</FieldLabel>
+									<FieldLabel>{{ t('test.type') }}</FieldLabel>
 									<div class="text-sm text-left">{{ typeLabel(test.type) }}</div>
 								</Field>
 
@@ -430,8 +430,8 @@ onMounted(() => {
 						</FieldGroup>
 					</div>
 					<div v-else class="text-center text-muted-foreground">
-						<div class="mb-2">{{ t('test.empty') || 'No standardized tests' }}</div>
-					<Button type="button" @click="startEdit">{{ t('test.add') || 'Add standardized test' }}</Button>
+						<div class="mb-2">{{ t('test.empty') }}</div>
+					<Button type="button" @click="startEdit">{{ t('test.add') }}</Button>
 					</div>
 				</div>
 			</CardContent>

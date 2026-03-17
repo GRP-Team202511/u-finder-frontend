@@ -29,14 +29,14 @@ const { t } = useI18n()
   <div class="grid gap-4">
     <Field>
       <FieldLabel :for="`patent-title-${props.index}`">
-        {{ t('academic.patent.title') || 'Title' }}
+        {{ t('academic.patent.title') }}
         <span v-if="props.editable" class="text-red-500">*</span>
       </FieldLabel>
       <Input
         v-if="props.editable"
         :id="`patent-title-${props.index}`"
         v-model="props.entry.title"
-        :placeholder="t('academic.patent.titlePlaceholder') || 'Patent title'"
+        :placeholder="t('academic.patent.titlePlaceholder')"
         :class="cn(props.hasTitleError && 'border-red-500')"
         @input="emit('clearTitleError')"
       />
@@ -44,34 +44,34 @@ const { t } = useI18n()
     </Field>
 
     <Field>
-      <FieldLabel :for="`patent-number-${props.index}`">{{ t('academic.patent.number') || 'Patent number' }}</FieldLabel>
+      <FieldLabel :for="`patent-number-${props.index}`">{{ t('academic.patent.number') }}</FieldLabel>
       <Input
         v-if="props.editable"
         :id="`patent-number-${props.index}`"
         v-model="props.entry.patentNumber"
-        :placeholder="t('academic.patent.numberPlaceholder') || 'Patent number'"
+        :placeholder="t('academic.patent.numberPlaceholder')"
       />
       <div v-else class="text-sm text-left">{{ props.entry.patentNumber || '-' }}</div>
     </Field>
 
     <Field>
-      <FieldLabel :for="`patent-region-${props.index}`">{{ t('academic.patent.region') || 'Region' }}</FieldLabel>
+      <FieldLabel :for="`patent-region-${props.index}`">{{ t('academic.patent.region') }}</FieldLabel>
       <Input
         v-if="props.editable"
         :id="`patent-region-${props.index}`"
         v-model="props.entry.region"
-        :placeholder="t('academic.patent.regionPlaceholder') || 'Region'"
+        :placeholder="t('academic.patent.regionPlaceholder')"
       />
       <div v-else class="text-sm text-left">{{ props.entry.region || '-' }}</div>
     </Field>
 
     <Field>
-      <FieldLabel :for="`patent-description-${props.index}`">{{ t('academic.patent.description') || 'Description' }}</FieldLabel>
+      <FieldLabel :for="`patent-description-${props.index}`">{{ t('academic.patent.description') }}</FieldLabel>
       <textarea
         v-if="props.editable"
         :id="`patent-description-${props.index}`"
         v-model="props.entry.description"
-        :placeholder="t('academic.patent.descriptionPlaceholder') || 'Description'"
+        :placeholder="t('academic.patent.descriptionPlaceholder')"
         rows="6"
         class="w-full rounded-md border px-3 py-2 text-sm"
       ></textarea>
