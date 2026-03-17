@@ -320,7 +320,8 @@ const appendToMessage = (messageId: string, chunk: string) => {
 	const isUniversityCardLoading = hasFullCardMarker || hasPartialCardMarker;
 	message.isUniversityCardLoading = isUniversityCardLoading;
 	const hasCardsAlready = Boolean(message.cards?.length);
-	const cardsAdded = cards.length > 0;
+	const validCards = cards;
+	const cardsAdded = validCards.length > 0;
 	if (preText) {
 		if (hasCardsAlready) {
 			message.tailContent = `${message.tailContent ?? ""}${preText}`;
@@ -337,9 +338,8 @@ const appendToMessage = (messageId: string, chunk: string) => {
 			message.content = `${message.content ?? ""}${postText}`;
 		}
 	}
-	if (cards.length) {
+	if (cardsAdded) {
 		const existing = message.cards ?? [];
-		const validCards = normalizeProgramCards(cards);
 		updateMessage(messageId, {
 			type: "cards",
 			cards: [...existing, ...validCards],
