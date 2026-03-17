@@ -517,6 +517,7 @@
         "title": "Internship",
         "company": "Company",
         "role": "Role",
+        "description": "Description",
         "time": {
             "start": "Start Date",
             "end": "End Date",
@@ -526,7 +527,8 @@
         "add": "Add internship",
         "placeholders": {
             "company": "Company name",
-            "role": "Position / Role"
+            "role": "Position / Role",
+            "description": "Description"
         },
         "validation": {
             "companyRequired": "Company name is required",

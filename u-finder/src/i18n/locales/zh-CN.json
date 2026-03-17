@@ -372,6 +372,7 @@
         "title": "实习经历",
         "company": "公司",
         "role": "职位",
+        "description": "描述",
         "time": {
             "start": "开始日期",
             "end": "结束日期",
@@ -381,7 +382,8 @@
         "add": "添加实习经历",
         "placeholders": {
             "company": "公司名称",
-            "role": "职位 / 角色"
+            "role": "职位 / 角色",
+            "description": "描述"
         },
         "validation": {
             "companyRequired": "公司名称为必填项",

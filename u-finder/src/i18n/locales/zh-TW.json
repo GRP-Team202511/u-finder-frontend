@@ -372,6 +372,7 @@
         "title": "實習經歷",
         "company": "公司",
         "role": "職位",
+        "description": "描述",
         "time": {
             "start": "開始日期",
             "end": "結束日期",
@@ -381,7 +382,8 @@
         "add": "新增實習經歷",
         "placeholders": {
             "company": "公司名稱",
-            "role": "職位 / 角色"
+            "role": "職位 / 角色",
+            "description": "描述"
         },
         "validation": {
             "companyRequired": "公司名稱為必填項",
