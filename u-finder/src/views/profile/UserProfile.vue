@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch, provide, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, watch, provide, onMounted, onBeforeUnmount, markRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import { Save } from 'lucide-vue-next'
@@ -36,11 +36,17 @@ let nextEditorId = 0
 
 function registerEditor(handler: EditorRegistration): () => void {
 	const id = nextEditorId++
-	registeredEditors.value.set(id, handler)
+	registeredEditors.value.set(id, markRaw(handler))
 	return () => { registeredEditors.value.delete(id) }
 }
 
-provide<ProfileEditor>('profileEditor', { register: registerEditor })
+const activeEl = ref<HTMLElement | null>(null)
+
+function setActiveEl(el: HTMLElement | null) {
+	activeEl.value = el
+}
+
+provide<ProfileEditor>('profileEditor', { register: registerEditor, setActiveEl })
 
 const hasEditingEditors = computed(() => {
 	for (const editor of registeredEditors.value.values()) {
@@ -69,10 +75,11 @@ async function saveAll() {
 		return
 	}
 
-	// Scroll the first editing card into the center of the viewport
-	const firstWithEl = editingEditors.find(e => e.el?.value)
-	if (firstWithEl?.el?.value) {
-		firstWithEl.el.value.scrollIntoView({ block: 'center', behavior: 'smooth' })
+	// Scroll the currently focused/active card (or first editing card) into center
+	const activeEditor = editingEditors.find(e => e.el?.value && e.el.value === activeEl.value)
+	const scrollTarget = activeEditor?.el?.value ?? editingEditors.find(e => e.el?.value)?.el?.value
+	if (scrollTarget) {
+		scrollTarget.scrollIntoView({ block: 'center', behavior: 'smooth' })
 		await new Promise(r => setTimeout(r, 350))
 	}
 

@@ -268,7 +268,7 @@ function cancel() {
 
 function startEdit() {
 	localEditing.value = true
-	// Ensure there's at least one entry to edit
+	profileEditor?.setActiveEl(cardRef.value)
 	if (standardizedTests.value.length === 0) {
 		standardizedTests.value.push(createEntryForType(''))
 		validationErrors.type.push(false)
@@ -285,7 +285,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div ref="cardRef" :class="cn('flex flex-col gap-6', props.class)">
+	<div ref="cardRef" @focusin="profileEditor?.setActiveEl(cardRef)" :class="cn('flex flex-col gap-6', props.class)">
 		<Card>
 			<CardHeader class="text-left">
 				<div class="flex items-center justify-between gap-4">

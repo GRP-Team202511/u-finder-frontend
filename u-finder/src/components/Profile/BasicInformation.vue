@@ -239,8 +239,8 @@ function cancel() {
 }
 
 function startEdit() {
-  // enter edit mode
   localEditing.value = true
+  profileEditor?.setActiveEl(cardRef.value)
   clearFieldErrors()
   errorMessage.value = ''
   emit('request-edit')
@@ -257,7 +257,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div ref="cardRef" :class="cn('flex flex-col gap-6', props.class)">
+  <div ref="cardRef" @focusin="profileEditor?.setActiveEl(cardRef)" :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-left">
         <div class="flex items-center justify-between gap-4">

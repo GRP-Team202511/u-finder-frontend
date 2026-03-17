@@ -9,4 +9,5 @@ export interface EditorRegistration {
 
 export interface ProfileEditor {
   register: (handler: EditorRegistration) => () => void
+  setActiveEl: (el: HTMLElement | null) => void
 }
