@@ -8,8 +8,20 @@ import {
 	type FavouriteItem,
 } from "@/api/favouriteApi";
 
-export const programKey = (program: ProgramCardData) =>
-	program.official_program_url || `${program.university.name}-${program.degree_program.name}`;
+export const programKey = (program: ProgramCardData | null | undefined) => {
+	if (!program) return "";
+	const url =
+		typeof program.official_program_url === "string"
+			? program.official_program_url
+			: "";
+	const universityName =
+		typeof program.university?.name === "string" ? program.university.name : "";
+	const programName =
+		typeof program.degree_program?.name === "string"
+			? program.degree_program.name
+			: "";
+	return url || (universityName && programName ? `${universityName}-${programName}` : "");
+};
 
 let storageSyncBound = false;
 
