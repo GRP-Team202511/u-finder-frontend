@@ -20,7 +20,7 @@ export const programKey = (program: ProgramCardData | null | undefined) => {
 		typeof program.degree_program?.name === "string"
 			? program.degree_program.name
 			: "";
-	return url || (universityName && programName ? `${universityName}-${programName}` : "");
+	return url || `${universityName}-${programName}`;
 };
 
 let storageSyncBound = false;
