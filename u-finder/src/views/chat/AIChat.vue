@@ -212,8 +212,13 @@ const extractProgramCards = (buffer: string) => {
 		const payload = afterStart.slice(0, endIndex).trim();
 		const parsedCards = parseCardPrograms(payload);
 		if (parsedCards?.length) {
-			cards.push(...normalizeProgramCards(parsedCards));
-			hasSeenCard = true;
+			const validCards = normalizeProgramCards(parsedCards);
+			if (validCards.length > 0) {
+				cards.push(...validCards);
+				hasSeenCard = true;
+			} else {
+				appendText(stripControlMarkers(payload));
+			}
 		} else {
 			// Recovery path: treat unparseable payload as text to avoid stuck buffers.
 			appendText(stripControlMarkers(payload));
