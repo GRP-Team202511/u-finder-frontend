@@ -40,9 +40,15 @@
       </div>
 
       <div class="flex flex-col gap-5">
-        <RecentUsersCard :users="dashboardData?.recentUsers ?? []" />
-        <ModelCostSnapshotCard :model-cost="dashboardData?.modelCost" />
-        <SystemLogsPreviewCard :logs="dashboardData?.systemLogs ?? []" />
+        <RecentUsersCard />
+        <ModelCostSnapshotCard
+          :model-cost="dashboardData?.modelCost"
+          @filter-change="handleCostFilterChange"
+        />
+        <SystemLogsPreviewCard
+          :logs="dashboardData?.systemLogs ?? []"
+          @filter-change="handleLogFilterChange"
+        />
       </div>
     </template>
   </div>
@@ -55,11 +61,12 @@ import StatCard from '@/components/admin/dashboard/SummaryCard.vue'
 import RecentUsersCard from '@/components/admin/dashboard/RecentUser.vue'
 import ModelCostSnapshotCard from '@/components/admin/dashboard/ModuleCost.vue'
 import SystemLogsPreviewCard from '@/components/admin/dashboard/SystemLog.vue'
-import { fetchDashboard, type DashboardResponse } from '@/api/dashboard'
+import { fetchDashboard, type DashboardResponse, type DashboardFetchParams } from '@/api/dashboard'
 
 const loading = ref(false)
 const error = ref('')
 const dashboardData = ref<DashboardResponse | null>(null)
+const filters = ref<DashboardFetchParams>({})
 
 const formattedCost = computed(() => {
   const cost = dashboardData.value?.summary.llmCostToday ?? 0
@@ -71,12 +78,22 @@ async function loadDashboard() {
   error.value = ''
 
   try {
-    dashboardData.value = await fetchDashboard()
+    dashboardData.value = await fetchDashboard(filters.value)
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Failed to load dashboard'
   } finally {
     loading.value = false
   }
+}
+
+function handleLogFilterChange(params: { logs_date?: string; logs_level?: string }) {
+  filters.value = { ...filters.value, ...params }
+  loadDashboard()
+}
+
+function handleCostFilterChange(params: { cost_model?: string; cost_time_range?: string }) {
+  filters.value = { ...filters.value, ...params }
+  loadDashboard()
 }
 
 function handleExport() {

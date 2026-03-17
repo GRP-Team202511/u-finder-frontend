@@ -13,10 +13,8 @@
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="gpt-4.1-mini">gpt-4.1-mini</SelectItem>
-            <SelectItem value="gpt-4.1">gpt-4.1</SelectItem>
-            <SelectItem value="gpt-4o-mini">gpt-4o-mini</SelectItem>
-            <SelectItem value="chat">chat</SelectItem>
+            <SelectItem value="chat">Chat</SelectItem>
+            <SelectItem value="cv_parsing">CV Parsing</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -28,9 +26,9 @@
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="24 hours">24 hours</SelectItem>
-            <SelectItem value="7 days">7 days</SelectItem>
-            <SelectItem value="30 days">30 days</SelectItem>
+            <SelectItem value="last_24h">24 hours</SelectItem>
+            <SelectItem value="last_7d">7 days</SelectItem>
+            <SelectItem value="last_1m">30 days</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -59,7 +57,7 @@
 
 <script setup lang="ts">
 import type { AcceptableValue } from 'reka-ui'
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -77,8 +75,12 @@ const props = defineProps<{
   modelCost?: ModelCostData
 }>()
 
-const selectedModel = ref(props.modelCost?.selectedModel ?? 'gpt-4.1-mini')
-const selectedRange = ref(props.modelCost?.selectedRange ?? '24 hours')
+const emit = defineEmits<{
+  (e: 'filter-change', params: { cost_model?: string; cost_time_range?: string }): void
+}>()
+
+const selectedModel = ref('chat')
+const selectedRange = ref('last_24h')
 
 const formattedRequests = computed(() => {
   const total = props.modelCost?.totalRequests ?? 0
@@ -93,19 +95,19 @@ const formattedCost = computed(() => {
 function handleModelChange(value: AcceptableValue) {
   if (typeof value !== 'string') return
   selectedModel.value = value
+  emitFilters()
 }
 
 function handleRangeChange(value: AcceptableValue) {
   if (typeof value !== 'string') return
   selectedRange.value = value
+  emitFilters()
 }
 
-watch(
-  () => props.modelCost,
-  (next) => {
-    selectedModel.value = next?.selectedModel ?? 'gpt-4.1-mini'
-    selectedRange.value = next?.selectedRange ?? '24 hours'
-  },
-  { immediate: true }
-)
+function emitFilters() {
+  emit('filter-change', {
+    cost_model: selectedModel.value,
+    cost_time_range: selectedRange.value,
+  })
+}
 </script>

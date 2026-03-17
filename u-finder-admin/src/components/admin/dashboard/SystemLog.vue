@@ -27,6 +27,7 @@
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="ALL">ALL</SelectItem>
             <SelectItem value="INFO">INFO</SelectItem>
             <SelectItem value="WARN">WARN</SelectItem>
             <SelectItem value="ERROR">ERROR</SelectItem>
@@ -36,13 +37,13 @@
     </div>
 
     <div class="overflow-hidden rounded-[18px] border border-[#dddddd] bg-white">
-      <div v-if="filteredLogs.length === 0" class="px-[14px] py-[18px] text-[13px] text-[#6b6b6b]">
+      <div v-if="props.logs.length === 0" class="px-[14px] py-[18px] text-[13px] text-[#6b6b6b]">
         No logs found.
       </div>
 
       <div
-        v-for="log in filteredLogs"
-        :key="log.date + log.time + log.message"
+        v-for="(log, idx) in props.logs"
+        :key="idx"
         class="grid items-center gap-3 border-b border-dashed border-[#d9d9d9] px-[14px] py-3 [grid-template-columns:92px_92px_1fr] last:border-b-0 max-[900px]:grid-cols-1 max-[900px]:gap-2"
       >
         <div class="text-[13px] text-[#222222]">{{ log.time }}</div>
@@ -58,7 +59,7 @@
 <script setup lang="ts">
 import { parseDate } from '@internationalized/date'
 import type { AcceptableValue } from 'reka-ui'
-import { computed, ref, watch } from 'vue'
+import { ref } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Calendar } from '@/components/ui/calendar'
@@ -72,46 +73,43 @@ export interface LogItem {
   message: string
 }
 
+const LEVEL_TO_API: Record<string, string> = {
+  ALL: 'all', INFO: 'info', WARN: 'warn', ERROR: 'error',
+}
+
 const props = defineProps<{
   logs: LogItem[]
 }>()
 
-const selectedDate = ref('2026-03-15')
+const emit = defineEmits<{
+  (e: 'filter-change', params: { logs_date?: string; logs_level?: string }): void
+}>()
+
+const today = new Date().toISOString().slice(0, 10)
+const selectedDate = ref(today)
 const selectedDateValue = ref<any>(parseDate(selectedDate.value))
 const isDateMenuOpen = ref(false)
-const selectedLevel = ref<'INFO' | 'WARN' | 'ERROR'>('INFO')
-
-const filteredLogs = computed(() => {
-  return props.logs.filter((log) => {
-    return log.date === selectedDate.value && log.level === selectedLevel.value
-  })
-})
+const selectedLevel = ref<'ALL' | 'INFO' | 'WARN' | 'ERROR'>('ALL')
 
 function handleCalendarChange(value: any) {
   if (!value) return
   selectedDateValue.value = value
   selectedDate.value = value.toString()
   isDateMenuOpen.value = false
+  emitFilters()
 }
 
 function handleLevelChange(value: AcceptableValue) {
   if (typeof value !== 'string') return
-  if (value !== 'INFO' && value !== 'WARN' && value !== 'ERROR') return
-  selectedLevel.value = value
+  if (!['ALL', 'INFO', 'WARN', 'ERROR'].includes(value)) return
+  selectedLevel.value = value as typeof selectedLevel.value
+  emitFilters()
 }
 
-watch(
-  () => props.logs,
-  (next) => {
-    const firstLog = next[0]
-    if (!firstLog) return
-
-    const hasSelectedDate = next.some((log) => log.date === selectedDate.value)
-    if (!hasSelectedDate) {
-      selectedDate.value = firstLog.date
-      selectedDateValue.value = parseDate(firstLog.date)
-    }
-  },
-  { immediate: true }
-)
+function emitFilters() {
+  emit('filter-change', {
+    logs_date: selectedDate.value,
+    logs_level: LEVEL_TO_API[selectedLevel.value] ?? 'all',
+  })
+}
 </script>
