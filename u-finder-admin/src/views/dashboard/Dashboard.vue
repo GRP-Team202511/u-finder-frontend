@@ -21,8 +21,8 @@
       </div>
     </div>
 
-    <div v-if="loading" class="p-5 text-sm text-[#555555]">Loading dashboard...</div>
-    <div v-else-if="error" class="p-5 text-sm text-[#c62828]">
+    <div v-if="initialLoading" class="p-5 text-sm text-[#555555]">Loading dashboard...</div>
+    <div v-else-if="error && !dashboardData" class="p-5 text-sm text-[#c62828]">
       {{ error }}
     </div>
     <template v-else>
@@ -67,6 +67,8 @@ const loading = ref(false)
 const error = ref('')
 const dashboardData = ref<DashboardResponse | null>(null)
 const filters = ref<DashboardFetchParams>({})
+
+const initialLoading = computed(() => loading.value && !dashboardData.value)
 
 const formattedCost = computed(() => {
   const cost = dashboardData.value?.summary.llmCostToday ?? 0
