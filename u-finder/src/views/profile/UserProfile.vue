@@ -2,7 +2,7 @@
 import { computed, ref, watch, provide, onMounted, onBeforeUnmount, markRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
-import { Save } from 'lucide-vue-next'
+import { Save, X } from 'lucide-vue-next'
 import BasicInformation from '@/components/Profile/BasicInformation.vue'
 import EducationBackground from '@/components/Profile/EducationBackground.vue'
 import AcademicOutcome from '@/components/Profile/AcademicOutcome/AcademicOutcome.vue'
@@ -102,6 +102,13 @@ async function saveAll() {
 	})
 
 	isSavingAll.value = false
+}
+
+function cancelAll() {
+	const editingEditors = [...registeredEditors.value.values()].filter(e => e.isEditing.value)
+	for (const editor of editingEditors) {
+		editor.cancel?.()
+	}
 }
 
 // CV Parser Dialog state
@@ -512,16 +519,26 @@ function handleCVResultCancel() {
 			/>
 		</div>
 
-		<!-- Save All dock -->
+		<!-- Save All / Cancel All dock -->
 		<Transition
 			enter-from-class="translate-y-full"
 			leave-to-class="translate-y-full"
 		>
 			<div
 				v-if="hasEditingEditors"
-				class="fixed bottom-0 right-0 z-50 flex items-center justify-center border-t bg-background py-3 transition-[left,translate] duration-200 ease-linear"
+				class="fixed bottom-0 right-0 z-50 flex items-center justify-center gap-3 border-t bg-background py-3 transition-[left,translate] duration-200 ease-linear"
 				:style="{ left: !isMobile && sidebarOpen ? 'var(--sidebar-width, 16rem)' : '0' }"
 			>
+				<Button
+					variant="outline"
+					size="lg"
+					class="gap-2"
+					:disabled="isSavingAll"
+					@click="cancelAll"
+				>
+					<X class="size-4" />
+					{{ t('profile.cancelAll') }}
+				</Button>
 				<Button
 					size="lg"
 					class="gap-2 shadow-lg"
