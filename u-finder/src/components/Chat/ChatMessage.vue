@@ -21,6 +21,7 @@ const roleClass = computed(() =>
 				:content="message.content"
 				:tail-content="message.tailContent"
 				:universities="message.cards"
+				:is-university-card-loading="Boolean(message.isUniversityCardLoading)"
 				:is-loading="Boolean(props.isLoading || message.isLoading)"
 			/>
 
