@@ -47,14 +47,13 @@ const emit = defineEmits<{
 }>()
 
 // participate in global profile edit/save/cancel via optional provided API
-type ProfileEditor = {
-  register: (h: { save: () => void; cancel?: () => void }) => () => void
-}
+import type { ProfileEditor } from '@/types/profileEditor'
 const profileEditor = inject<ProfileEditor | null>('profileEditor', null)
 
 // local edit state
 const localEditing = ref(false)
 const pendingSave = ref(false)
+const cardRef = ref<HTMLElement | null>(null)
 
 function createEntryForType(type: AcademicEntry["type"]): AcademicEntry {
   if (type === "research paper") {
@@ -202,7 +201,7 @@ function cancel() {
 
 function startEdit() {
   localEditing.value = true
-  // Ensure there's at least one entry to edit
+  profileEditor?.setActiveEl(cardRef.value)
   if (academicOutcomes.value.length === 0) {
     academicOutcomes.value.push(createEntryForType(''))
     validationErrors.type.push(false)
@@ -214,14 +213,14 @@ function startEdit() {
 // register with parent profileEditor if available
 onMounted(() => {
   if (profileEditor && typeof profileEditor.register === 'function') {
-    const unregister = profileEditor.register({ save: () => save(), cancel: () => cancel() })
+    const unregister = profileEditor.register({ save: () => save(), cancel: () => cancel(), isEditing: localEditing, isSaving: pendingSave, el: cardRef })
     onBeforeUnmount(() => unregister())
   }
 })
 </script>
 
 <template>
-  <div :class="cn('flex flex-col gap-6', props.class)">
+  <div ref="cardRef" @focusin="profileEditor?.setActiveEl(cardRef)" :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-left">
         <div class="flex items-center justify-between gap-4">
