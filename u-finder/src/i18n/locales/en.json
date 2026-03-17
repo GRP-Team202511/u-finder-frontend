@@ -29,8 +29,15 @@
             "sendCode": "Send Code",
             "send": "Reset Password",
             "otp": "Verification Code",
+            "otpPlaceholder": "Enter 6-digit code",
             "newPassword": "New Password",
+            "confirmPassword": "Confirm Password",
             "codeDescription": "Code sent to your email.",
+            "step1Desc": "Enter your email to receive a verification code",
+            "step2Desc": "Enter the verification code and your new password",
+            "step1Hint": "A verification code will be sent to this email address",
+            "emailPlaceholder": "your@email.com",
+            "back": "Back",
             "resendCode": "Resend",
             "errors": {
                 "emailRequired": "Email is required",
@@ -46,6 +53,7 @@
                 "wrongCode": "Incorrect verification code",
                 "unauthorized": "Unauthorized request",
                 "invalidInput": "Invalid input provided",
+                "passwordMismatch": "Passwords do not match",
                 "resetFailed": "Failed to reset password. Please try again."
             },
             "success": {
@@ -88,6 +96,8 @@
         "error": "An error occurred during signup. Please try again.",
         "codeSent": "The verification code has been sent",
         "passwordError": "Password must be 8-20 characters, with at least one letter and one digit.",
+        "passwordMismatch": "Passwords do not match",
+        "confirmPasswordRequired": "Please confirm your password",
         "verification": {
             "enter": "Enter verification code",
             "sent": "We sent a 6-digit code to your email.",
