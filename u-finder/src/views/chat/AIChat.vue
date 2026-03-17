@@ -178,13 +178,19 @@ const flushMessageBuffer = (messageId: string, options?: { discardIncompleteCard
 	const remainder = messageBuffers.get(messageId);
 	if (!remainder) return;
 	messageBuffers.delete(messageId);
-	if (options?.discardIncompleteCards && remainder.includes(programCardStart)) {
+	const hasFullCardStart = remainder.includes(programCardStart);
+	const partialStartSuffixSize = findPartialStartSuffix(remainder);
+	const hasPartialCardStart = partialStartSuffixSize > 0;
+	if (options?.discardIncompleteCards && (hasFullCardStart || hasPartialCardStart)) {
 		return;
 	}
+	const remainderWithoutPartialSuffix = hasPartialCardStart
+		? remainder.slice(0, -partialStartSuffixSize)
+		: remainder;
 	const sanitizedRemainder = stripControlMarkers(
-		remainder.split(programCardStart).join("").split(programCardEnd).join("")
+		remainderWithoutPartialSuffix.split(programCardStart).join("").split(programCardEnd).join("")
 	);
-	if (remainder.includes(programCardStart)) {
+	if (hasFullCardStart) {
 		if (!sanitizedRemainder.trim()) return;
 		const message = messages.value.find((item) => item.id === messageId);
 		if (!message) return;
