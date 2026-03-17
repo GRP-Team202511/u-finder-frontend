@@ -89,17 +89,24 @@ async function saveAll() {
 		editor.save()
 	}
 
-	// Wait until all triggered saves settle (editors exit edit mode) or timeout.
-	await new Promise<void>((resolve) => {
-		const timeout = setTimeout(() => { stop(); resolve() }, 15_000)
-		const stop = watch(
-			() => editingEditors.every(e => !e.isEditing.value),
-			(allDone) => {
-				if (allDone) { clearTimeout(timeout); stop(); resolve() }
-			},
-			{ immediate: true },
-		)
-	})
+	// After calling save(), editors that passed validation will have isSaving=true.
+	// Editors that failed validation return early and isSaving stays false.
+	// Only wait for editors that actually initiated a save.
+	const savingEditors = editingEditors.filter(e => e.isSaving?.value)
+
+	if (savingEditors.length > 0) {
+		await new Promise<void>((resolve) => {
+			let stop: ReturnType<typeof watch> | undefined
+			const timeout = setTimeout(() => { stop?.(); resolve() }, 15_000)
+			stop = watch(
+				() => savingEditors.every(e => !e.isEditing.value),
+				(allDone) => {
+					if (allDone) { clearTimeout(timeout); stop?.(); resolve() }
+				},
+				{ immediate: true },
+			)
+		})
+	}
 
 	isSavingAll.value = false
 }

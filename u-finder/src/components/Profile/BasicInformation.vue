@@ -250,7 +250,7 @@ function startEdit() {
 onMounted(async () => {
   await initBirthdays()
   if (profileEditor && typeof profileEditor.register === 'function') {
-    const unregister = profileEditor.register({ save: () => save(), cancel: () => cancel(), isEditing: localEditing, el: cardRef })
+    const unregister = profileEditor.register({ save: () => save(), cancel: () => cancel(), isEditing: localEditing, isSaving: isLoading, el: cardRef })
     onBeforeUnmount(() => unregister())
   }
 })

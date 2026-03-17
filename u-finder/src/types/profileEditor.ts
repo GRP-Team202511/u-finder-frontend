@@ -4,6 +4,7 @@ export interface EditorRegistration {
   save: () => void
   cancel?: () => void
   isEditing: Ref<boolean>
+  isSaving?: Ref<boolean>
   el?: Ref<HTMLElement | null>
 }
 

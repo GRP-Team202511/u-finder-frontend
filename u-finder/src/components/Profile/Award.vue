@@ -158,7 +158,7 @@ function startEdit() {
 // register with parent profileEditor if available
 onMounted(() => {
   if (profileEditor && typeof profileEditor.register === 'function') {
-    const unregister = profileEditor.register({ save: () => save(), cancel: () => cancel(), isEditing: localEditing, el: cardRef })
+    const unregister = profileEditor.register({ save: () => save(), cancel: () => cancel(), isEditing: localEditing, isSaving: pendingSave, el: cardRef })
     onBeforeUnmount(() => unregister())
   }
 })
