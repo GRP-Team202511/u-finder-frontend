@@ -134,13 +134,14 @@
 </template>
 
 <script setup lang="ts">
+import type { AcceptableValue } from 'reka-ui'
 import { computed, ref, watch } from 'vue'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-interface UserRow {
+export interface UserRow {
   id: number
   name: string
   email: string
@@ -150,62 +151,9 @@ interface UserRow {
   lastActiveMinutes: number
 }
 
-const users: UserRow[] = [
-  {
-    id: 1024,
-    name: 'Albert Wolff',
-    email: 'albert@ufinder.com',
-    role: 'Student',
-    status: 'Active',
-    lastActive: '3 min ago',
-    lastActiveMinutes: 3
-  },
-  {
-    id: 1188,
-    name: 'Kai-Hsiang Shen',
-    email: 'kaihs@ufinder.com',
-    role: 'Student',
-    status: 'Pending',
-    lastActive: '1 hour ago',
-    lastActiveMinutes: 60
-  },
-  {
-    id: 2003,
-    name: 'Spam Bot 03',
-    email: 'bot03@temp.com',
-    role: 'Unknown',
-    status: 'Blocked',
-    lastActive: '2 days ago',
-    lastActiveMinutes: 2880
-  },
-  {
-    id: 1452,
-    name: 'Emily Carter',
-    email: 'emily@ufinder.com',
-    role: 'Student',
-    status: 'Active',
-    lastActive: '12 min ago',
-    lastActiveMinutes: 12
-  },
-  {
-    id: 1567,
-    name: 'Ryan Chen',
-    email: 'ryan@ufinder.com',
-    role: 'Admin',
-    status: 'Active',
-    lastActive: '25 min ago',
-    lastActiveMinutes: 25
-  },
-  {
-    id: 1789,
-    name: 'Sophia Lin',
-    email: 'sophia@ufinder.com',
-    role: 'Student',
-    status: 'Pending',
-    lastActive: '4 hours ago',
-    lastActiveMinutes: 240
-  }
-]
+const props = defineProps<{
+  users: UserRow[]
+}>()
 
 const searchQuery = ref('')
 const sortKey = ref<'name' | 'role' | 'status' | 'lastActiveMinutes' | 'id'>('name')
@@ -217,9 +165,9 @@ const rowsPerPage = ref(5)
 const filteredUsers = computed(() => {
   const query = searchQuery.value.trim().toLowerCase()
 
-  if (!query) return users
+  if (!query) return props.users
 
-  return users.filter((user) => {
+  return props.users.filter((user) => {
     return (
       user.name.toLowerCase().includes(query) ||
       user.email.toLowerCase().includes(query) ||
@@ -276,17 +224,19 @@ function prevPage() {
   }
 }
 
-function handleSortKeyChange(value: any) {
+function handleSortKeyChange(value: AcceptableValue) {
   if (typeof value !== 'string') return
   sortKey.value = value as 'name' | 'role' | 'status' | 'lastActiveMinutes' | 'id'
 }
 
-function handleSortOrderChange(value: any) {
+function handleSortOrderChange(value: AcceptableValue) {
+  if (typeof value !== 'string') return
   if (value !== 'asc' && value !== 'desc') return
   sortOrder.value = value
 }
 
-function handleRowsPerPageChange(value: any) {
+function handleRowsPerPageChange(value: AcceptableValue) {
+  if (typeof value !== 'string') return
   const next = Number(value)
   if ([5, 10, 20].includes(next)) {
     rowsPerPage.value = next
@@ -296,6 +246,13 @@ function handleRowsPerPageChange(value: any) {
 watch([searchQuery, sortKey, sortOrder, rowsPerPage], () => {
   currentPage.value = 1
 })
+
+watch(
+  () => props.users,
+  () => {
+    currentPage.value = 1
+  }
+)
 </script>
 
 <style scoped>

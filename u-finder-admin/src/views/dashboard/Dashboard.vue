@@ -9,39 +9,87 @@
       </div>
 
       <div class="topbar-actions">
-        <Button variant="outline" size="lg" class="topbar-btn">Export</Button>
-        <Button variant="outline" size="lg" class="topbar-btn">Refresh</Button>
-        <Button variant="default" size="lg" class="topbar-btn">Save</Button>
+        <Button variant="outline" size="lg" class="topbar-btn" @click="handleExport">
+          Export
+        </Button>
+        <Button variant="outline" size="lg" class="topbar-btn" @click="loadDashboard">
+          Refresh
+        </Button>
+        <Button variant="default" size="lg" class="topbar-btn" @click="handleSave">
+          Save
+        </Button>
       </div>
     </div>
 
-    <div class="stats-grid stats-grid--two">
-      <StatCard
-        title="Total Users"
-        value="1,284"
-        subtitle="+32 this week"
-      />
-      <StatCard
-        title="LLM Cost (Today)"
-        value="$18.42"
-        subtitle="budget: $40/day"
-      />
+    <div v-if="loading" class="dashboard-state">Loading dashboard...</div>
+    <div v-else-if="error" class="dashboard-state dashboard-state--error">
+      {{ error }}
     </div>
+    <template v-else>
+      <div class="stats-grid stats-grid--two">
+        <StatCard
+          title="Total Users"
+          :value="dashboardData?.summary.totalUsers ?? 0"
+          :subtitle="dashboardData?.summary.totalUsersSubtitle ?? ''"
+        />
+        <StatCard
+          title="LLM Cost (Today)"
+          :value="formattedCost"
+          :subtitle="dashboardData?.summary.llmCostSubtitle ?? ''"
+        />
+      </div>
 
-    <div class="section-stack">
-      <RecentUsersCard />
-      <ModelCostSnapshotCard />
-      <SystemLogsPreviewCard />
-    </div>
+      <div class="section-stack">
+        <RecentUsersCard :users="dashboardData?.recentUsers ?? []" />
+        <ModelCostSnapshotCard :model-cost="dashboardData?.modelCost" />
+        <SystemLogsPreviewCard :logs="dashboardData?.systemLogs ?? []" />
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
 import { Button } from '@/components/ui/button'
 import StatCard from '@/components/admin/dashboard/SummaryCard.vue'
 import RecentUsersCard from '@/components/admin/dashboard/RecentUser.vue'
 import ModelCostSnapshotCard from '@/components/admin/dashboard/ModuleCost.vue'
 import SystemLogsPreviewCard from '@/components/admin/dashboard/SystemLog.vue'
+import { fetchDashboard, type DashboardResponse } from '@/api/dashboard'
+
+const loading = ref(false)
+const error = ref('')
+const dashboardData = ref<DashboardResponse | null>(null)
+
+const formattedCost = computed(() => {
+  const cost = dashboardData.value?.summary.llmCostToday ?? 0
+  return `$${cost.toFixed(2)}`
+})
+
+async function loadDashboard() {
+  loading.value = true
+  error.value = ''
+
+  try {
+    dashboardData.value = await fetchDashboard()
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Failed to load dashboard'
+  } finally {
+    loading.value = false
+  }
+}
+
+function handleExport() {
+  console.log('export dashboard')
+}
+
+function handleSave() {
+  console.log('save dashboard settings')
+}
+
+onMounted(() => {
+  loadDashboard()
+})
 </script>
 
 <style scoped>
@@ -104,6 +152,16 @@ import SystemLogsPreviewCard from '@/components/admin/dashboard/SystemLog.vue'
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.dashboard-state {
+  padding: 20px;
+  font-size: 14px;
+  color: #555555;
+}
+
+.dashboard-state--error {
+  color: #c62828;
 }
 
 @media (max-width: 1024px) {

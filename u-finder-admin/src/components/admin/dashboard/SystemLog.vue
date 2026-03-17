@@ -57,60 +57,32 @@
 
 <script setup lang="ts">
 import { parseDate } from '@internationalized/date'
-import { computed, ref } from 'vue'
+import type { AcceptableValue } from 'reka-ui'
+import { computed, ref, watch } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Calendar } from '@/components/ui/calendar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-interface LogItem {
+export interface LogItem {
   date: string
   time: string
   level: 'INFO' | 'WARN' | 'ERROR'
   message: string
 }
 
+const props = defineProps<{
+  logs: LogItem[]
+}>()
+
 const selectedDate = ref('2026-03-15')
 const selectedDateValue = ref<any>(parseDate(selectedDate.value))
 const isDateMenuOpen = ref(false)
 const selectedLevel = ref<'INFO' | 'WARN' | 'ERROR'>('INFO')
 
-const logs: LogItem[] = [
-  {
-    date: '2026-03-15',
-    time: '17:41:12',
-    level: 'INFO',
-    message: 'User #1188 requested verification code'
-  },
-  {
-    date: '2026-03-15',
-    time: '17:40:03',
-    level: 'WARN',
-    message: 'Daily budget reached 80% threshold'
-  },
-  {
-    date: '2026-03-15',
-    time: '17:38:55',
-    level: 'ERROR',
-    message: 'LLM timeout on /recommend (retry succeeded)'
-  },
-  {
-    date: '2026-03-15',
-    time: '17:33:10',
-    level: 'INFO',
-    message: 'Login request verified successfully'
-  },
-  {
-    date: '2026-03-14',
-    time: '14:20:22',
-    level: 'WARN',
-    message: 'Multiple failed login attempts detected'
-  }
-]
-
 const filteredLogs = computed(() => {
-  return logs.filter((log) => {
+  return props.logs.filter((log) => {
     return log.date === selectedDate.value && log.level === selectedLevel.value
   })
 })
@@ -122,10 +94,26 @@ function handleCalendarChange(value: any) {
   isDateMenuOpen.value = false
 }
 
-function handleLevelChange(value: any) {
+function handleLevelChange(value: AcceptableValue) {
+  if (typeof value !== 'string') return
   if (value !== 'INFO' && value !== 'WARN' && value !== 'ERROR') return
   selectedLevel.value = value
 }
+
+watch(
+  () => props.logs,
+  (next) => {
+    const firstLog = next[0]
+    if (!firstLog) return
+
+    const hasSelectedDate = next.some((log) => log.date === selectedDate.value)
+    if (!hasSelectedDate) {
+      selectedDate.value = firstLog.date
+      selectedDateValue.value = parseDate(firstLog.date)
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped>

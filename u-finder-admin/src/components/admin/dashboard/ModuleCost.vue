@@ -39,14 +39,14 @@
     <div class="stats-grid">
       <div class="mini-stat">
         <div class="mini-stat__label">Total Requests</div>
-        <div class="mini-stat__value">3,912</div>
-        <div class="mini-stat__sub">avg latency: 1.8s</div>
+        <div class="mini-stat__value">{{ formattedRequests }}</div>
+        <div class="mini-stat__sub">avg latency: {{ props.modelCost?.avgLatency ?? '0s' }}</div>
       </div>
 
       <div class="mini-stat">
         <div class="mini-stat__label">Estimated Cost</div>
-        <div class="mini-stat__value">$18.42</div>
-        <div class="mini-stat__sub">tokens: 9.7M</div>
+        <div class="mini-stat__value">{{ formattedCost }}</div>
+        <div class="mini-stat__sub">tokens: {{ props.modelCost?.tokens ?? '0' }}</div>
       </div>
     </div>
 
@@ -58,23 +58,56 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import type { AcceptableValue } from 'reka-ui'
+import { computed, ref, watch } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-const selectedModel = ref('gpt-4.1-mini')
-const selectedRange = ref('24 hours')
+export interface ModelCostData {
+  selectedModel: string
+  selectedRange: string
+  totalRequests: number
+  avgLatency: string
+  estimatedCost: number
+  tokens: string
+}
 
-function handleModelChange(value: any) {
+const props = defineProps<{
+  modelCost?: ModelCostData
+}>()
+
+const selectedModel = ref(props.modelCost?.selectedModel ?? 'gpt-4.1-mini')
+const selectedRange = ref(props.modelCost?.selectedRange ?? '24 hours')
+
+const formattedRequests = computed(() => {
+  const total = props.modelCost?.totalRequests ?? 0
+  return total.toLocaleString()
+})
+
+const formattedCost = computed(() => {
+  const cost = props.modelCost?.estimatedCost ?? 0
+  return `$${cost.toFixed(2)}`
+})
+
+function handleModelChange(value: AcceptableValue) {
   if (typeof value !== 'string') return
   selectedModel.value = value
 }
 
-function handleRangeChange(value: any) {
+function handleRangeChange(value: AcceptableValue) {
   if (typeof value !== 'string') return
   selectedRange.value = value
 }
+
+watch(
+  () => props.modelCost,
+  (next) => {
+    selectedModel.value = next?.selectedModel ?? 'gpt-4.1-mini'
+    selectedRange.value = next?.selectedRange ?? '24 hours'
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped>
