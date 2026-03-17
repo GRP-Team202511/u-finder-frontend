@@ -45,10 +45,10 @@ function removeSubject(index: number) {
 <template>
 	<div class="grid gap-4">
 		<Field>
-			<FieldLabel :for="`ap-year-${props.index}`">{{ t('test.examYear') || 'Exam year' }}</FieldLabel>
+			<FieldLabel :for="`ap-year-${props.index}`">{{ t('test.examYear') }}</FieldLabel>
 			<Select v-if="props.editable" v-model="props.entry.exam_year">
 				<SelectTrigger :id="`ap-year-${props.index}`" class="w-full">
-					<SelectValue :placeholder="t('test.examYear') || 'Exam year'" />
+					<SelectValue :placeholder="t('test.examYear')" />
 				</SelectTrigger>
 				<SelectContent>
 					<SelectItem v-for="year in examYears" :key="year" :value="String(year)">{{ year }}</SelectItem>
@@ -59,10 +59,10 @@ function removeSubject(index: number) {
 
 		<div class="rounded-md border p-4">
 			<div class="grid gap-2">
-				<div class="text-sm font-medium text-left">{{ t('test.subjects') || 'Subjects' }}</div>
+				<div class="text-sm font-medium text-left">{{ t('test.subjects') }}</div>
 				<div v-for="(subject, sidx) in subjects" :key="sidx" class="grid grid-cols-2 gap-4 pt-2">
 					<Field>
-						<FieldLabel :for="`ap-subject-${props.index}-${sidx}`">{{ t('test.subject') || 'Subject' }}</FieldLabel>
+						<FieldLabel :for="`ap-subject-${props.index}-${sidx}`">{{ t('test.subject') }}</FieldLabel>
 						<Input
 							v-if="props.editable"
 							:id="`ap-subject-${props.index}-${sidx}`"
@@ -71,7 +71,7 @@ function removeSubject(index: number) {
 						<div v-else class="text-sm text-left">{{ subject.subject || '-' }}</div>
 					</Field>
 					<Field>
-						<FieldLabel :for="`ap-score-${props.index}-${sidx}`">{{ t('test.score') || 'Score' }}</FieldLabel>
+						<FieldLabel :for="`ap-score-${props.index}-${sidx}`">{{ t('test.score') }}</FieldLabel>
 						<Input
 							v-if="props.editable"
 							:id="`ap-score-${props.index}-${sidx}`"
@@ -80,8 +80,8 @@ function removeSubject(index: number) {
 						<div v-else class="text-sm text-left">{{ subject.score || '-' }}</div>
 					</Field>
 					<div v-if="props.editable" class="col-span-2 flex justify-end gap-2">
-						<Button type="button" variant="secondary" @click="removeSubject(sidx)">{{ t('profile.remove') || 'Remove' }}</Button>
-						<Button type="button" @click="addSubject">{{ t('profile.add') || 'Add' }}</Button>
+						<Button type="button" variant="secondary" @click="removeSubject(sidx)">{{ t('profile.remove') }}</Button>
+						<Button type="button" @click="addSubject">{{ t('profile.add') }}</Button>
 					</div>
 				</div>
 			</div>

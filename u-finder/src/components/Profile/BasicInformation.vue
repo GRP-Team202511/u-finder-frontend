@@ -151,19 +151,19 @@ const df = new DateFormatter('en-US', { dateStyle: 'medium' })
 
 function genderLabel(gender: string) {
   if (!gender) return '-'
-  if (gender.toLowerCase() === 'male') return t('info.gender.male') || 'Male'
-  if (gender.toLowerCase() === 'female') return t('info.gender.female') || 'Female'
-  if (gender.toLowerCase() === 'other') return t('info.gender.other') || 'Other'
+  if (gender.toLowerCase() === 'male') return t('info.gender.male')
+  if (gender.toLowerCase() === 'female') return t('info.gender.female')
+  if (gender.toLowerCase() === 'other') return t('info.gender.other')
   // Fallback: capitalize first letter of each word
   return gender.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
 }
 
 function getHttpErrorMessage(err: any, fallbackKey: string) {
   const status = err?.response?.status
-  if (status === 401) return t('info.errors.unauthorized') || 'Invalid or expired token.'
-  if (status === 404) return t('info.errors.notFound') || 'User not found.'
-  if (status === 500) return t('info.errors.serverError') || 'Internal server error.'
-  return t(fallbackKey) || ''
+  if (status === 401) return t('info.errors.unauthorized')
+  if (status === 404) return t('info.errors.notFound')
+  if (status === 500) return t('info.errors.serverError')
+  return t(fallbackKey)
 }
 
 function formatToDate(dv: any, tz: string) {
@@ -187,7 +187,7 @@ function save(e?: Event) {
   if (e && e.preventDefault) e.preventDefault()
   if (!localEditing.value || !userStore.isLoggedIn) {
     if (!userStore.isLoggedIn)
-      errorMessage.value = t('info.errors.notLoggedIn') || 'You are not logged in.'
+      errorMessage.value = t('info.errors.notLoggedIn')
     return
   }
   clearFieldErrors()
@@ -199,7 +199,7 @@ function save(e?: Event) {
   const nameValue = (info.name || '').trim()
   const genderValue = info.gender || ''
 
-  if (!nameValue) fieldErrors.name = t('info.errors.nameRequired') || 'Name is required.'
+  if (!nameValue) fieldErrors.name = t('info.errors.nameRequired')
   if (fieldErrors.name) return
 
   isLoading.value = true
@@ -221,7 +221,7 @@ function save(e?: Event) {
       toast.success(t('profile.toast.information.saveSuccess'))
     })
     .catch((err) => {
-      errorMessage.value = getHttpErrorMessage(err, 'info.errors.saveFailed') || 'Failed to save personal information.'
+      errorMessage.value = getHttpErrorMessage(err, 'info.errors.saveFailed')
       toast.error(t('profile.toast.information.saveFailed'))
     })
     .finally(() => {
@@ -266,11 +266,11 @@ onMounted(async () => {
             {{ t("info.title") }}
           </CardTitle>
           <div v-if="!localEditing">
-            <Button type="button" :disabled="isLoading" @click="startEdit">{{ t('profile.edit') || 'Edit' }}</Button>
+            <Button type="button" :disabled="isLoading" @click="startEdit">{{ t('profile.edit') }}</Button>
           </div>
           <div v-else class="flex gap-2">
-            <Button type="button" variant="secondary" :disabled="isLoading" @click="cancel">{{ t('profile.cancel') || 'Cancel' }}</Button>
-            <Button type="button" :disabled="isLoading" @click="save">{{ t('profile.save') || 'Save' }}</Button>
+            <Button type="button" variant="secondary" :disabled="isLoading" @click="cancel">{{ t('profile.cancel') }}</Button>
+            <Button type="button" :disabled="isLoading" @click="save">{{ t('profile.save') }}</Button>
           </div>
         </div>
       </CardHeader>
@@ -280,33 +280,33 @@ onMounted(async () => {
           <form @submit="save">
             <FieldGroup>
               <Field>
-                <FieldLabel for="name">{{ t('info.name') || 'Name' }}</FieldLabel>
+                <FieldLabel for="name">{{ t('info.name') }}</FieldLabel>
                 <Input id="name" v-model="information.name" placeholder="Name" />
                 <div v-if="fieldErrors.name" class="text-xs text-destructive mt-1">{{ fieldErrors.name }}</div>
               </Field>
 
               <Field>
-                <FieldLabel for="gender">{{ t('info.gender.title') || 'Gender' }}</FieldLabel>
+                <FieldLabel for="gender">{{ t('info.gender.title') }}</FieldLabel>
                 <Select v-model="information.gender">
                   <SelectTrigger id="gender" class="w-full">
                     <SelectValue placeholder="Gender" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="male">{{ t('info.gender.male') || 'Male' }}</SelectItem>
-                    <SelectItem value="female">{{ t('info.gender.female') || 'Female' }}</SelectItem>
-                    <SelectItem value="other">{{ t('info.gender.other') || 'Other' }}</SelectItem>
+                    <SelectItem value="male">{{ t('info.gender.male') }}</SelectItem>
+                    <SelectItem value="female">{{ t('info.gender.female') }}</SelectItem>
+                    <SelectItem value="other">{{ t('info.gender.other') }}</SelectItem>
                   </SelectContent>
                 </Select>
                 <div v-if="fieldErrors.gender" class="text-xs text-destructive mt-1">{{ fieldErrors.gender }}</div>
               </Field>
 
               <Field>
-                <FieldLabel for="birthday">{{ t('info.birthday') || 'Birthday' }}</FieldLabel>
+                <FieldLabel for="birthday">{{ t('info.birthday') }}</FieldLabel>
                 <Popover v-slot="{ close }">
                   <PopoverTrigger as-child>
                     <Button variant="outline" :class="cn('w-full justify-start text-left font-normal', !information.birthday && 'text-muted-foreground')">
                       <CalendarIcon class="mr-2 h-4 w-4" />
-                      {{ birthday ? df.format(birthday!.toDate(getLocalTimeZone())) : (information.birthday || 'Pick date') }}
+                      {{ birthday ? df.format(birthday!.toDate(getLocalTimeZone())) : (information.birthday || t('date.pickDate')) }}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent class="w-auto p-0" align="start">
@@ -329,24 +329,24 @@ onMounted(async () => {
           <div v-if="information">
             <FieldGroup>
               <Field>
-                <FieldLabel>{{ t('info.name') || 'Name' }}</FieldLabel>
+                <FieldLabel>{{ t('info.name') }}</FieldLabel>
                 <div class="text-sm text-left">{{ information.name || '-' }}</div>
               </Field>
 
               <Field>
-                <FieldLabel>{{ t('info.gender.title') || 'Gender' }}</FieldLabel>
+                <FieldLabel>{{ t('info.gender.title') }}</FieldLabel>
                 <div class="text-sm text-left">{{ genderLabel(information.gender) }}</div>
               </Field>
 
               <Field>
-                <FieldLabel>{{ t('info.birthday') || 'Birthday' }}</FieldLabel>
+                <FieldLabel>{{ t('info.birthday') }}</FieldLabel>
                 <div class="text-sm text-left">{{ birthday ? df.format(birthday!.toDate(getLocalTimeZone())) : (information.birthday || '-') }}</div>
               </Field>
             </FieldGroup>
           </div>
           <div v-else class="text-center text-muted-foreground">
-            <div class="mb-2">{{ t('info.empty') || 'No information records' }}</div>
-            <Button type="button" @click="startEdit">{{ t('info.add') || 'Add information' }}</Button>
+            <div class="mb-2">{{ t('info.empty') }}</div>
+            <Button type="button" @click="startEdit">{{ t('info.add') }}</Button>
           </div>
         </div>
       </CardContent>

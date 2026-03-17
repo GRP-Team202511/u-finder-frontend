@@ -118,8 +118,8 @@ const sectionsData = computed(() => {
   return [
     {
       key: 'personalInfo',
-      title: t('info.title') || 'Personal Information',
-      action: t('profile.cvParser.actions.overwrite') || 'Overwrite',
+      title: t('info.title'),
+      action: t('profile.cvParser.actions.overwrite'),
       hasData: hasPersonalInfo(),
       count: hasPersonalInfo() ? 1 : 0,
       preview: formatPersonalInfo(),
@@ -127,8 +127,8 @@ const sectionsData = computed(() => {
     },
     {
       key: 'education',
-      title: t('edu.title') || 'Education Background',
-      action: t('profile.cvParser.actions.append') || 'Append',
+      title: t('edu.title'),
+      action: t('profile.cvParser.actions.append'),
       hasData: props.data.education.data.length > 0,
       count: props.data.education.data.length,
       preview: formatEducation(),
@@ -136,8 +136,8 @@ const sectionsData = computed(() => {
     },
     {
       key: 'academic',
-      title: t('academic.title') || 'Academic Outcomes',
-      action: t('profile.cvParser.actions.append') || 'Append',
+      title: t('academic.title'),
+      action: t('profile.cvParser.actions.append'),
       hasData: props.data.academic.data.length > 0,
       count: props.data.academic.data.length,
       preview: formatAcademic(),
@@ -145,8 +145,8 @@ const sectionsData = computed(() => {
     },
     {
       key: 'test',
-      title: t('test.title') || 'Standardized Tests',
-      action: t('profile.cvParser.actions.append') || 'Append',
+      title: t('test.title'),
+      action: t('profile.cvParser.actions.append'),
       hasData: props.data.test.data.length > 0,
       count: props.data.test.data.length,
       preview: formatTest(),
@@ -154,8 +154,8 @@ const sectionsData = computed(() => {
     },
     {
       key: 'internship',
-      title: t('internship.title') || 'Internship',
-      action: t('profile.cvParser.actions.append') || 'Append',
+      title: t('internship.title'),
+      action: t('profile.cvParser.actions.append'),
       hasData: props.data.internship.data.length > 0,
       count: props.data.internship.data.length,
       preview: formatInternship(),
@@ -163,8 +163,8 @@ const sectionsData = computed(() => {
     },
     {
       key: 'project',
-      title: t('project.title') || 'Projects',
-      action: t('profile.cvParser.actions.append') || 'Append',
+      title: t('project.title'),
+      action: t('profile.cvParser.actions.append'),
       hasData: props.data.project.data.length > 0,
       count: props.data.project.data.length,
       preview: formatProject(),
@@ -172,8 +172,8 @@ const sectionsData = computed(() => {
     },
     {
       key: 'campus',
-      title: t('campusExp.title') || 'Campus Experience',
-      action: t('profile.cvParser.actions.append') || 'Append',
+      title: t('campusExp.title'),
+      action: t('profile.cvParser.actions.append'),
       hasData: props.data.campus.data.length > 0,
       count: props.data.campus.data.length,
       preview: formatCampus(),
@@ -181,8 +181,8 @@ const sectionsData = computed(() => {
     },
     {
       key: 'award',
-      title: t('award.title') || 'Awards',
-      action: t('profile.cvParser.actions.append') || 'Append',
+      title: t('award.title'),
+      action: t('profile.cvParser.actions.append'),
       hasData: props.data.award.data.length > 0,
       count: props.data.award.data.length,
       preview: formatAward(),
@@ -217,9 +217,9 @@ function formatPersonalInfo(): string[] {
   if (!props.data) return []
   const info = props.data.personalInfo
   const items: string[] = []
-  if (info.name) items.push(`${t('info.name') || 'Name'}: ${info.name}`)
-  if (info.gender) items.push(`${t('info.gender.title') || 'Gender'}: ${info.gender}`)
-  if (info.birthday) items.push(`${t('info.birthday') || 'Birthday'}: ${info.birthday}`)
+  if (info.name) items.push(`${t('info.name')}: ${info.name}`)
+  if (info.gender) items.push(`${t('info.gender.title')}: ${info.gender}`)
+  if (info.birthday) items.push(`${t('info.birthday')}: ${info.birthday}`)
   return items
 }
 
@@ -234,9 +234,9 @@ function formatAcademic(): string[] {
   if (!props.data) return []
   return props.data.academic.data.map(item => {
     if (item.type === 'research paper') {
-      return `${t('academic.paper') || 'Paper'}: ${item.title}`
+      return `${t('academic.paper')}: ${item.title}`
     } else {
-      return `${t('academic.patent') || 'Patent'}: ${item.title}`
+      return `${t('academic.patent')}: ${item.title}`
     }
   })
 }
@@ -297,34 +297,34 @@ function formatItemDetails(item: any, sectionKey: string): { label: string; valu
   const details: { label: string; value: string }[] = []
   
   if (sectionKey === 'personalInfo') {
-    if (item.name) details.push({ label: t('info.name') || 'Name', value: item.name })
-    if (item.gender) details.push({ label: t('info.gender.title') || 'Gender', value: item.gender })
-    if (item.birthday) details.push({ label: t('info.birthday') || 'Birthday', value: item.birthday })
+    if (item.name) details.push({ label: t('info.name'), value: item.name })
+    if (item.gender) details.push({ label: t('info.gender.title'), value: item.gender })
+    if (item.birthday) details.push({ label: t('info.birthday'), value: item.birthday })
   } else if (sectionKey === 'education') {
-    details.push({ label: t('edu.type') || 'Type', value: item.type })
-    details.push({ label: t('edu.institution') || 'Institution', value: item.name })
-    details.push({ label: t('edu.major') || 'Major', value: item.major })
-    details.push({ label: t('edu.time.start') || 'Start', value: item.time.start })
-    details.push({ label: t('edu.time.end') || 'End', value: item.time.end })
-    if (item.ranking) details.push({ label: t('edu.ranking') || 'Ranking', value: item.ranking })
-    details.push({ label: t('edu.GPA') || 'GPA', value: `${item.GPA} / ${item['GPA-base']}` })
+    details.push({ label: t('edu.type'), value: item.type })
+    details.push({ label: t('edu.institution'), value: item.name })
+    details.push({ label: t('edu.major'), value: item.major })
+    details.push({ label: t('edu.time.start'), value: item.time.start })
+    details.push({ label: t('edu.time.end'), value: item.time.end })
+    if (item.ranking) details.push({ label: t('edu.ranking'), value: item.ranking })
+    details.push({ label: t('edu.GPA'), value: `${item.GPA} / ${item['GPA-base']}` })
   } else if (sectionKey === 'academic') {
     if (item.type === 'research paper') {
-      details.push({ label: t('academic.type.title') || 'Type', value: t('academic.type.researchPaper') || 'Research Paper' })
-      details.push({ label: t('academic.researchPaper.title') || 'Title', value: item.title })
-      if (item.doi) details.push({ label: t('academic.researchPaper.doi') || 'DOI', value: item.doi })
-      if (item.abstract) details.push({ label: t('academic.researchPaper.abstract') || 'Abstract', value: item.abstract })
+      details.push({ label: t('academic.type.title'), value: t('academic.type.researchPaper') })
+      details.push({ label: t('academic.researchPaper.title'), value: item.title })
+      if (item.doi) details.push({ label: t('academic.researchPaper.doi'), value: item.doi })
+      if (item.abstract) details.push({ label: t('academic.researchPaper.abstract'), value: item.abstract })
     } else {
-      details.push({ label: t('academic.type.title') || 'Type', value: t('academic.type.patent') || 'Patent' })
-      details.push({ label: t('academic.patent.title') || 'Title', value: item.title })
-      if (item.patentNumber) details.push({ label: t('academic.patent.number') || 'Patent Number', value: item.patentNumber })
-      if (item.region) details.push({ label: t('academic.patent.region') || 'Region', value: item.region })
-      if (item.description) details.push({ label: t('academic.patent.description') || 'Description', value: item.description })
+      details.push({ label: t('academic.type.title'), value: t('academic.type.patent') })
+      details.push({ label: t('academic.patent.title'), value: item.title })
+      if (item.patentNumber) details.push({ label: t('academic.patent.number'), value: item.patentNumber })
+      if (item.region) details.push({ label: t('academic.patent.region'), value: item.region })
+      if (item.description) details.push({ label: t('academic.patent.description'), value: item.description })
     }
   } else if (sectionKey === 'test') {
-    details.push({ label: t('test.type') || 'Test Type', value: item.type })
+    details.push({ label: t('test.type'), value: item.type })
     if (item.test_date) {
-      details.push({ label: t('test.testDate') || 'Test Date', value: item.test_date })
+      details.push({ label: t('test.testDate'), value: item.test_date })
     }
     // Add scores
     Object.entries(item.scores).forEach(([key, value]) => {
@@ -333,25 +333,25 @@ function formatItemDetails(item: any, sectionKey: string): { label: string; valu
       }
     })
   } else if (sectionKey === 'internship') {
-    details.push({ label: t('internship.company') || 'Company', value: item.company })
-    details.push({ label: t('internship.role') || 'Role', value: item.role })
-    details.push({ label: t('internship.time.start') || 'Start', value: item.time.start })
-    details.push({ label: t('internship.time.end') || 'End', value: item.time.end })
-    if (item.time.till_now) details.push({ label: '', value: t('internship.time.till now') || 'Till Now' })
-    if (item.description) details.push({ label: t('internship.description') || 'Description', value: item.description })
+    details.push({ label: t('internship.company'), value: item.company })
+    details.push({ label: t('internship.role'), value: item.role })
+    details.push({ label: t('internship.time.start'), value: item.time.start })
+    details.push({ label: t('internship.time.end'), value: item.time.end })
+    if (item.time.till_now) details.push({ label: '', value: t('internship.time.till now') })
+    if (item.description) details.push({ label: t('internship.description'), value: item.description })
   } else if (sectionKey === 'project') {
-    details.push({ label: t('project.name') || 'Project Name', value: item.name })
-    details.push({ label: t('project.role') || 'Role', value: item.role })
-    details.push({ label: t('project.time.start') || 'Start', value: item.time.start })
-    details.push({ label: t('project.time.end') || 'End', value: item.time.end })
-    if (item.time.till_now) details.push({ label: '', value: t('project.time.till now') || 'Till Now' })
-    if (item.description) details.push({ label: t('project.description') || 'Description', value: item.description })
+    details.push({ label: t('project.name'), value: item.name })
+    details.push({ label: t('project.role'), value: item.role })
+    details.push({ label: t('project.time.start'), value: item.time.start })
+    details.push({ label: t('project.time.end'), value: item.time.end })
+    if (item.time.till_now) details.push({ label: '', value: t('project.time.till now') })
+    if (item.description) details.push({ label: t('project.description'), value: item.description })
   } else if (sectionKey === 'campus') {
-    details.push({ label: t('campusExp.name') || 'Name', value: item.name })
-    if (item.description) details.push({ label: t('campusExp.description') || 'Description', value: item.description })
+    details.push({ label: t('campusExp.name'), value: item.name })
+    if (item.description) details.push({ label: t('campusExp.description'), value: item.description })
   } else if (sectionKey === 'award') {
-    details.push({ label: t('award.name') || 'Award Name', value: item.name })
-    if (item.description) details.push({ label: t('award.description') || 'Description', value: item.description })
+    details.push({ label: t('award.name'), value: item.name })
+    if (item.description) details.push({ label: t('award.description'), value: item.description })
   }
   
   return details
@@ -362,9 +362,9 @@ function formatItemDetails(item: any, sectionKey: string): { label: string; valu
   <Dialog v-model:open="isOpen">
     <DialogContent class="sm:max-w-200 max-h-[85vh] flex flex-col">
       <DialogHeader>
-        <DialogTitle>{{ t('profile.cvParser.reviewTitle') || 'Review Parsed Data' }}</DialogTitle>
+        <DialogTitle>{{ t('profile.cvParser.reviewTitle') }}</DialogTitle>
         <DialogDescription>
-          {{ t('profile.cvParser.reviewDescription') || 'Select the sections you want to import to your profile.' }}
+          {{ t('profile.cvParser.reviewDescription') }}
         </DialogDescription>
       </DialogHeader>
 
@@ -380,7 +380,7 @@ function formatItemDetails(item: any, sectionKey: string): { label: string; valu
             :for="'select-all'"
             class="text-sm font-medium cursor-pointer"
           >
-            {{ t('profile.cvParser.selectAll') || 'Select All' }}
+            {{ t('profile.cvParser.selectAll') }}
           </Label>
         </div>
 
@@ -466,7 +466,7 @@ function formatItemDetails(item: any, sectionKey: string): { label: string; valu
                     </p>
                   </div>
                   <p v-else class="text-sm text-muted-foreground italic">
-                    {{ t('profile.cvParser.noData') || 'No data found' }}
+                    {{ t('profile.cvParser.noData') }}
                   </p>
                 </CardContent>
               </Card>
@@ -481,13 +481,13 @@ function formatItemDetails(item: any, sectionKey: string): { label: string; valu
 
       <DialogFooter class="gap-2">
         <Button variant="outline" @click="cancel">
-          {{ t('profile.cancel') || 'Cancel' }}
+          {{ t('profile.cancel') }}
         </Button>
         <Button 
           @click="confirmSelection"
           :disabled="!someSelected"
         >
-          {{ t('profile.cvParser.confirmImport') || 'Confirm Import' }}
+          {{ t('profile.cvParser.confirmImport') }}
         </Button>
       </DialogFooter>
     </DialogContent>

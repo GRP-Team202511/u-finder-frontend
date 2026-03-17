@@ -128,13 +128,13 @@ function handleDrop(event: DragEvent) {
 async function validateAndUploadFile(file: File) {
   // Check file type
   if (!ACCEPTED_TYPES.includes(file.type)) {
-    toast.error(t('profile.cvParser.errors.invalidFormat') || 'Invalid file format. Only PDF, DOCX, and DOC are supported.')
+    toast.error(t('profile.cvParser.errors.invalidFormat'))
     return
   }
   
   // Check file size
   if (file.size > MAX_FILE_SIZE) {
-    toast.error(t('profile.cvParser.errors.fileTooLarge') || 'File size exceeds 10MB limit.')
+    toast.error(t('profile.cvParser.errors.fileTooLarge'))
     return
   }
   
@@ -159,7 +159,7 @@ async function uploadFile(file: File) {
 
     // Success
     isParsing.value = false
-    toast.success(t('profile.cvParser.parseSuccess') || 'CV parsed successfully!')
+    toast.success(t('profile.cvParser.parseSuccess'))
 
     // Emit parse complete event with data
     emit('parse-complete', response.data)
@@ -182,40 +182,37 @@ async function uploadFile(file: File) {
 
     // Client-side timeout (ECONNABORTED) — different message from a generic server error
     if (error.code === 'ECONNABORTED') {
-      toast.error(
-        t('profile.cvParser.errors.timeout') ||
-        'Parsing timed out. The file may be too complex — please try again.'
-      )
+      toast.error(t('profile.cvParser.errors.timeout'))
       console.error('CV upload timed out:', error)
       return
     }
 
     // HTTP error — map status codes to user-friendly messages
     const status = error.response?.status
-    let errorMessage = t('profile.cvParser.errors.uploadFailed') || 'Failed to upload CV. Please try again.'
+    let errorMessage = t('profile.cvParser.errors.uploadFailed')
 
     switch (status) {
       case 400:
-        errorMessage = t('profile.cvParser.errors.noFile') || 'No file uploaded or file is empty.'
+        errorMessage = t('profile.cvParser.errors.noFile')
         break
       case 401:
-        errorMessage = t('profile.cvParser.errors.unauthorized') || 'You are not authorized. Please login again.'
+        errorMessage = t('profile.cvParser.errors.unauthorized')
         break
       case 413:
-        errorMessage = t('profile.cvParser.errors.fileTooLarge') || 'File size exceeds 10MB limit.'
+        errorMessage = t('profile.cvParser.errors.fileTooLarge')
         break
       case 415:
-        errorMessage = t('profile.cvParser.errors.invalidFormat') || 'Unsupported file format. Only PDF and DOCX are allowed.'
+        errorMessage = t('profile.cvParser.errors.invalidFormat')
         break
       case 422:
-        errorMessage = t('profile.cvParser.errors.parseFailed') || 'Failed to extract information from the uploaded file.'
+        errorMessage = t('profile.cvParser.errors.parseFailed')
         break
       case 502:
-        errorMessage = t('profile.cvParser.errors.serviceUnavailable') || 'AI service is temporarily unavailable. Please try again later.'
+        errorMessage = t('profile.cvParser.errors.serviceUnavailable')
         break
       case 500:
       default:
-        errorMessage = t('profile.cvParser.errors.serverError') || 'Internal server error. Please try again.'
+        errorMessage = t('profile.cvParser.errors.serverError')
         break
     }
 
@@ -236,9 +233,9 @@ function formatFileSize(bytes: number): string {
   <Dialog v-model:open="isOpen">
     <DialogContent class="sm:max-w-2xl">
       <DialogHeader>
-        <DialogTitle>{{ t('profile.cvParser.title') || 'Import from CV' }}</DialogTitle>
+        <DialogTitle>{{ t('profile.cvParser.title') }}</DialogTitle>
         <DialogDescription>
-          {{ t('profile.cvParser.description') || 'Upload your CV to automatically fill in your profile information.' }}
+          {{ t('profile.cvParser.description') }}
         </DialogDescription>
       </DialogHeader>
 
@@ -271,13 +268,13 @@ function formatFileSize(bytes: number): string {
             />
           </svg>
           <p class="mt-4 text-sm font-medium">
-            {{ t('profile.cvParser.uploadPrompt') || 'Drag and drop your CV here, or click to select a file' }}
+            {{ t('profile.cvParser.uploadPrompt') }}
           </p>
           <p class="mt-2 text-xs text-muted-foreground">
-            {{ t('profile.cvParser.supportedFormats') || 'Supported formats: PDF, DOCX, DOC' }}
+            {{ t('profile.cvParser.supportedFormats') }}
           </p>
           <p class="text-xs text-muted-foreground">
-            {{ t('profile.cvParser.maxSize') || 'Maximum file size: 10MB' }}
+            {{ t('profile.cvParser.maxSize') }}
           </p>
         </div>
         
@@ -295,7 +292,7 @@ function formatFileSize(bytes: number): string {
       <div v-else-if="isUploading" class="py-12 text-center">
         <Spinner class="mx-auto h-12 w-12 text-primary" />
         <p class="mt-4 text-sm font-medium">
-          {{ t('profile.cvParser.uploading') || 'Uploading...' }}
+          {{ t('profile.cvParser.uploading') }}
         </p>
         <p v-if="selectedFile" class="mt-2 text-xs text-muted-foreground">
           {{ selectedFile.name }} ({{ formatFileSize(selectedFile.size) }})
@@ -306,10 +303,10 @@ function formatFileSize(bytes: number): string {
       <div v-else-if="isParsing" class="py-12 text-center">
         <Spinner class="mx-auto h-12 w-12 text-primary" />
         <p class="mt-4 text-sm font-medium">
-          {{ t('profile.cvParser.parsing') || 'Parsing your CV...' }}
+          {{ t('profile.cvParser.parsing') }}
         </p>
         <p class="mt-2 text-xs text-muted-foreground">
-          {{ t('profile.cvParser.parsingHint') || 'This may take up to 1 minute for complex documents.' }}
+          {{ t('profile.cvParser.parsingHint') }}
         </p>
       </div>
 
@@ -320,7 +317,7 @@ function formatFileSize(bytes: number): string {
           @click="isParsing || isUploading ? cancelUpload() : closeDialog()"
           :disabled="false"
         >
-          {{ t('profile.cancel') || 'Cancel' }}
+          {{ t('profile.cancel') }}
         </Button>
       </DialogFooter>
     </DialogContent>

@@ -90,11 +90,11 @@ function removeSubject(index: number) {
 <template>
 	<div class="grid gap-4">
 		<Field>
-			<FieldLabel :for="`alevel-session-${props.index}`">{{ t('test.examSession') || 'Exam session' }}</FieldLabel>
+			<FieldLabel :for="`alevel-session-${props.index}`">{{ t('test.examSession') }}</FieldLabel>
 			<div v-if="props.editable" class="grid grid-cols-2 gap-4">
 				<Select v-model="selectedYear">
 					<SelectTrigger :id="`alevel-year-${props.index}`" class="w-full">
-						<SelectValue :placeholder="t('test.examYear') || 'Year'" />
+						<SelectValue :placeholder="t('test.examYear')" />
 					</SelectTrigger>
 					<SelectContent>
 						<SelectItem v-for="year in examYears" :key="year" :value="String(year)">{{ year }}</SelectItem>
@@ -102,7 +102,7 @@ function removeSubject(index: number) {
 				</Select>
 				<Select v-model="selectedMonth">
 					<SelectTrigger :id="`alevel-month-${props.index}`" class="w-full">
-						<SelectValue :placeholder="t('test.month') || 'Month'" />
+						<SelectValue :placeholder="t('test.month')" />
 					</SelectTrigger>
 					<SelectContent>
 						<SelectItem v-for="month in availableMonths" :key="month.value" :value="month.value">{{ month.label }}</SelectItem>
@@ -113,17 +113,17 @@ function removeSubject(index: number) {
 		</Field>
 
 		<Field>
-			<FieldLabel :for="`alevel-overall-${props.index}`">{{ t('test.overallPredicted') || 'Overall predicted' }}</FieldLabel>
+			<FieldLabel :for="`alevel-overall-${props.index}`">{{ t('test.overallPredicted') }}</FieldLabel>
 			<Input v-if="props.editable" :id="`alevel-overall-${props.index}`" v-model="props.entry.overall_predicted" />
 			<div v-else class="text-sm text-left">{{ props.entry.overall_predicted || '-' }}</div>
 		</Field>
 
 		<div class="rounded-md border p-4">
 			<div class="grid gap-2">
-				<div class="text-sm font-medium text-left">{{ t('test.subjects') || 'Subjects' }}</div>
+				<div class="text-sm font-medium text-left">{{ t('test.subjects') }}</div>
 				<div v-for="(subject, sidx) in subjects" :key="sidx" class="grid grid-cols-2 gap-4 pt-2">
 					<Field>
-						<FieldLabel :for="`alevel-subject-${props.index}-${sidx}`">{{ t('test.subject') || 'Subject' }}</FieldLabel>
+						<FieldLabel :for="`alevel-subject-${props.index}-${sidx}`">{{ t('test.subject') }}</FieldLabel>
 						<Input
 							v-if="props.editable"
 							:id="`alevel-subject-${props.index}-${sidx}`"
@@ -132,7 +132,7 @@ function removeSubject(index: number) {
 						<div v-else class="text-sm text-left">{{ subject.subject || '-' }}</div>
 					</Field>
 					<Field>
-						<FieldLabel :for="`alevel-grade-${props.index}-${sidx}`">{{ t('test.grade') || 'Grade' }}</FieldLabel>
+						<FieldLabel :for="`alevel-grade-${props.index}-${sidx}`">{{ t('test.grade') }}</FieldLabel>
 						<Input
 							v-if="props.editable"
 							:id="`alevel-grade-${props.index}-${sidx}`"
@@ -141,8 +141,8 @@ function removeSubject(index: number) {
 						<div v-else class="text-sm text-left">{{ subject.grade || '-' }}</div>
 					</Field>
 					<div v-if="props.editable" class="col-span-2 flex justify-end gap-2">
-						<Button type="button" variant="secondary" @click="removeSubject(sidx)">{{ t('profile.remove') || 'Remove' }}</Button>
-						<Button type="button" @click="addSubject">{{ t('profile.add') || 'Add' }}</Button>
+						<Button type="button" variant="secondary" @click="removeSubject(sidx)">{{ t('profile.remove') }}</Button>
+						<Button type="button" @click="addSubject">{{ t('profile.add') }}</Button>
 					</div>
 				</div>
 			</div>

@@ -18,7 +18,7 @@
         "forgot": "Forgot your password?",
         "submit": "Log In",
         "twoFactorRequired": "Two-factor verification required",
-        "no account": "Not have an account?",
+        "no account": "Don't have an account?",
         "signup": "Sign up",
         "unauth": "The password is incorrect",
         "not_found": "The account doesn't exist",
@@ -51,8 +51,8 @@
                 "sendCodeFirst": "Please send verification code first",
                 "fieldsRequired": "All fields are required",
                 "wrongCode": "Incorrect verification code",
-                "unauthorized": "Unauthorized request",
-                "invalidInput": "Invalid input provided",
+                "unauthorized": "Your session has expired. Please request a new verification code.",
+                "invalidInput": "Please check your input and try again.",
                 "passwordMismatch": "Passwords do not match",
                 "resetFailed": "Failed to reset password. Please try again."
             },
@@ -92,8 +92,8 @@
         "and": " and ",
         "privacy": "Privacy Policy",
         "occupied": "This email has been registered.",
-        "unprocessable": "Invalid signup input.",
-        "error": "An error occurred during signup. Please try again.",
+        "unprocessable": "Please check your information and try again.",
+        "error": "Something went wrong during signup. Please check your connection and try again.",
         "codeSent": "The verification code has been sent",
         "passwordError": "Password must be 8-20 characters, with at least one letter and one digit.",
         "passwordMismatch": "Passwords do not match",
@@ -306,14 +306,14 @@
                 "uploadFailed": "Failed to upload CV. Please try again.",
                 "noFile": "No file uploaded or file is empty.",
                 "unauthorized": "You are not authorized. Please login again.",
-                "parseFailed": "Failed to extract information from the uploaded file.",
+                "parseFailed": "Failed to extract information from the uploaded file. Please check the file format and try again.",
                 "serviceUnavailable": "AI service is temporarily unavailable. Please try again later.",
                 "serverError": "Internal server error. Please try again.",
                 "timeout": "Parsing timed out. The file may be too complex — please try again."
             }
         },
         "errors": {
-            "loadFailed": "Ops, something went wrong...",
+            "loadFailed": "Something went wrong",
             "loadFailedDescription": "Unable to load your profile data. Please try refreshing the page."
         },
         "toast": {
@@ -372,7 +372,7 @@
             "notLoggedIn": "You are not logged in.",
             "saveFailed": "Failed to save personal information.",
             "loadFailed": "Failed to load personal information.",
-            "unauthorized": "Invalid or expired token.",
+            "unauthorized": "Your session has expired. Please log in again.",
             "notFound": "User not found.",
             "serverError": "Internal server error.",
             "nameRequired": "Name is required.",
@@ -409,18 +409,18 @@
             "doctoral": "Doctoral"
         },
         "validation": {
-            "typeRequired": "Education type is required",
-            "nameRequired": "Institution name is required",
-            "startRequired": "Start date is required",
-            "dateRangeInvalid": "Start date must not be after end date",
-            "rankingFormat": "Ranking must use format X/Y, e.g. 5/200",
-            "rankingRange": " Ranking must be positive integers with X <= Y",
-            "gpaBaseInvalid": "GPA base must be a positive number",
-            "gpaBaseMin": " GPA base must be greater than 0",
-            "gpaBaseMax": "GPA base must be 100 or below",
-            "gpaInvalid": "GPA must be a positive number",
-            "gpaNegative": "GPA cannot be negative",
-            "gpaExceedsBase": "GPA cannot be greater than GPA base"
+            "typeRequired": "Education #{index}: Type is required",
+            "nameRequired": "Education #{index}: Institution name is required",
+            "startRequired": "Education #{index}: Start date is required",
+            "dateRangeInvalid": "Education #{index}: Start date must not be after end date",
+            "rankingFormat": "Education #{index}: Ranking must use format X/Y, e.g. 5/200",
+            "rankingRange": "Education #{index}: Ranking must be positive integers with X <= Y",
+            "gpaBaseInvalid": "Education #{index}: GPA base must be a positive number",
+            "gpaBaseMin": "Education #{index}: GPA base must be greater than 0",
+            "gpaBaseMax": "Education #{index}: GPA base must be 100 or below",
+            "gpaInvalid": "Education #{index}: GPA must be a positive number",
+            "gpaNegative": "Education #{index}: GPA cannot be negative",
+            "gpaExceedsBase": "Education #{index}: GPA cannot be greater than GPA base"
         }
     },
     "academic": {
@@ -455,8 +455,8 @@
             "descriptionPlaceholder": "Description"
         },
         "validation": {
-            "typeRequired": "Academic outcome type is required",
-            "titleRequired": "Title is required"
+            "typeRequired": "Academic outcome #{index}: Type is required",
+            "titleRequired": "Academic outcome #{index}: Title is required"
         }
     },
     "test": {
@@ -519,8 +519,8 @@
             "readingUseOfEnglish": "Reading & Use Of English"
         },
         "validation": {
-            "typeRequired": "Test type is required",
-            "subjectRequired": "At least one subject is required"
+            "typeRequired": "Test #{index}: Type is required",
+            "subjectRequired": "Test #{index}: At least one subject is required"
         }
     },
     "internship": {
@@ -541,9 +541,9 @@
             "description": "Description"
         },
         "validation": {
-            "companyRequired": "Company name is required",
-            "roleRequired": "Role is required",
-            "dateRangeInvalid": "Start date must not be after end date"
+            "companyRequired": "Internship #{index}: Company name is required",
+            "roleRequired": "Internship #{index}: Role is required",
+            "dateRangeInvalid": "Internship #{index}: Start date must not be after end date"
         }
     },
     "project": {
@@ -564,8 +564,8 @@
             "description": "Description"
         },
         "validation": {
-            "nameRequired": "Project name is required",
-            "dateRangeInvalid": "Start date must not be after end date"
+            "nameRequired": "Project #{index}: Name is required",
+            "dateRangeInvalid": "Project #{index}: Start date must not be after end date"
         }
     },
     "campusExp": {
@@ -579,7 +579,7 @@
             "description": "Description"
         },
         "validation": {
-            "nameRequired": "Campus experience name is required"
+            "nameRequired": "Campus experience #{index}: Name is required"
         }
     },
     "award": {
@@ -593,7 +593,7 @@
             "description": "Description"
         },
         "validation": {
-            "nameRequired": "Award name is required"
+            "nameRequired": "Award #{index}: Name is required"
         }
     },
     "date": {
@@ -612,9 +612,9 @@
             "disclaimer": "U-Finder can make mistakes. Check important info."
         },
         "errors": {
-            "streamFailed": "Sorry, I could not complete that request.",
-            "stopFailed": "Failed to stop response generation",
-            "loadHistoryFailed": "Failed to load conversation history"
+            "streamFailed": "We couldn't complete that request. Please try again.",
+            "stopFailed": "Failed to stop response generation. Please try again.",
+            "loadHistoryFailed": "Failed to load conversation history. Please try again."
         },
         "card": {
             "loadingAria": "University information loading",
@@ -642,7 +642,7 @@
                 "language": "Language",
                 "faculty": "Faculty",
                 "deadline": "Deadline",
-                "languageReqs": "Language reqs",
+                "languageReqs": "Language requirements",
                 "academicRequirements": "Academic requirements",
                 "otherRequirements": "Other requirements",
                 "cost": "Cost"

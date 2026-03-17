@@ -17,6 +17,8 @@
         "password": "密码",
         "forgot": "忘记密码？",
         "submit": "登录",
+        "twoFactorRequired": "需要两步验证",
+        "unprocessable": "登录信息无效，请检查后重试。",
         "no account": "没有帐号？",
         "signup": "注册账户",
         "unauth": "密码不正确",
@@ -49,8 +51,8 @@
                 "sendCodeFirst": "请先发送验证码",
                 "fieldsRequired": "所有字段都是必填的",
                 "wrongCode": "验证码不正确",
-                "unauthorized": "未授权的请求",
-                "invalidInput": "输入的数据无效",
+                "unauthorized": "您的会话已过期，请重新请求验证码。",
+                "invalidInput": "请检查输入内容后重试。",
                 "passwordMismatch": "两次输入的密码不一致",
                 "resetFailed": "重置密码失败，请重试。"
             },
@@ -60,6 +62,20 @@
                 "passwordReset": "密码重置成功！正在跳转到登录页面..."
             }
         }
+    },
+    "twofa": {
+        "title": "两步验证",
+        "description": "请输入验证码以继续。",
+        "totpLabel": "验证器代码",
+        "recoveryLabel": "恢复代码",
+        "totpHint": "请输入验证器应用中的 6 位数代码。",
+        "recoveryHint": "请输入您的 8 位恢复代码。",
+        "verify": "验证",
+        "switchToRecovery": "使用恢复代码",
+        "switchToTotp": "使用验证器代码",
+        "invalid": "验证码无效",
+        "failed": "验证失败",
+        "success": "验证成功"
     },
     "signup":{
         "title": "注册账户",
@@ -76,7 +92,8 @@
         "and": "和",
         "privacy": "隐私政策",
         "occupied": "该邮箱已被注册。",
-        "error": "注册过程中发生错误，请重试。",
+        "unprocessable": "注册信息无效，请检查后重试。",
+        "error": "注册过程中出现问题，请检查网络连接后重试。",
         "codeSent": "验证码已发送",
         "passwordError": "密码必须为8-20个字符，至少包含一个字母和一个数字。",
         "passwordMismatch": "两次输入的密码不一致",
@@ -109,6 +126,9 @@
         "settings": "设置",
         "language": "语言",
         "logout": "登出",
+        "logoutUnauthorized": "您的会话已过期，已自动登出。",
+        "logoutServerError": "登出时服务器出错，本地会话已清除。",
+        "logoutFailed": "登出失败，请重试。",
         "deleteConversation": "删除对话",
         "deleteConfirm": "确定要删除此对话吗？此操作无法撤销。",
         "renameConversation": "编辑对话名称",
@@ -163,7 +183,7 @@
                 "uploadFailed": "上传简历失败。请重试。",
                 "noFile": "未上传文件或文件为空。",
                 "unauthorized": "您未获授权。请重新登录。",
-                "parseFailed": "无法从上传的文件中提取信息。",
+                "parseFailed": "无法从上传的文件中提取信息。请检查文件格式后重试。",
                 "serviceUnavailable": "AI 服务暂时不可用。请稍后重试。",
                 "serverError": "服务器内部错误。请重试。",
                 "timeout": "解析超时，文件可能过于复杂，请重试。"
@@ -229,7 +249,7 @@
             "notLoggedIn": "您尚未登录。",
             "saveFailed": "保存个人信息失败。",
             "loadFailed": "加载个人信息失败。",
-            "unauthorized": "无效或已过期的令牌。",
+            "unauthorized": "您的会话已过期，请重新登录。",
             "notFound": "未找到用户。",
             "serverError": "服务器内部错误。",
             "nameRequired": "姓名为必填项。",
@@ -266,18 +286,18 @@
             "doctoral": "博士"
         },
         "validation": {
-            "typeRequired": "教育类型为必填项",
-            "nameRequired": "学校名称为必填项",
-            "startRequired": "开始日期为必填项",
-            "dateRangeInvalid": "开始日期不能晚于结束日期",
-            "rankingFormat": "排名格式必须为 X/Y，例如 5/200",
-            "rankingRange": "排名必须为正整数，且 X <= Y",
-            "gpaBaseInvalid": "GPA 满分必须为正数",
-            "gpaBaseMin": "GPA 满分必须大于 0",
-            "gpaBaseMax": "GPA 满分不能大于 100",
-            "gpaInvalid": "GPA 必须为正数",
-            "gpaNegative": "GPA 不能为负数",
-            "gpaExceedsBase": "GPA 不能大于 GPA 满分"
+            "typeRequired": "教育经历 #{index}：类型为必填项",
+            "nameRequired": "教育经历 #{index}：学校名称为必填项",
+            "startRequired": "教育经历 #{index}：开始日期为必填项",
+            "dateRangeInvalid": "教育经历 #{index}：开始日期不能晚于结束日期",
+            "rankingFormat": "教育经历 #{index}：排名格式必须为 X/Y，例如 5/200",
+            "rankingRange": "教育经历 #{index}：排名必须为正整数，且 X <= Y",
+            "gpaBaseInvalid": "教育经历 #{index}：GPA 满分必须为正数",
+            "gpaBaseMin": "教育经历 #{index}：GPA 满分必须大于 0",
+            "gpaBaseMax": "教育经历 #{index}：GPA 满分不能大于 100",
+            "gpaInvalid": "教育经历 #{index}：GPA 必须为正数",
+            "gpaNegative": "教育经历 #{index}：GPA 不能为负数",
+            "gpaExceedsBase": "教育经历 #{index}：GPA 不能大于 GPA 满分"
         }
     },
     "academic": {
@@ -310,8 +330,8 @@
             "descriptionPlaceholder": "描述"
         },
         "validation": {
-            "typeRequired": "学术成果类型为必填项",
-            "titleRequired": "标题为必填项"
+            "typeRequired": "学术成果 #{index}：类型为必填项",
+            "titleRequired": "学术成果 #{index}：标题为必填项"
         }
     },
     "test": {
@@ -374,8 +394,8 @@
             "readingUseOfEnglish": "Reading & Use of English"
         },
         "validation": {
-            "typeRequired": "考试类型为必填项",
-            "subjectRequired": "至少需要填写一个科目"
+            "typeRequired": "考试 #{index}：类型为必填项",
+            "subjectRequired": "考试 #{index}：至少需要填写一个科目"
         }
     },
     "internship": {
@@ -396,9 +416,9 @@
             "description": "描述"
         },
         "validation": {
-            "companyRequired": "公司名称为必填项",
-            "roleRequired": "职位为必填项",
-            "dateRangeInvalid": "开始日期不能晚于结束日期"
+            "companyRequired": "实习经历 #{index}：公司名称为必填项",
+            "roleRequired": "实习经历 #{index}：职位为必填项",
+            "dateRangeInvalid": "实习经历 #{index}：开始日期不能晚于结束日期"
         }
     },
     "project": {
@@ -419,8 +439,8 @@
             "description": "描述"
         },
         "validation": {
-            "nameRequired": "项目名称为必填项",
-            "dateRangeInvalid": "开始日期不能晚于结束日期"
+            "nameRequired": "项目 #{index}：名称为必填项",
+            "dateRangeInvalid": "项目 #{index}：开始日期不能晚于结束日期"
         }
     },
     "campusExp": {
@@ -434,7 +454,7 @@
             "description": "描述"
         },
         "validation": {
-            "nameRequired": "校园经历名称为必填项"
+            "nameRequired": "校园经历 #{index}：名称为必填项"
         }
     },
     "award": {
@@ -448,7 +468,7 @@
             "description": "描述"
         },
         "validation": {
-            "nameRequired": "奖项名称为必填项"
+            "nameRequired": "奖项 #{index}：名称为必填项"
         }
     },
     "date": {
@@ -459,14 +479,17 @@
     "chat": {
         "title": "U-Finder",
         "tagline": "发现最适合你的大学。",
+        "stopped": "已停止生成回复。",
         "input": {
             "label": "消息",
             "placeholder": "与 U-Finder 聊天...",
+            "stop": "停止生成",
             "disclaimer": "U-Finder 可能会出错。请核实重要信息。"
         },
         "errors": {
-            "streamFailed": "抱歉，无法完成该请求。",
-            "loadHistoryFailed": "加载对话历史失败"
+            "streamFailed": "无法完成该请求，请重试。",
+            "stopFailed": "停止生成失败，请重试。",
+            "loadHistoryFailed": "加载对话历史失败，请重试。"
         },
         "card": {
             "loadingAria": "大学信息加载中",
@@ -504,6 +527,31 @@
                 "universitySite": "大学官网",
                 "facultySite": "学院官网"
             }
+        }
+    },
+    "favourites": {
+        "title": "收藏的大学",
+        "subtitle": "保存您想要再次查看的大学。",
+        "empty": {
+            "title": "暂无收藏",
+            "description": "在 AI 对话中添加大学即可在此查看。"
+        },
+        "toast": {
+            "addSuccess": "已添加大学到收藏",
+            "addFailed": "添加大学到收藏失败",
+            "removeSuccess": "已从收藏中移除大学",
+            "removeFailed": "从收藏中移除大学失败",
+            "loadFailed": "加载收藏列表失败"
+        },
+        "errors": {
+            "loadFailed": "加载收藏列表失败"
+        },
+        "actions": {
+            "showDetails": "查看详情",
+            "remove": "移除",
+            "add": "添加到收藏",
+            "close": "关闭",
+            "retry": "重试"
         }
     },
     "settings": {

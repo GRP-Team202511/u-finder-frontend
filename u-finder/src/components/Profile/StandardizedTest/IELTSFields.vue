@@ -35,35 +35,35 @@ if (!props.entry.scores) {
 			:index="props.index"
 			:editable="props.editable"
 			id-base="ielts-date"
-			:label="t('test.testDate') || 'Test date'"
+			:label="t('test.testDate')"
 		/>
 
 		<div class="rounded-md border p-4">
 			<div class="grid gap-2">
-			<div class="text-sm font-medium text-left">{{ t('test.scores.title') || 'Scores' }}</div>
+			<div class="text-sm font-medium text-left">{{ t('test.scores.title') }}</div>
 			<div class="grid grid-cols-2 gap-4 pt-2">
 				<Field>
-					<FieldLabel>{{ t('test.scores.overall') || 'Overall' }}</FieldLabel>
+					<FieldLabel>{{ t('test.scores.overall') }}</FieldLabel>
 					<Input v-if="props.editable" v-model="props.entry.scores.overall" placeholder="" />
 					<div v-else class="text-sm text-left">{{ props.entry.scores.overall || '-' }}</div>
 				</Field>
 				<Field>
-					<FieldLabel>{{ t('test.scores.listening') || 'Listening' }}</FieldLabel>
+					<FieldLabel>{{ t('test.scores.listening') }}</FieldLabel>
 					<Input v-if="props.editable" v-model="props.entry.scores.listening" placeholder="" />
 					<div v-else class="text-sm text-left">{{ props.entry.scores.listening || '-' }}</div>
 				</Field>
 				<Field>
-					<FieldLabel>{{ t('test.scores.reading') || 'Reading' }}</FieldLabel>
+					<FieldLabel>{{ t('test.scores.reading') }}</FieldLabel>
 					<Input v-if="props.editable" v-model="props.entry.scores.reading" placeholder="" />
 					<div v-else class="text-sm text-left">{{ props.entry.scores.reading || '-' }}</div>
 				</Field>
 				<Field>
-					<FieldLabel>{{ t('test.scores.writing') || 'Writing' }}</FieldLabel>
+					<FieldLabel>{{ t('test.scores.writing') }}</FieldLabel>
 					<Input v-if="props.editable" v-model="props.entry.scores.writing" placeholder="" />
 					<div v-else class="text-sm text-left">{{ props.entry.scores.writing || '-' }}</div>
 				</Field>
 				<Field>
-					<FieldLabel>{{ t('test.scores.speaking') || 'Speaking' }}</FieldLabel>
+					<FieldLabel>{{ t('test.scores.speaking') }}</FieldLabel>
 					<Input v-if="props.editable" v-model="props.entry.scores.speaking" placeholder="" />
 					<div v-else class="text-sm text-left">{{ props.entry.scores.speaking || '-' }}</div>
 				</Field>
