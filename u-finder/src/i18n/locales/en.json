@@ -605,6 +605,7 @@
             "loadHistoryFailed": "Failed to load conversation history"
         },
         "card": {
+            "loadingAria": "University information loading",
             "locationNotSpecified": "Location not specified",
             "tuitionNotSpecified": "Tuition not specified",
             "notSpecified": "Not specified",

@@ -457,6 +457,7 @@
             "loadHistoryFailed": "載入對話歷史失敗"
         },
         "card": {
+            "loadingAria": "大學資訊載入中",
             "locationNotSpecified": "未指定地點",
             "tuitionNotSpecified": "未指定學費",
             "notSpecified": "未指定",
