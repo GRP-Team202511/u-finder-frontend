@@ -77,6 +77,7 @@ type InternshipEntry = {
   company: string
   role: string
   time: { start: string; end: string }
+  description: string
 }
 
 const { t } = useI18n()
@@ -110,6 +111,7 @@ const internships: Ref<InternshipEntry[]> = ref(props.modelValue ? JSON.parse(JS
     company: '',
     role: '',
     time: { start: '', end: '' },
+    description: '',
   }
 ])
 
@@ -182,7 +184,7 @@ const defaultPlaceholder = today(getLocalTimeZone())
 const df = new DateFormatter('en-US', { dateStyle: 'medium' })
 
 function addEntry() {
-  internships.value.push({ company: '', role: '', time: { start: '', end: '' } })
+  internships.value.push({ company: '', role: '', time: { start: '', end: '' }, description: '' })
   startDates.push(undefined)
   endDates.push(undefined)
   ongoing.push(false)
@@ -251,6 +253,7 @@ function save(e?: Event) {
     const hasAnyField =
       !isBlankValue(intern.company) ||
       !isBlankValue(intern.role) ||
+      !isBlankValue(intern.description) ||
       !isBlankValue(intern.time?.start) ||
       !isBlankValue(intern.time?.end) ||
       !!startDates[i] ||
@@ -344,7 +347,7 @@ function startEdit() {
   localEditing.value = true
   // Ensure there's at least one entry to edit
   if (internships.value.length === 0) {
-    internships.value.push({ company: '', role: '', time: { start: '', end: '' } })
+    internships.value.push({ company: '', role: '', time: { start: '', end: '' }, description: '' })
     startDates.push(undefined)
     endDates.push(undefined)
     ongoing.push(false)
@@ -471,6 +474,17 @@ onMounted(() => {
                   </Field>
                 </div>
 
+                <Field>
+                  <FieldLabel :for="`description-${idx}`">{{ t('internship.description') || 'Description' }}</FieldLabel>
+                  <textarea
+                    :id="`description-${idx}`"
+                    v-model="intern.description"
+                    :placeholder="t('internship.placeholders.description') || 'Description'"
+                    rows="6"
+                    class="w-full rounded-md border px-3 py-2 text-sm"
+                  ></textarea>
+                </Field>
+
                 <div class="flex justify-end gap-2 mt-2">
                   <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
                 </div>
@@ -508,6 +522,11 @@ onMounted(() => {
                     <div class="text-sm text-left">{{ ongoing[idx] ? (t('internship.time.till now') || 'Till now') : (endDates[idx] ? df.format(endDates[idx]!.toDate(getLocalTimeZone())) : (intern.time.end || '-')) }}</div>
                   </Field>
                 </div>
+
+                <Field>
+                  <FieldLabel>{{ t('internship.description') || 'Description' }}</FieldLabel>
+                  <div class="text-sm text-left whitespace-pre-wrap break-words">{{ intern.description || '-' }}</div>
+                </Field>
 
               </template>
             </FieldGroup>
