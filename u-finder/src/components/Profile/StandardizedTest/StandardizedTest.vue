@@ -370,7 +370,7 @@ onMounted(() => {
 								<Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
 							</div>
 
-							<FieldSeparator v-if="idx < standardizedTests.length - 1" />
+							<hr v-if="idx < standardizedTests.length - 1" class="my-6 border-t-2 border-muted-foreground/20" />
 							</template>
 						</FieldGroup>
 						
@@ -424,6 +424,8 @@ onMounted(() => {
 								<div v-else class="text-sm text-muted-foreground">
 									-
 								</div>
+
+								<hr v-if="idx < standardizedTests.length - 1" class="my-6 border-t-2 border-muted-foreground/20" />
 							</template>
 						</FieldGroup>
 					</div>
