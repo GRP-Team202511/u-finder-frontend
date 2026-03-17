@@ -1,32 +1,32 @@
 <template>
-  <div class="dashboard-page">
-    <div class="dashboard-topbar">
+  <div class="min-h-screen w-full bg-[#f5f5f5] box-border px-6 pb-8 pt-6 max-md:px-[18px]">
+    <div class="mb-[18px] flex items-start justify-between gap-[18px] max-lg:flex-col">
       <div>
-        <h1 class="dashboard-title">Dashboard</h1>
-        <p class="dashboard-subtitle">
+        <h1 class="m-0 text-5xl font-black leading-none tracking-[-0.03em] text-[#111111] max-lg:text-[40px] max-md:text-4xl">Dashboard</h1>
+        <p class="mt-[10px] text-sm leading-[1.4] text-[#6b6b6b]">
           Overview of users, sessions, cost usage, and system activity.
         </p>
       </div>
 
-      <div class="topbar-actions">
-        <Button variant="outline" size="lg" class="topbar-btn" @click="handleExport">
+      <div class="flex flex-wrap items-center gap-[10px]">
+        <Button variant="outline" size="lg" class="min-h-10 text-[13px] font-semibold" @click="handleExport">
           Export
         </Button>
-        <Button variant="outline" size="lg" class="topbar-btn" @click="loadDashboard">
+        <Button variant="outline" size="lg" class="min-h-10 text-[13px] font-semibold" @click="loadDashboard">
           Refresh
         </Button>
-        <Button variant="default" size="lg" class="topbar-btn" @click="handleSave">
+        <Button variant="default" size="lg" class="min-h-10 text-[13px] font-semibold" @click="handleSave">
           Save
         </Button>
       </div>
     </div>
 
-    <div v-if="loading" class="dashboard-state">Loading dashboard...</div>
-    <div v-else-if="error" class="dashboard-state dashboard-state--error">
+    <div v-if="loading" class="p-5 text-sm text-[#555555]">Loading dashboard...</div>
+    <div v-else-if="error" class="p-5 text-sm text-[#c62828]">
       {{ error }}
     </div>
     <template v-else>
-      <div class="stats-grid stats-grid--two">
+      <div class="mb-5 grid gap-[14px] md:grid-cols-2">
         <StatCard
           title="Total Users"
           :value="dashboardData?.summary.totalUsers ?? 0"
@@ -39,7 +39,7 @@
         />
       </div>
 
-      <div class="section-stack">
+      <div class="flex flex-col gap-5">
         <RecentUsersCard :users="dashboardData?.recentUsers ?? []" />
         <ModelCostSnapshotCard :model-cost="dashboardData?.modelCost" />
         <SystemLogsPreviewCard :logs="dashboardData?.systemLogs ?? []" />
@@ -91,100 +91,3 @@ onMounted(() => {
   loadDashboard()
 })
 </script>
-
-<style scoped>
-.dashboard-page {
-  width: 100%;
-  min-height: 100vh;
-  padding: 24px 24px 32px;
-  background: #f5f5f5;
-  box-sizing: border-box;
-}
-
-.dashboard-topbar {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 18px;
-}
-
-.dashboard-title {
-  margin: 0;
-  font-size: 48px;
-  line-height: 1;
-  font-weight: 900;
-  color: #111111;
-  letter-spacing: -0.03em;
-}
-
-.dashboard-subtitle {
-  margin: 10px 0 0;
-  font-size: 14px;
-  line-height: 1.4;
-  color: #6b6b6b;
-}
-
-.topbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.topbar-btn {
-  min-height: 40px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.stats-grid {
-  display: grid;
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.stats-grid--two {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.section-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.dashboard-state {
-  padding: 20px;
-  font-size: 14px;
-  color: #555555;
-}
-
-.dashboard-state--error {
-  color: #c62828;
-}
-
-@media (max-width: 1024px) {
-  .dashboard-title {
-    font-size: 40px;
-  }
-
-  .dashboard-topbar {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 768px) {
-  .dashboard-page {
-    padding: 18px;
-  }
-
-  .stats-grid--two {
-    grid-template-columns: 1fr;
-  }
-
-  .dashboard-title {
-    font-size: 36px;
-  }
-}
-</style>

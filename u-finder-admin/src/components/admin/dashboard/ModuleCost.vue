@@ -1,15 +1,15 @@
 <template>
-  <Card class="panel">
-    <div class="panel__header">
-      <h2 class="panel__title">Model Cost Snapshot</h2>
-      <span class="pill-tag">Today</span>
+  <Card class="box-border rounded-[28px] border border-[#dddddd] bg-white p-5">
+    <div class="mb-[18px] flex items-center justify-between">
+      <h2 class="m-0 text-[22px] font-extrabold leading-[1.15] text-[#111111]">Model Cost Snapshot</h2>
+      <span class="inline-flex items-center justify-center rounded-full border border-[#d8d8d8] bg-[#f7f7f7] px-[14px] py-[9px] text-xs font-bold text-[#111111]">Today</span>
     </div>
 
-    <div class="filter-grid">
-      <div class="field">
-        <label class="field__label">Model</label>
+    <div class="mb-[14px] grid gap-[14px] md:grid-cols-2">
+      <div class="flex flex-col gap-[7px]">
+        <label class="text-[13px] font-medium text-[#6b6b6b]">Model</label>
         <Select :model-value="selectedModel" @update:model-value="handleModelChange">
-          <SelectTrigger class="field__input">
+          <SelectTrigger class="h-[42px] w-full min-w-0 text-[13px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -21,10 +21,10 @@
         </Select>
       </div>
 
-      <div class="field">
-        <label class="field__label">Time Range</label>
+      <div class="flex flex-col gap-[7px]">
+        <label class="text-[13px] font-medium text-[#6b6b6b]">Time Range</label>
         <Select :model-value="selectedRange" @update:model-value="handleRangeChange">
-          <SelectTrigger class="field__input">
+          <SelectTrigger class="h-[42px] w-full min-w-0 text-[13px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -36,23 +36,23 @@
       </div>
     </div>
 
-    <div class="stats-grid">
-      <div class="mini-stat">
-        <div class="mini-stat__label">Total Requests</div>
-        <div class="mini-stat__value">{{ formattedRequests }}</div>
-        <div class="mini-stat__sub">avg latency: {{ props.modelCost?.avgLatency ?? '0s' }}</div>
+    <div class="mb-[14px] grid gap-[14px] md:grid-cols-2">
+      <div class="box-border min-h-[112px] rounded-[18px] border border-[#dddddd] p-[18px]">
+        <div class="mb-2 text-[13px] text-[#6b6b6b]">Total Requests</div>
+        <div class="mb-2 text-[28px] font-extrabold leading-[1.05] text-[#111111]">{{ formattedRequests }}</div>
+        <div class="text-xs leading-[1.35] text-[#6b6b6b]">avg latency: {{ props.modelCost?.avgLatency ?? '0s' }}</div>
       </div>
 
-      <div class="mini-stat">
-        <div class="mini-stat__label">Estimated Cost</div>
-        <div class="mini-stat__value">{{ formattedCost }}</div>
-        <div class="mini-stat__sub">tokens: {{ props.modelCost?.tokens ?? '0' }}</div>
+      <div class="box-border min-h-[112px] rounded-[18px] border border-[#dddddd] p-[18px]">
+        <div class="mb-2 text-[13px] text-[#6b6b6b]">Estimated Cost</div>
+        <div class="mb-2 text-[28px] font-extrabold leading-[1.05] text-[#111111]">{{ formattedCost }}</div>
+        <div class="text-xs leading-[1.35] text-[#6b6b6b]">tokens: {{ props.modelCost?.tokens ?? '0' }}</div>
       </div>
     </div>
 
-    <div class="actions">
-      <Button variant="outline" size="default" class="secondary-btn">Download</Button>
-      <Button variant="default" size="default" class="primary-btn">Set Alert</Button>
+    <div class="flex flex-wrap gap-[10px]">
+      <Button variant="outline" size="default" class="text-[13px] font-bold">Download</Button>
+      <Button variant="default" size="default" class="text-[13px] font-bold">Set Alert</Button>
     </div>
   </Card>
 </template>
@@ -109,122 +109,3 @@ watch(
   { immediate: true }
 )
 </script>
-
-<style scoped>
-.panel {
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 28px;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.panel__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-}
-
-.panel__title {
-  margin: 0;
-  font-size: 22px;
-  line-height: 1.15;
-  font-weight: 800;
-  color: #111111;
-}
-
-.pill-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 9px 14px;
-  border-radius: 999px;
-  border: 1px solid #d8d8d8;
-  background: #f7f7f7;
-  font-size: 12px;
-  font-weight: 700;
-  color: #111111;
-}
-
-.filter-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-bottom: 14px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.field__label {
-  font-size: 13px;
-  color: #6b6b6b;
-  font-weight: 500;
-}
-
-.field__input {
-  width: 100%;
-  height: 42px;
-  min-width: 0;
-  font-size: 13px;
-  box-sizing: border-box;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-bottom: 14px;
-}
-
-.mini-stat {
-  border: 1px solid #dddddd;
-  border-radius: 18px;
-  padding: 18px;
-  min-height: 112px;
-  box-sizing: border-box;
-}
-
-.mini-stat__label {
-  font-size: 13px;
-  color: #6b6b6b;
-  margin-bottom: 8px;
-}
-
-.mini-stat__value {
-  font-size: 28px;
-  font-weight: 800;
-  line-height: 1.05;
-  color: #111111;
-  margin-bottom: 8px;
-}
-
-.mini-stat__sub {
-  font-size: 12px;
-  color: #6b6b6b;
-  line-height: 1.35;
-}
-
-.actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.secondary-btn,
-.primary-btn {
-  font-size: 13px;
-  font-weight: 700;
-}
-
-@media (max-width: 900px) {
-  .filter-grid,
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-}
-</style>

@@ -1,8 +1,8 @@
 <template>
-  <section class="stat-card">
-    <div class="stat-card__label">{{ title }}</div>
-    <div class="stat-card__value">{{ value }}</div>
-    <div v-if="subtitle" class="stat-card__sub">{{ subtitle }}</div>
+  <section class="box-border flex min-h-[120px] flex-col justify-center rounded-3xl border border-[#dddddd] bg-white px-5 py-4">
+    <div class="mb-1.5 text-sm font-semibold leading-[1.25] text-[#6b6b6b]">{{ title }}</div>
+    <div class="mb-1.5 text-[34px] font-extrabold leading-none tracking-[-0.02em] text-[#111111]">{{ value }}</div>
+    <div v-if="subtitle" class="text-xs leading-[1.3] text-[#6b6b6b]">{{ subtitle }}</div>
   </section>
 </template>
 
@@ -13,40 +13,3 @@ defineProps<{
   subtitle?: string
 }>()
 </script>
-
-<style scoped>
-.stat-card {
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 24px;
-  padding: 16px 20px;
-  min-height: 120px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
-}
-
-.stat-card__label {
-  font-size: 14px;
-  line-height: 1.25;
-  color: #6b6b6b;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.stat-card__value {
-  font-size: 34px;
-  line-height: 1;
-  font-weight: 800;
-  color: #111111;
-  letter-spacing: -0.02em;
-  margin-bottom: 6px;
-}
-
-.stat-card__sub {
-  font-size: 12px;
-  line-height: 1.3;
-  color: #6b6b6b;
-}
-</style>

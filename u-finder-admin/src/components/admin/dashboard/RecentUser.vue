@@ -1,28 +1,28 @@
 <template>
-  <section class="panel">
-    <div class="panel__header">
+  <section class="box-border rounded-[28px] border border-[#dddddd] bg-white p-5">
+    <div class="mb-3">
       <div>
-        <h2 class="panel__title">Recent Users</h2>
-        <p class="panel__desc">
+        <h2 class="m-0 text-[22px] font-extrabold leading-[1.15] text-[#111111]">Recent Users</h2>
+        <p class="mt-1.5 text-[13px] leading-[1.4] text-[#6b6b6b]">
           Quick view for checking user pages, status, and last active time.
         </p>
       </div>
     </div>
 
-    <div class="toolbar">
-      <div class="search-wrap">
+    <div class="mb-[14px] flex flex-wrap items-center justify-between gap-3">
+      <div class="min-w-[220px] flex-1">
         <Input
           v-model="searchQuery"
           type="text"
-          class="search-input"
+          class="h-[42px] w-full rounded-[14px] border border-[#d8d8d8] bg-white px-[14px] text-[13px] text-[#111111]"
           placeholder="Search users..."
         />
       </div>
 
-      <div class="sort-wrap">
-        <label class="sort-label">Sort by</label>
+      <div class="flex flex-wrap items-center gap-2">
+        <label class="text-[13px] text-[#666666]">Sort by</label>
         <Select :model-value="sortKey" @update:model-value="handleSortKeyChange">
-          <SelectTrigger class="sort-select">
+          <SelectTrigger class="h-[42px] min-w-[120px] text-[13px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -35,7 +35,7 @@
         </Select>
 
         <Select :model-value="sortOrder" @update:model-value="handleSortOrderChange">
-          <SelectTrigger class="sort-select sort-select--small">
+          <SelectTrigger class="h-[42px] min-w-[120px] text-[13px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -46,46 +46,46 @@
       </div>
     </div>
 
-    <div class="table-wrap">
-      <Table class="users-table">
+    <div class="overflow-hidden rounded-[18px] border border-[#e4e4e4] bg-white max-[1100px]:overflow-x-auto">
+      <Table class="w-full table-fixed border-collapse max-[1100px]:min-w-[780px]">
         <TableHeader>
           <TableRow>
-            <TableHead>User</TableHead>
-            <TableHead>Plan</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Last Active</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead class="border-b border-[#e4e4e4] bg-[#f7f7f7] px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666]">User</TableHead>
+            <TableHead class="border-b border-[#e4e4e4] bg-[#f7f7f7] px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666]">Plan</TableHead>
+            <TableHead class="border-b border-[#e4e4e4] bg-[#f7f7f7] px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666]">Status</TableHead>
+            <TableHead class="border-b border-[#e4e4e4] bg-[#f7f7f7] px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666]">Last Active</TableHead>
+            <TableHead class="border-b border-[#e4e4e4] bg-[#f7f7f7] px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666]">Actions</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
           <TableRow v-if="paginatedUsers.length === 0">
-            <TableCell :colspan="5" class="empty-cell">No matching users found.</TableCell>
+            <TableCell :colspan="5" class="px-[14px] py-5 text-center text-[13px] text-[#777777]">No matching users found.</TableCell>
           </TableRow>
 
           <TableRow v-for="user in paginatedUsers" :key="user.id">
-            <TableCell>
-              <div class="user-block">
-                <div class="user-name">{{ user.name }}</div>
-                <div class="user-meta">{{ user.email }}</div>
-                <div class="user-meta">#{{ user.id }}</div>
+            <TableCell class="align-middle border-b border-[#eeeeee] px-[14px] py-[11px]">
+              <div class="flex flex-col gap-0.5">
+                <div class="text-sm font-bold leading-[1.2] text-[#111111]">{{ user.name }}</div>
+                <div class="text-xs leading-[1.25] text-[#777777]">{{ user.email }}</div>
+                <div class="text-xs leading-[1.25] text-[#777777]">#{{ user.id }}</div>
               </div>
             </TableCell>
 
-            <TableCell>
-              <span class="pill">{{ user.role }}</span>
+            <TableCell class="align-middle border-b border-[#eeeeee] px-[14px] py-[11px]">
+              <span class="inline-flex min-w-[78px] items-center justify-center rounded-full border border-[#dddddd] bg-[#f8f8f8] px-2.5 py-[5px] text-xs text-[#222222]">{{ user.role }}</span>
             </TableCell>
 
-            <TableCell>
-              <span class="pill">{{ user.status }}</span>
+            <TableCell class="align-middle border-b border-[#eeeeee] px-[14px] py-[11px]">
+              <span class="inline-flex min-w-[78px] items-center justify-center rounded-full border border-[#dddddd] bg-[#f8f8f8] px-2.5 py-[5px] text-xs text-[#222222]">{{ user.status }}</span>
             </TableCell>
 
-            <TableCell class="last-active">
+            <TableCell class="align-middle border-b border-[#eeeeee] px-[14px] py-[11px] text-[13px] leading-[1.3] text-[#555555]">
               {{ user.lastActive }}
             </TableCell>
 
-            <TableCell>
-              <div class="action-group">
+            <TableCell class="align-middle border-b border-[#eeeeee] px-[14px] py-[11px]">
+              <div class="flex flex-wrap gap-1.5">
                 <Button variant="secondary" size="sm">
                   {{ user.status === 'Blocked' ? 'Unblock' : 'Block' }}
                 </Button>
@@ -97,11 +97,11 @@
       </Table>
     </div>
 
-    <div class="pagination">
-      <div class="rows">
+    <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2 text-xs text-[#666666]">
         <span>Rows per page</span>
         <Select :model-value="String(rowsPerPage)" @update:model-value="handleRowsPerPageChange">
-          <SelectTrigger class="rows-select">
+          <SelectTrigger class="h-[34px] min-w-16 text-xs">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -112,11 +112,11 @@
         </Select>
       </div>
 
-      <div class="page-info">
+      <div class="text-xs text-[#666666]">
         Page {{ currentPage }} of {{ totalPages }}
       </div>
 
-      <div class="page-buttons">
+      <div class="flex items-center gap-1.5">
         <Button variant="secondary" size="sm" @click="prevPage" :disabled="currentPage === 1">
           ‹
         </Button>
@@ -254,209 +254,3 @@ watch(
   }
 )
 </script>
-
-<style scoped>
-.panel {
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 28px;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.panel__header {
-  margin-bottom: 12px;
-}
-
-.panel__title {
-  margin: 0;
-  font-size: 22px;
-  line-height: 1.15;
-  font-weight: 800;
-  color: #111111;
-}
-
-.panel__desc {
-  margin: 6px 0 0;
-  font-size: 13px;
-  color: #6b6b6b;
-  line-height: 1.4;
-}
-
-.toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
-}
-
-.search-wrap {
-  flex: 1;
-  min-width: 220px;
-}
-
-.search-input {
-  width: 100%;
-  height: 42px;
-  border-radius: 14px;
-  border: 1px solid #d8d8d8;
-  background: #ffffff;
-  padding: 0 14px;
-  font-size: 13px;
-  color: #111111;
-  outline: none;
-  box-sizing: border-box;
-}
-
-.sort-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.sort-label {
-  font-size: 13px;
-  color: #666666;
-}
-
-.sort-select {
-  height: 42px;
-  min-width: 120px;
-  font-size: 13px;
-}
-
-.sort-select--small {
-  min-width: 120px;
-}
-
-.table-wrap {
-  border: 1px solid #e4e4e4;
-  border-radius: 18px;
-  overflow: hidden;
-  background: #ffffff;
-}
-
-.users-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-
-.users-table th {
-  text-align: left;
-  background: #f7f7f7;
-  color: #666666;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 11px 14px;
-  border-bottom: 1px solid #e4e4e4;
-}
-
-.users-table td {
-  padding: 11px 14px;
-  border-bottom: 1px solid #eeeeee;
-  vertical-align: middle;
-}
-
-.users-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.user-block {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.user-name {
-  font-size: 14px;
-  line-height: 1.2;
-  font-weight: 700;
-  color: #111111;
-}
-
-.user-meta {
-  font-size: 12px;
-  line-height: 1.25;
-  color: #777777;
-}
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 78px;
-  padding: 5px 10px;
-  border-radius: 999px;
-  border: 1px solid #dddddd;
-  background: #f8f8f8;
-  font-size: 12px;
-  color: #222222;
-}
-
-.last-active {
-  font-size: 13px;
-  color: #555555;
-  line-height: 1.3;
-}
-
-.action-group {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.empty-cell {
-  text-align: center;
-  color: #777777;
-  font-size: 13px;
-  padding: 20px 14px;
-}
-
-.pagination {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-}
-
-.rows {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: #666666;
-}
-
-.rows-select {
-  height: 34px;
-  min-width: 64px;
-  font-size: 12px;
-}
-
-.page-info {
-  font-size: 12px;
-  color: #666666;
-}
-
-.page-buttons {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-@media (max-width: 1100px) {
-  .table-wrap {
-    overflow-x: auto;
-  }
-
-  .users-table {
-    min-width: 780px;
-  }
-}
-</style>
