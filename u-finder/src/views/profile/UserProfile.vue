@@ -21,8 +21,10 @@ import { getAllProfile, updateProfileField, updatePersonalInfo } from '@/api/pro
 import type { PersonalInfo, CVParseResponse } from '@/types/profileTypes'
 import type { EditorRegistration, ProfileEditor } from '@/types/profileEditor'
 import { useUserStore } from '@/stores/userStore'
+import { useSidebar } from '@/components/ui/sidebar'
 
 const { t } = useI18n()
+const { open: sidebarOpen, isMobile } = useSidebar()
 const userStore = useUserStore()
 const token = computed(() => userStore.user?.token || '')
 
@@ -510,26 +512,31 @@ function handleCVResultCancel() {
 			/>
 		</div>
 
-		<!-- Floating Save All button -->
+		<!-- Save All dock -->
 		<Transition
 			enter-active-class="transition duration-200 ease-out"
-			enter-from-class="opacity-0 translate-y-4"
+			enter-from-class="opacity-0 translate-y-full"
 			enter-to-class="opacity-100 translate-y-0"
 			leave-active-class="transition duration-150 ease-in"
 			leave-from-class="opacity-100 translate-y-0"
-			leave-to-class="opacity-0 translate-y-4"
+			leave-to-class="opacity-0 translate-y-full"
 		>
-			<Button
+			<div
 				v-if="hasEditingEditors"
-				class="fixed right-4 bottom-5 z-60 shadow-lg gap-2"
-				size="lg"
-				:disabled="isSavingAll"
-				@click="saveAll"
+				class="fixed bottom-0 right-0 z-50 flex items-center justify-center border-t bg-background py-3 transition-[left] duration-200 ease-linear"
+				:style="{ left: !isMobile && sidebarOpen ? 'var(--sidebar-width, 16rem)' : '0' }"
 			>
-				<Spinner v-if="isSavingAll" class="size-4" />
-				<Save v-else class="size-4" />
-				{{ isSavingAll ? t('profile.savingAll') : t('profile.saveAll') }}
-			</Button>
+				<Button
+					size="lg"
+					class="gap-2 shadow-lg"
+					:disabled="isSavingAll"
+					@click="saveAll"
+				>
+					<Spinner v-if="isSavingAll" class="size-4" />
+					<Save v-else class="size-4" />
+					{{ isSavingAll ? t('profile.savingAll') : t('profile.saveAll') }}
+				</Button>
+			</div>
 		</Transition>
 		
 		<!-- CV Parser Dialog -->
