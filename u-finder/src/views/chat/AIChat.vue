@@ -537,8 +537,11 @@ const loadHistoryMessages = async (convId: string) => {
 			if (cards.length > 0) {
 				aiMessage.type = "cards";
 				aiMessage.cards = cards;
+				if (preText.trim()) {
+					aiMessage.content = preText.trim();
+				}
 				if (postText.trim()) {
-					aiMessage.tailContent = postText;
+					aiMessage.tailContent = postText.trim();
 				}
 			} else {
 				aiMessage.type = "text";
