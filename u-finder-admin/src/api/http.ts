@@ -65,4 +65,29 @@ http.interceptors.response.use(
   }
 )
 
+/**
+ * Extract a human-readable error message from an Axios error.
+ * Handles FastAPI's `{detail: {message: "..."}}` and `{detail: "..."}` formats.
+ */
+export function extractErrorMessage(error: unknown, fallback: string): string {
+  if (typeof error === 'object' && error !== null && 'response' in error) {
+    const resp = (error as any).response
+    const data = resp?.data
+    if (data) {
+      const raw = typeof data === 'string' ? tryParseJSON(data) : data
+      if (raw?.detail) {
+        if (typeof raw.detail === 'string') return raw.detail
+        if (typeof raw.detail?.message === 'string') return raw.detail.message
+      }
+      if (typeof raw?.message === 'string') return raw.message
+    }
+  }
+  if (error instanceof Error && error.message) return error.message
+  return fallback
+}
+
+function tryParseJSON(text: string): any {
+  try { return JSON.parse(text) } catch { return null }
+}
+
 export default http

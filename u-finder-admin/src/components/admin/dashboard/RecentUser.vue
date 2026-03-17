@@ -165,6 +165,10 @@ import {
   deleteUser,
   type AdminUser,
 } from '@/api/dashboard'
+import { extractErrorMessage } from '@/api/http'
+import { useAdminStore } from '@/stores/adminStore'
+
+const adminStore = useAdminStore()
 
 const USER_TYPE_MAP: Record<string, string> = {
   '1': 'Student',
@@ -183,6 +187,7 @@ interface UserRow {
 }
 
 function mapUser(u: AdminUser): UserRow {
+  const isSelf = u.id === adminStore.admin?.id
   return {
     id: u.id,
     name: u.name,
@@ -190,7 +195,9 @@ function mapUser(u: AdminUser): UserRow {
     role: USER_TYPE_MAP[u.type] ?? 'Unknown',
     status: u.status.charAt(0).toUpperCase() + u.status.slice(1),
     createdAt: new Date(u.created_at).toLocaleDateString(),
-    availableActions: u.available_actions,
+    availableActions: isSelf
+      ? u.available_actions.filter(a => a !== 'block' && a !== 'delete')
+      : u.available_actions,
   }
 }
 
@@ -203,8 +210,8 @@ async function loadUsers() {
   try {
     const raw = await fetchAdminUsers()
     users.value = raw.map(mapUser)
-  } catch (e: any) {
-    toast.error(e?.response?.data?.detail?.message ?? 'Failed to load users')
+  } catch (e: unknown) {
+    toast.error(extractErrorMessage(e, 'Failed to load users'))
   } finally {
     loadingUsers.value = false
   }
@@ -216,8 +223,8 @@ async function handleBlock(userId: number) {
     await blockUser(userId)
     toast.success('User blocked')
     await loadUsers()
-  } catch (e: any) {
-    toast.error(e?.response?.data?.detail?.message ?? 'Failed to block user')
+  } catch (e: unknown) {
+    toast.error(extractErrorMessage(e, 'Failed to block user'))
   } finally {
     actionLoading.value = null
   }
@@ -229,8 +236,8 @@ async function handleUnblock(userId: number) {
     await unblockUser(userId)
     toast.success('User unblocked')
     await loadUsers()
-  } catch (e: any) {
-    toast.error(e?.response?.data?.detail?.message ?? 'Failed to unblock user')
+  } catch (e: unknown) {
+    toast.error(extractErrorMessage(e, 'Failed to unblock user'))
   } finally {
     actionLoading.value = null
   }
@@ -243,8 +250,8 @@ async function handleDelete(userId: number) {
     await deleteUser(userId)
     toast.success('User deleted')
     await loadUsers()
-  } catch (e: any) {
-    toast.error(e?.response?.data?.detail?.message ?? 'Failed to delete user')
+  } catch (e: unknown) {
+    toast.error(extractErrorMessage(e, 'Failed to delete user'))
   } finally {
     actionLoading.value = null
   }
