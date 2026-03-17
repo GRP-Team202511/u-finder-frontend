@@ -659,7 +659,7 @@ onMounted(() => {
                   <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
                 </div>
 
-                <FieldSeparator v-if="idx < education.length - 1" />
+                <hr v-if="idx < education.length - 1" class="my-6 border-t-2 border-muted-foreground/20" />
               </template>
             </FieldGroup>
             
@@ -712,6 +712,8 @@ onMounted(() => {
                     <div class="text-sm text-left">{{ edu.GPA_base || '-' }}</div>
                   </Field>
                 </div>
+
+                <hr v-if="idx < education.length - 1" class="my-6 border-t-2 border-muted-foreground/20" />
 
               </template>
             </FieldGroup>

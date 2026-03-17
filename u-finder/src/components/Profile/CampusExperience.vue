@@ -211,7 +211,7 @@ onMounted(() => {
                   <Button type="button" variant="secondary" @click="removeEntry(idx)">{{ t('profile.remove') || 'Remove' }}</Button>
                 </div>
 
-                <FieldSeparator v-if="idx < campusExperience.length - 1" />
+                <hr v-if="idx < campusExperience.length - 1" class="my-6 border-t-2 border-muted-foreground/20" />
               </template>
             </FieldGroup>
             
@@ -232,6 +232,7 @@ onMounted(() => {
                   <FieldLabel>{{ t('campusExp.description') || 'Description' }}</FieldLabel>
                   <div class="text-sm text-left whitespace-pre-wrap break-words">{{ campusExp.description || '-' }}</div>
                 </Field>
+                <hr v-if="idx < campusExperience.length - 1" class="my-6 border-t-2 border-muted-foreground/20" />
               </template>
             </FieldGroup>
           </div>
