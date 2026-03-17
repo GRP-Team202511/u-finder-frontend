@@ -457,6 +457,7 @@
             "loadHistoryFailed": "加载对话历史失败"
         },
         "card": {
+            "loadingAria": "大学信息加载中",
             "locationNotSpecified": "未指定地点",
             "tuitionNotSpecified": "未指定学费",
             "notSpecified": "未指定",

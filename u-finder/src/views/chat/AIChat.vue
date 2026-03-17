@@ -27,6 +27,7 @@ let messageCounter = 1;
 const programCardStart = "<<__CARD__>>";
 const programCardEnd = "<<__END__>>";
 const messageBuffers = new Map<string, string>();
+const endedByServerMessages = new Set<string>();
 const searchingMarker = "<<__SEARCHING__>>";
 
 const ensureStoppedPlaceholder = (messageId: string) => {
@@ -54,26 +55,153 @@ const findPartialStartSuffix = (value: string) => {
 	return 0;
 };
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+	Boolean(value) && typeof value === "object";
+
+const isString = (value: unknown): value is string =>
+	typeof value === "string";
+
+const isNullableString = (value: unknown): value is string | null =>
+	value === null || typeof value === "string";
+
+const isNullableNumber = (value: unknown): value is number | null =>
+	value === null || typeof value === "number";
+
+const parseCardPrograms = (rawPayload: string): ProgramCardData[] | null => {
+	const candidates: string[] = [];
+	const trimmed = rawPayload.trim();
+	candidates.push(trimmed);
+
+	// Handle ```json ... ``` wrappers if the model emits fenced content.
+	const withoutFence = trimmed
+		.replace(/^```(?:json)?\s*/i, "")
+		.replace(/\s*```$/i, "")
+		.trim();
+	if (withoutFence && withoutFence !== trimmed) {
+		candidates.push(withoutFence);
+	}
+
+	// Handle noisy prefixes/suffixes by slicing to the outermost JSON object.
+	const firstBrace = withoutFence.indexOf("{");
+	const lastBrace = withoutFence.lastIndexOf("}");
+	if (firstBrace !== -1 && lastBrace > firstBrace) {
+		const objectSlice = withoutFence.slice(firstBrace, lastBrace + 1).trim();
+		if (objectSlice && !candidates.includes(objectSlice)) {
+			candidates.push(objectSlice);
+		}
+	}
+
+	for (const candidate of candidates) {
+		try {
+			const parsed = JSON.parse(candidate);
+			const programs =
+				(parsed?.type === "program_card" && parsed?.payload?.programs) ||
+				parsed?.programs ||
+				parsed;
+			const list = Array.isArray(programs) ? programs : [programs];
+			if (list.length) return list as ProgramCardData[];
+		} catch {
+			// Retry with a minimal trailing-comma cleanup.
+			try {
+				const sanitized = candidate.replace(/,\s*([}\]])/g, "$1");
+				const parsed = JSON.parse(sanitized);
+				const programs =
+					(parsed?.type === "program_card" && parsed?.payload?.programs) ||
+					parsed?.programs ||
+					parsed;
+				const list = Array.isArray(programs) ? programs : [programs];
+				if (list.length) return list as ProgramCardData[];
+			} catch {
+				// Try next candidate.
+			}
+		}
+	}
+
+	return null;
+};
+
+const isProgramCardLike = (value: unknown): value is ProgramCardData => {
+	if (!isRecord(value)) return false;
+
+	const university = value.university;
+	if (!isRecord(university)) return false;
+	if (!isString(university.name)) return false;
+	if (!isNullableString(university.country)) return false;
+	if (!isNullableString(university.city)) return false;
+	if (!isString(university.official_website)) return false;
+
+	const faculty = value.faculty;
+	if (!isRecord(faculty)) return false;
+	if (!isNullableString(faculty.name)) return false;
+	if (!isNullableString(faculty.official_website)) return false;
+
+	const degreeProgram = value.degree_program;
+	if (!isRecord(degreeProgram)) return false;
+	if (!isString(degreeProgram.name)) return false;
+	if (!isString(degreeProgram.degree_level)) return false;
+	if (!isString(degreeProgram.field)) return false;
+	if (!isNullableString(degreeProgram.track_or_specialization)) return false;
+	if (!isString(degreeProgram.program_type)) return false;
+	if (!isNullableString(degreeProgram.duration)) return false;
+	if (!isNullableString(degreeProgram.language)) return false;
+
+	const admissions = value.admissions;
+	if (!isRecord(admissions)) return false;
+	if (!isNullableString(admissions.academic_requirements)) return false;
+	if (!isNullableString(admissions.language_requirements)) return false;
+	if (!isNullableString(admissions.other_requirements)) return false;
+	if (!isNullableString(admissions.application_deadline)) return false;
+
+	const tuition = value.tuition;
+	if (!isRecord(tuition)) return false;
+	if (!isNullableNumber(tuition.amount)) return false;
+	if (!isNullableString(tuition.currency)) return false;
+	if (!isNullableString(tuition.per)) return false;
+
+	if (!(value.career_outcomes === null || (Array.isArray(value.career_outcomes) && value.career_outcomes.every(isString)))) {
+		return false;
+	}
+
+	if (!isString(value.official_program_url)) return false;
+	if (!isString(value.last_verified)) return false;
+
+	return true;
+};
+
+const normalizeProgramCards = (cards: ProgramCardData[]) =>
+	cards.filter((card) => isProgramCardLike(card));
+
 const extractProgramCards = (buffer: string) => {
 	let remaining = buffer;
-	let text = "";
+	let preText = "";
+	let postText = "";
 	const cards: ProgramCardData[] = [];
+	let hasSeenCard = false;
+
+	const appendText = (value: string) => {
+		if (!value) return;
+		if (hasSeenCard) {
+			postText += value;
+		} else {
+			preText += value;
+		}
+	};
 
 	while (true) {
 		const startIndex = remaining.indexOf(programCardStart);
 		if (startIndex === -1) {
 			const partialSize = findPartialStartSuffix(remaining);
 			if (partialSize > 0) {
-				text += stripControlMarkers(remaining.slice(0, -partialSize));
+				appendText(stripControlMarkers(remaining.slice(0, -partialSize)));
 				remaining = remaining.slice(-partialSize);
 			} else {
-				text += stripControlMarkers(remaining);
+				appendText(stripControlMarkers(remaining));
 				remaining = "";
 			}
 			break;
 		}
 
-		text += stripControlMarkers(remaining.slice(0, startIndex));
+		appendText(stripControlMarkers(remaining.slice(0, startIndex)));
 		const afterStart = remaining.slice(startIndex + programCardStart.length);
 		const endIndex = afterStart.indexOf(programCardEnd);
 		if (endIndex === -1) {
@@ -82,36 +210,43 @@ const extractProgramCards = (buffer: string) => {
 		}
 
 		const payload = afterStart.slice(0, endIndex).trim();
-		try {
-			const parsed = JSON.parse(payload);
-			const programs =
-				(parsed?.type === "program_card" && parsed?.payload?.programs) ||
-				parsed?.programs ||
-				parsed;
-			const list = Array.isArray(programs) ? programs : [programs];
-			cards.push(...(list as ProgramCardData[]));
-		} catch {
-			remaining = remaining.slice(startIndex);
-			break;
+		const parsedCards = parseCardPrograms(payload);
+		if (parsedCards?.length) {
+			const validCards = normalizeProgramCards(parsedCards);
+			if (validCards.length > 0) {
+				cards.push(...validCards);
+				hasSeenCard = true;
+			} else {
+				appendText(stripControlMarkers(payload));
+			}
+		} else {
+			// Recovery path: treat unparseable payload as text to avoid stuck buffers.
+			appendText(stripControlMarkers(payload));
 		}
 
 		remaining = afterStart.slice(endIndex + programCardEnd.length);
 	}
 
-	return { text, cards, remainder: remaining };
+	return { preText, postText, cards, remainder: remaining };
 };
 
 const flushMessageBuffer = (messageId: string, options?: { discardIncompleteCards?: boolean }) => {
 	const remainder = messageBuffers.get(messageId);
 	if (!remainder) return;
 	messageBuffers.delete(messageId);
-	if (options?.discardIncompleteCards && remainder.includes(programCardStart)) {
+	const hasFullCardStart = remainder.includes(programCardStart);
+	const partialStartSuffixSize = findPartialStartSuffix(remainder);
+	const hasPartialCardStart = partialStartSuffixSize > 0;
+	if (options?.discardIncompleteCards && (hasFullCardStart || hasPartialCardStart)) {
 		return;
 	}
+	const remainderWithoutPartialSuffix = hasPartialCardStart
+		? remainder.slice(0, -partialStartSuffixSize)
+		: remainder;
 	const sanitizedRemainder = stripControlMarkers(
-		remainder.split(programCardStart).join("").split(programCardEnd).join("")
+		remainderWithoutPartialSuffix.split(programCardStart).join("").split(programCardEnd).join("")
 	);
-	if (remainder.includes(programCardStart)) {
+	if (hasFullCardStart) {
 		if (!sanitizedRemainder.trim()) return;
 		const message = messages.value.find((item) => item.id === messageId);
 		if (!message) return;
@@ -137,7 +272,10 @@ const flushMessageBuffer = (messageId: string, options?: { discardIncompleteCard
 const stopStream = () => {
 	if (activeMessageId.value) {
 		ensureStoppedPlaceholder(activeMessageId.value);
-		updateMessage(activeMessageId.value, { isLoading: false });
+		updateMessage(activeMessageId.value, {
+			isLoading: false,
+			isUniversityCardLoading: false,
+		});
 		activeMessageId.value = null;
 	}
 	streamController.value?.abort();
@@ -175,25 +313,52 @@ const appendToMessage = (messageId: string, chunk: string) => {
 	const message = messages.value.find((item) => item.id === messageId);
 	if (!message) return;
 	const buffer = `${messageBuffers.get(messageId) ?? ""}${stripControlMarkers(chunk)}`;
-	const { text, cards, remainder } = extractProgramCards(buffer);
+	const { preText, postText, cards, remainder } = extractProgramCards(buffer);
 	messageBuffers.set(messageId, remainder);
-	if (text) {
-		if (message.cards?.length) {
-			message.tailContent = `${message.tailContent ?? ""}${text}`;
+	const hasFullCardMarker = remainder.includes(programCardStart);
+	const hasPartialCardMarker = findPartialStartSuffix(remainder) > 0;
+	const isUniversityCardLoading = hasFullCardMarker || hasPartialCardMarker;
+	message.isUniversityCardLoading = isUniversityCardLoading;
+	const hasCardsAlready = Boolean(message.cards?.length);
+	const validCards = cards;
+	const cardsAdded = validCards.length > 0;
+	if (preText) {
+		if (hasCardsAlready) {
+			message.tailContent = `${message.tailContent ?? ""}${preText}`;
 		} else {
 			message.type = "text";
-			message.content = `${message.content ?? ""}${text}`;
+			message.content = `${message.content ?? ""}${preText}`;
 		}
 	}
-	if (cards.length) {
+	if (postText) {
+		if (hasCardsAlready || cardsAdded) {
+			message.tailContent = `${message.tailContent ?? ""}${postText}`;
+		} else {
+			message.type = "text";
+			message.content = `${message.content ?? ""}${postText}`;
+		}
+	}
+	if (cardsAdded) {
 		const existing = message.cards ?? [];
-		updateMessage(messageId, { type: "cards", cards: [...existing, ...cards] });
+		updateMessage(messageId, {
+			type: "cards",
+			cards: [...existing, ...validCards],
+			isUniversityCardLoading,
+		});
 	}
 };
 
 const handleSsePayload = (messageId: string, payload: string) => {
 	if (!payload) return;
-	if (payload === "[DONE]") return;
+	if (payload === "[DONE]") {
+		endedByServerMessages.add(messageId);
+		flushMessageBuffer(messageId);
+		updateMessage(messageId, { isUniversityCardLoading: false });
+		if (activeMessageId.value === messageId) {
+			streamController.value?.abort();
+		}
+		return;
+	}
 
 	let parsed: any;
 	try {
@@ -235,7 +400,12 @@ const handleSsePayload = (messageId: string, payload: string) => {
 	}
 
 	if (parsed.event === "message_end" || parsed.done === true) {
+		endedByServerMessages.add(messageId);
 		flushMessageBuffer(messageId);
+		updateMessage(messageId, { isUniversityCardLoading: false });
+		if (activeMessageId.value === messageId) {
+			streamController.value?.abort();
+		}
 		return;
 	}
 
@@ -249,7 +419,12 @@ const handleSsePayload = (messageId: string, payload: string) => {
 		parsed.cards ||
 		parsed.universities;
 	if (Array.isArray(cards)) {
-		updateMessage(messageId, { type: "cards", cards });
+		const validCards = normalizeProgramCards(cards as ProgramCardData[]);
+		updateMessage(messageId, {
+			type: "cards",
+			cards: validCards,
+			isUniversityCardLoading: false,
+		});
 		return;
 	}
 
@@ -292,9 +467,16 @@ const startStream = async (prompt: string, messageId: string) => {
 		}
 	} finally {
 		const streamWasAborted = controller.signal.aborted;
-		flushMessageBuffer(messageId, { discardIncompleteCards: streamWasAborted });
+		const endedByServer = endedByServerMessages.has(messageId);
+		endedByServerMessages.delete(messageId);
+		flushMessageBuffer(messageId, {
+			discardIncompleteCards: streamWasAborted && !endedByServer,
+		});
 		if (activeStreamToken.value === streamToken) {
-			updateMessage(messageId, { isLoading: false });
+			updateMessage(messageId, {
+				isLoading: false,
+				isUniversityCardLoading: false,
+			});
 			activeMessageId.value = null;
 			streamController.value = null;
 			activeStreamToken.value = null;
@@ -355,17 +537,20 @@ const loadHistoryMessages = async (convId: string) => {
 			}
 			
 			// Parse program card
-			const { text, cards } = extractProgramCards(aiContent || '');
+			const { preText, postText, cards } = extractProgramCards(aiContent || '');
 			
 			if (cards.length > 0) {
 				aiMessage.type = "cards";
 				aiMessage.cards = cards;
-				if (text.trim()) {
-					aiMessage.tailContent = text;
+				if (preText.trim()) {
+					aiMessage.content = preText.trim();
+				}
+				if (postText.trim()) {
+					aiMessage.tailContent = postText.trim();
 				}
 			} else {
 				aiMessage.type = "text";
-				const finalText = (text || aiContent || '').trim();
+				const finalText = (preText || aiContent || '').trim();
 				aiMessage.content = finalText || t("chat.stopped");
 			}
 			
@@ -399,6 +584,7 @@ const handleSend = (text: string) => {
 		type: "text",
 		content: "",
 		isLoading: true,
+		isUniversityCardLoading: false,
 	});
 
 	void startStream(trimmed, aiMessageId);

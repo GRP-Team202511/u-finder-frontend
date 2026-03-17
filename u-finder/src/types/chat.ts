@@ -42,6 +42,7 @@ export type ChatMessageData = {
 	tailContent?: string;
 	cards?: ProgramCardData[];
 	isLoading?: boolean;
+	isUniversityCardLoading?: boolean;
 };
 
 // Conversation types for history feature
