@@ -53,13 +53,47 @@
         <div class="text-[13px] leading-[1.35] text-[#222222]">{{ log.message }}</div>
       </div>
     </div>
+
+    <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2 text-xs text-[#666666]">
+        <span>Rows per page</span>
+        <Select :model-value="String(rowsPerPage)" @update:model-value="handleRowsPerPageChange">
+          <SelectTrigger class="h-[34px] min-w-16 text-xs">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="5">5</SelectItem>
+            <SelectItem value="10">10</SelectItem>
+            <SelectItem value="20">20</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div class="text-xs text-[#666666]">
+        Page {{ currentPage }} of {{ totalPages }}
+      </div>
+
+      <div class="flex items-center gap-1.5">
+        <Button variant="secondary" size="sm" @click="prevPage" :disabled="currentPage === 1">
+          ‹
+        </Button>
+        <Button
+          variant="secondary"
+          size="sm"
+          @click="nextPage"
+          :disabled="currentPage === totalPages || totalPages === 0"
+        >
+          ›
+        </Button>
+      </div>
+    </div>
   </Card>
 </template>
 
 <script setup lang="ts">
 import { parseDate } from '@internationalized/date'
 import type { AcceptableValue } from 'reka-ui'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Calendar } from '@/components/ui/calendar'
@@ -79,10 +113,16 @@ const LEVEL_TO_API: Record<string, string> = {
 
 const props = defineProps<{
   logs: LogItem[]
+  logsTotalCount: number
 }>()
 
 const emit = defineEmits<{
-  (e: 'filter-change', params: { logs_date?: string; logs_level?: string }): void
+  (e: 'filter-change', params: {
+    logs_date?: string
+    logs_level?: string
+    logs_page?: number
+    logs_per_page?: number
+  }): void
 }>()
 
 const today = new Date().toISOString().slice(0, 10)
@@ -90,12 +130,19 @@ const selectedDate = ref(today)
 const selectedDateValue = ref<any>(parseDate(selectedDate.value))
 const isDateMenuOpen = ref(false)
 const selectedLevel = ref<'ALL' | 'INFO' | 'WARN' | 'ERROR'>('ALL')
+const currentPage = ref(1)
+const rowsPerPage = ref(10)
+
+const totalPages = computed(() =>
+  props.logsTotalCount === 0 ? 0 : Math.ceil(props.logsTotalCount / rowsPerPage.value)
+)
 
 function handleCalendarChange(value: any) {
   if (!value) return
   selectedDateValue.value = value
   selectedDate.value = value.toString()
   isDateMenuOpen.value = false
+  currentPage.value = 1
   emitFilters()
 }
 
@@ -103,13 +150,40 @@ function handleLevelChange(value: AcceptableValue) {
   if (typeof value !== 'string') return
   if (!['ALL', 'INFO', 'WARN', 'ERROR'].includes(value)) return
   selectedLevel.value = value as typeof selectedLevel.value
+  currentPage.value = 1
   emitFilters()
+}
+
+function handleRowsPerPageChange(value: AcceptableValue) {
+  if (typeof value !== 'string') return
+  const n = Number(value)
+  if ([5, 10, 20].includes(n)) {
+    rowsPerPage.value = n
+    currentPage.value = 1
+    emitFilters()
+  }
+}
+
+function prevPage() {
+  if (currentPage.value > 1) {
+    currentPage.value--
+    emitFilters()
+  }
+}
+
+function nextPage() {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++
+    emitFilters()
+  }
 }
 
 function emitFilters() {
   emit('filter-change', {
     logs_date: selectedDate.value,
     logs_level: LEVEL_TO_API[selectedLevel.value] ?? 'all',
+    logs_page: currentPage.value,
+    logs_per_page: rowsPerPage.value,
   })
 }
 </script>
