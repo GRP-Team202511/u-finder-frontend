@@ -26,6 +26,7 @@ interface BackendDashboardSummary {
     level: string
     message: string
   }>
+  logs_total_count: number
   model_cost_snapshot: {
     total_requests: number
     avg_latency_seconds?: number | null
@@ -74,6 +75,7 @@ export interface DashboardResponse {
   recentUsers: RecentUserItem[]
   modelCost: ModelCostData
   systemLogs: SystemLogItem[]
+  logsTotalCount: number
 }
 
 // ── Mapping helpers ─────────────────────────────────────────────────
@@ -151,6 +153,7 @@ function mapRawToDashboard(raw: BackendDashboardSummary): DashboardResponse {
         message: log.message,
       }
     }),
+    logsTotalCount: raw.logs_total_count ?? 0,
   }
 }
 
@@ -159,6 +162,8 @@ function mapRawToDashboard(raw: BackendDashboardSummary): DashboardResponse {
 export interface DashboardFetchParams {
   logs_date?: string
   logs_level?: string
+  logs_page?: number
+  logs_per_page?: number
   cost_model?: string
   cost_time_range?: string
 }

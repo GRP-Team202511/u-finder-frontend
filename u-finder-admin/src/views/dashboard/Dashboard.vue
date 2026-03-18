@@ -41,6 +41,7 @@
         />
         <SystemLogsPreviewCard
           :logs="dashboardData?.systemLogs ?? []"
+          :logs-total-count="dashboardData?.logsTotalCount ?? 0"
           @filter-change="handleLogFilterChange"
         />
       </div>
@@ -82,7 +83,12 @@ async function loadDashboard() {
   }
 }
 
-function handleLogFilterChange(params: { logs_date?: string; logs_level?: string }) {
+function handleLogFilterChange(params: {
+  logs_date?: string
+  logs_level?: string
+  logs_page?: number
+  logs_per_page?: number
+}) {
   filters.value = { ...filters.value, ...params }
   loadDashboard()
 }
