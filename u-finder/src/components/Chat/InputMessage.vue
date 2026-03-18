@@ -38,7 +38,9 @@ const handleKeydown = (event: KeyboardEvent) => {
 	if (event.key === "Enter" && !event.shiftKey) {
 		// Prevent send during IME composition (covers old Safari via ref flag,
 		// modern browsers via event.isComposing)
-		if (event.isComposing || composing.value) return;
+		// Although keyCode has been deprecated, Safari has compatibility issue,
+		// so we still have to use it
+		if (event.isComposing || composing.value || event.keyCode == 229) return;
 		event.preventDefault();
 		if (props.isSending) {
 			emit("stop");
