@@ -23,6 +23,8 @@
         "signup": "注册账户",
         "unauth": "密码不正确",
         "not_found": "该账户不存在",
+        "forbidden": "您的账户已被封禁，请联系客服或管理员。",
+        "error": "登录失败，请稍后重试。",
         "reset": {
             "title": "重置密码",
             "description": "使用您的电子邮箱重置密码",

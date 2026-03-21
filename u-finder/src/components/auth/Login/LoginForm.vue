@@ -81,6 +81,8 @@ const handleLogin = async() => {
       console.log("User not found")
       notFound.value = true
       toast.error(t("login.not_found"))
+    } else if (error.response?.status === 403 || error.response?.status === 423) {
+      toast.error(t("login.forbidden"))
     } else if (error.response?.status === 422) {
       const details = error?.response?.data?.detail as ValidationDetail[] | undefined
       if (Array.isArray(details)) {
@@ -97,6 +99,7 @@ const handleLogin = async() => {
       toast.error(t("login.unprocessable"))
     } else {
       console.error("Login error:", error)
+      toast.error(t("login.error"))
     }
   } finally {
     logging.value = false
