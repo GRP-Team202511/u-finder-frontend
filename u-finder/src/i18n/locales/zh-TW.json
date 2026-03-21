@@ -23,6 +23,8 @@
         "signup": "註冊帳戶",
         "unauth": "密碼不正確",
         "not_found": "該帳戶不存在",
+        "forbidden": "您的帳戶已被封鎖，請聯繫客服或管理員。",
+        "error": "登入失敗，請稍後重試。",
         "reset": {
             "title": "重置密碼",
             "description": "使用您的電子郵箱重置密碼",

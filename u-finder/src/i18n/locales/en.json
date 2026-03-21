@@ -23,6 +23,8 @@
         "unauth": "The password is incorrect",
         "not_found": "The account doesn't exist",
         "unprocessable": "Invalid login input.",
+        "forbidden": "Your account has been blocked. Please contact support or an administrator.",
+        "error": "Login failed. Please try again later.",
         "reset": {
             "title": "Reset Password",
             "description": "Reset password with your email",
