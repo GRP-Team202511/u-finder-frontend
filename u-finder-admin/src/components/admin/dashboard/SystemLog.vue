@@ -1,13 +1,13 @@
 <template>
   <Card class="box-border rounded-[28px] border border-[#dddddd] bg-white p-5">
     <div class="mb-[14px] flex items-center justify-between">
-      <h2 class="m-0 text-[22px] font-extrabold leading-[1.15] text-[#111111]">System Logs Preview</h2>
-      <span class="inline-flex items-center justify-center rounded-full border border-[#d8d8d8] bg-[#f7f7f7] px-[14px] py-[9px] text-xs font-bold text-[#111111]">Live</span>
+      <h2 class="m-0 text-[22px] font-extrabold leading-[1.15] text-[#111111]">{{ t('dashboard.systemLogs.title') }}</h2>
+      <span class="inline-flex items-center justify-center rounded-full border border-[#d8d8d8] bg-[#f7f7f7] px-[14px] py-[9px] text-xs font-bold text-[#111111]">{{ t('dashboard.systemLogs.badge') }}</span>
     </div>
 
     <div class="mb-[14px] grid gap-[14px] md:grid-cols-2">
       <div class="flex flex-col gap-[7px]">
-        <label class="text-[13px] font-medium text-[#6b6b6b]">Date</label>
+        <label class="text-[13px] font-medium text-[#6b6b6b]">{{ t('dashboard.filters.date') }}</label>
         <DropdownMenu v-model:open="isDateMenuOpen">
           <DropdownMenuTrigger as-child>
             <Button variant="outline" class="h-[42px] w-full min-w-0 justify-start rounded-[14px] border border-[#d5d5d5] bg-white px-[14px] text-[13px] text-[#111111]">
@@ -21,16 +21,16 @@
       </div>
 
       <div class="flex flex-col gap-[7px]">
-        <label class="text-[13px] font-medium text-[#6b6b6b]">Level</label>
+        <label class="text-[13px] font-medium text-[#6b6b6b]">{{ t('dashboard.filters.level') }}</label>
         <Select :model-value="selectedLevel" @update:model-value="handleLevelChange">
           <SelectTrigger class="h-[42px] w-full min-w-0 rounded-[14px] border border-[#d5d5d5] bg-white px-[14px] text-[13px] text-[#111111]">
-            <SelectValue />
+            <SelectValue>{{ selectedLevelLabel }}</SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">ALL</SelectItem>
-            <SelectItem value="INFO">INFO</SelectItem>
-            <SelectItem value="WARN">WARN</SelectItem>
-            <SelectItem value="ERROR">ERROR</SelectItem>
+            <SelectItem value="ALL">{{ t('dashboard.systemLogs.levels.all') }}</SelectItem>
+            <SelectItem value="INFO">{{ t('dashboard.systemLogs.levels.info') }}</SelectItem>
+            <SelectItem value="WARN">{{ t('dashboard.systemLogs.levels.warn') }}</SelectItem>
+            <SelectItem value="ERROR">{{ t('dashboard.systemLogs.levels.error') }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -38,7 +38,7 @@
 
     <div class="overflow-hidden rounded-[18px] border border-[#dddddd] bg-white">
       <div v-if="props.logs.length === 0" class="px-[14px] py-[18px] text-[13px] text-[#6b6b6b]">
-        No logs found.
+        {{ t('dashboard.systemLogs.empty') }}
       </div>
 
       <div
@@ -48,7 +48,7 @@
       >
         <div class="text-[13px] text-[#222222]">{{ log.time }}</div>
         <div class="flex items-center">
-          <span class="inline-flex min-w-[58px] items-center justify-center rounded-full border border-[#d7d7d7] bg-[#f7f7f7] px-2.5 py-[5px] text-xs text-[#222222]">{{ log.level }}</span>
+          <span class="inline-flex min-w-[58px] items-center justify-center rounded-full border border-[#d7d7d7] bg-[#f7f7f7] px-2.5 py-[5px] text-xs text-[#222222]">{{ t(`dashboard.systemLogs.levels.${log.level.toLowerCase()}`) }}</span>
         </div>
         <div class="text-[13px] leading-[1.35] text-[#222222]">{{ log.message }}</div>
       </div>
@@ -56,7 +56,7 @@
 
     <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-2 text-xs text-[#666666]">
-        <span>Rows per page</span>
+        <span>{{ t('dashboard.pagination.rowsPerPage') }}</span>
         <Select :model-value="String(rowsPerPage)" @update:model-value="handleRowsPerPageChange">
           <SelectTrigger class="h-[34px] min-w-16 text-xs">
             <SelectValue />
@@ -70,7 +70,7 @@
       </div>
 
       <div class="text-xs text-[#666666]">
-        Page {{ currentPage }} of {{ totalPages }}
+        {{ t('dashboard.pagination.pageOf', { page: currentPage, total: totalPages }) }}
       </div>
 
       <div class="flex items-center gap-1.5">
@@ -94,11 +94,14 @@
 import { parseDate } from '@internationalized/date'
 import type { AcceptableValue } from 'reka-ui'
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Calendar } from '@/components/ui/calendar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
+const { t } = useI18n()
 
 export interface LogItem {
   date: string
@@ -132,6 +135,13 @@ const isDateMenuOpen = ref(false)
 const selectedLevel = ref<'ALL' | 'INFO' | 'WARN' | 'ERROR'>('ALL')
 const currentPage = ref(1)
 const rowsPerPage = ref(10)
+
+const selectedLevelLabel = computed(() => {
+  if (selectedLevel.value === 'INFO') return t('dashboard.systemLogs.levels.info')
+  if (selectedLevel.value === 'WARN') return t('dashboard.systemLogs.levels.warn')
+  if (selectedLevel.value === 'ERROR') return t('dashboard.systemLogs.levels.error')
+  return t('dashboard.systemLogs.levels.all')
+})
 
 const totalPages = computed(() =>
   props.logsTotalCount === 0 ? 0 : Math.ceil(props.logsTotalCount / rowsPerPage.value)

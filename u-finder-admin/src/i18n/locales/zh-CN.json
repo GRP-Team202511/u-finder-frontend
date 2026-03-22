@@ -14,6 +14,8 @@
     "twoFactorRequired": "需要进行两步验证",
     "unauth": "密码不正确",
     "not_found": "该账户不存在",
+    "invalid_credentials": "账号或密码错误",
+    "blocked": "你的账户已被封禁",
     "unprocessable": "登录输入无效。",
     "reset": {
       "title": "重置密码",
@@ -207,6 +209,106 @@
     }
   },
   "dashboard": {
-    "title": "数据看板"
+    "title": "数据看板",
+    "page": {
+      "title": "数据看板",
+      "subtitle": "用户、会话、成本使用与系统活动总览。",
+      "refresh": "刷新",
+      "loading": "正在加载看板...",
+      "loadError": "加载看板失败"
+    },
+    "summary": {
+      "totalUsers": "总用户数",
+      "llmCostToday": "LLM 成本（今日）"
+    },
+    "filters": {
+      "sortBy": "排序依据",
+      "model": "模型",
+      "timeRange": "时间范围",
+      "date": "日期",
+      "level": "级别",
+      "sortOptions": {
+        "name": "名称",
+        "plan": "计划",
+        "status": "状态",
+        "id": "ID"
+      },
+      "orderOptions": {
+        "asc": "升序",
+        "desc": "降序"
+      }
+    },
+    "pagination": {
+      "rowsPerPage": "每页行数",
+      "pageOf": "第 {page} 页 / 共 {total} 页"
+    },
+    "recentUsers": {
+      "title": "最近用户",
+      "subtitle": "快速查看用户页面、状态与最近活跃时间。",
+      "searchPlaceholder": "搜索用户...",
+      "empty": "未找到匹配用户。",
+      "confirmDelete": "你确定要永久删除该用户吗？",
+      "table": {
+        "user": "用户",
+        "plan": "计划",
+        "status": "状态",
+        "created": "创建时间",
+        "actions": "操作"
+      },
+      "actions": {
+        "block": "封禁",
+        "unblock": "解封",
+        "delete": "删除"
+      },
+      "roles": {
+        "1": "用户",
+        "2": "专业用户",
+        "3": "管理员",
+        "4": "超级管理员",
+        "unknown": "未知"
+      },
+      "statuses": {
+        "active": "正常",
+        "blocked": "已封禁",
+        "unknown": "未知"
+      },
+      "toasts": {
+        "loadFailed": "加载用户失败",
+        "userBlocked": "用户已封禁",
+        "blockFailed": "封禁用户失败",
+        "userUnblocked": "用户已解封",
+        "unblockFailed": "解封用户失败",
+        "userDeleted": "用户已删除",
+        "deleteFailed": "删除用户失败"
+      }
+    },
+    "modelCost": {
+      "title": "模型成本快照",
+      "badge": "今天",
+      "totalRequests": "总请求数",
+      "avgLatency": "平均延迟",
+      "estimatedCost": "预估成本",
+      "tokens": "tokens",
+      "models": {
+        "chat": "聊天",
+        "cvParsing": "简历解析"
+      },
+      "timeRanges": {
+        "last24h": "24 小时",
+        "last7d": "7 天",
+        "last30d": "30 天"
+      }
+    },
+    "systemLogs": {
+      "title": "系统日志预览",
+      "badge": "实时",
+      "empty": "暂无日志。",
+      "levels": {
+        "all": "全部",
+        "info": "信息",
+        "warn": "警告",
+        "error": "错误"
+      }
+    }
   }
 }

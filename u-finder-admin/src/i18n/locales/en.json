@@ -14,6 +14,8 @@
     "twoFactorRequired": "Two-factor verification required",
     "unauth": "The password is incorrect",
     "not_found": "The account doesn't exist",
+    "invalid_credentials": "Invalid email or password",
+    "blocked": "Your account has been blocked",
     "unprocessable": "Invalid login input.",
     "reset": {
       "title": "Reset Password",
@@ -207,6 +209,106 @@
     }
   },
   "dashboard": {
-    "title": "Dashboard"
+    "title": "Dashboard",
+    "page": {
+      "title": "Dashboard",
+      "subtitle": "Overview of users, sessions, cost usage, and system activity.",
+      "refresh": "Refresh",
+      "loading": "Loading dashboard...",
+      "loadError": "Failed to load dashboard"
+    },
+    "summary": {
+      "totalUsers": "Total Users",
+      "llmCostToday": "LLM Cost (Today)"
+    },
+    "filters": {
+      "sortBy": "Sort by",
+      "model": "Model",
+      "timeRange": "Time Range",
+      "date": "Date",
+      "level": "Level",
+      "sortOptions": {
+        "name": "Name",
+        "plan": "Plan",
+        "status": "Status",
+        "id": "ID"
+      },
+      "orderOptions": {
+        "asc": "Ascending",
+        "desc": "Descending"
+      }
+    },
+    "pagination": {
+      "rowsPerPage": "Rows per page",
+      "pageOf": "Page {page} of {total}"
+    },
+    "recentUsers": {
+      "title": "Recent Users",
+      "subtitle": "Quick view for checking user pages, status, and last active time.",
+      "searchPlaceholder": "Search users...",
+      "empty": "No matching users found.",
+      "confirmDelete": "Are you sure you want to permanently delete this user?",
+      "table": {
+        "user": "User",
+        "plan": "Plan",
+        "status": "Status",
+        "created": "Created",
+        "actions": "Actions"
+      },
+      "actions": {
+        "block": "Block",
+        "unblock": "Unblock",
+        "delete": "Delete"
+      },
+      "roles": {
+        "1": "User",
+        "2": "Pro User",
+        "3": "Admin",
+        "4": "Super Admin",
+        "unknown": "Unknown"
+      },
+      "statuses": {
+        "active": "Active",
+        "blocked": "Blocked",
+        "unknown": "Unknown"
+      },
+      "toasts": {
+        "loadFailed": "Failed to load users",
+        "userBlocked": "User blocked",
+        "blockFailed": "Failed to block user",
+        "userUnblocked": "User unblocked",
+        "unblockFailed": "Failed to unblock user",
+        "userDeleted": "User deleted",
+        "deleteFailed": "Failed to delete user"
+      }
+    },
+    "modelCost": {
+      "title": "Model Cost Snapshot",
+      "badge": "Today",
+      "totalRequests": "Total Requests",
+      "avgLatency": "avg latency",
+      "estimatedCost": "Estimated Cost",
+      "tokens": "tokens",
+      "models": {
+        "chat": "Chat",
+        "cvParsing": "CV Parsing"
+      },
+      "timeRanges": {
+        "last24h": "24 hours",
+        "last7d": "7 days",
+        "last30d": "30 days"
+      }
+    },
+    "systemLogs": {
+      "title": "System Logs Preview",
+      "badge": "Live",
+      "empty": "No logs found.",
+      "levels": {
+        "all": "ALL",
+        "info": "INFO",
+        "warn": "WARN",
+        "error": "ERROR"
+      }
+    }
   }
 }

@@ -1,34 +1,34 @@
 <template>
   <Card class="box-border rounded-[28px] border border-[#dddddd] bg-white p-5">
     <div class="mb-[18px] flex items-center justify-between">
-      <h2 class="m-0 text-[22px] font-extrabold leading-[1.15] text-[#111111]">Model Cost Snapshot</h2>
-      <span class="inline-flex items-center justify-center rounded-full border border-[#d8d8d8] bg-[#f7f7f7] px-[14px] py-[9px] text-xs font-bold text-[#111111]">Today</span>
+      <h2 class="m-0 text-[22px] font-extrabold leading-[1.15] text-[#111111]">{{ t('dashboard.modelCost.title') }}</h2>
+      <span class="inline-flex items-center justify-center rounded-full border border-[#d8d8d8] bg-[#f7f7f7] px-[14px] py-[9px] text-xs font-bold text-[#111111]">{{ t('dashboard.modelCost.badge') }}</span>
     </div>
 
     <div class="mb-[14px] grid gap-[14px] md:grid-cols-2">
       <div class="flex flex-col gap-[7px]">
-        <label class="text-[13px] font-medium text-[#6b6b6b]">Model</label>
+        <label class="text-[13px] font-medium text-[#6b6b6b]">{{ t('dashboard.filters.model') }}</label>
         <Select :model-value="selectedModel" @update:model-value="handleModelChange">
           <SelectTrigger class="h-[42px] w-full min-w-0 text-[13px]">
-            <SelectValue />
+            <SelectValue>{{ selectedModelLabel }}</SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="chat">Chat</SelectItem>
-            <SelectItem value="cv_parsing">CV Parsing</SelectItem>
+            <SelectItem value="chat">{{ t('dashboard.modelCost.models.chat') }}</SelectItem>
+            <SelectItem value="cv_parsing">{{ t('dashboard.modelCost.models.cvParsing') }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div class="flex flex-col gap-[7px]">
-        <label class="text-[13px] font-medium text-[#6b6b6b]">Time Range</label>
+        <label class="text-[13px] font-medium text-[#6b6b6b]">{{ t('dashboard.filters.timeRange') }}</label>
         <Select :model-value="selectedRange" @update:model-value="handleRangeChange">
           <SelectTrigger class="h-[42px] w-full min-w-0 text-[13px]">
-            <SelectValue />
+            <SelectValue>{{ selectedRangeLabel }}</SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="last_24h">24 hours</SelectItem>
-            <SelectItem value="last_7d">7 days</SelectItem>
-            <SelectItem value="last_1m">30 days</SelectItem>
+            <SelectItem value="last_24h">{{ t('dashboard.modelCost.timeRanges.last24h') }}</SelectItem>
+            <SelectItem value="last_7d">{{ t('dashboard.modelCost.timeRanges.last7d') }}</SelectItem>
+            <SelectItem value="last_1m">{{ t('dashboard.modelCost.timeRanges.last30d') }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -36,15 +36,15 @@
 
     <div class="mb-[14px] grid gap-[14px] md:grid-cols-2">
       <div class="box-border min-h-[112px] rounded-[18px] border border-[#dddddd] p-[18px]">
-        <div class="mb-2 text-[13px] text-[#6b6b6b]">Total Requests</div>
+        <div class="mb-2 text-[13px] text-[#6b6b6b]">{{ t('dashboard.modelCost.totalRequests') }}</div>
         <div class="mb-2 text-[28px] font-extrabold leading-[1.05] text-[#111111]">{{ formattedRequests }}</div>
-        <div class="text-xs leading-[1.35] text-[#6b6b6b]">avg latency: {{ props.modelCost?.avgLatency ?? '0s' }}</div>
+        <div class="text-xs leading-[1.35] text-[#6b6b6b]">{{ t('dashboard.modelCost.avgLatency') }}: {{ props.modelCost?.avgLatency ?? '0s' }}</div>
       </div>
 
       <div class="box-border min-h-[112px] rounded-[18px] border border-[#dddddd] p-[18px]">
-        <div class="mb-2 text-[13px] text-[#6b6b6b]">Estimated Cost</div>
+        <div class="mb-2 text-[13px] text-[#6b6b6b]">{{ t('dashboard.modelCost.estimatedCost') }}</div>
         <div class="mb-2 text-[28px] font-extrabold leading-[1.05] text-[#111111]">{{ formattedCost }}</div>
-        <div class="text-xs leading-[1.35] text-[#6b6b6b]">tokens: {{ props.modelCost?.tokens ?? '0' }}</div>
+        <div class="text-xs leading-[1.35] text-[#6b6b6b]">{{ t('dashboard.modelCost.tokens') }}: {{ props.modelCost?.tokens ?? '0' }}</div>
       </div>
     </div>
 
@@ -54,8 +54,11 @@
 <script setup lang="ts">
 import type { AcceptableValue } from 'reka-ui'
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Card } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
+const { t } = useI18n()
 
 export interface ModelCostData {
   selectedModel: string
@@ -76,6 +79,17 @@ const emit = defineEmits<{
 
 const selectedModel = ref('chat')
 const selectedRange = ref('last_24h')
+
+const selectedModelLabel = computed(() => {
+  if (selectedModel.value === 'cv_parsing') return t('dashboard.modelCost.models.cvParsing')
+  return t('dashboard.modelCost.models.chat')
+})
+
+const selectedRangeLabel = computed(() => {
+  if (selectedRange.value === 'last_7d') return t('dashboard.modelCost.timeRanges.last7d')
+  if (selectedRange.value === 'last_1m') return t('dashboard.modelCost.timeRanges.last30d')
+  return t('dashboard.modelCost.timeRanges.last24h')
+})
 
 const formattedRequests = computed(() => {
   const total = props.modelCost?.totalRequests ?? 0

@@ -14,6 +14,8 @@
     "twoFactorRequired": "需要進行兩步驟驗證",
     "unauth": "密碼不正確",
     "not_found": "該帳戶不存在",
+    "invalid_credentials": "帳號或密碼錯誤",
+    "blocked": "你的帳戶已被封禁",
     "unprocessable": "登入輸入無效。",
     "reset": {
       "title": "重置密碼",
@@ -207,6 +209,106 @@
     }
   },
   "dashboard": {
-    "title": "數據看板"
+    "title": "數據看板",
+    "page": {
+      "title": "數據看板",
+      "subtitle": "使用者、工作階段、成本使用與系統活動總覽。",
+      "refresh": "重新整理",
+      "loading": "正在載入看板...",
+      "loadError": "載入看板失敗"
+    },
+    "summary": {
+      "totalUsers": "總使用者數",
+      "llmCostToday": "LLM 成本（今日）"
+    },
+    "filters": {
+      "sortBy": "排序依據",
+      "model": "模型",
+      "timeRange": "時間範圍",
+      "date": "日期",
+      "level": "等級",
+      "sortOptions": {
+        "name": "名稱",
+        "plan": "方案",
+        "status": "狀態",
+        "id": "ID"
+      },
+      "orderOptions": {
+        "asc": "升冪",
+        "desc": "降冪"
+      }
+    },
+    "pagination": {
+      "rowsPerPage": "每頁列數",
+      "pageOf": "第 {page} 頁 / 共 {total} 頁"
+    },
+    "recentUsers": {
+      "title": "最近使用者",
+      "subtitle": "快速查看使用者頁面、狀態與最近活動時間。",
+      "searchPlaceholder": "搜尋使用者...",
+      "empty": "找不到符合條件的使用者。",
+      "confirmDelete": "你確定要永久刪除此使用者嗎？",
+      "table": {
+        "user": "使用者",
+        "plan": "方案",
+        "status": "狀態",
+        "created": "建立時間",
+        "actions": "操作"
+      },
+      "actions": {
+        "block": "封鎖",
+        "unblock": "解除封鎖",
+        "delete": "刪除"
+      },
+      "roles": {
+        "1": "使用者",
+        "2": "專業使用者",
+        "3": "管理員",
+        "4": "超級管理員",
+        "unknown": "未知"
+      },
+      "statuses": {
+        "active": "正常",
+        "blocked": "已封鎖",
+        "unknown": "未知"
+      },
+      "toasts": {
+        "loadFailed": "載入使用者失敗",
+        "userBlocked": "使用者已封鎖",
+        "blockFailed": "封鎖使用者失敗",
+        "userUnblocked": "使用者已解除封鎖",
+        "unblockFailed": "解除封鎖使用者失敗",
+        "userDeleted": "使用者已刪除",
+        "deleteFailed": "刪除使用者失敗"
+      }
+    },
+    "modelCost": {
+      "title": "模型成本快照",
+      "badge": "今天",
+      "totalRequests": "總請求數",
+      "avgLatency": "平均延遲",
+      "estimatedCost": "預估成本",
+      "tokens": "tokens",
+      "models": {
+        "chat": "聊天",
+        "cvParsing": "履歷解析"
+      },
+      "timeRanges": {
+        "last24h": "24 小時",
+        "last7d": "7 天",
+        "last30d": "30 天"
+      }
+    },
+    "systemLogs": {
+      "title": "系統日誌預覽",
+      "badge": "即時",
+      "empty": "暫無日誌。",
+      "levels": {
+        "all": "全部",
+        "info": "資訊",
+        "warn": "警告",
+        "error": "錯誤"
+      }
+    }
   }
 }
