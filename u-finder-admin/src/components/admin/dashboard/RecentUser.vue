@@ -171,9 +171,10 @@ import { useAdminStore } from '@/stores/adminStore'
 const adminStore = useAdminStore()
 
 const USER_TYPE_MAP: Record<string, string> = {
-  '1': 'Student',
-  '2': 'Institution',
+  '1': 'User',
+  '2': 'Pro User',
   '3': 'Admin',
+  '4': 'Super Admin',
 }
 
 interface UserRow {
