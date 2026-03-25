@@ -634,20 +634,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<!-- flex-1 main + shrink-0 footer keeps the composer at the bottom in empty and non-empty states -->
-	<div class="flex h-dvh w-full min-h-0 flex-col gap-2 p-2">
+	<!-- relative + absolute hero: vertical center of the full panel, independent of footer / textarea height -->
+	<div class="relative flex h-dvh w-full min-h-0 flex-col gap-2 p-2">
 		<div class="flex min-h-0 flex-1 flex-col">
-			<div
-				v-if="!messages.length"
-				class="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 text-center"
-			>
-				<header class="space-y-1">
-					<h1 class="text-3xl font-bold">{{ t("chat.title") }}</h1>
-					<p class="text-m text-muted-foreground">
-						{{ t("chat.tagline") }}
-					</p>
-				</header>
-			</div>
+			<!-- Empty chat: only a flex spacer so the composer stays at the bottom -->
+			<div v-if="!messages.length" class="min-h-0 flex-1" />
 
 			<div v-else class="flex min-h-0 flex-1 flex-col pt-8">
 				<ChatWindow
@@ -658,7 +649,20 @@ onBeforeUnmount(() => {
 			</div>
 		</div>
 
-		<div class="shrink-0 pb-4 pt-1">
+		<!-- Viewport-panel center (top-1/2 of this h-dvh shell), not the flex slot above the footer -->
+		<div
+			v-if="!messages.length"
+			class="pointer-events-none absolute inset-x-2 top-1/2 z-0 flex -translate-y-1/2 justify-center text-center"
+		>
+			<header class="pointer-events-auto space-y-1 px-2">
+				<h1 class="text-3xl font-bold">{{ t("chat.title") }}</h1>
+				<p class="text-m text-muted-foreground">
+					{{ t("chat.tagline") }}
+				</p>
+			</header>
+		</div>
+
+		<div class="relative z-10 shrink-0 pb-4 pt-1">
 			<MessageInput
 				:disabled="isSending"
 				:is-sending="isSending"

@@ -115,24 +115,24 @@ const stop = () => {
 										v-if="!isSending"
 										type="submit"
 										variant="default"
-										size="icon-xs"
+										size="icon-sm"
 										class="rounded-full"
 										:disabled="disabled || !draft.trim()"
 									>
-										<ArrowUp class="size-4" />
+										<ArrowUp class="size-5" />
 										<span class="sr-only">{{ t("chat.input.send") }}</span>
 									</InputGroupButton>
 									<InputGroupButton
 										v-else
 										type="button"
 										variant="default"
-										size="icon-xs"
+										size="icon-sm"
 										class="rounded-full"
 										:disabled="stopDisabled"
 										:aria-label="t('chat.input.stop')"
 										@click="stop"
 									>
-										<CircleStop class="size-4" />
+										<CircleStop class="size-5" />
 									</InputGroupButton>
 								</div>
 							</InputGroupAddon>
