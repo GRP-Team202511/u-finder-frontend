@@ -96,7 +96,7 @@ const stop = () => {
 						<div
 							class="flex w-full min-w-0 flex-col rounded-2xl border border-border/40 bg-muted/35 shadow-[0_6px_24px_-6px_rgba(0,0,0,0.07)] dark:border-border/40 dark:bg-muted/20 dark:shadow-[0_8px_28px_-8px_rgba(0,0,0,0.32)]"
 						>
-							<div class="w-full min-w-0 px-2.5 pb-2 pt-1.5">
+							<div class="w-full min-w-0 px-4 pb-2 pt-1.5 sm:px-5">
 								<InputGroup
 									class="w-full min-w-0 border-0 bg-transparent text-base shadow-none has-[>[data-align=block-end]]:[&>textarea]:pt-2 has-[[data-slot=input-group-control]:focus-visible]:border-transparent has-[[data-slot=input-group-control]:focus-visible]:shadow-none has-[[data-slot=input-group-control]:focus-visible]:ring-0 has-[[data-slot=input-group-control]:focus-visible]:ring-offset-0 dark:bg-transparent"
 									:data-disabled="disabled ? 'true' : undefined"
@@ -107,7 +107,7 @@ const stop = () => {
 										:disabled="disabled"
 										rows="1"
 										enterkeyhint="send"
-										class="min-h-12 max-h-[calc(6lh+1rem)] overflow-y-auto px-0.5 py-2 text-base md:text-base leading-snug placeholder:text-base focus-visible:border-transparent focus-visible:shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+										class="min-h-12 max-h-[calc(6lh+1rem)] overflow-y-auto px-0 py-2 text-base md:text-base leading-snug placeholder:text-base focus-visible:border-transparent focus-visible:shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
 										@keydown="handleKeydown"
 										@compositionstart="() => (composing = true)"
 										@compositionend="() => (composing = false)"
