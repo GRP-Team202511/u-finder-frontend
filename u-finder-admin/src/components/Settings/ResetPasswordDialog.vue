@@ -17,8 +17,10 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp
 import { Spinner } from '@/components/ui/spinner'
 import { AlertTriangle } from 'lucide-vue-next'
 import { resetPassword, verifyResetPassword, resendResetPasswordCode, getUserInfo } from '@/api/adminApi'
+import { useAdminStore } from '@/stores/adminStore'
 
 const { t } = useI18n()
+const adminStore = useAdminStore()
 
 const props = defineProps<{
   open: boolean
@@ -31,6 +33,7 @@ const emit = defineEmits<{
 
 // Form state
 const email = ref('')
+const emailReadonly = ref(false)
 const newPassword = ref('')
 const confirmPassword = ref('')
 const otpCode = ref('')
@@ -64,7 +67,8 @@ watch(otpCode, (newValue) => {
 
 function resetDialog() {
   currentStep.value = 1
-  email.value = ''
+  email.value = adminStore.admin?.email ?? ''
+  emailReadonly.value = !!email.value
   newPassword.value = ''
   confirmPassword.value = ''
   otpCode.value = ''
@@ -84,13 +88,20 @@ const fetchUserEmail = async () => {
   isLoadingEmail.value = true
   try {
     const response = await getUserInfo()
-    email.value = response.data.email
+    if (response.data.email) {
+      email.value = response.data.email
+      emailReadonly.value = true
+    }
   } catch (error: any) {
     console.error('Failed to fetch user info:', error)
-    toast.error(t('settings.account.fetchUserInfoError'))
-    // Close dialog if we can't get email
-    emit('update:open', false)
+    if (!email.value) {
+      toast.error(t('settings.account.fetchUserInfoError'))
+      emailReadonly.value = false
+    }
   } finally {
+    if (!email.value) {
+      emailReadonly.value = false
+    }
     isLoadingEmail.value = false
   }
 }
@@ -275,6 +286,12 @@ const resendButtonText = computed(() => {
           <div v-if="isLoadingEmail" class="flex items-center justify-center py-4">
             <Spinner class="size-6" />
           </div>
+          <Input
+            v-else-if="!emailReadonly"
+            v-model="email"
+            type="email"
+            :placeholder="t('login.email')"
+          />
           <div
             v-else
             class="h-9 w-full rounded-md border border-input bg-muted/50 px-3 py-1 text-sm flex items-center"

@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Mail, KeyRound, Shield, RefreshCw, User as UserIcon } from 'lucide-vue-next'
+import { useAdminStore } from '@/stores/adminStore'
 import TwoFactorSetupDialog from './TwoFactorSetupDialog.vue'
 import TwoFactorDisableDialog from './TwoFactorDisableDialog.vue'
 import RegenerateBackupCodesDialog from './RegenerateBackupCodesDialog.vue'
@@ -17,11 +18,11 @@ import DeviceManagementDialog from './DeviceManagementDialog.vue'
 import { get2FAStatus, getUserInfo } from '@/api/adminApi'
 
 const { t } = useI18n()
+const adminStore = useAdminStore()
 
-// User info - TODO: Add email and user type to User interface when available from API
-const userName = ref('')
-const userEmail = ref('')
-const userType = ref<number>(0)
+const userName = ref(adminStore.admin?.name ?? '')
+const userEmail = ref(adminStore.admin?.email ?? '')
+const userType = ref<number | string>(0)
 const userAvatar = ref('') // Placeholder - will be fetched from API
 const isLoadingUserInfo = ref(false)
 
@@ -46,9 +47,11 @@ async function fetchUserInfo() {
   isLoadingUserInfo.value = true
   try {
     const response = await getUserInfo()
-    userName.value = response.data.name
-    userEmail.value = response.data.email
-    userType.value = response.data.user_type
+    if (response.data.name) {
+      userName.value = response.data.name
+    }
+    userEmail.value = response.data.email || adminStore.admin?.email || ''
+    userType.value = response.data.user_type ?? 0
   } catch (error) {
     console.error('Failed to fetch user info:', error)
     toast.error(t('settings.account.fetchUserInfoError'))
@@ -58,10 +61,24 @@ async function fetchUserInfo() {
 }
 
 const userPlanDisplay = computed(() => {
-  if (String(userType.value) === '1') {
+  const normalized = String(userType.value).trim().toLowerCase().replace(/_/g, ' ')
+
+  if (normalized === '1' || normalized === 'free' || normalized === 'user') {
     return t('settings.account.plans.free')
   }
-  // Add more plan types as needed
+
+  if (normalized === '4' || normalized === 'super admin') {
+    return 'Super Admin'
+  }
+
+  if (normalized === '3' || normalized === 'admin') {
+    return 'Admin'
+  }
+
+  if (normalized === '2' || normalized === 'pro' || normalized === 'pro user') {
+    return 'Pro User'
+  }
+
   return String(userType.value)
 })
 
