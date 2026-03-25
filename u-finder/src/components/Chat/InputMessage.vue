@@ -14,7 +14,6 @@ import {
 	InputGroupText,
 	InputGroupTextarea,
 } from "@/components/ui/input-group";
-import { Separator } from "@/components/ui/separator";
 import { ArrowUp, CircleStop } from "lucide-vue-next";
 
 const props = defineProps<{
@@ -123,7 +122,6 @@ const stop = () => {
 											{{ t("chat.input.newlineHint") }}
 										</InputGroupText>
 										<div class="ml-auto flex items-center gap-2">
-											<Separator orientation="vertical" class="h-4!" />
 											<InputGroupButton
 												v-if="!isSending"
 												type="submit"
