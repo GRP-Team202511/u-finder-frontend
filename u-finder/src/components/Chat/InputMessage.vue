@@ -94,7 +94,7 @@ const stop = () => {
 								:disabled="disabled"
 								rows="1"
 								enterkeyhint="send"
-								class="min-h-12 max-h-48 overflow-y-auto text-lg placeholder:text-lg"
+								class="min-h-12 max-h-48 overflow-y-auto"
 								@keydown="handleKeydown"
 								@compositionstart="() => (composing = true)"
 								@compositionend="() => (composing = false)"
