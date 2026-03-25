@@ -635,12 +635,16 @@ onBeforeUnmount(() => {
 
 <template>
 	<!-- relative + absolute hero: vertical center of the full panel, independent of footer / textarea height -->
-	<div class="relative flex h-dvh w-full min-h-0 flex-col gap-2 p-2">
-		<div class="flex min-h-0 flex-1 flex-col">
+	<div class="relative flex h-dvh w-full min-h-0 flex-col gap-0 p-2">
+		<div class="flex min-h-0 w-full min-w-0 flex-1 flex-col">
 			<!-- Empty chat: only a flex spacer so the composer stays at the bottom -->
-			<div v-if="!messages.length" class="min-h-0 flex-1" />
+			<div v-if="!messages.length" class="min-h-0 min-w-0 flex-1" />
 
-			<div v-else class="flex min-h-0 flex-1 flex-col pt-8">
+			<!-- Full-width scroll; fade strip lives on the footer so it aligns with the composer top (no flex gap / pt offset). -->
+			<div
+				v-else
+				class="flex min-h-0 w-full min-w-0 flex-1 flex-col pt-8"
+			>
 				<ChatWindow
 					:messages="messages"
 					:loading-message-id="activeMessageId"
@@ -662,17 +666,24 @@ onBeforeUnmount(() => {
 			</header>
 		</div>
 
-		<div class="relative z-10 shrink-0 pb-4 pt-1">
-			<MessageInput
-				:is-sending="isSending"
-				:stop-disabled="isStopping"
-				:placeholder="t('chat.input.placeholder')"
-				@send="handleSend"
-				@stop="handleStop"
+		<div class="relative z-10 w-full shrink-0 pb-4">
+			<div
+				v-if="messages.length"
+				class="pointer-events-none absolute inset-x-0 top-0 z-1 h-[20px] -translate-y-full bg-linear-to-t from-background to-transparent"
+				aria-hidden="true"
 			/>
-			<p class="mt-2 text-center text-xs text-muted-foreground">
-				{{ t("chat.input.disclaimer") }}
-			</p>
+			<div class="mx-auto w-full max-w-5xl">
+				<MessageInput
+					:is-sending="isSending"
+					:stop-disabled="isStopping"
+					:placeholder="t('chat.input.placeholder')"
+					@send="handleSend"
+					@stop="handleStop"
+				/>
+				<p class="mt-2 text-center text-xs text-muted-foreground">
+					{{ t("chat.input.disclaimer") }}
+				</p>
+			</div>
 		</div>
 	</div>
 </template>
