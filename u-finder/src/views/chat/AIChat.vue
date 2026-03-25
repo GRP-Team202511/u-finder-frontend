@@ -664,7 +664,6 @@ onBeforeUnmount(() => {
 
 		<div class="relative z-10 shrink-0 pb-4 pt-1">
 			<MessageInput
-				:disabled="isSending"
 				:is-sending="isSending"
 				:stop-disabled="isStopping"
 				:placeholder="t('chat.input.placeholder')"

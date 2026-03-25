@@ -53,6 +53,7 @@ const resetHeight = () => {
 };
 
 const submit = () => {
+	if (props.isSending) return;
 	const value = draft.value.trim();
 	if (!value || props.disabled) return;
 	emit("send", value);
@@ -65,6 +66,11 @@ const handleKeydown = (event: KeyboardEvent) => {
 
 	if (event.key === "Enter") {
 		if (event.isComposing || composing.value || event.keyCode === 229) return;
+		// While the model streams, Enter is a no-op (no send, no newline).
+		if (props.isSending) {
+			event.preventDefault();
+			return;
+		}
 		event.preventDefault();
 		submit();
 	}
