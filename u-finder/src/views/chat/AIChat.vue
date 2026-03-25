@@ -634,52 +634,42 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<div class="flex h-dvh w-full flex-col gap-6 p-2">
-		<div
-			v-if="!messages.length"
-			class="flex flex-1 flex-col items-center justify-center gap-6 text-center"
-		>
-			<header class="space-y-1">
-				<h1 class="text-3xl font-bold">{{ t("chat.title") }}</h1>
-				<p class="text-m text-muted-foreground">
-					{{ t("chat.tagline") }}
-				</p>
-			</header>
-
-			<div class="w-full max-w-xl">
-				<MessageInput
-					:disabled="isSending"
-					:is-sending="isSending"
-					:stop-disabled="isStopping"
-					:placeholder="t('chat.input.placeholder')"
-					@send="handleSend"
-					@stop="handleStop"
-				/>
+	<!-- flex-1 main + shrink-0 footer keeps the composer at the bottom in empty and non-empty states -->
+	<div class="flex h-dvh w-full min-h-0 flex-col gap-6 p-2">
+		<div class="flex min-h-0 flex-1 flex-col">
+			<div
+				v-if="!messages.length"
+				class="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 text-center"
+			>
+				<header class="space-y-1">
+					<h1 class="text-3xl font-bold">{{ t("chat.title") }}</h1>
+					<p class="text-m text-muted-foreground">
+						{{ t("chat.tagline") }}
+					</p>
+				</header>
 			</div>
-		</div>
 
-		<div v-else class="flex min-h-0 flex-1 flex-col gap-4">
-			<div class="flex min-h-0 flex-1 pt-8">
+			<div v-else class="flex min-h-0 flex-1 flex-col pt-8">
 				<ChatWindow
 					:messages="messages"
 					:loading-message-id="activeMessageId"
 					:is-sending="isSending"
 				/>
 			</div>
+		</div>
 
-			<div class="pb-4 pt-2">
-				<MessageInput
-					:disabled="isSending"
-					:is-sending="isSending"
-					:stop-disabled="isStopping"
-					:placeholder="t('chat.input.placeholder')"
-					@send="handleSend"
-					@stop="handleStop"
-				/>
-				<p class="mt-2 text-center text-xs text-muted-foreground">
-					{{ t("chat.input.disclaimer") }}
-				</p>
-			</div>
+		<div class="shrink-0 pb-4 pt-2">
+			<MessageInput
+				:disabled="isSending"
+				:is-sending="isSending"
+				:stop-disabled="isStopping"
+				:placeholder="t('chat.input.placeholder')"
+				@send="handleSend"
+				@stop="handleStop"
+			/>
+			<p class="mt-2 text-center text-xs text-muted-foreground">
+				{{ t("chat.input.disclaimer") }}
+			</p>
 		</div>
 	</div>
 </template>
