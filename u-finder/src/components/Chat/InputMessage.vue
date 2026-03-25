@@ -35,17 +35,17 @@ const submit = () => {
 };
 
 const handleKeydown = (event: KeyboardEvent) => {
-	if (event.key === "Enter" && !event.shiftKey) {
-		// Prevent send during IME composition (covers old Safari via ref flag,
-		// modern browsers via event.isComposing)
-		// Although keyCode has been deprecated, Safari has compatibility issue,
-		// so we still have to use it
-		if (event.isComposing || composing.value || event.keyCode == 229) return;
+	// Shift+Enter: let the browser insert a newline naturally (no preventDefault)
+	if (event.key === "Enter" && event.shiftKey) return;
+
+	if (event.key === "Enter") {
+		// Skip send during IME composition to avoid submitting mid-composition.
+		// event.isComposing covers modern browsers; composing ref + keyCode 229
+		// covers old Safari where isComposing is unreliable.
+		if (event.isComposing || composing.value || event.keyCode === 229) return;
+
+		// Prevent the default newline so Enter always means "send"
 		event.preventDefault();
-		if (props.isSending) {
-			emit("stop");
-			return;
-		}
 		submit();
 	}
 };
