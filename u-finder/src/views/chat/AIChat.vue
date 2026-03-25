@@ -635,7 +635,7 @@ onBeforeUnmount(() => {
 
 <template>
 	<!-- flex-1 main + shrink-0 footer keeps the composer at the bottom in empty and non-empty states -->
-	<div class="flex h-dvh w-full min-h-0 flex-col gap-6 p-2">
+	<div class="flex h-dvh w-full min-h-0 flex-col gap-2 p-2">
 		<div class="flex min-h-0 flex-1 flex-col">
 			<div
 				v-if="!messages.length"
@@ -658,7 +658,7 @@ onBeforeUnmount(() => {
 			</div>
 		</div>
 
-		<div class="shrink-0 pb-4 pt-2">
+		<div class="shrink-0 pb-4 pt-1">
 			<MessageInput
 				:disabled="isSending"
 				:is-sending="isSending"
