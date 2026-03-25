@@ -14,7 +14,7 @@ import {
 	InputGroupText,
 	InputGroupTextarea,
 } from "@/components/ui/input-group";
-import { ArrowUp, CircleStop } from "lucide-vue-next";
+import { ArrowUp } from "lucide-vue-next";
 
 const props = defineProps<{
 	placeholder?: string;
@@ -143,7 +143,10 @@ const stop = () => {
 												:aria-label="t('chat.input.stop')"
 												@click="stop"
 											>
-												<CircleStop class="size-5" />
+												<span
+													class="pointer-events-none block size-2.5 shrink-0 rounded-[2px] bg-current"
+													aria-hidden="true"
+												/>
 											</InputGroupButton>
 										</div>
 									</InputGroupAddon>
