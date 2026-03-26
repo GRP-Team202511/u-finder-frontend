@@ -45,15 +45,21 @@ watch(
 </script>
 
 <template>
-	<section class="no-scrollbar min-h-0 flex-1 overflow-y-auto">
-		<div class="flex flex-col gap-3">
-			<ChatMessage
-				v-for="message in messages"
-				:key="message.id"
-				:message="message"
-				:is-loading="Boolean(props.isSending && props.loadingMessageId === message.id)"
-			/>
-			<div ref="bottomEl" />
+	<!-- Full-width scrollport so the entire pane width scrolls (flex-safe: min-w-0). -->
+	<section
+		class="no-scrollbar min-h-0 w-full min-w-0 flex-1 overflow-y-auto overscroll-contain"
+	>
+		<!-- Narrow column for bubbles; section above stays full width so wheel/trackpad scroll works on margins. -->
+		<div class="mx-auto w-full max-w-5xl min-w-0">
+			<div class="flex w-full min-w-0 flex-col gap-3">
+				<ChatMessage
+					v-for="message in messages"
+					:key="message.id"
+					:message="message"
+					:is-loading="Boolean(props.isSending && props.loadingMessageId === message.id)"
+				/>
+				<div ref="bottomEl" />
+			</div>
 		</div>
 	</section>
 </template>

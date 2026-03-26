@@ -614,6 +614,8 @@
             "label": "Message",
             "placeholder": "Chat with U-Finder...",
             "stop": "Stop generating",
+            "newlineHint": "Shift + Enter for new line",
+            "send": "Send",
             "disclaimer": "U-Finder can make mistakes. Check important info."
         },
         "errors": {

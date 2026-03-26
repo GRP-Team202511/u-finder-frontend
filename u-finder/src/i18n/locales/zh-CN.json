@@ -489,6 +489,8 @@
             "label": "消息",
             "placeholder": "与 U-Finder 聊天...",
             "stop": "停止生成",
+            "newlineHint": "Shift + Enter 换行",
+            "send": "发送",
             "disclaimer": "U-Finder 可能会出错。请核实重要信息。"
         },
         "errors": {

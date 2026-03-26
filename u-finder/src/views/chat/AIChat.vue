@@ -634,42 +634,46 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<div class="flex h-dvh w-full flex-col gap-6 p-2">
-		<div
-			v-if="!messages.length"
-			class="flex flex-1 flex-col items-center justify-center gap-6 text-center"
-		>
-			<header class="space-y-1">
-				<h1 class="text-3xl font-bold">{{ t("chat.title") }}</h1>
-				<p class="text-m text-muted-foreground">
-					{{ t("chat.tagline") }}
-				</p>
-			</header>
+	<!-- relative + absolute hero: vertical center of the full panel, independent of footer / textarea height -->
+	<div class="relative flex h-dvh w-full min-h-0 flex-col gap-0 p-2">
+		<div class="flex min-h-0 w-full min-w-0 flex-1 flex-col">
+			<!-- Empty chat: only a flex spacer so the composer stays at the bottom -->
+			<div v-if="!messages.length" class="min-h-0 min-w-0 flex-1" />
 
-			<div class="w-full max-w-xl">
-				<MessageInput
-					:disabled="isSending"
-					:is-sending="isSending"
-					:stop-disabled="isStopping"
-					:placeholder="t('chat.input.placeholder')"
-					@send="handleSend"
-					@stop="handleStop"
-				/>
-			</div>
-		</div>
-
-		<div v-else class="flex min-h-0 flex-1 flex-col gap-4">
-			<div class="flex min-h-0 flex-1 pt-8">
+			<!-- Full-width scroll; fade strip lives on the footer so it aligns with the composer top (no flex gap / pt offset). -->
+			<div
+				v-else
+				class="flex min-h-0 w-full min-w-0 flex-1 flex-col pt-8"
+			>
 				<ChatWindow
 					:messages="messages"
 					:loading-message-id="activeMessageId"
 					:is-sending="isSending"
 				/>
 			</div>
+		</div>
 
-			<div class="pb-4 pt-2">
+		<!-- Viewport-panel center (top-1/2 of this h-dvh shell), not the flex slot above the footer -->
+		<div
+			v-if="!messages.length"
+			class="pointer-events-none absolute inset-x-2 top-1/2 z-0 flex -translate-y-1/2 justify-center text-center"
+		>
+			<header class="pointer-events-auto space-y-1 px-2">
+				<h1 class="text-3xl font-bold">{{ t("chat.title") }}</h1>
+				<p class="text-m text-muted-foreground">
+					{{ t("chat.tagline") }}
+				</p>
+			</header>
+		</div>
+
+		<div class="relative z-10 w-full shrink-0 pb-4">
+			<div
+				v-if="messages.length"
+				class="pointer-events-none absolute inset-x-0 top-0 z-1 h-[20px] -translate-y-full bg-linear-to-t from-background to-transparent"
+				aria-hidden="true"
+			/>
+			<div class="mx-auto w-full max-w-5xl">
 				<MessageInput
-					:disabled="isSending"
 					:is-sending="isSending"
 					:stop-disabled="isStopping"
 					:placeholder="t('chat.input.placeholder')"
