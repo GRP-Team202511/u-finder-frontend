@@ -634,8 +634,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<!-- relative + absolute hero: vertical center of the full panel, independent of footer / textarea height -->
-	<div class="relative flex h-dvh w-full min-h-0 flex-col gap-0 p-1 sm:p-2">
+	<!-- relative + absolute hero: vertical center of the available panel, independent of footer / textarea height -->
+	<div class="relative flex h-full w-full min-h-0 min-w-0 flex-col">
 		<div class="flex min-h-0 w-full min-w-0 flex-1 flex-col">
 			<!-- Empty chat: only a flex spacer so the composer stays at the bottom -->
 			<div v-if="!messages.length" class="min-h-0 min-w-0 flex-1" />
@@ -643,7 +643,7 @@ onBeforeUnmount(() => {
 			<!-- Full-width scroll; fade strip lives on the footer so it aligns with the composer top (no flex gap / pt offset). -->
 			<div
 				v-else
-				class="flex min-h-0 w-full min-w-0 flex-1 flex-col pt-8"
+				class="flex min-h-0 w-full min-w-0 flex-1 flex-col pt-4 sm:pt-6"
 			>
 				<ChatWindow
 					:messages="messages"
@@ -653,7 +653,7 @@ onBeforeUnmount(() => {
 			</div>
 		</div>
 
-		<!-- Viewport-panel center (top-1/2 of this h-dvh shell), not the flex slot above the footer -->
+		<!-- Viewport-panel center (top-1/2 of this shell), not the flex slot above the footer -->
 		<div
 			v-if="!messages.length"
 			class="pointer-events-none absolute inset-x-2 top-1/2 z-0 flex -translate-y-1/2 justify-center text-center"
@@ -666,7 +666,7 @@ onBeforeUnmount(() => {
 			</header>
 		</div>
 
-		<div class="relative z-10 w-full shrink-0 pb-3 sm:pb-4">
+		<div class="relative z-10 w-full shrink-0 px-1 pb-3 sm:px-2 sm:pb-4">
 			<div
 				v-if="messages.length"
 				class="pointer-events-none absolute inset-x-0 top-0 z-1 h-[20px] -translate-y-full bg-linear-to-t from-background to-transparent"
