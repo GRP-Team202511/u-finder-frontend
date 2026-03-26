@@ -47,11 +47,11 @@ onBeforeUnmount(() => {
 					class="absolute inset-0 bg-black/50 backdrop-blur-sm"
 					@click.self="emit('close')"
 				/>
-				<div class="relative flex w-full max-w-4xl flex-col gap-4">
-					<div class="max-h-[80vh] overflow-y-auto">
+				<div class="relative z-10 flex h-[min(85vh,760px)] w-full max-w-4xl min-w-0 flex-col overflow-hidden rounded-xl border bg-background shadow-2xl">
+					<div class="min-h-0 flex-1 overflow-y-auto p-3 sm:p-4">
 						<UniversityCard v-if="program" :program="program" />
 					</div>
-					<div class="flex justify-end">
+					<div class="flex justify-end border-t bg-background px-4 py-3">
 						<Button data-dialog-focus variant="outline" @click="emit('close')">
 							{{ t("favourites.actions.close") }}
 						</Button>
