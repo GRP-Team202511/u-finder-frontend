@@ -30,7 +30,7 @@ provide('addNewConversation', (conversationId: string) => {
     <AppSidebar ref="sidebarRef" />
     <SidebarInset>
       <div class="h-full min-h-0 flex-1 overflow-y-auto overscroll-none">
-        <div class="mx-auto w-full max-w-screen-2xl px-8">
+        <div class="mx-auto w-full max-w-screen-2xl px-3 sm:px-4 lg:px-8">
           <router-view />
         </div>
       </div>
