@@ -240,6 +240,7 @@
         }
     },
     "sidebar": {
+        "appName": "U-Finder",
         "newChat": "New Chat",
         "newConversation": "New Conversation",
         "conversations": "Conversations",

@@ -32,12 +32,27 @@ function isItemActive(item: any) {
   return false
 }
 
+const emit = defineEmits<{
+  (e: 'item-click'): void
+}>()
+
+function handleItemClick(item: {
+  action?: () => void
+}, event: MouseEvent) {
+  if (item.action) {
+    event.preventDefault()
+    item.action()
+  }
+  emit('item-click')
+}
+
 defineProps<{
   items: {
     title?: string
     titleKey?: string
     url?: string
     to?: RouteLocationRaw
+    action?: () => void
     icon?: LucideIcon
     isActive?: boolean
     items?: {
@@ -71,7 +86,7 @@ defineProps<{
               <SidebarMenuSub>
                 <SidebarMenuSubItem v-for="subItem in item.items" :key="subItem.title || subItem.titleKey">
                   <SidebarMenuSubButton as-child>
-                    <a :href="subItem.url">
+                    <a :href="subItem.url" @click="emit('item-click')">
                       <span>{{ subItem.titleKey ? t(subItem.titleKey) : subItem.title }}</span>
                     </a>
                   </SidebarMenuSubButton>
@@ -83,7 +98,7 @@ defineProps<{
 
         <SidebarMenuItem v-else>
           <SidebarMenuButton as-child :tooltip="item.title" :isActive="isItemActive(item)">
-            <RouterLink :to="item.to || item.url || '#'" class="flex items-center w-full">
+            <RouterLink :to="item.to || item.url || '#'" class="flex items-center w-full" @click="handleItemClick(item, $event)">
               <component :is="item.icon" v-if="item.icon" class="menu-icon" />
               <span class="menu-label">{{ item.titleKey ? t(item.titleKey) : item.title }}</span>
             </RouterLink>
