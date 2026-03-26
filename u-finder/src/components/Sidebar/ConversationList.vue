@@ -29,6 +29,8 @@ const emit = defineEmits<{
   loadMore: []
   delete: [conversationId: string]
   rename: [conversationId: string, currentName: string]
+  select: [conversationId: string]
+  action: []
 }>()
 
 const { t } = useI18n()
@@ -55,16 +57,19 @@ const handleConversationClick = (conversationId: string) => {
   // Trigger custom event to notify AIChat
   window.dispatchEvent(new CustomEvent('conversation-changed', { detail: { conversationId } }))
   router.push({ name: 'AIChat' })
+  emit('select', conversationId)
 }
 
 const handleDelete = (conversationId: string, event: Event) => {
   event.stopPropagation()
   emit('delete', conversationId)
+  emit('action')
 }
 
 const handleRename = (conversationId: string, currentName: string, event: Event) => {
   event.stopPropagation()
   emit('rename', conversationId, currentName)
+  emit('action')
 }
 
 // Listen to conversation switching event

@@ -367,14 +367,14 @@ onMounted(() => {
   <div ref="cardRef" @focusin="profileEditor?.setActiveEl(cardRef)" :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-left">
-        <div class="flex items-center justify-between gap-4">
-          <CardTitle class="text-3xl font-bold">
+        <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2">
+          <CardTitle class="text-2xl font-bold sm:text-3xl">
             {{ t('internship.title') }}
           </CardTitle>
-          <div v-if="!localEditing">
+          <div v-if="!localEditing" class="flex justify-end">
             <Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
           </div>
-          <div v-else class="flex gap-2">
+          <div v-else class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
             <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
             <Button type="button" @click="save">{{ t('profile.save') }}</Button>
           </div>
@@ -407,7 +407,7 @@ onMounted(() => {
                   />
                 </Field>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field>
                     <FieldLabel :for="`start-${idx}`">{{ t('internship.time.start') }}</FieldLabel>
                       <Popover v-slot="{ close }">
@@ -477,7 +477,7 @@ onMounted(() => {
                     v-model="intern.description"
                     :placeholder="t('internship.placeholders.description') || 'Description'"
                     rows="6"
-                    class="w-full rounded-md border px-3 py-2 text-sm"
+                    class="w-full rounded-md border px-3 py-2 text-base md:text-sm"
                   ></textarea>
                 </Field>
 
@@ -508,7 +508,7 @@ onMounted(() => {
                   <div class="text-sm text-left">{{ intern.role || '-' }}</div>
                 </Field>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field>
                     <FieldLabel>{{ t('internship.time.start') }}</FieldLabel>
                     <div class="text-sm text-left">{{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (intern.time.start || '-') }}</div>

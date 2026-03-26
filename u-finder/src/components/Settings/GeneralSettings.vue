@@ -91,24 +91,24 @@ function navigateToPrivacy() {
       </CardHeader>
       <CardContent class="space-y-4">
         <!-- Theme Mode Selector -->
-        <div class="flex items-center justify-between rounded-lg border p-4">
-          <div class="flex items-center gap-3">
+        <div class="flex flex-col gap-3 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex min-w-0 items-center gap-3">
             <div class="rounded-md bg-muted p-2">
               <Monitor v-if="themeMode === 'system'" class="size-5 text-foreground" />
               <Moon v-else-if="themeMode === 'dark'" class="size-5 text-foreground" />
               <Sun v-else class="size-5 text-foreground" />
             </div>
-            <div class="space-y-0.5">
+            <div class="min-w-0 space-y-0.5">
               <Label class="text-base font-medium">
                 {{ t('settings.general.theme') }}
               </Label>
-              <p class="text-sm text-muted-foreground">
+              <p class="text-sm text-muted-foreground break-words">
                 {{ t('settings.general.themeDesc') }}
               </p>
             </div>
           </div>
           <Select v-model="themeMode">
-            <SelectTrigger class="w-35">
+            <SelectTrigger class="w-full sm:w-35">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -152,29 +152,29 @@ function navigateToPrivacy() {
 
         <!-- Project Info -->
         <div class="space-y-3 rounded-lg border p-4">
-          <div class="flex items-center justify-between">
+          <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <Label class="text-sm text-muted-foreground">{{ t('settings.about.version') }}</Label>
-            <span class="text-sm font-medium">v{{ version }}</span>
+            <span class="text-sm font-medium break-words">v{{ version }}</span>
           </div>
           <Separator />
-          <div class="flex items-center justify-between">
+          <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <Label class="text-sm text-muted-foreground">{{ t('settings.about.license') }}</Label>
-            <span class="text-sm font-medium">Apache 2.0</span>
+            <span class="text-sm font-medium break-words">Apache 2.0</span>
           </div>
           <Separator />
-          <div class="flex items-center justify-between">
+          <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <Label class="text-sm text-muted-foreground">{{ t('settings.about.course') }}</Label>
-            <span class="text-sm font-medium">COMP2043 GRP</span>
+            <span class="text-sm font-medium break-words">COMP2043 GRP</span>
           </div>
           <Separator />
-          <div class="flex items-center justify-between">
+          <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <Label class="text-sm text-muted-foreground">{{ t('settings.about.team') }}</Label>
-            <span class="text-sm font-medium">Team2025.11</span>
+            <span class="text-sm font-medium break-words">Team2025.11</span>
           </div>
           <Separator />
-          <div class="flex items-center justify-between">
+          <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <Label class="text-sm text-muted-foreground">{{ t('settings.about.university') }}</Label>
-            <span class="text-sm font-medium text-right">University of Nottingham Ningbo China</span>
+            <span class="text-sm font-medium break-words text-left sm:text-right">University of Nottingham Ningbo China</span>
           </div>
         </div>
 

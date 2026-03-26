@@ -199,6 +199,14 @@ button:focus-visible {
   body {
     @apply bg-background text-foreground;
     overscroll-behavior: none;
+    width: 100%;
+    min-height: 100%;
+    overflow-x: clip;
+  }
+
+  #app {
+    width: 100%;
+    min-height: 100dvh;
   }
 }
 

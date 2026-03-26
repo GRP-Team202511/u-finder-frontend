@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, computed, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import type { SidebarProps } from "@/components/ui/sidebar"
@@ -23,6 +23,7 @@ import {
   SidebarRail,
   SidebarTrigger,
   SidebarSeparator,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
 import {
@@ -45,7 +46,9 @@ const props = defineProps<SidebarProps>()
 
 const { t } = useI18n()
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
+const { isMobile, setOpenMobile } = useSidebar()
 
 // State
 const conversations = ref<ConversationItem[]>([])
@@ -64,6 +67,13 @@ const newConversationName = ref('')
 
 const navMain = [
   {
+    titleKey: "sidebar.newChat",
+    icon: Plus,
+    action: () => {
+      handleNewChat()
+    },
+  },
+  {
     titleKey: "sidebar.favourite",
     to: { name: 'Favourite' },
     icon: Star,
@@ -74,6 +84,12 @@ const navMain = [
     icon: User,
   },
 ]
+
+const closeMobileSidebar = () => {
+  if (isMobile.value) {
+    setOpenMobile(false)
+  }
+}
 
 const navUser = computed(() => ({
   name: userStore.user?.name,
@@ -134,6 +150,7 @@ const handleNewChat = () => {
   // Trigger custom event to notify AIChat
   window.dispatchEvent(new CustomEvent('conversation-changed', { detail: { conversationId: null } }))
   router.push({ name: 'AIChat' })
+  closeMobileSidebar()
 }
 
 // Handle delete conversation
@@ -216,6 +233,13 @@ onMounted(() => {
   fetchAvatar()
 })
 
+watch(
+  () => route.fullPath,
+  () => {
+    closeMobileSidebar()
+  }
+)
+
 // Expose for parent component
 defineExpose({
   loadConversations,
@@ -225,25 +249,16 @@ defineExpose({
 
 <template>
   <Sidebar v-bind="props" collapsible="icon">
-    <SidebarHeader class="px-3 py-2 flex items-start justify-between">
-      <div class="flex items-center w-full">
-        <SidebarTrigger />
-        <Button
-          variant="ghost"
-          size="sm"
-          class="ml-2 flex items-center gap-2 group-data-[collapsible=icon]:hidden"
-          @click="handleNewChat"
-        >
-          <Plus class="h-4 w-4" />
-          <span>{{ t('sidebar.newChat') }}</span>
-        </Button>
+    <SidebarHeader class="flex items-start justify-between px-3 py-2">
+      <div class="flex w-full items-center">
+        <SidebarTrigger class="hidden md:inline-flex" />
       </div>
     </SidebarHeader>
 
     <SidebarContent class="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <div class="pt-4">
         <!-- Other Navigation Items -->
-        <NavMain :items="navMain" />
+        <NavMain :items="navMain" @item-click="closeMobileSidebar" />
 
         <SidebarSeparator class="my-4 group-data-[collapsible=icon]:hidden" />
 
@@ -256,6 +271,8 @@ defineExpose({
             @load-more="loadConversations(true)"
             @delete="handleDeleteConversation"
             @rename="handleRenameConversation"
+            @select="closeMobileSidebar"
+            @action="closeMobileSidebar"
           />
         </div>
       </div>

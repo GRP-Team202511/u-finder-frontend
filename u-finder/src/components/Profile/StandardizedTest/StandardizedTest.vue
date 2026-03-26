@@ -288,14 +288,14 @@ onMounted(() => {
 	<div ref="cardRef" @focusin="profileEditor?.setActiveEl(cardRef)" :class="cn('flex flex-col gap-6', props.class)">
 		<Card>
 			<CardHeader class="text-left">
-				<div class="flex items-center justify-between gap-4">
-					<CardTitle class="text-3xl font-bold">
+				<div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2">
+					<CardTitle class="text-2xl font-bold sm:text-3xl">
 						{{ t('test.title') }}
 					</CardTitle>
-				<div v-if="!localEditing">
+					<div v-if="!localEditing" class="flex justify-end">
 						<Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
 					</div>
-					<div v-else class="flex gap-2">
+					<div v-else class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
 						<Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
 						<Button type="button" @click="save">{{ t('profile.save') }}</Button>
 					</div>

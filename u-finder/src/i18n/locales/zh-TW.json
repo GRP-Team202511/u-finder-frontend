@@ -119,6 +119,7 @@
         }
     },
     "sidebar": {
+        "appName": "U-Finder",
         "newChat": "新對話",        "newConversation": "新對話",        "conversations": "對話列表",
         "noConversations": "暫無對話",
         "loadMore": "載入更多...",
@@ -551,7 +552,8 @@
             "loadFailed": "載入收藏清單失敗"
         },
         "errors": {
-            "loadFailed": "載入收藏清單失敗"
+            "loadFailed": "載入收藏清單失敗",
+            "loadFailedDescription": "無法載入您的收藏清單，請嘗試重新整理頁面。"
         },
         "actions": {
             "showDetails": "查看詳情",

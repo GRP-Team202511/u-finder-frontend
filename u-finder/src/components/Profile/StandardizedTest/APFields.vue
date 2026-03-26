@@ -60,7 +60,7 @@ function removeSubject(index: number) {
 		<div class="rounded-md border p-4">
 			<div class="grid gap-2">
 				<div class="text-sm font-medium text-left">{{ t('test.subjects') }}</div>
-				<div v-for="(subject, sidx) in subjects" :key="sidx" class="grid grid-cols-2 gap-4 pt-2">
+				<div v-for="(subject, sidx) in subjects" :key="sidx" class="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-2">
 					<Field>
 						<FieldLabel :for="`ap-subject-${props.index}-${sidx}`">{{ t('test.subject') }}</FieldLabel>
 						<Input

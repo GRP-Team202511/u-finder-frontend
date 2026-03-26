@@ -483,14 +483,14 @@ onMounted(() => {
   <div ref="cardRef" @focusin="profileEditor?.setActiveEl(cardRef)" :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-left">
-        <div class="flex items-center justify-between gap-4">
-          <CardTitle class="text-3xl font-bold">
+        <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2">
+          <CardTitle class="text-2xl font-bold sm:text-3xl">
             {{ t("edu.title") }}
           </CardTitle>
-          <div v-if="!localEditing">
+          <div v-if="!localEditing" class="flex justify-end">
             <Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
           </div>
-          <div v-else class="flex gap-2">
+          <div v-else class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
             <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
             <Button type="button" @click="save">{{ t('profile.save') }}</Button>
           </div>
@@ -527,7 +527,7 @@ onMounted(() => {
                   />
                 </Field>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field>
                     <FieldLabel :for="`start-${idx}`">{{ t('edu.time.start') }} <span class="text-red-500">*</span></FieldLabel>
                       <Popover v-slot="{ close }">
@@ -592,7 +592,7 @@ onMounted(() => {
                   <Input :id="`major-${idx}`" v-model="edu.major" :placeholder="t('edu.placeholders.major')" />
                 </Field>
 
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <Field>
                     <FieldLabel :for="`ranking-${idx}`">{{ t('edu.ranking') }}</FieldLabel>
                     <Input
@@ -654,7 +654,7 @@ onMounted(() => {
                   <div class="text-sm text-left">{{ edu.name || '-' }}</div>
                 </Field>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field>
                     <FieldLabel>{{ t('edu.time.start') }}</FieldLabel>
                     <div class="text-sm text-left">{{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (edu.time.start || '-') }}</div>
@@ -670,7 +670,7 @@ onMounted(() => {
                   <div class="text-sm text-left">{{ edu.major || '-' }}</div>
                 </Field>
 
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <Field>
                     <FieldLabel>{{ t('edu.ranking') }}</FieldLabel>
                     <div class="text-sm text-left">{{ edu.ranking || '-' }}</div>

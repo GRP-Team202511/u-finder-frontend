@@ -29,7 +29,7 @@ const handleSignupSuccess = (token: string) => {
 
 <template>
   <Toaster />
-  <div class='flex px-8 py-4 justify-end'>
+  <div class='flex justify-end px-3 py-3 sm:px-4 sm:py-4 lg:px-8'>
     <header>
       <LanguageSelector />
     </header>
