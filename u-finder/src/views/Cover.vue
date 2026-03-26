@@ -17,16 +17,16 @@ function goLogin() {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col px-8">
-    <header class="p-4 md:px-8 flex justify-end">
+  <div class="min-h-screen flex flex-col px-3 sm:px-4 lg:px-8">
+    <header class="flex justify-end p-3 sm:p-4 md:px-8">
       <LanguageSelector />
     </header>
-    <main class="flex-1 flex items-center justify-center p-8">
+    <main class="flex flex-1 items-center justify-center p-4 sm:p-6 lg:p-8">
       <div class="text-center max-w-2xl">
-        <h1 class="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg">
+        <h1 class="mb-4 text-3xl font-bold drop-shadow-lg sm:text-4xl md:text-6xl">
           {{ t('cover.title') }}
         </h1>
-        <p class="text-lg md:text-xl mb-8 opacity-90">
+        <p class="mb-8 text-base opacity-90 sm:text-lg md:text-xl">
           {{ t('cover.description') }}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
