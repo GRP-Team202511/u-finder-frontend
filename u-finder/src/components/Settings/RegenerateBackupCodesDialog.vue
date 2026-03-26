@@ -159,7 +159,7 @@ function handleClose() {
         </div>
 
         <!-- New Backup Codes Grid -->
-        <div class="grid grid-cols-2 gap-3 p-4 bg-muted/50 rounded-lg border">
+        <div class="grid grid-cols-1 gap-3 p-4 bg-muted/50 rounded-lg border sm:grid-cols-2">
           <div
             v-for="(code, index) in newBackupCodes"
             :key="index"
