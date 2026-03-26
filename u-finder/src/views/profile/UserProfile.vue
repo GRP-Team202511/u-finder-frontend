@@ -440,9 +440,9 @@ function handleCVResultCancel() {
 </script>
 
 <template>
-	<div class="p-4">
-		<div class="flex items-center justify-between mb-6">
-			<h1 class="text-3xl font-bold">{{ t('profile.title') }}</h1>
+	<div class="p-3 sm:p-4">
+		<div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+			<h1 class="text-2xl font-bold sm:text-3xl">{{ t('profile.title') }}</h1>
 			<Button @click="showCVParserDialog = true">
 				{{ t('profile.cvParser.button') }}
 			</Button>
@@ -533,13 +533,13 @@ function handleCVResultCancel() {
 		>
 			<div
 				v-if="hasEditingEditors"
-				class="fixed bottom-0 right-0 z-50 flex items-center justify-center gap-3 border-t bg-background py-3 transition-[left,translate] duration-200 ease-linear"
+				class="fixed bottom-0 right-0 z-50 flex w-full flex-wrap items-center justify-center gap-2 border-t bg-background px-3 py-3 transition-[left,translate] duration-200 ease-linear sm:gap-3 sm:px-4"
 				:style="{ left: !isMobile && sidebarOpen ? 'var(--sidebar-width, 16rem)' : '0' }"
 			>
 				<Button
 					variant="outline"
 					size="lg"
-					class="gap-2"
+					class="w-full gap-2 sm:w-auto"
 					:disabled="isSavingAll"
 					@click="cancelAll"
 				>
@@ -548,7 +548,7 @@ function handleCVResultCancel() {
 				</Button>
 				<Button
 					size="lg"
-					class="gap-2 shadow-lg"
+					class="w-full gap-2 shadow-lg sm:w-auto"
 					:disabled="isSavingAll"
 					@click="saveAll"
 				>
