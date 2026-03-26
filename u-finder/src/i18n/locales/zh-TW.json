@@ -552,7 +552,8 @@
             "loadFailed": "載入收藏清單失敗"
         },
         "errors": {
-            "loadFailed": "載入收藏清單失敗"
+            "loadFailed": "載入收藏清單失敗",
+            "loadFailedDescription": "無法載入您的收藏清單，請嘗試重新整理頁面。"
         },
         "actions": {
             "showDetails": "查看詳情",

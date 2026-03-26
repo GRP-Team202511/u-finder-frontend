@@ -552,7 +552,9 @@
             "loadFailed": "加载收藏列表失败"
         },
         "errors": {
-            "loadFailed": "加载收藏列表失败"
+            "loadFailed": "加载收藏列表失败",
+            "loadFailedDescription": "无法加载您的收藏列表，请尝试刷新页面。"
+
         },
         "actions": {
             "showDetails": "查看详情",

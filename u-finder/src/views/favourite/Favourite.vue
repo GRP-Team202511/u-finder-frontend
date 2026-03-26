@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import { toast } from "vue-sonner";
 import CompactUniversityCard from "@/components/Favourite/CompactUniversityCard.vue";
 import UniversityDetailDialog from "@/components/Favourite/UniversityDetailDialog.vue";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { useFavouriteStore } from "@/stores/favouriteStore";
 import { useUserStore } from "@/stores/userStore";
@@ -72,7 +73,7 @@ watch(
 <template>
 	<section class="relative flex min-h-0 flex-1 flex-col gap-4 py-4 sm:gap-6 sm:py-6">
 		<header class="space-y-1 pt-6">
-			<h1 class="text-2xl font-semibold">{{ t("favourites.title") }}</h1>
+			<h1 class="text-2xl font-bold sm:text-3xl">{{ t("favourites.title") }}</h1>
 			<p class="text-sm text-muted-foreground">{{ t("favourites.subtitle") }}</p>
 		</header>
 
@@ -80,14 +81,23 @@ watch(
 			<Spinner class="h-8 w-8" />
 		</div>
 
-		<div v-else-if="loadError" class="flex flex-1 flex-col items-center justify-center gap-4">
-			<p class="text-sm text-muted-foreground">{{ t("favourites.errors.loadFailed") }}</p>
-			<button
-				class="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground"
-				@click="loadFavourites"
-			>
-				{{ t("favourites.actions.retry") }}
-			</button>
+		<div v-else-if="loadError" class="flex flex-1 flex-col items-center justify-center py-12">
+			<Card class="w-full max-w-2xl">
+				<CardHeader>
+					<CardTitle class="text-center text-destructive text-xl">
+						{{ t("favourites.errors.loadFailed") }}
+					</CardTitle>
+				</CardHeader>
+				<CardContent class="text-center text-muted-foreground">
+					<p class="mb-4">{{ t("favourites.errors.loadFailedDescription") }}</p>
+					<button
+						class="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90"
+						@click="loadFavourites"
+					>
+						{{ t("favourites.actions.retry") }}
+					</button>
+				</CardContent>
+			</Card>
 		</div>
 
 		<div

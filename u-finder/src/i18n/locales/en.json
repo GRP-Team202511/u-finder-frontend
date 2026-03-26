@@ -677,7 +677,8 @@
             "loadFailed": "Failed to load favourites"
         },
         "errors": {
-            "loadFailed": "Failed to load favourites"
+            "loadFailed": "Failed to load favourites",
+            "loadFailedDescription": "Unable to load your favourites. Please try refreshing the page."
         },
         "actions": {
             "showDetails": "Show details",
