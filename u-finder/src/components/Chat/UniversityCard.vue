@@ -160,45 +160,45 @@ const handleToggleFavourite = async () => {
 						force-mount
 						class="col-start-1 row-start-1 [&[hidden]]:block data-[state=inactive]:invisible data-[state=inactive]:pointer-events-none"
 					>
-					<p class="text-sm font-semibold text-foreground">{{ t("chat.card.programDetails") }}</p>
-					<div class="mt-2 grid gap-2">
-						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+					<p class="text-base font-semibold text-foreground">{{ t("chat.card.programDetails") }}</p>
+					<div class="mt-3 grid gap-4 sm:mt-2 sm:gap-2">
+						<div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.degree") }}</span>
 							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.degree_program.degree_level }}
 							</span>
 						</div>
-						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+						<div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.field") }}</span>
 							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.degree_program.field }}
 							</span>
 						</div>
-						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+						<div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.track") }}</span>
 							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.degree_program.track_or_specialization ?? t("chat.card.notSpecified") }}
 							</span>
 						</div>
-						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+						<div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.type") }}</span>
 							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.degree_program.program_type }}
 							</span>
 						</div>
-						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+						<div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.duration") }}</span>
 							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.degree_program.duration ?? t("chat.card.notSpecified") }}
 							</span>
 						</div>
-						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+						<div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.language") }}</span>
 							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.degree_program.language ?? t("chat.card.notSpecified") }}
 							</span>
 						</div>
-						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+						<div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.faculty") }}</span>
 							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.faculty.name ?? t("chat.card.notSpecified") }}
@@ -213,27 +213,27 @@ const handleToggleFavourite = async () => {
 						class="col-start-1 row-start-1 [&[hidden]]:block data-[state=inactive]:invisible data-[state=inactive]:pointer-events-none"
 					>
 					<div>
-						<p class="text-sm font-semibold text-foreground">{{ t("chat.card.admissions") }}</p>
-						<div class="mt-2 grid gap-2">
-							<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+						<p class="text-base font-semibold text-foreground">{{ t("chat.card.admissions") }}</p>
+						<div class="mt-3 grid gap-4 sm:mt-2 sm:gap-2">
+							<div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 								<span class="text-muted-foreground">{{ t("chat.card.labels.deadline") }}</span>
 								<span class="break-words text-left font-semibold sm:text-right">
 									{{ program.admissions.application_deadline ?? t("chat.card.notSpecified") }}
 								</span>
 							</div>
-							<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+							<div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 								<span class="text-muted-foreground">{{ t("chat.card.labels.languageReqs") }}</span>
 								<span class="break-words text-left font-semibold sm:text-right">
 									{{ formatLanguageRequirements() }}
 								</span>
 							</div>
-							<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+							<div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 								<span class="text-muted-foreground">{{ t("chat.card.labels.academicRequirements") }}</span>
 								<span class="break-words text-left font-semibold sm:text-right">
 									{{ program.admissions.academic_requirements ?? t("chat.card.notSpecified") }}
 								</span>
 							</div>
-							<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+							<div class="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 								<span class="text-muted-foreground">{{ t("chat.card.labels.otherRequirements") }}</span>
 								<span class="break-words text-left font-semibold sm:text-right">
 									{{ program.admissions.other_requirements ?? t("chat.card.notSpecified") }}
@@ -242,9 +242,9 @@ const handleToggleFavourite = async () => {
 						</div>
 					</div>
 
-					<div class="mt-4">
-						<p class="text-sm font-semibold text-foreground">{{ t("chat.card.tuition") }}</p>
-						<div class="mt-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+					<div class="mt-6 sm:mt-4">
+						<p class="text-base font-semibold text-foreground">{{ t("chat.card.tuition") }}</p>
+						<div class="mt-3 flex flex-col gap-0.5 sm:mt-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.cost") }}</span>
 							<span class="break-words text-left font-semibold sm:text-right">
 								{{ tuitionLabel() }}
@@ -259,7 +259,7 @@ const handleToggleFavourite = async () => {
 						class="col-start-1 row-start-1 [&[hidden]]:block data-[state=inactive]:invisible data-[state=inactive]:pointer-events-none"
 					>
 					<div>
-						<p class="text-sm font-semibold text-foreground">{{ t("chat.card.careerOutcomes") }}</p>
+						<p class="text-base font-semibold text-foreground">{{ t("chat.card.careerOutcomes") }}</p>
 						<ul
 							v-if="program.career_outcomes && program.career_outcomes.length"
 							class="list-disc space-y-1 pt-2 pl-5"
@@ -275,7 +275,7 @@ const handleToggleFavourite = async () => {
 					</div>
 
 					<div class="mt-4">
-						<p class="text-sm font-semibold text-foreground">{{ t("chat.card.linksTitle") }}</p>
+						<p class="text-base font-semibold text-foreground">{{ t("chat.card.linksTitle") }}</p>
 						<div class="mt-2 flex flex-wrap gap-2">
 							<a
 								:href="program.official_program_url"
