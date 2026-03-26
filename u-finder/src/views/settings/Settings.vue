@@ -14,7 +14,7 @@ const activeTab = ref('account')
 </script>
 
 <template>
-  <div class="flex h-full flex-col gap-4 p-3 sm:gap-6 sm:p-4 lg:p-6">
+  <div class="flex h-full min-w-0 flex-col gap-4 overflow-x-hidden p-3 sm:gap-6 sm:p-4 lg:p-6">
     <!-- Page Header -->
     <div class="flex items-center gap-3">
       <SettingsIcon class="size-8 text-primary" />
@@ -35,12 +35,12 @@ const activeTab = ref('account')
       </TabsList>
 
       <!-- Account Settings Tab -->
-      <TabsContent value="account" class="mt-6">
+      <TabsContent value="account" class="mt-6 min-w-0 overflow-x-hidden">
         <AccountSettings />
       </TabsContent>
 
       <!-- General Settings Tab -->
-      <TabsContent value="general" class="mt-6">
+      <TabsContent value="general" class="mt-6 min-w-0 overflow-x-hidden">
         <GeneralSettings />
       </TabsContent>
     </Tabs>
