@@ -11,10 +11,20 @@ const roleClass = computed(() =>
 		? "self-end text-right"
 		: "self-start text-left"
 );
+
+const containerClass = computed(() => {
+	if (props.message.role === "user") {
+		return "max-w-[90%] sm:max-w-[80%]";
+	}
+	if (props.message.type === "cards" || (props.message.cards?.length ?? 0) > 0) {
+		return "max-w-full";
+	}
+	return "max-w-[95%] sm:max-w-[85%]";
+});
 </script>
 
 <template>
-	<article :class="['flex max-w-[80%] flex-col gap-2', roleClass]">
+	<article :class="['flex min-w-0 flex-col gap-2', roleClass, containerClass]">
 		<div class="rounded-md border px-4 py-3 text-base">
 			<AIMessage
 				v-if="message.role === 'ai'"

@@ -16,6 +16,13 @@ import {
 	TabsList,
 	TabsTrigger,
 } from "@/components/ui/tabs";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { Star } from "lucide-vue-next"
 import { extractProgram, programKey, useFavouriteStore } from "@/stores/favouriteStore";
 
@@ -91,10 +98,10 @@ const handleToggleFavourite = async () => {
 </script>
 
 <template>
-	<Card>
+	<Card class="w-full min-w-0">
 		<CardHeader>
 			<div class="flex items-start justify-between gap-4">
-				<div>
+				<div class="min-w-0">
 					<CardTitle class = "text-2xl font-bold">
 						{{ program.university.name }}
 					</CardTitle>
@@ -123,8 +130,18 @@ const handleToggleFavourite = async () => {
 				</p>
 			</div>
 			<Tabs v-model="selectedView" class="text-sm">
-				<div>
-					<TabsList class="h-8">
+				<div class="space-y-2">
+					<Select v-model="selectedView">
+						<SelectTrigger class="w-full sm:hidden">
+							<SelectValue :placeholder="t('chat.card.tabs.program')" />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="program">{{ t("chat.card.tabs.program") }}</SelectItem>
+							<SelectItem value="admission">{{ t("chat.card.tabs.admission") }}</SelectItem>
+							<SelectItem value="career">{{ t("chat.card.tabs.career") }}</SelectItem>
+						</SelectContent>
+					</Select>
+					<TabsList class="hidden h-auto w-full flex-wrap justify-start gap-1 p-1 sm:flex">
 						<TabsTrigger value="program" class="text-sm">
 							{{ t("chat.card.tabs.program") }}
 						</TabsTrigger>
@@ -145,45 +162,45 @@ const handleToggleFavourite = async () => {
 					>
 					<p class="text-sm font-semibold text-foreground">{{ t("chat.card.programDetails") }}</p>
 					<div class="mt-2 grid gap-2">
-						<div class="flex items-center justify-between gap-4">
+						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.degree") }}</span>
-							<span class="font-semibold">
+							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.degree_program.degree_level }}
 							</span>
 						</div>
-						<div class="flex items-center justify-between gap-4">
+						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.field") }}</span>
-							<span class="font-semibold">
+							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.degree_program.field }}
 							</span>
 						</div>
-						<div class="flex items-center justify-between gap-4">
+						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.track") }}</span>
-							<span class="font-semibold">
+							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.degree_program.track_or_specialization ?? t("chat.card.notSpecified") }}
 							</span>
 						</div>
-						<div class="flex items-center justify-between gap-4">
+						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.type") }}</span>
-							<span class="font-semibold">
+							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.degree_program.program_type }}
 							</span>
 						</div>
-						<div class="flex items-center justify-between gap-4">
+						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.duration") }}</span>
-							<span class="font-semibold">
+							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.degree_program.duration ?? t("chat.card.notSpecified") }}
 							</span>
 						</div>
-						<div class="flex items-center justify-between gap-4">
+						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.language") }}</span>
-							<span class="font-semibold">
+							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.degree_program.language ?? t("chat.card.notSpecified") }}
 							</span>
 						</div>
-						<div class="flex items-center justify-between gap-4">
+						<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.faculty") }}</span>
-							<span class="font-semibold">
+							<span class="break-words text-left font-semibold sm:text-right">
 								{{ program.faculty.name ?? t("chat.card.notSpecified") }}
 							</span>
 						</div>
@@ -198,27 +215,27 @@ const handleToggleFavourite = async () => {
 					<div>
 						<p class="text-sm font-semibold text-foreground">{{ t("chat.card.admissions") }}</p>
 						<div class="mt-2 grid gap-2">
-							<div class="flex items-center justify-between gap-4">
+							<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 								<span class="text-muted-foreground">{{ t("chat.card.labels.deadline") }}</span>
-								<span class="font-semibold">
+								<span class="break-words text-left font-semibold sm:text-right">
 									{{ program.admissions.application_deadline ?? t("chat.card.notSpecified") }}
 								</span>
 							</div>
-							<div class="flex items-center justify-between gap-20">
+							<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 								<span class="text-muted-foreground">{{ t("chat.card.labels.languageReqs") }}</span>
-								<span class="text-right font-semibold">
+								<span class="break-words text-left font-semibold sm:text-right">
 									{{ formatLanguageRequirements() }}
 								</span>
 							</div>
-							<div class="flex items-center justify-between gap-20">
+							<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 								<span class="text-muted-foreground">{{ t("chat.card.labels.academicRequirements") }}</span>
-								<span class="text-right font-semibold">
+								<span class="break-words text-left font-semibold sm:text-right">
 									{{ program.admissions.academic_requirements ?? t("chat.card.notSpecified") }}
 								</span>
 							</div>
-							<div class="flex items-center justify-between gap-20">
+							<div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 								<span class="text-muted-foreground">{{ t("chat.card.labels.otherRequirements") }}</span>
-								<span class="text-right font-semibold">
+								<span class="break-words text-left font-semibold sm:text-right">
 									{{ program.admissions.other_requirements ?? t("chat.card.notSpecified") }}
 								</span>
 							</div>
@@ -227,9 +244,9 @@ const handleToggleFavourite = async () => {
 
 					<div class="mt-4">
 						<p class="text-sm font-semibold text-foreground">{{ t("chat.card.tuition") }}</p>
-						<div class="mt-2 flex items-center justify-between gap-4">
+						<div class="mt-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
 							<span class="text-muted-foreground">{{ t("chat.card.labels.cost") }}</span>
-							<span class="font-semibold">
+							<span class="break-words text-left font-semibold sm:text-right">
 								{{ tuitionLabel() }}
 							</span>
 						</div>
