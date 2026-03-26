@@ -42,7 +42,7 @@ if (!props.entry.scores) {
 		<div class="rounded-md border p-4">
 			<div class="grid gap-2">
 			<div class="text-sm font-medium text-left">{{ t('test.scores.title') }}</div>
-			<div class="grid grid-cols-2 gap-4 pt-2">
+			<div class="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-2">
 				<Field>
 					<FieldLabel>{{ t('test.scores.composite') }}</FieldLabel>
 					<Input v-if="props.editable" v-model="props.entry.scores.composite" />

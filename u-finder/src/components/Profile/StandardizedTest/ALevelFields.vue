@@ -91,7 +91,7 @@ function removeSubject(index: number) {
 	<div class="grid gap-4">
 		<Field>
 			<FieldLabel :for="`alevel-session-${props.index}`">{{ t('test.examSession') }}</FieldLabel>
-			<div v-if="props.editable" class="grid grid-cols-2 gap-4">
+			<div v-if="props.editable" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<Select v-model="selectedYear">
 					<SelectTrigger :id="`alevel-year-${props.index}`" class="w-full">
 						<SelectValue :placeholder="t('test.examYear')" />
@@ -121,7 +121,7 @@ function removeSubject(index: number) {
 		<div class="rounded-md border p-4">
 			<div class="grid gap-2">
 				<div class="text-sm font-medium text-left">{{ t('test.subjects') }}</div>
-				<div v-for="(subject, sidx) in subjects" :key="sidx" class="grid grid-cols-2 gap-4 pt-2">
+				<div v-for="(subject, sidx) in subjects" :key="sidx" class="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-2">
 					<Field>
 						<FieldLabel :for="`alevel-subject-${props.index}-${sidx}`">{{ t('test.subject') }}</FieldLabel>
 						<Input
