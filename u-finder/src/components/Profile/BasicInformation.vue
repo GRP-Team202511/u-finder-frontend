@@ -260,14 +260,14 @@ onMounted(async () => {
   <div ref="cardRef" @focusin="profileEditor?.setActiveEl(cardRef)" :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-left">
-        <div class="flex items-center justify-between gap-4">
-          <CardTitle class="text-3xl font-bold">
+        <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <CardTitle class="text-2xl font-bold sm:text-3xl">
             {{ t("info.title") }}
           </CardTitle>
-          <div v-if="!localEditing">
+          <div v-if="!localEditing" class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
             <Button type="button" :disabled="isLoading" @click="startEdit">{{ t('profile.edit') }}</Button>
           </div>
-          <div v-else class="flex gap-2">
+          <div v-else class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
             <Button type="button" variant="secondary" :disabled="isLoading" @click="cancel">{{ t('profile.cancel') }}</Button>
             <Button type="button" :disabled="isLoading" @click="save">{{ t('profile.save') }}</Button>
           </div>

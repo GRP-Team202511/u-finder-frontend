@@ -352,14 +352,14 @@ onMounted(() => {
   <div ref="cardRef" @focusin="profileEditor?.setActiveEl(cardRef)" :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-left">
-        <div class="flex items-center justify-between gap-4">
-          <CardTitle class="text-3xl font-bold">
+        <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <CardTitle class="text-2xl font-bold sm:text-3xl">
             {{ t('project.title') }}
           </CardTitle>
-          <div v-if="!localEditing">
+          <div v-if="!localEditing" class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
             <Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
           </div>
-          <div v-else class="flex gap-2">
+          <div v-else class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
             <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
             <Button type="button" @click="save">{{ t('profile.save') }}</Button>
           </div>
@@ -386,7 +386,7 @@ onMounted(() => {
                   <Input :id="`role-${idx}`" v-model="project.role" :placeholder="t('project.placeholders.role')" />
                 </Field>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field>
                     <FieldLabel :for="`start-${idx}`">{{ t('project.time.start') }}</FieldLabel>
                       <Popover v-slot="{ close }">
@@ -456,7 +456,7 @@ onMounted(() => {
                     v-model="project.description"
                     :placeholder="t('project.placeholders.description')"
                     rows="6"
-                    class="w-full rounded-md border px-3 py-2 text-sm"
+                    class="w-full rounded-md border px-3 py-2 text-base md:text-sm"
                   ></textarea>
                 </Field>
 
@@ -487,7 +487,7 @@ onMounted(() => {
                   <div class="text-sm text-left">{{ project.role || '-' }}</div>
                 </Field>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field>
                     <FieldLabel>{{ t('project.time.start') }}</FieldLabel>
                     <div class="text-sm text-left">{{ startDates[idx] ? df.format(startDates[idx]!.toDate(getLocalTimeZone())) : (project.time.start || '-') }}</div>
