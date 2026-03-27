@@ -14,6 +14,8 @@
     "twoFactorRequired": "需要进行两步验证",
     "unauth": "密码不正确",
     "not_found": "该账户不存在",
+    "invalid_credentials": "账号或密码错误",
+    "blocked": "你的账户已被封禁",
     "unprocessable": "登录输入无效。",
     "reset": {
       "title": "重置密码",

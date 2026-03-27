@@ -14,6 +14,8 @@
     "twoFactorRequired": "Two-factor verification required",
     "unauth": "The password is incorrect",
     "not_found": "The account doesn't exist",
+    "invalid_credentials": "Invalid email or password",
+    "blocked": "Your account has been blocked",
     "unprocessable": "Invalid login input.",
     "reset": {
       "title": "Reset Password",

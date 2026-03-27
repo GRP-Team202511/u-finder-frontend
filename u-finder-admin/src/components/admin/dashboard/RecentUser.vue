@@ -172,11 +172,11 @@ import { useAdminStore } from '@/stores/adminStore'
 const adminStore = useAdminStore()
 const { t, locale } = useI18n()
 
-const USER_TYPE_MAP: Record<string, string> = {
-  '1': 'User',
-  '2': 'Pro User',
-  '3': 'Admin',
-  '4': 'Super Admin',
+const ROLE_PRIORITY: Record<string, number> = {
+  '4': 0,
+  '3': 1,
+  '2': 2,
+  '1': 3,
 }
 
 function getRoleText(type: string) {
@@ -330,6 +330,22 @@ const sortedUsers = computed(() => {
   const copied = [...filteredUsers.value]
   copied.sort((a, b) => {
     const key = sortKey.value
+
+    if (key === 'role') {
+      const aRank = ROLE_PRIORITY[a.roleType] ?? 99
+      const bRank = ROLE_PRIORITY[b.roleType] ?? 99
+
+      if (aRank !== bRank) {
+        return sortOrder.value === 'asc' ? aRank - bRank : bRank - aRank
+      }
+
+      const aName = a.name.toLowerCase()
+      const bName = b.name.toLowerCase()
+      if (aName < bName) return sortOrder.value === 'asc' ? -1 : 1
+      if (aName > bName) return sortOrder.value === 'asc' ? 1 : -1
+      return 0
+    }
+
     const aVal = getSortValue(a, key)
     const bVal = getSortValue(b, key)
 

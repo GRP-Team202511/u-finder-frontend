@@ -39,6 +39,7 @@ const emit = defineEmits<{
 const logging = ref(false)
 const unauth = ref(false)
 const notFound = ref(false)
+const blocked = ref(false)
 
 const form = ref({
   email: '',
@@ -55,6 +56,7 @@ const handleLogin = async() => {
   logging.value = true
   unauth.value = false
   notFound.value = false
+  blocked.value = false
 
   try {
     const response = await login(form.value)
@@ -73,15 +75,40 @@ const handleLogin = async() => {
     }
     throw new Error("Unexpected login response")
   } catch (error: any) {
-    if (error.response?.status === 401) {
-      console.log("Wrong password")
-      unauth.value = true
-      toast.error(t("login.unauth"))
-    } else if(error.response?.status === 404) {
+    const status = error.response?.status
+    const message = String(error?.response?.data?.message || '').toLowerCase()
+    const detailText = String(error?.response?.data?.detail || '').toLowerCase()
+    const combined = `${message} ${detailText}`
+
+    const isBlocked = combined.includes('blocked') || combined.includes('封禁') || combined.includes('封鎖')
+    const isNotFound =
+      combined.includes('user not found') ||
+      combined.includes('account doesn\'t exist') ||
+      combined.includes('account does not exist') ||
+      combined.includes('no account') ||
+      combined.includes('不存在')
+    const isWrongPassword =
+      combined.includes('incorrect password') ||
+      combined.includes('password is incorrect') ||
+      combined.includes('密码不正确') ||
+      combined.includes('密碼不正確')
+
+    if ((status === 403 && isBlocked) || isBlocked) {
+      blocked.value = true
+      toast.error(t("login.blocked"))
+    } else if (status === 404 || isNotFound) {
       console.log("User not found")
       notFound.value = true
       toast.error(t("login.not_found"))
-    } else if (error.response?.status === 422) {
+    } else if (status === 401 && isWrongPassword) {
+      console.log("Wrong password")
+      unauth.value = true
+      toast.error(t("login.unauth"))
+    } else if (status === 401) {
+      notFound.value = true
+      unauth.value = true
+      toast.error(t("login.invalid_credentials"))
+    } else if (status === 422) {
       const details = error?.response?.data?.detail as ValidationDetail[] | undefined
       if (Array.isArray(details)) {
         const fields = details
@@ -126,8 +153,8 @@ const handleLogin = async() => {
                 v-model="form.email"
                 id="email"
                 type="email"
-                :class="{ 'border-red-500 ': notFound }"
-                @focus="notFound = false"
+                :class="{ 'border-red-500 ': notFound || blocked }"
+                @focus="notFound = false; blocked = false"
                 required
               />
             </Field>
@@ -148,8 +175,8 @@ const handleLogin = async() => {
                 id="password" 
                 type="password" 
                 required 
-                :class="{ 'border-red-500 ': unauth }"
-                @focus="unauth = false"
+                :class="{ 'border-red-500 ': unauth || blocked }"
+                @focus="unauth = false; blocked = false"
               />
             </Field>
             <FieldSeparator />

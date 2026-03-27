@@ -14,6 +14,8 @@
     "twoFactorRequired": "需要進行兩步驟驗證",
     "unauth": "密碼不正確",
     "not_found": "該帳戶不存在",
+    "invalid_credentials": "帳號或密碼錯誤",
+    "blocked": "你的帳戶已被封禁",
     "unprocessable": "登入輸入無效。",
     "reset": {
       "title": "重置密碼",

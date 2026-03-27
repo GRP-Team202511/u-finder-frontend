@@ -57,7 +57,7 @@ export interface AdminTwoFactorVerifyResponse {
 }
 
 export const verifyTwoFactor = (data: AdminTwoFactorVerifyRequest, tempToken: string) => {
-	return http.post<AdminTwoFactorVerifyResponse>('/auth/2fa/verify', data, {
+	return http.post<AdminTwoFactorVerifyResponse>('/api/admin/auth/2fa/verify', data, {
 		headers: {
 			'Temp-Token': tempToken,
 		},
@@ -86,11 +86,11 @@ export interface ResendResetPasswordResponse {
 }
 
 export const resetPassword = (data: ResetPasswordRequest) => {
-	return http.post<ResetPasswordResponse>('/auth/reset', data)
+	return http.post<ResetPasswordResponse>('/api/admin/auth/reset', data)
 }
 
 export const verifyResetPassword = (data: VerifyResetPasswordRequest, tempToken: string) => {
-	return http.post<VerifyResetPasswordResponse>('/auth/reset/verify', data, {
+	return http.post<VerifyResetPasswordResponse>('/api/admin/auth/reset/verify', data, {
 		headers: {
 			'Temp-Token': tempToken,
 		},
@@ -98,7 +98,7 @@ export const verifyResetPassword = (data: VerifyResetPasswordRequest, tempToken:
 }
 
 export const resendResetPasswordCode = (tempToken: string) => {
-	return http.post<ResendResetPasswordResponse>('/auth/reset/resend', {}, {
+	return http.post<ResendResetPasswordResponse>('/api/admin/auth/reset/resend', {}, {
 		headers: {
 			'Temp-Token': tempToken,
 		},
@@ -106,7 +106,7 @@ export const resendResetPasswordCode = (tempToken: string) => {
 }
 
 export const logoutUser = () => {
-	return http.post<{ message: string }>('/auth/logout')
+	return http.post<{ message: string }>('/api/admin/auth/logout')
 }
 
 export interface TwoFAStatusResponse {
@@ -145,23 +145,23 @@ export interface RegenerateBackupCodesResponse {
 }
 
 export const get2FAStatus = () => {
-	return http.get<TwoFAStatusResponse>('/auth/2fa/status')
+	return http.get<TwoFAStatusResponse>('/api/admin/auth/2fa/status')
 }
 
 export const setup2FA = () => {
-	return http.post<Setup2FAResponse>('/auth/2fa/setup')
+	return http.post<Setup2FAResponse>('/api/admin/auth/2fa/setup')
 }
 
 export const confirm2FA = (data: Confirm2FARequest) => {
-	return http.post<Confirm2FAResponse>('/auth/2fa/confirm', data)
+	return http.post<Confirm2FAResponse>('/api/admin/auth/2fa/confirm', data)
 }
 
 export const disable2FA = (data: Disable2FARequest) => {
-	return http.post<Disable2FAResponse>('/auth/2fa/disable', data)
+	return http.post<Disable2FAResponse>('/api/admin/auth/2fa/disable', data)
 }
 
 export const regenerateBackupCodes = (data: RegenerateBackupCodesRequest) => {
-	return http.post<RegenerateBackupCodesResponse>('/auth/2fa/backup-codes/regenerate', data)
+	return http.post<RegenerateBackupCodesResponse>('/api/admin/auth/2fa/backup-codes/regenerate', data)
 }
 
 export interface UserInfoResponse {
@@ -171,7 +171,7 @@ export interface UserInfoResponse {
 }
 
 export const getUserInfo = () => {
-	return http.get<UserInfoResponse>('/auth/settings/info')
+	return http.get<UserInfoResponse>('/api/admin/auth/settings/info')
 }
 
 export type DeviceType = 'PC' | 'Mobile' | 'Tablet' | 'Bot' | 'Unknown'
@@ -200,13 +200,13 @@ export interface LogoutDeviceResponse {
 }
 
 export const getDevices = () => {
-	return http.get<DevicesResponse>('/auth/settings/devices')
+	return http.get<DevicesResponse>('/api/admin/auth/settings/devices')
 }
 
 export const logoutDevice = (sessionId: number) => {
-	return http.delete<LogoutDeviceResponse>(`/auth/settings/devices/${sessionId}`)
+	return http.delete<LogoutDeviceResponse>(`/api/admin/auth/settings/devices/${sessionId}`)
 }
 
 export const logoutAllDevices = () => {
-	return http.post<LogoutAllDevicesResponse>('/auth/settings/logout-all')
+	return http.post<LogoutAllDevicesResponse>('/api/admin/auth/settings/logout-all')
 }
