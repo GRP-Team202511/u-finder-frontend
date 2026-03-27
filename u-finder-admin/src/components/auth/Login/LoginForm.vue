@@ -61,7 +61,7 @@ const handleLogin = async() => {
   try {
     const response = await login(form.value)
     if (response.status === 200) {
-      adminStore.setAdmin(response.data)
+      adminStore.setAdmin(response.data, form.value.email.trim())
       router.push({ name: 'Dashboard' })
       return
     }

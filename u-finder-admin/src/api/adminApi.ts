@@ -167,11 +167,81 @@ export const regenerateBackupCodes = (data: RegenerateBackupCodesRequest) => {
 export interface UserInfoResponse {
 	name: string
 	email: string
-	user_type: number
+	user_type: number | string
 }
 
-export const getUserInfo = () => {
-	return http.get<UserInfoResponse>('/api/admin/auth/settings/info')
+function unwrapPayload(raw: unknown): Record<string, unknown> {
+	if (!raw || typeof raw !== 'object') return {}
+	const top = raw as Record<string, unknown>
+	const nested = top.data
+	if (nested && typeof nested === 'object') {
+		return nested as Record<string, unknown>
+	}
+	return top
+}
+
+function normalizeUserType(value: unknown): number | string {
+	if (typeof value === 'number') return value
+	if (typeof value !== 'string') return 0
+
+	const trimmed = value.trim()
+	if (/^\d+$/.test(trimmed)) return Number(trimmed)
+
+	const role = trimmed.toLowerCase().replace(/_/g, ' ')
+	if (role === 'user' || role === 'free') return 1
+	if (role === 'pro user' || role === 'pro') return 2
+	if (role === 'admin') return 3
+	if (role === 'super admin') return 4
+
+	return trimmed
+}
+
+function normalizeUserInfo(raw: unknown): UserInfoResponse {
+	const payload = unwrapPayload(raw)
+	const userObject = payload.user
+	const userRecord = userObject && typeof userObject === 'object'
+		? (userObject as Record<string, unknown>)
+		: null
+
+	const nameCandidate = payload.name ?? payload.username ?? payload.admin_name ?? payload.user_name ?? userRecord?.name
+	const emailCandidate =
+		payload.email ??
+		payload.email_address ??
+		payload.user_email ??
+		payload.admin_email ??
+		payload.mail ??
+		payload.account ??
+		userRecord?.email ??
+		userRecord?.email_address
+	const userTypeCandidate = payload.user_type ?? payload.type ?? payload.role
+
+	return {
+		name: typeof nameCandidate === 'string' ? nameCandidate : '',
+		email: typeof emailCandidate === 'string' ? emailCandidate : '',
+		user_type: normalizeUserType(userTypeCandidate),
+	}
+}
+
+const SETTINGS_INFO_ENDPOINTS = ['/api/admin/auth/settings/info', '/api/admin/settings/info'] as const
+
+export const getUserInfo = async () => {
+	let lastError: unknown = null
+
+	for (const endpoint of SETTINGS_INFO_ENDPOINTS) {
+		try {
+			const response = await http.get<unknown>(endpoint)
+			return {
+				...response,
+				data: normalizeUserInfo(response.data),
+			}
+		} catch (error: unknown) {
+			const status = (error as any)?.response?.status
+			lastError = error
+			if (status !== 404) break
+		}
+	}
+
+	throw lastError
 }
 
 export type DeviceType = 'PC' | 'Mobile' | 'Tablet' | 'Bot' | 'Unknown'
