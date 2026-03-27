@@ -262,8 +262,8 @@
         "block": "封鎖",
         "unblock": "解除封鎖",
         "delete": "刪除",
-        "setAdmin": "設為管理員",
-        "setUser": "設為使用者"
+        "promote": "設為管理員",
+        "demote": "設為使用者"
       },
       "roles": {
         "1": "使用者",

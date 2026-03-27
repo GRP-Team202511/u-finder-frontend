@@ -262,8 +262,8 @@
         "block": "Block",
         "unblock": "Unblock",
         "delete": "Delete",
-        "setAdmin": "Set as Admin",
-        "setUser": "Set as User"
+        "promote": "Set as Admin",
+        "demote": "Set as User"
       },
       "roles": {
         "1": "User",

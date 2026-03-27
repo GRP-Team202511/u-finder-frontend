@@ -108,19 +108,19 @@
                   @click="handleDelete(user.id)"
                 >{{ t('dashboard.recentUsers.actions.delete') }}</Button>
                 <Button
-                  v-if="user.availableActions.includes('set_admin')"
+                  v-if="user.availableActions.includes('promote')"
                   variant="outline"
                   size="sm"
                   :disabled="actionLoading === user.id"
-                  @click="handleSetAdmin(user.id)"
-                >{{ t('dashboard.recentUsers.actions.setAdmin') }}</Button>
+                  @click="handlePromote(user.id)"
+                >{{ t('dashboard.recentUsers.actions.promote') }}</Button>
                 <Button
-                  v-if="user.availableActions.includes('set_user')"
+                  v-if="user.availableActions.includes('demote')"
                   variant="outline"
                   size="sm"
                   :disabled="actionLoading === user.id"
-                  @click="handleSetUser(user.id)"
-                >{{ t('dashboard.recentUsers.actions.setUser') }}</Button>
+                  @click="handleDemote(user.id)"
+                >{{ t('dashboard.recentUsers.actions.demote') }}</Button>
               </div>
             </TableCell>
           </TableRow>
@@ -291,10 +291,10 @@ async function handleDelete(userId: number) {
   }
 }
 
-async function handleSetAdmin(userId: number) {
+async function handlePromote(userId: number) {
   actionLoading.value = userId
   try {
-    await changeUserRole(userId, '3')
+    await changeUserRole(userId, 3)
     toast.success(t('dashboard.recentUsers.toasts.roleChanged'))
     await loadUsers()
   } catch (e: unknown) {
@@ -304,10 +304,10 @@ async function handleSetAdmin(userId: number) {
   }
 }
 
-async function handleSetUser(userId: number) {
+async function handleDemote(userId: number) {
   actionLoading.value = userId
   try {
-    await changeUserRole(userId, '1')
+    await changeUserRole(userId, 1)
     toast.success(t('dashboard.recentUsers.toasts.roleChanged'))
     await loadUsers()
   } catch (e: unknown) {

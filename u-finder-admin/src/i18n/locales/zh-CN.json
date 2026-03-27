@@ -262,8 +262,8 @@
         "block": "封禁",
         "unblock": "解封",
         "delete": "删除",
-        "setAdmin": "设为管理员",
-        "setUser": "设为用户"
+        "promote": "设为管理员",
+        "demote": "设为用户"
       },
       "roles": {
         "1": "用户",
