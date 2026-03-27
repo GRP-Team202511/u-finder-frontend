@@ -545,6 +545,9 @@ function handleCVResultCancel() {
 				:modelValue="awardData"
 				@save="onAwardSave"
 			/>
+
+			<!-- Spacer to prevent the fixed Save All/Cancel All toolbar from overlapping the last card -->
+			<div v-if="hasEditingEditors" class="h-24 shrink-0 sm:h-16" aria-hidden="true" />
 		</div>
 
 		<!-- Save All / Cancel All dock -->
