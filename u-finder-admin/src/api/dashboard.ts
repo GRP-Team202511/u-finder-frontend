@@ -193,3 +193,7 @@ export async function unblockUser(userId: number) {
 export async function deleteUser(userId: number) {
   return http.delete(`/api/admin/users/${userId}`)
 }
+
+export async function changeUserRole(userId: number, role: number) {
+  return http.patch(`/api/admin/users/${userId}/role`, { role })
+}

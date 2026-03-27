@@ -87,15 +87,29 @@
             <TableCell class="align-middle border-b border-[#eeeeee] dark:border-border px-[14px] py-[11px]">
               <div class="flex flex-wrap gap-1.5">
                 <Button
+                  v-if="user.availableActions.includes('promote')"
+                  variant="outline"
+                  size="sm"
+                  :disabled="actionLoading === user.id"
+                  @click="handlePromote(user.id)"
+                >{{ t('dashboard.recentUsers.actions.promote') }}</Button>
+                <Button
+                  v-if="user.availableActions.includes('demote')"
+                  variant="outline"
+                  size="sm"
+                  :disabled="actionLoading === user.id"
+                  @click="handleDemote(user.id)"
+                >{{ t('dashboard.recentUsers.actions.demote') }}</Button>
+                <Button
                   v-if="user.availableActions.includes('block')"
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   :disabled="actionLoading === user.id"
                   @click="handleBlock(user.id)"
                 >{{ t('dashboard.recentUsers.actions.block') }}</Button>
                 <Button
                   v-if="user.availableActions.includes('unblock')"
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   :disabled="actionLoading === user.id"
                   @click="handleUnblock(user.id)"
@@ -164,6 +178,7 @@ import {
   blockUser,
   unblockUser,
   deleteUser,
+  changeUserRole,
   type AdminUser,
 } from '@/api/dashboard'
 import { extractErrorMessage } from '@/api/http'
@@ -271,6 +286,32 @@ async function handleDelete(userId: number) {
     await loadUsers()
   } catch (e: unknown) {
     toast.error(extractErrorMessage(e, t('dashboard.recentUsers.toasts.deleteFailed')))
+  } finally {
+    actionLoading.value = null
+  }
+}
+
+async function handlePromote(userId: number) {
+  actionLoading.value = userId
+  try {
+    await changeUserRole(userId, 3)
+    toast.success(t('dashboard.recentUsers.toasts.roleChanged'))
+    await loadUsers()
+  } catch (e: unknown) {
+    toast.error(extractErrorMessage(e, t('dashboard.recentUsers.toasts.roleChangeFailed')))
+  } finally {
+    actionLoading.value = null
+  }
+}
+
+async function handleDemote(userId: number) {
+  actionLoading.value = userId
+  try {
+    await changeUserRole(userId, 1)
+    toast.success(t('dashboard.recentUsers.toasts.roleChanged'))
+    await loadUsers()
+  } catch (e: unknown) {
+    toast.error(extractErrorMessage(e, t('dashboard.recentUsers.toasts.roleChangeFailed')))
   } finally {
     actionLoading.value = null
   }

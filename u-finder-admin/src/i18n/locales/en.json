@@ -261,7 +261,9 @@
       "actions": {
         "block": "Block",
         "unblock": "Unblock",
-        "delete": "Delete"
+        "delete": "Delete",
+        "promote": "Set as Admin",
+        "demote": "Set as User"
       },
       "roles": {
         "1": "User",
@@ -282,7 +284,9 @@
         "userUnblocked": "User unblocked",
         "unblockFailed": "Failed to unblock user",
         "userDeleted": "User deleted",
-        "deleteFailed": "Failed to delete user"
+        "deleteFailed": "Failed to delete user",
+        "roleChanged": "User role updated",
+        "roleChangeFailed": "Failed to update user role"
       }
     },
     "modelCost": {
