@@ -557,7 +557,7 @@ function handleCVResultCancel() {
 		>
 			<div
 				v-if="hasEditingEditors"
-				class="fixed bottom-0 right-0 z-50 flex w-full flex-wrap items-center justify-center gap-2 border-t bg-background px-3 py-3 transition-[left,translate] duration-200 ease-linear sm:gap-3 sm:px-4"
+				class="fixed bottom-0 right-0 z-50 flex flex-wrap items-center justify-center gap-2 border-t bg-background px-3 py-3 transition-[left,translate] duration-200 ease-linear sm:gap-3 sm:px-4"
 				:style="{ left: !isMobile && sidebarOpen ? 'var(--sidebar-width, 16rem)' : '0' }"
 			>
 				<Button
