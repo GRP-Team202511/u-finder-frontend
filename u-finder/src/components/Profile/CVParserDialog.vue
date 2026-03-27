@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import axios from 'axios'
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
+import { Progress } from '@/components/ui/progress'
 import { uploadCV } from '@/api/profileApi'
 import type { CVParseResponse } from '@/types/profileTypes'
 
@@ -45,6 +46,18 @@ const fileInputRef = ref<HTMLInputElement | null>(null)
 // Holds the controller for the current in-flight upload so we can abort it on demand
 const abortController = ref<AbortController | null>(null)
 
+// Simulated parsing progress (0-100)
+const parseProgress = ref(0)
+// Interval timer driving the fake progress animation
+let progressTimer: ReturnType<typeof setInterval> | null = null
+
+// Maps the current progress value to a phase-specific hint i18n key
+const parsingHintKey = computed(() => {
+  if (parseProgress.value < 30) return 'profile.cvParser.parsingStep1'
+  if (parseProgress.value < 70) return 'profile.cvParser.parsingStep2'
+  return 'profile.cvParser.parsingStep3'
+})
+
 // Accepted file types
 const ACCEPTED_TYPES = [
   'application/pdf',
@@ -74,6 +87,34 @@ function resetState() {
   isParsing.value = false
   isDragging.value = false
   abortController.value = null
+  stopParsingProgress(false)
+}
+
+// Start the simulated progress animation when parsing begins
+function startParsingProgress() {
+  parseProgress.value = 0
+  progressTimer = setInterval(() => {
+    const current = parseProgress.value
+    if (current < 30) {
+      // Phase 1: fast ramp-up (0 → 30 in ~3 s at 200 ms interval)
+      parseProgress.value = Math.min(30, current + 2)
+    } else if (current < 85) {
+      // Phase 2: slow creep (30 → 85 in ~22 s)
+      parseProgress.value = Math.min(85, current + 0.5)
+    } else if (current < 95) {
+      // Phase 3: very slow crawl (85 → 95 in ~40 s) — nearly stalls to hint at completion
+      parseProgress.value = Math.min(95, current + 0.1)
+    }
+  }, 200)
+}
+
+// Stop the progress animation; jump to 100 on success or reset to 0 on failure
+function stopParsingProgress(success: boolean) {
+  if (progressTimer) {
+    clearInterval(progressTimer)
+    progressTimer = null
+  }
+  parseProgress.value = success ? 100 : 0
 }
 
 // Abort the in-flight request and return to the file-selection state
@@ -154,10 +195,12 @@ async function uploadFile(file: File) {
     // File is already in the browser — transition straight to the AI-parsing wait state
     isUploading.value = false
     isParsing.value = true
+    startParsingProgress()
 
     const response = await uploadCV(file, abortController.value.signal)
 
-    // Success
+    // Success — jump progress to 100% then close
+    stopParsingProgress(true)
     isParsing.value = false
     toast.success(t('profile.cvParser.parseSuccess'))
 
@@ -300,12 +343,17 @@ function formatFileSize(bytes: number): string {
       </div>
 
       <!-- Parsing State -->
-      <div v-else-if="isParsing" class="py-12 text-center">
-        <Spinner class="mx-auto h-12 w-12 text-primary" />
-        <p class="mt-4 text-sm font-medium">
+      <div v-else-if="isParsing" class="py-8 text-center">
+        <p class="text-sm font-medium mb-4">
           {{ t('profile.cvParser.parsing') }}
         </p>
-        <p class="mt-2 text-xs text-muted-foreground">
+        <!-- Simulated progress bar: animates from 0 to 85% while waiting, then jumps to 100% on success -->
+        <Progress :model-value="parseProgress" class="h-2 mb-2" />
+        <div class="flex justify-between items-center mt-1 mb-3">
+          <span class="text-xs text-muted-foreground">{{ t(parsingHintKey) }}</span>
+          <span class="text-xs text-muted-foreground">{{ Math.round(parseProgress) }}%</span>
+        </div>
+        <p class="text-xs text-muted-foreground">
           {{ t('profile.cvParser.parsingHint') }}
         </p>
       </div>
