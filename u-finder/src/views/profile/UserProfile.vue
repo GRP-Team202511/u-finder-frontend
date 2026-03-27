@@ -461,7 +461,7 @@ function handleCVResultCancel() {
 </script>
 
 <template>
-	<div class="p-3 sm:p-4">
+	<div class="mx-auto w-full max-w-5xl p-3 sm:p-4">
 		<div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 			<h1 class="text-2xl font-bold sm:text-3xl">{{ t('profile.title') }}</h1>
 			<Button @click="showCVParserDialog = true">
