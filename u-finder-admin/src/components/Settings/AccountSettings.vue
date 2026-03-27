@@ -23,7 +23,7 @@ const adminStore = useAdminStore()
 const userName = ref(adminStore.admin?.name ?? '')
 const userEmail = ref(adminStore.admin?.email ?? '')
 const userType = ref<number | string>(0)
-const userAvatar = ref('') // Will be fetched from API
+const userAvatar = ref(adminStore.avatarUrl || '') // Synced with store
 const isLoadingUserInfo = ref(false)
 const avatarInputRef = ref<HTMLInputElement | null>(null)
 
@@ -67,7 +67,9 @@ async function fetchAvatar() {
   try {
     const response = await getAvatar('256x256')
     if (response.data.url) {
-      userAvatar.value = `${baseUrl}${response.data.url}`
+      const fullUrl = `${baseUrl}${response.data.url}`
+      userAvatar.value = fullUrl
+      adminStore.setAvatar(fullUrl)
     }
   } catch {
     // No avatar - that's fine
@@ -87,7 +89,9 @@ async function handleAvatarChange(event: Event) {
     const response = await uploadAvatar(file)
     const url = response.data.avatar_urls?.webp_256 || response.data.avatar_urls?.webp_original || response.data.avatar_urls?.original
     if (url) {
-      userAvatar.value = `${baseUrl}${url}`
+      const fullUrl = `${baseUrl}${url}`
+      userAvatar.value = fullUrl
+      adminStore.setAvatar(fullUrl)
     }
     toast.success(t('settings.account.avatarUploadSuccess'))
   } catch {

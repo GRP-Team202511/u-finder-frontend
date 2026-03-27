@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import type { SidebarProps } from "@/components/ui/sidebar"
 import { LayoutDashboard } from "lucide-vue-next"
 import NavMain from "@/components/Sidebar/NavMain.vue"
@@ -13,14 +13,30 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { useAdminStore } from "@/stores/adminStore"
+import { getAvatar } from "@/api/adminApi"
 
 const props = defineProps<SidebarProps>()
 const adminStore = useAdminStore()
 
 const user = computed(() => ({
   name: adminStore.admin?.name,
-  avatar: "/avatars/shadcn.jpg",
+  avatar: adminStore.avatarUrl || '',
 }))
+
+// Fetch avatar on sidebar mount if not already cached in store
+onMounted(async () => {
+  if (!adminStore.avatarUrl && adminStore.isLoggedIn) {
+    try {
+      const baseUrl = import.meta.env.VITE_BASE_URL || ''
+      const response = await getAvatar('256x256')
+      if (response.data.url) {
+        adminStore.setAvatar(`${baseUrl}${response.data.url}`)
+      }
+    } catch {
+      // No avatar available
+    }
+  }
+})
 
 const navMain = [
   {

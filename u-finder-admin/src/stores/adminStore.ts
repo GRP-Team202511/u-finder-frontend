@@ -38,6 +38,7 @@ function extractEmailFromToken(token?: string): string | undefined {
 export const useAdminStore = defineStore('admin', {
 	state: () => ({
 		admin: null as Admin | null,
+		avatarUrl: '' as string,
 	}),
 
 	getters: {
@@ -51,8 +52,12 @@ export const useAdminStore = defineStore('admin', {
 				email: admin.email ?? fallbackEmail ?? extractEmailFromToken(admin.token),
 			}
 		},
+		setAvatar(url: string) {
+			this.avatarUrl = url
+		},
 		logout() {
 			this.admin = null
+			this.avatarUrl = ''
 		},
 	},
 
