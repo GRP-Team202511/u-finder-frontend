@@ -87,27 +87,6 @@
             <TableCell class="align-middle border-b border-[#eeeeee] dark:border-border px-[14px] py-[11px]">
               <div class="flex flex-wrap gap-1.5">
                 <Button
-                  v-if="user.availableActions.includes('block')"
-                  variant="secondary"
-                  size="sm"
-                  :disabled="actionLoading === user.id"
-                  @click="handleBlock(user.id)"
-                >{{ t('dashboard.recentUsers.actions.block') }}</Button>
-                <Button
-                  v-if="user.availableActions.includes('unblock')"
-                  variant="secondary"
-                  size="sm"
-                  :disabled="actionLoading === user.id"
-                  @click="handleUnblock(user.id)"
-                >{{ t('dashboard.recentUsers.actions.unblock') }}</Button>
-                <Button
-                  v-if="user.availableActions.includes('delete')"
-                  variant="destructive"
-                  size="sm"
-                  :disabled="actionLoading === user.id"
-                  @click="handleDelete(user.id)"
-                >{{ t('dashboard.recentUsers.actions.delete') }}</Button>
-                <Button
                   v-if="user.availableActions.includes('promote')"
                   variant="outline"
                   size="sm"
@@ -121,6 +100,27 @@
                   :disabled="actionLoading === user.id"
                   @click="handleDemote(user.id)"
                 >{{ t('dashboard.recentUsers.actions.demote') }}</Button>
+                <Button
+                  v-if="user.availableActions.includes('block')"
+                  variant="outline"
+                  size="sm"
+                  :disabled="actionLoading === user.id"
+                  @click="handleBlock(user.id)"
+                >{{ t('dashboard.recentUsers.actions.block') }}</Button>
+                <Button
+                  v-if="user.availableActions.includes('unblock')"
+                  variant="outline"
+                  size="sm"
+                  :disabled="actionLoading === user.id"
+                  @click="handleUnblock(user.id)"
+                >{{ t('dashboard.recentUsers.actions.unblock') }}</Button>
+                <Button
+                  v-if="user.availableActions.includes('delete')"
+                  variant="destructive"
+                  size="sm"
+                  :disabled="actionLoading === user.id"
+                  @click="handleDelete(user.id)"
+                >{{ t('dashboard.recentUsers.actions.delete') }}</Button>
               </div>
             </TableCell>
           </TableRow>
