@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useAdminStore } from '@/stores/adminStore'
 import { logoutUser } from '@/api/adminApi'
+import { setLoggingOut } from '@/api/http'
 import { toast } from 'vue-sonner'
 
 const props = defineProps<{
@@ -81,22 +82,14 @@ const switchLanguage = (langCode: string) => {
 }
 
 const handleLogout = async () => {
+  setLoggingOut(true)
   try {
     await logoutUser()
-  } catch (error: any) {
-    const status = error?.response?.status
-    if (status === 401) {
-      console.log('Logout unauthorized')
-      toast.error(t('sidebar.logoutUnauthorized'))
-    } else if (status === 500) {
-      console.log('Logout server error')
-      toast.error(t('sidebar.logoutServerError'))
-    } else {
-      console.log('Logout failed')
-      toast.error(t('sidebar.logoutFailed'))
-    }
+  } catch {
+    // Server-side logout may fail, but we clear local state regardless
   } finally {
     adminStore.logout()
+    setLoggingOut(false)
     router.push({ name: 'Login' })
   }
 }

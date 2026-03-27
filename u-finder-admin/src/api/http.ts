@@ -12,6 +12,11 @@ const http = axios.create({
 })
 
 let isHandlingUnauthorized = false
+let isLoggingOut = false
+
+export function setLoggingOut(value: boolean) {
+  isLoggingOut = value
+}
 
 // request interceptor
 http.interceptors.request.use(
@@ -42,7 +47,7 @@ http.interceptors.response.use(
       const hadToken = !!adminStore.admin?.token
       adminStore.logout()
 
-      if (hadToken && !isHandlingUnauthorized) {
+      if (hadToken && !isHandlingUnauthorized && !isLoggingOut) {
         isHandlingUnauthorized = true
         try {
           toast.error(t('common.errors.sessionExpired'))
