@@ -67,7 +67,7 @@ async function fetchAvatar() {
   try {
     const response = await getAvatar('256x256')
     if (response.data.url) {
-      const fullUrl = `${baseUrl}${response.data.url}`
+      const fullUrl = `${baseUrl}${response.data.url}?t=${Date.now()}`
       userAvatar.value = fullUrl
       adminStore.setAvatar(fullUrl)
     }
@@ -89,7 +89,7 @@ async function handleAvatarChange(event: Event) {
     const response = await uploadAvatar(file)
     const url = response.data.avatar_urls?.webp_256 || response.data.avatar_urls?.webp_original || response.data.avatar_urls?.original
     if (url) {
-      const fullUrl = `${baseUrl}${url}`
+      const fullUrl = `${baseUrl}${url}?t=${Date.now()}`
       userAvatar.value = fullUrl
       adminStore.setAvatar(fullUrl)
     }

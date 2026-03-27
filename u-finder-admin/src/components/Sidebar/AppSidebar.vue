@@ -30,7 +30,7 @@ onMounted(async () => {
       const baseUrl = import.meta.env.VITE_BASE_URL || ''
       const response = await getAvatar('256x256')
       if (response.data.url) {
-        adminStore.setAvatar(`${baseUrl}${response.data.url}`)
+        adminStore.setAvatar(`${baseUrl}${response.data.url}?t=${Date.now()}`)
       }
     } catch {
       // No avatar available
