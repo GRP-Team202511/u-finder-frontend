@@ -1,13 +1,13 @@
 <template>
-  <Card class="box-border rounded-[28px] border border-[#dddddd] bg-white p-5">
+  <Card class="box-border rounded-[28px] border border-[#dddddd] dark:border-border bg-white dark:bg-card p-5">
     <div class="mb-[18px] flex items-center justify-between">
-      <h2 class="m-0 text-[22px] font-extrabold leading-[1.15] text-[#111111]">{{ t('dashboard.modelCost.title') }}</h2>
-      <span class="inline-flex items-center justify-center rounded-full border border-[#d8d8d8] bg-[#f7f7f7] px-[14px] py-[9px] text-xs font-bold text-[#111111]">{{ t('dashboard.modelCost.badge') }}</span>
+      <h2 class="m-0 text-[22px] font-extrabold leading-[1.15] text-[#111111] dark:text-foreground">{{ t('dashboard.modelCost.title') }}</h2>
+      <span class="inline-flex items-center justify-center rounded-full border border-[#d8d8d8] dark:border-border bg-[#f7f7f7] dark:bg-muted px-[14px] py-[9px] text-xs font-bold text-[#111111] dark:text-foreground">{{ t('dashboard.modelCost.badge') }}</span>
     </div>
 
     <div class="mb-[14px] grid gap-[14px] md:grid-cols-2">
       <div class="flex flex-col gap-[7px]">
-        <label class="text-[13px] font-medium text-[#6b6b6b]">{{ t('dashboard.filters.model') }}</label>
+        <label class="text-[13px] font-medium text-[#6b6b6b] dark:text-muted-foreground">{{ t('dashboard.filters.model') }}</label>
         <Select :model-value="selectedModel" @update:model-value="handleModelChange">
           <SelectTrigger class="h-[42px] w-full min-w-0 text-[13px]">
             <SelectValue>{{ selectedModelLabel }}</SelectValue>
@@ -20,7 +20,7 @@
       </div>
 
       <div class="flex flex-col gap-[7px]">
-        <label class="text-[13px] font-medium text-[#6b6b6b]">{{ t('dashboard.filters.timeRange') }}</label>
+        <label class="text-[13px] font-medium text-[#6b6b6b] dark:text-muted-foreground">{{ t('dashboard.filters.timeRange') }}</label>
         <Select :model-value="selectedRange" @update:model-value="handleRangeChange">
           <SelectTrigger class="h-[42px] w-full min-w-0 text-[13px]">
             <SelectValue>{{ selectedRangeLabel }}</SelectValue>
@@ -35,16 +35,16 @@
     </div>
 
     <div class="mb-[14px] grid gap-[14px] md:grid-cols-2">
-      <div class="box-border min-h-[112px] rounded-[18px] border border-[#dddddd] p-[18px]">
-        <div class="mb-2 text-[13px] text-[#6b6b6b]">{{ t('dashboard.modelCost.totalRequests') }}</div>
-        <div class="mb-2 text-[28px] font-extrabold leading-[1.05] text-[#111111]">{{ formattedRequests }}</div>
-        <div class="text-xs leading-[1.35] text-[#6b6b6b]">{{ t('dashboard.modelCost.avgLatency') }}: {{ props.modelCost?.avgLatency ?? '0s' }}</div>
+      <div class="box-border min-h-[112px] rounded-[18px] border border-[#dddddd] dark:border-border p-[18px]">
+        <div class="mb-2 text-[13px] text-[#6b6b6b] dark:text-muted-foreground">{{ t('dashboard.modelCost.totalRequests') }}</div>
+        <div class="mb-2 text-[28px] font-extrabold leading-[1.05] text-[#111111] dark:text-foreground">{{ formattedRequests }}</div>
+        <div class="text-xs leading-[1.35] text-[#6b6b6b] dark:text-muted-foreground">{{ t('dashboard.modelCost.avgLatency') }}: {{ props.modelCost?.avgLatency ?? '0s' }}</div>
       </div>
 
-      <div class="box-border min-h-[112px] rounded-[18px] border border-[#dddddd] p-[18px]">
-        <div class="mb-2 text-[13px] text-[#6b6b6b]">{{ t('dashboard.modelCost.estimatedCost') }}</div>
-        <div class="mb-2 text-[28px] font-extrabold leading-[1.05] text-[#111111]">{{ formattedCost }}</div>
-        <div class="text-xs leading-[1.35] text-[#6b6b6b]">{{ t('dashboard.modelCost.tokens') }}: {{ props.modelCost?.tokens ?? '0' }}</div>
+      <div class="box-border min-h-[112px] rounded-[18px] border border-[#dddddd] dark:border-border p-[18px]">
+        <div class="mb-2 text-[13px] text-[#6b6b6b] dark:text-muted-foreground">{{ t('dashboard.modelCost.estimatedCost') }}</div>
+        <div class="mb-2 text-[28px] font-extrabold leading-[1.05] text-[#111111] dark:text-foreground">{{ formattedCost }}</div>
+        <div class="text-xs leading-[1.35] text-[#6b6b6b] dark:text-muted-foreground">{{ t('dashboard.modelCost.tokens') }}: {{ props.modelCost?.tokens ?? '0' }}</div>
       </div>
     </div>
 

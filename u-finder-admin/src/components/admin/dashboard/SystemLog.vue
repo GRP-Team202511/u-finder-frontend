@@ -1,16 +1,16 @@
 <template>
-  <Card class="box-border rounded-[28px] border border-[#dddddd] bg-white p-5">
+  <Card class="box-border rounded-[28px] border border-[#dddddd] dark:border-border bg-white dark:bg-card p-5">
     <div class="mb-[14px] flex items-center justify-between">
-      <h2 class="m-0 text-[22px] font-extrabold leading-[1.15] text-[#111111]">{{ t('dashboard.systemLogs.title') }}</h2>
-      <span class="inline-flex items-center justify-center rounded-full border border-[#d8d8d8] bg-[#f7f7f7] px-[14px] py-[9px] text-xs font-bold text-[#111111]">{{ t('dashboard.systemLogs.badge') }}</span>
+      <h2 class="m-0 text-[22px] font-extrabold leading-[1.15] text-[#111111] dark:text-foreground">{{ t('dashboard.systemLogs.title') }}</h2>
+      <span class="inline-flex items-center justify-center rounded-full border border-[#d8d8d8] dark:border-border bg-[#f7f7f7] dark:bg-muted px-[14px] py-[9px] text-xs font-bold text-[#111111] dark:text-foreground">{{ t('dashboard.systemLogs.badge') }}</span>
     </div>
 
     <div class="mb-[14px] grid gap-[14px] md:grid-cols-2">
       <div class="flex flex-col gap-[7px]">
-        <label class="text-[13px] font-medium text-[#6b6b6b]">{{ t('dashboard.filters.date') }}</label>
+        <label class="text-[13px] font-medium text-[#6b6b6b] dark:text-muted-foreground">{{ t('dashboard.filters.date') }}</label>
         <DropdownMenu v-model:open="isDateMenuOpen">
           <DropdownMenuTrigger as-child>
-            <Button variant="outline" class="h-[42px] w-full min-w-0 justify-start rounded-[14px] border border-[#d5d5d5] bg-white px-[14px] text-[13px] text-[#111111]">
+            <Button variant="outline" class="h-[42px] w-full min-w-0 justify-start rounded-[14px] border border-[#d5d5d5] dark:border-border bg-white dark:bg-muted px-[14px] text-[13px] text-[#111111] dark:text-foreground">
               {{ selectedDate }}
             </Button>
           </DropdownMenuTrigger>
@@ -21,9 +21,9 @@
       </div>
 
       <div class="flex flex-col gap-[7px]">
-        <label class="text-[13px] font-medium text-[#6b6b6b]">{{ t('dashboard.filters.level') }}</label>
+        <label class="text-[13px] font-medium text-[#6b6b6b] dark:text-muted-foreground">{{ t('dashboard.filters.level') }}</label>
         <Select :model-value="selectedLevel" @update:model-value="handleLevelChange">
-          <SelectTrigger class="h-[42px] w-full min-w-0 rounded-[14px] border border-[#d5d5d5] bg-white px-[14px] text-[13px] text-[#111111]">
+          <SelectTrigger class="h-[42px] w-full min-w-0 rounded-[14px] border border-[#d5d5d5] dark:border-border bg-white dark:bg-muted px-[14px] text-[13px] text-[#111111] dark:text-foreground">
             <SelectValue>{{ selectedLevelLabel }}</SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -36,26 +36,26 @@
       </div>
     </div>
 
-    <div class="overflow-hidden rounded-[18px] border border-[#dddddd] bg-white">
-      <div v-if="props.logs.length === 0" class="px-[14px] py-[18px] text-[13px] text-[#6b6b6b]">
+    <div class="overflow-hidden rounded-[18px] border border-[#dddddd] dark:border-border bg-white dark:bg-card">
+      <div v-if="props.logs.length === 0" class="px-[14px] py-[18px] text-[13px] text-[#6b6b6b] dark:text-muted-foreground">
         {{ t('dashboard.systemLogs.empty') }}
       </div>
 
       <div
         v-for="(log, idx) in props.logs"
         :key="idx"
-        class="grid items-center gap-3 border-b border-dashed border-[#d9d9d9] px-[14px] py-3 [grid-template-columns:92px_92px_1fr] last:border-b-0 max-[900px]:grid-cols-1 max-[900px]:gap-2"
+        class="grid items-center gap-3 border-b border-dashed border-[#d9d9d9] dark:border-border px-[14px] py-3 [grid-template-columns:92px_92px_1fr] last:border-b-0 max-[900px]:grid-cols-1 max-[900px]:gap-2"
       >
-        <div class="text-[13px] text-[#222222]">{{ log.time }}</div>
+        <div class="text-[13px] text-[#222222] dark:text-foreground">{{ log.time }}</div>
         <div class="flex items-center">
-          <span class="inline-flex min-w-[58px] items-center justify-center rounded-full border border-[#d7d7d7] bg-[#f7f7f7] px-2.5 py-[5px] text-xs text-[#222222]">{{ t(`dashboard.systemLogs.levels.${log.level.toLowerCase()}`) }}</span>
+          <span class="inline-flex min-w-[58px] items-center justify-center rounded-full border border-[#d7d7d7] dark:border-border bg-[#f7f7f7] dark:bg-muted px-2.5 py-[5px] text-xs text-[#222222] dark:text-foreground">{{ t(`dashboard.systemLogs.levels.${log.level.toLowerCase()}`) }}</span>
         </div>
-        <div class="text-[13px] leading-[1.35] text-[#222222]">{{ log.message }}</div>
+        <div class="text-[13px] leading-[1.35] text-[#222222] dark:text-foreground">{{ log.message }}</div>
       </div>
     </div>
 
     <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-2 text-xs text-[#666666]">
+      <div class="flex items-center gap-2 text-xs text-[#666666] dark:text-muted-foreground">
         <span>{{ t('dashboard.pagination.rowsPerPage') }}</span>
         <Select :model-value="String(rowsPerPage)" @update:model-value="handleRowsPerPageChange">
           <SelectTrigger class="h-[34px] min-w-16 text-xs">
@@ -69,7 +69,7 @@
         </Select>
       </div>
 
-      <div class="text-xs text-[#666666]">
+      <div class="text-xs text-[#666666] dark:text-muted-foreground">
         {{ t('dashboard.pagination.pageOf', { page: currentPage, total: totalPages }) }}
       </div>
 
