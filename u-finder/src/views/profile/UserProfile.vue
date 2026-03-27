@@ -18,7 +18,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { getAllProfile, updateProfileField, updatePersonalInfo } from '@/api/profileApi'
-import type { PersonalInfo, CVParseResponse } from '@/types/profileTypes'
+import type { PersonalInfo, CVParseResponse, CVImportSelections } from '@/types/profileTypes'
 import type { EditorRegistration, ProfileEditor } from '@/types/profileEditor'
 import { useUserStore } from '@/stores/userStore'
 import { useSidebar } from '@/components/ui/sidebar'
@@ -298,13 +298,13 @@ function handleCVParseComplete(data: CVParseResponse) {
 }
 
 // Handle CV result confirmation
-async function handleCVResultConfirm(selections: any) {
+async function handleCVResultConfirm(selections: CVImportSelections) {
 	if (!cvParseResult.value) return
 	
 	const promises: Promise<any>[] = []
 	
 	try {
-		// Update personal info (overwrite)
+		// Update personal info (overwrite) — personalInfo is a single object so still read from cvParseResult
 		if (selections.personalInfo) {
 			const promise = updatePersonalInfo(cvParseResult.value.personalInfo)
 				.then(() => {
@@ -318,9 +318,9 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update education (append)
-		if (selections.education && cvParseResult.value.education.data.length > 0) {
-			const newData = [...(educationData.value || []), ...cvParseResult.value.education.data]
+		// Append only the user-selected education items
+		if (selections.education.length > 0) {
+			const newData = [...(educationData.value || []), ...selections.education]
 			const promise = updateProfileField('education', newData)
 				.then(() => {
 					educationData.value = newData
@@ -333,9 +333,9 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update academic (append)
-		if (selections.academic && cvParseResult.value.academic.data.length > 0) {
-			const newData = [...(academicOutcomeData.value || []), ...cvParseResult.value.academic.data]
+		// Append only the user-selected academic items
+		if (selections.academic.length > 0) {
+			const newData = [...(academicOutcomeData.value || []), ...selections.academic]
 			const promise = updateProfileField('academic', newData)
 				.then(() => {
 					academicOutcomeData.value = newData
@@ -348,9 +348,9 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update test (append)
-		if (selections.test && cvParseResult.value.test.data.length > 0) {
-			const newData = [...(standardizedTestData.value || []), ...cvParseResult.value.test.data]
+		// Append only the user-selected test items
+		if (selections.test.length > 0) {
+			const newData = [...(standardizedTestData.value || []), ...selections.test]
 			const promise = updateProfileField('test', newData)
 				.then(() => {
 					standardizedTestData.value = newData
@@ -363,9 +363,9 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update internship (append)
-		if (selections.internship && cvParseResult.value.internship.data.length > 0) {
-			const newData = [...(internshipData.value || []), ...cvParseResult.value.internship.data]
+		// Append only the user-selected internship items
+		if (selections.internship.length > 0) {
+			const newData = [...(internshipData.value || []), ...selections.internship]
 			const promise = updateProfileField('internship', newData)
 				.then(() => {
 					internshipData.value = newData
@@ -378,9 +378,9 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update project (append)
-		if (selections.project && cvParseResult.value.project.data.length > 0) {
-			const newData = [...(projectData.value || []), ...cvParseResult.value.project.data]
+		// Append only the user-selected project items
+		if (selections.project.length > 0) {
+			const newData = [...(projectData.value || []), ...selections.project]
 			const promise = updateProfileField('project', newData)
 				.then(() => {
 					projectData.value = newData
@@ -393,9 +393,9 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update campus (append)
-		if (selections.campus && cvParseResult.value.campus.data.length > 0) {
-			const newData = [...(campusExpData.value || []), ...cvParseResult.value.campus.data]
+		// Append only the user-selected campus items
+		if (selections.campus.length > 0) {
+			const newData = [...(campusExpData.value || []), ...selections.campus]
 			const promise = updateProfileField('campus', newData)
 				.then(() => {
 					campusExpData.value = newData
@@ -408,9 +408,9 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update award (append)
-		if (selections.award && cvParseResult.value.award.data.length > 0) {
-			const newData = [...(awardData.value || []), ...cvParseResult.value.award.data]
+		// Append only the user-selected award items
+		if (selections.award.length > 0) {
+			const newData = [...(awardData.value || []), ...selections.award]
 			const promise = updateProfileField('award', newData)
 				.then(() => {
 					awardData.value = newData

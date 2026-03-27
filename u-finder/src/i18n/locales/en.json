@@ -302,6 +302,7 @@
             "item": "item",
             "items": "items",
             "more": "more...",
+            "scrollHint": "Scroll to view more",
             "confirmImport": "Confirm Import",
             "importSuccess": "CV data imported successfully!",
             "importFailed": "Failed to import CV data",

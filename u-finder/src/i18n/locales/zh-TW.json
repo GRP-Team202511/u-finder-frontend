@@ -179,6 +179,7 @@
             "item": "項",
             "items": "項",
             "more": "更多...",
+            "scrollHint": "滚動查看更多",
             "confirmImport": "確認匯入",
             "importSuccess": "履歷資料匯入成功！",
             "importFailed": "匯入履歷資料失敗",

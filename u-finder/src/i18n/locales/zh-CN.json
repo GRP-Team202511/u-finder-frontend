@@ -179,6 +179,7 @@
             "item": "项",
             "items": "项",
             "more": "更多...",
+            "scrollHint": "滚动查看更多",
             "confirmImport": "确认导入",
             "importSuccess": "简历数据导入成功！",
             "importFailed": "导入简历数据失败",

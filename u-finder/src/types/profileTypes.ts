@@ -292,3 +292,19 @@ export interface CVParseResponse {
   campus: { data: CampusItem[] }
   award: { data: AwardItem[] }
 }
+
+/**
+ * Payload emitted by CVParseResultReview when the user confirms their import selection.
+ * Array fields contain only the specific items the user chose to import (not all parsed items).
+ * personalInfo is a boolean since it is a single object (overwrite semantics).
+ */
+export interface CVImportSelections {
+  personalInfo: boolean
+  education: EducationItem[]
+  academic: AcademicItem[]
+  test: TestItem[]
+  internship: InternshipItem[]
+  project: ProjectItem[]
+  campus: CampusItem[]
+  award: AwardItem[]
+}
