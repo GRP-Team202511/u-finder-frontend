@@ -83,6 +83,8 @@
       "email": "電子郵件",
       "plan": "計劃",
       "changeAvatar": "更換頭像",
+      "avatarUploadSuccess": "頭像上傳成功",
+      "avatarUploadError": "頭像上傳失敗",
       "fetchUserInfoError": "獲取使用者資訊失敗",
       "plans": {
         "free": "免費計劃"
