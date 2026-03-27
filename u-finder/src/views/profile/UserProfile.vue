@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch, provide, onMounted, onBeforeUnmount, markRaw } from 'vue'
+import { computed, ref, watch, provide, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import { Save, X } from 'lucide-vue-next'
@@ -33,13 +33,18 @@ const isLoading = ref(false)
 const loadError = ref(false)
 
 // ─── Profile Editor Provider ──────────────────────────────────────────────────
-const registeredEditors = ref(new Map<number, EditorRegistration>())
+const registeredEditors = new Map<number, EditorRegistration>()
+const registeredEditorsVersion = ref(0)
 let nextEditorId = 0
 
 function registerEditor(handler: EditorRegistration): () => void {
 	const id = nextEditorId++
-	registeredEditors.value.set(id, markRaw(handler))
-	return () => { registeredEditors.value.delete(id) }
+	registeredEditors.set(id, handler)
+	registeredEditorsVersion.value++
+	return () => {
+		registeredEditors.delete(id)
+		registeredEditorsVersion.value++
+	}
 }
 
 const activeEl = ref<HTMLElement | null>(null)
@@ -51,15 +56,17 @@ function setActiveEl(el: HTMLElement | null) {
 provide<ProfileEditor>('profileEditor', { register: registerEditor, setActiveEl })
 
 const hasEditingEditors = computed(() => {
-	for (const editor of registeredEditors.value.values()) {
+	registeredEditorsVersion.value
+	for (const editor of registeredEditors.values()) {
 		if (editor.isEditing.value) return true
 	}
 	return false
 })
 
 const editingComponentsCount = computed(() => {
+	registeredEditorsVersion.value
 	let count = 0
-	for (const editor of registeredEditors.value.values()) {
+	for (const editor of registeredEditors.values()) {
 		if (editor.isEditing.value) count++
 	}
 	return count
@@ -71,7 +78,7 @@ async function saveAll() {
 	if (isSavingAll.value) return
 	isSavingAll.value = true
 
-	const editingEditors = [...registeredEditors.value.values()].filter(e => e.isEditing.value)
+	const editingEditors = [...registeredEditors.values()].filter(e => e.isEditing.value)
 	if (editingEditors.length === 0) {
 		isSavingAll.value = false
 		return
@@ -112,7 +119,7 @@ async function saveAll() {
 }
 
 function cancelAll() {
-	const editingEditors = [...registeredEditors.value.values()].filter(e => e.isEditing.value)
+	const editingEditors = [...registeredEditors.values()].filter(e => e.isEditing.value)
 	for (const editor of editingEditors) {
 		editor.cancel?.()
 	}
