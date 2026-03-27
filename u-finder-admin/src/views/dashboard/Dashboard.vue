@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen w-full bg-[#f5f5f5] dark:bg-background box-border px-6 pb-8 pt-6 max-md:px-[18px]">
+  <div class="min-h-screen w-full box-border px-6 pb-8 pt-6 max-md:px-[18px]">
     <div class="mb-[18px] flex items-start justify-between gap-[18px] max-lg:flex-col">
       <div>
         <h1 class="m-0 text-5xl font-black leading-none tracking-[-0.03em] text-[#111111] dark:text-foreground max-lg:text-[40px] max-md:text-4xl">{{ t('dashboard.page.title') }}</h1>

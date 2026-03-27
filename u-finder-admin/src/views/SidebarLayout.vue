@@ -22,7 +22,7 @@ const sidebarRef = ref<InstanceType<typeof AppSidebar>>()
   <SidebarProvider class="h-dvh">
     <AppSidebar ref="sidebarRef" />
     <SidebarInset>
-      <div class="flex h-full min-h-0 flex-1 flex-col gap-4 overflow-auto p-4 pt-0">
+      <div class="flex h-full min-h-0 flex-1 flex-col gap-4 overflow-auto bg-[#f5f5f5] p-4 pt-0 dark:bg-background">
         <router-view />
       </div>
     </SidebarInset>
