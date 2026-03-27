@@ -18,7 +18,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { getAllProfile, updateProfileField, updatePersonalInfo } from '@/api/profileApi'
-import type { PersonalInfo, CVParseResponse, CVImportSelections } from '@/types/profileTypes'
+import type { PersonalInfo, CVParseResponse, CVImportSelections, ImportMode } from '@/types/profileTypes'
 import type { EditorRegistration, ProfileEditor } from '@/types/profileEditor'
 import { useUserStore } from '@/stores/userStore'
 import { useSidebar } from '@/components/ui/sidebar'
@@ -319,8 +319,10 @@ async function handleCVResultConfirm(selections: CVImportSelections) {
 		}
 		
 		// Append only the user-selected education items
-		if (selections.education.length > 0) {
-			const newData = [...(educationData.value || []), ...selections.education]
+		if (selections.education.items.length > 0) {
+			const newData = selections.education.mode === 'overwrite'
+				? selections.education.items
+				: [...(educationData.value || []), ...selections.education.items]
 			const promise = updateProfileField('education', newData)
 				.then(() => {
 					educationData.value = newData
@@ -334,8 +336,10 @@ async function handleCVResultConfirm(selections: CVImportSelections) {
 		}
 		
 		// Append only the user-selected academic items
-		if (selections.academic.length > 0) {
-			const newData = [...(academicOutcomeData.value || []), ...selections.academic]
+		if (selections.academic.items.length > 0) {
+			const newData = selections.academic.mode === 'overwrite'
+				? selections.academic.items
+				: [...(academicOutcomeData.value || []), ...selections.academic.items]
 			const promise = updateProfileField('academic', newData)
 				.then(() => {
 					academicOutcomeData.value = newData
@@ -349,8 +353,10 @@ async function handleCVResultConfirm(selections: CVImportSelections) {
 		}
 		
 		// Append only the user-selected test items
-		if (selections.test.length > 0) {
-			const newData = [...(standardizedTestData.value || []), ...selections.test]
+		if (selections.test.items.length > 0) {
+			const newData = selections.test.mode === 'overwrite'
+				? selections.test.items
+				: [...(standardizedTestData.value || []), ...selections.test.items]
 			const promise = updateProfileField('test', newData)
 				.then(() => {
 					standardizedTestData.value = newData
@@ -364,8 +370,10 @@ async function handleCVResultConfirm(selections: CVImportSelections) {
 		}
 		
 		// Append only the user-selected internship items
-		if (selections.internship.length > 0) {
-			const newData = [...(internshipData.value || []), ...selections.internship]
+		if (selections.internship.items.length > 0) {
+			const newData = selections.internship.mode === 'overwrite'
+				? selections.internship.items
+				: [...(internshipData.value || []), ...selections.internship.items]
 			const promise = updateProfileField('internship', newData)
 				.then(() => {
 					internshipData.value = newData
@@ -379,8 +387,10 @@ async function handleCVResultConfirm(selections: CVImportSelections) {
 		}
 		
 		// Append only the user-selected project items
-		if (selections.project.length > 0) {
-			const newData = [...(projectData.value || []), ...selections.project]
+		if (selections.project.items.length > 0) {
+			const newData = selections.project.mode === 'overwrite'
+				? selections.project.items
+				: [...(projectData.value || []), ...selections.project.items]
 			const promise = updateProfileField('project', newData)
 				.then(() => {
 					projectData.value = newData
@@ -394,8 +404,10 @@ async function handleCVResultConfirm(selections: CVImportSelections) {
 		}
 		
 		// Append only the user-selected campus items
-		if (selections.campus.length > 0) {
-			const newData = [...(campusExpData.value || []), ...selections.campus]
+		if (selections.campus.items.length > 0) {
+			const newData = selections.campus.mode === 'overwrite'
+				? selections.campus.items
+				: [...(campusExpData.value || []), ...selections.campus.items]
 			const promise = updateProfileField('campus', newData)
 				.then(() => {
 					campusExpData.value = newData
@@ -409,8 +421,10 @@ async function handleCVResultConfirm(selections: CVImportSelections) {
 		}
 		
 		// Append only the user-selected award items
-		if (selections.award.length > 0) {
-			const newData = [...(awardData.value || []), ...selections.award]
+		if (selections.award.items.length > 0) {
+			const newData = selections.award.mode === 'overwrite'
+				? selections.award.items
+				: [...(awardData.value || []), ...selections.award.items]
 			const promise = updateProfileField('award', newData)
 				.then(() => {
 					awardData.value = newData

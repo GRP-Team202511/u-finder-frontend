@@ -293,18 +293,21 @@ export interface CVParseResponse {
   award: { data: AwardItem[] }
 }
 
+/** Whether to append parsed items to existing data or replace all existing items */
+export type ImportMode = 'append' | 'overwrite'
+
 /**
  * Payload emitted by CVParseResultReview when the user confirms their import selection.
- * Array fields contain only the specific items the user chose to import (not all parsed items).
- * personalInfo is a boolean since it is a single object (overwrite semantics).
+ * personalInfo is a boolean (always overwrite — single object, no list).
+ * All array sections carry both the user-selected items and the chosen import mode.
  */
 export interface CVImportSelections {
   personalInfo: boolean
-  education: EducationItem[]
-  academic: AcademicItem[]
-  test: TestItem[]
-  internship: InternshipItem[]
-  project: ProjectItem[]
-  campus: CampusItem[]
-  award: AwardItem[]
+  education:  { mode: ImportMode; items: EducationItem[] }
+  academic:   { mode: ImportMode; items: AcademicItem[] }
+  test:       { mode: ImportMode; items: TestItem[] }
+  internship: { mode: ImportMode; items: InternshipItem[] }
+  project:    { mode: ImportMode; items: ProjectItem[] }
+  campus:     { mode: ImportMode; items: CampusItem[] }
+  award:      { mode: ImportMode; items: AwardItem[] }
 }
