@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Info } from 'lucide-vue-next'
+import { Info, CircleHelp } from 'lucide-vue-next'
 import {
   Dialog,
   DialogContent,
@@ -26,6 +26,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import type { CVParseResponse, CVImportSelections, ImportMode } from '@/types/profileTypes'
 
 const { t } = useI18n()
@@ -448,6 +454,20 @@ function formatItemDetails(item: any, sectionKey: string): { label: string; valu
           <!-- Global mode toggle: sets all array sections to append or overwrite at once -->
           <div class="flex shrink-0 items-center gap-2">
             <span class="text-xs text-muted-foreground">{{ t('profile.cvParser.allSections') }}:</span>
+            <!-- Help tooltip: explains what append and overwrite mean -->
+            <TooltipProvider :delay-duration="100">
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <button type="button" class="text-muted-foreground hover:text-foreground transition-colors" tabindex="-1">
+                    <CircleHelp class="h-3.5 w-3.5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" class="max-w-56 text-xs leading-relaxed">
+                  <p><strong>{{ t('profile.cvParser.importModeAppend') }}</strong>: {{ t('profile.cvParser.importModeAppendDesc') }}</p>
+                  <p class="mt-1"><strong>{{ t('profile.cvParser.importModeOverwrite') }}</strong>: {{ t('profile.cvParser.importModeOverwriteDesc') }}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <div class="flex rounded-md border overflow-hidden text-xs">
               <button
                 type="button"
