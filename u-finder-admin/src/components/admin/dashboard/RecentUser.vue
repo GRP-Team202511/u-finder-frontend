@@ -107,6 +107,20 @@
                   :disabled="actionLoading === user.id"
                   @click="handleDelete(user.id)"
                 >{{ t('dashboard.recentUsers.actions.delete') }}</Button>
+                <Button
+                  v-if="user.availableActions.includes('set_admin')"
+                  variant="outline"
+                  size="sm"
+                  :disabled="actionLoading === user.id"
+                  @click="handleSetAdmin(user.id)"
+                >{{ t('dashboard.recentUsers.actions.setAdmin') }}</Button>
+                <Button
+                  v-if="user.availableActions.includes('set_user')"
+                  variant="outline"
+                  size="sm"
+                  :disabled="actionLoading === user.id"
+                  @click="handleSetUser(user.id)"
+                >{{ t('dashboard.recentUsers.actions.setUser') }}</Button>
               </div>
             </TableCell>
           </TableRow>
@@ -164,6 +178,7 @@ import {
   blockUser,
   unblockUser,
   deleteUser,
+  changeUserRole,
   type AdminUser,
 } from '@/api/dashboard'
 import { extractErrorMessage } from '@/api/http'
@@ -271,6 +286,32 @@ async function handleDelete(userId: number) {
     await loadUsers()
   } catch (e: unknown) {
     toast.error(extractErrorMessage(e, t('dashboard.recentUsers.toasts.deleteFailed')))
+  } finally {
+    actionLoading.value = null
+  }
+}
+
+async function handleSetAdmin(userId: number) {
+  actionLoading.value = userId
+  try {
+    await changeUserRole(userId, '3')
+    toast.success(t('dashboard.recentUsers.toasts.roleChanged'))
+    await loadUsers()
+  } catch (e: unknown) {
+    toast.error(extractErrorMessage(e, t('dashboard.recentUsers.toasts.roleChangeFailed')))
+  } finally {
+    actionLoading.value = null
+  }
+}
+
+async function handleSetUser(userId: number) {
+  actionLoading.value = userId
+  try {
+    await changeUserRole(userId, '1')
+    toast.success(t('dashboard.recentUsers.toasts.roleChanged'))
+    await loadUsers()
+  } catch (e: unknown) {
+    toast.error(extractErrorMessage(e, t('dashboard.recentUsers.toasts.roleChangeFailed')))
   } finally {
     actionLoading.value = null
   }

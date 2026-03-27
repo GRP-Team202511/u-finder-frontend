@@ -261,7 +261,9 @@
       "actions": {
         "block": "封禁",
         "unblock": "解封",
-        "delete": "删除"
+        "delete": "删除",
+        "setAdmin": "设为管理员",
+        "setUser": "设为用户"
       },
       "roles": {
         "1": "用户",
@@ -282,7 +284,9 @@
         "userUnblocked": "用户已解封",
         "unblockFailed": "解封用户失败",
         "userDeleted": "用户已删除",
-        "deleteFailed": "删除用户失败"
+        "deleteFailed": "删除用户失败",
+        "roleChanged": "用户角色已更新",
+        "roleChangeFailed": "更新用户角色失败"
       }
     },
     "modelCost": {
