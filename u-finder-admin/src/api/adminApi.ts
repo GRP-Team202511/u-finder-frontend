@@ -280,3 +280,34 @@ export const logoutDevice = (sessionId: number) => {
 export const logoutAllDevices = () => {
 	return http.post<LogoutAllDevicesResponse>('/api/admin/auth/settings/logout-all')
 }
+
+// ──────── Avatar ────────
+
+export interface AvatarUploadResponse {
+	message: string
+	avatar_urls: Record<string, string>
+}
+
+export interface AvatarDeleteResponse {
+	message: string
+}
+
+export interface GetAvatarResponse {
+	url: string | null
+}
+
+export const getAvatar = (size: string = '256x256') => {
+	return http.get<GetAvatarResponse>('/api/admin/auth/settings/avatar', { params: { size } })
+}
+
+export const uploadAvatar = (file: File) => {
+	const formData = new FormData()
+	formData.append('file', file)
+	return http.put<AvatarUploadResponse>('/api/admin/auth/settings/avatar', formData, {
+		headers: { 'Content-Type': 'multipart/form-data' },
+	})
+}
+
+export const deleteAvatar = () => {
+	return http.delete<AvatarDeleteResponse>('/api/admin/auth/settings/avatar')
+}

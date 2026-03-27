@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen w-full bg-[#f5f5f5] box-border px-6 pb-8 pt-6 max-md:px-[18px]">
+  <div class="min-h-screen w-full box-border px-6 pb-8 pt-6 max-md:px-[18px]">
     <div class="mb-[18px] flex items-start justify-between gap-[18px] max-lg:flex-col">
       <div>
-        <h1 class="m-0 text-5xl font-black leading-none tracking-[-0.03em] text-[#111111] max-lg:text-[40px] max-md:text-4xl">{{ t('dashboard.page.title') }}</h1>
-        <p class="mt-[10px] text-sm leading-[1.4] text-[#6b6b6b]">
+        <h1 class="m-0 text-5xl font-black leading-none tracking-[-0.03em] text-[#111111] dark:text-foreground max-lg:text-[40px] max-md:text-4xl">{{ t('dashboard.page.title') }}</h1>
+        <p class="mt-[10px] text-sm leading-[1.4] text-[#6b6b6b] dark:text-muted-foreground">
           {{ t('dashboard.page.subtitle') }}
         </p>
       </div>
@@ -15,8 +15,8 @@
       </div>
     </div>
 
-    <div v-if="initialLoading" class="p-5 text-sm text-[#555555]">{{ t('dashboard.page.loading') }}</div>
-    <div v-else-if="error && !dashboardData" class="p-5 text-sm text-[#c62828]">
+    <div v-if="initialLoading" class="p-5 text-sm text-[#555555] dark:text-muted-foreground">{{ t('dashboard.page.loading') }}</div>
+    <div v-else-if="error && !dashboardData" class="p-5 text-sm text-[#c62828] dark:text-red-400">
       {{ error }}
     </div>
     <template v-else>

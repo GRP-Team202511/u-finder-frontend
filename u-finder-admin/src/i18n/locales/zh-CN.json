@@ -83,6 +83,8 @@
       "email": "邮箱",
       "plan": "计划",
       "changeAvatar": "更换头像",
+      "avatarUploadSuccess": "头像上传成功",
+      "avatarUploadError": "头像上传失败",
       "fetchUserInfoError": "获取用户信息失败",
       "plans": {
         "free": "免费计划"

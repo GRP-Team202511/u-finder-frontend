@@ -1,9 +1,9 @@
 <template>
-  <section class="box-border rounded-[28px] border border-[#dddddd] bg-white p-5">
+  <section class="box-border rounded-[28px] border border-[#dddddd] dark:border-border bg-white dark:bg-card p-5">
     <div class="mb-3">
       <div>
-        <h2 class="m-0 text-[22px] font-extrabold leading-[1.15] text-[#111111]">{{ t('dashboard.recentUsers.title') }}</h2>
-        <p class="mt-1.5 text-[13px] leading-[1.4] text-[#6b6b6b]">
+        <h2 class="m-0 text-[22px] font-extrabold leading-[1.15] text-[#111111] dark:text-foreground">{{ t('dashboard.recentUsers.title') }}</h2>
+        <p class="mt-1.5 text-[13px] leading-[1.4] text-[#6b6b6b] dark:text-muted-foreground">
           {{ t('dashboard.recentUsers.subtitle') }}
         </p>
       </div>
@@ -14,13 +14,13 @@
         <Input
           v-model="searchQuery"
           type="text"
-          class="h-[42px] w-full rounded-[14px] border border-[#d8d8d8] bg-white px-[14px] text-[13px] text-[#111111]"
+          class="h-[42px] w-full rounded-[14px] border border-[#d8d8d8] dark:border-border bg-white dark:bg-muted px-[14px] text-[13px] text-[#111111] dark:text-foreground"
           :placeholder="t('dashboard.recentUsers.searchPlaceholder')"
         />
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
-        <label class="text-[13px] text-[#666666]">{{ t('dashboard.filters.sortBy') }}</label>
+        <label class="text-[13px] text-[#666666] dark:text-muted-foreground">{{ t('dashboard.filters.sortBy') }}</label>
         <Select :model-value="sortKey" @update:model-value="handleSortKeyChange">
           <SelectTrigger class="h-[42px] min-w-[120px] text-[13px]">
             <SelectValue>{{ sortKeyLabel }}</SelectValue>
@@ -46,45 +46,45 @@
       </div>
     </div>
 
-    <div class="overflow-hidden rounded-[18px] border border-[#e4e4e4] bg-white max-[1100px]:overflow-x-auto">
+    <div class="overflow-hidden rounded-[18px] border border-[#e4e4e4] dark:border-border bg-white dark:bg-card max-[1100px]:overflow-x-auto">
       <Table class="w-full table-fixed border-collapse max-[1100px]:min-w-[780px]">
         <TableHeader>
           <TableRow>
-            <TableHead class="border-b border-[#e4e4e4] bg-[#f7f7f7] px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666]">{{ t('dashboard.recentUsers.table.user') }}</TableHead>
-            <TableHead class="border-b border-[#e4e4e4] bg-[#f7f7f7] px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666]">{{ t('dashboard.recentUsers.table.plan') }}</TableHead>
-            <TableHead class="border-b border-[#e4e4e4] bg-[#f7f7f7] px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666]">{{ t('dashboard.recentUsers.table.status') }}</TableHead>
-            <TableHead class="border-b border-[#e4e4e4] bg-[#f7f7f7] px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666]">{{ t('dashboard.recentUsers.table.created') }}</TableHead>
-            <TableHead class="border-b border-[#e4e4e4] bg-[#f7f7f7] px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666]">{{ t('dashboard.recentUsers.table.actions') }}</TableHead>
+            <TableHead class="border-b border-[#e4e4e4] dark:border-border bg-[#f7f7f7] dark:bg-muted px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666] dark:text-muted-foreground">{{ t('dashboard.recentUsers.table.user') }}</TableHead>
+            <TableHead class="border-b border-[#e4e4e4] dark:border-border bg-[#f7f7f7] dark:bg-muted px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666] dark:text-muted-foreground">{{ t('dashboard.recentUsers.table.plan') }}</TableHead>
+            <TableHead class="border-b border-[#e4e4e4] dark:border-border bg-[#f7f7f7] dark:bg-muted px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666] dark:text-muted-foreground">{{ t('dashboard.recentUsers.table.status') }}</TableHead>
+            <TableHead class="border-b border-[#e4e4e4] dark:border-border bg-[#f7f7f7] dark:bg-muted px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666] dark:text-muted-foreground">{{ t('dashboard.recentUsers.table.created') }}</TableHead>
+            <TableHead class="border-b border-[#e4e4e4] dark:border-border bg-[#f7f7f7] dark:bg-muted px-[14px] py-[11px] text-left text-[13px] font-bold text-[#666666] dark:text-muted-foreground">{{ t('dashboard.recentUsers.table.actions') }}</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
           <TableRow v-if="paginatedUsers.length === 0">
-            <TableCell :colspan="5" class="px-[14px] py-5 text-center text-[13px] text-[#777777]">{{ t('dashboard.recentUsers.empty') }}</TableCell>
+            <TableCell :colspan="5" class="px-[14px] py-5 text-center text-[13px] text-[#777777] dark:text-muted-foreground">{{ t('dashboard.recentUsers.empty') }}</TableCell>
           </TableRow>
 
           <TableRow v-for="user in paginatedUsers" :key="user.id">
-            <TableCell class="align-middle border-b border-[#eeeeee] px-[14px] py-[11px]">
+            <TableCell class="align-middle border-b border-[#eeeeee] dark:border-border px-[14px] py-[11px]">
               <div class="flex flex-col gap-0.5">
-                <div class="text-sm font-bold leading-[1.2] text-[#111111]">{{ user.name }}</div>
-                <div class="text-xs leading-[1.25] text-[#777777]">{{ user.email }}</div>
-                <div class="text-xs leading-[1.25] text-[#777777]">#{{ user.id }}</div>
+                <div class="text-sm font-bold leading-[1.2] text-[#111111] dark:text-foreground">{{ user.name }}</div>
+                <div class="text-xs leading-[1.25] text-[#777777] dark:text-muted-foreground">{{ user.email }}</div>
+                <div class="text-xs leading-[1.25] text-[#777777] dark:text-muted-foreground">#{{ user.id }}</div>
               </div>
             </TableCell>
 
-            <TableCell class="align-middle border-b border-[#eeeeee] px-[14px] py-[11px]">
-              <span class="inline-flex min-w-[78px] items-center justify-center rounded-full border border-[#dddddd] bg-[#f8f8f8] px-2.5 py-[5px] text-xs text-[#222222]">{{ getRoleText(user.roleType) }}</span>
+            <TableCell class="align-middle border-b border-[#eeeeee] dark:border-border px-[14px] py-[11px]">
+              <span class="inline-flex min-w-[78px] items-center justify-center rounded-full border border-[#dddddd] dark:border-border bg-[#f8f8f8] dark:bg-muted px-2.5 py-[5px] text-xs text-[#222222] dark:text-foreground">{{ getRoleText(user.roleType) }}</span>
             </TableCell>
 
-            <TableCell class="align-middle border-b border-[#eeeeee] px-[14px] py-[11px]">
-              <span class="inline-flex min-w-[78px] items-center justify-center rounded-full border border-[#dddddd] bg-[#f8f8f8] px-2.5 py-[5px] text-xs text-[#222222]">{{ getStatusText(user.statusKey) }}</span>
+            <TableCell class="align-middle border-b border-[#eeeeee] dark:border-border px-[14px] py-[11px]">
+              <span class="inline-flex min-w-[78px] items-center justify-center rounded-full border border-[#dddddd] dark:border-border bg-[#f8f8f8] dark:bg-muted px-2.5 py-[5px] text-xs text-[#222222] dark:text-foreground">{{ getStatusText(user.statusKey) }}</span>
             </TableCell>
 
-            <TableCell class="align-middle border-b border-[#eeeeee] px-[14px] py-[11px] text-[13px] leading-[1.3] text-[#555555]">
+            <TableCell class="align-middle border-b border-[#eeeeee] dark:border-border px-[14px] py-[11px] text-[13px] leading-[1.3] text-[#555555] dark:text-muted-foreground">
               {{ user.createdAt }}
             </TableCell>
 
-            <TableCell class="align-middle border-b border-[#eeeeee] px-[14px] py-[11px]">
+            <TableCell class="align-middle border-b border-[#eeeeee] dark:border-border px-[14px] py-[11px]">
               <div class="flex flex-wrap gap-1.5">
                 <Button
                   v-if="user.availableActions.includes('block')"
@@ -115,7 +115,7 @@
     </div>
 
     <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-2 text-xs text-[#666666]">
+      <div class="flex items-center gap-2 text-xs text-[#666666] dark:text-muted-foreground">
         <span>{{ t('dashboard.pagination.rowsPerPage') }}</span>
         <Select :model-value="String(rowsPerPage)" @update:model-value="handleRowsPerPageChange">
           <SelectTrigger class="h-[34px] min-w-16 text-xs">
@@ -129,7 +129,7 @@
         </Select>
       </div>
 
-      <div class="text-xs text-[#666666]">
+      <div class="text-xs text-[#666666] dark:text-muted-foreground">
         {{ t('dashboard.pagination.pageOf', { page: currentPage, total: totalPages }) }}
       </div>
 

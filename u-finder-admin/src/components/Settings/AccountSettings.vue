@@ -15,7 +15,7 @@ import TwoFactorDisableDialog from './TwoFactorDisableDialog.vue'
 import RegenerateBackupCodesDialog from './RegenerateBackupCodesDialog.vue'
 import ResetPasswordDialog from './ResetPasswordDialog.vue'
 import DeviceManagementDialog from './DeviceManagementDialog.vue'
-import { get2FAStatus, getUserInfo } from '@/api/adminApi'
+import { get2FAStatus, getUserInfo, getAvatar, uploadAvatar } from '@/api/adminApi'
 
 const { t } = useI18n()
 const adminStore = useAdminStore()
@@ -23,8 +23,9 @@ const adminStore = useAdminStore()
 const userName = ref(adminStore.admin?.name ?? '')
 const userEmail = ref(adminStore.admin?.email ?? '')
 const userType = ref<number | string>(0)
-const userAvatar = ref('') // Placeholder - will be fetched from API
+const userAvatar = ref(adminStore.avatarUrl || '') // Synced with store
 const isLoadingUserInfo = ref(false)
+const avatarInputRef = ref<HTMLInputElement | null>(null)
 
 // 2FA state
 const is2FAEnabled = ref(false)
@@ -40,7 +41,7 @@ const showRegenerateCodesDialog = ref(false)
 
 // Fetch 2FA status on mount
 onMounted(async () => {
-  await Promise.all([fetch2FAStatus(), fetchUserInfo()])
+  await Promise.all([fetch2FAStatus(), fetchUserInfo(), fetchAvatar()])
 })
 
 async function fetchUserInfo() {
@@ -57,6 +58,46 @@ async function fetchUserInfo() {
     toast.error(t('settings.account.fetchUserInfoError'))
   } finally {
     isLoadingUserInfo.value = false
+  }
+}
+
+const baseUrl = import.meta.env.VITE_BASE_URL || ''
+
+async function fetchAvatar() {
+  try {
+    const response = await getAvatar('256x256')
+    if (response.data.url) {
+      const fullUrl = `${baseUrl}${response.data.url}?t=${Date.now()}`
+      userAvatar.value = fullUrl
+      adminStore.setAvatar(fullUrl)
+    }
+  } catch {
+    // No avatar - that's fine
+  }
+}
+
+function triggerAvatarUpload() {
+  avatarInputRef.value?.click()
+}
+
+async function handleAvatarChange(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+
+  try {
+    const response = await uploadAvatar(file)
+    const url = response.data.avatar_urls?.webp_256 || response.data.avatar_urls?.webp_original || response.data.avatar_urls?.original
+    if (url) {
+      const fullUrl = `${baseUrl}${url}?t=${Date.now()}`
+      userAvatar.value = fullUrl
+      adminStore.setAvatar(fullUrl)
+    }
+    toast.success(t('settings.account.avatarUploadSuccess'))
+  } catch {
+    toast.error(t('settings.account.avatarUploadError'))
+  } finally {
+    input.value = ''
   }
 }
 
@@ -142,7 +183,7 @@ function handle2FASuccess() {
               <Label class="text-sm font-medium">{{ t('settings.account.username') }}</Label>
               <div
                 v-if="!isLoadingUserInfo"
-                class="h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm text-black dark:bg-white dark:text-black flex items-center"
+                class="h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm text-black dark:bg-muted dark:text-foreground flex items-center"
               >
                 {{ userName }}
               </div>
@@ -152,7 +193,7 @@ function handle2FASuccess() {
               <Label class="text-sm font-medium">{{ t('settings.account.email') }}</Label>
               <div
                 v-if="!isLoadingUserInfo"
-                class="h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm text-black dark:bg-white dark:text-black flex items-center"
+                class="h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm text-black dark:bg-muted dark:text-foreground flex items-center"
               >
                 {{ userEmail }}
               </div>
@@ -162,7 +203,7 @@ function handle2FASuccess() {
               <Label class="text-sm font-medium">{{ t('settings.account.plan') }}</Label>
               <div
                 v-if="!isLoadingUserInfo"
-                class="h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm text-black dark:bg-white dark:text-black flex items-center"
+                class="h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm text-black dark:bg-muted dark:text-foreground flex items-center"
               >
                 {{ userPlanDisplay }}
               </div>
@@ -176,7 +217,14 @@ function handle2FASuccess() {
               <UserIcon v-if="!userAvatar" class="size-12 text-muted-foreground" />
               <img v-else :src="userAvatar" alt="User avatar" class="w-full h-full rounded-full object-cover" />
             </div>
-            <Button variant="outline" size="sm" class="text-xs">{{ t('settings.account.changeAvatar') }}</Button>
+            <input
+              ref="avatarInputRef"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
+              class="hidden"
+              @change="handleAvatarChange"
+            />
+            <Button variant="outline" size="sm" class="text-xs" @click="triggerAvatarUpload">{{ t('settings.account.changeAvatar') }}</Button>
           </div>
         </div>
       </CardContent>

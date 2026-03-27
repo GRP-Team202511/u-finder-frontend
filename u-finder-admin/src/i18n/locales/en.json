@@ -83,6 +83,8 @@
       "email": "Email",
       "plan": "Plan",
       "changeAvatar": "Change Avatar",
+      "avatarUploadSuccess": "Avatar uploaded successfully",
+      "avatarUploadError": "Failed to upload avatar",
       "fetchUserInfoError": "Failed to fetch user information",
       "plans": {
         "free": "Free Plan"
