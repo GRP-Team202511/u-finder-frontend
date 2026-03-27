@@ -1,0 +1,419 @@
+import http from './http'
+
+// Login request payload structure
+export interface LoginRequest {
+  email: string
+  password: string
+}
+
+// Login response payload structure
+export interface LoginResponse {
+  id: number
+  name: string
+  token: string
+}
+
+export interface LoginTwoFactorResponse {
+  temp_token: string | null
+}
+
+export type LoginApiResponse =
+  | {
+      status: 200
+      data: LoginResponse
+    }
+  | {
+      status: 202
+      data: LoginTwoFactorResponse
+    }
+
+// Signup request payload structure
+export interface SignupRequest {
+  name: string
+  email: string
+  password: string
+}
+
+// Signup response payload structure
+export interface SignupResponse {
+  temp_token: string
+}
+
+// Verify signup request payload structure
+export interface VerifySignupRequest {
+  code: string
+}
+
+// Verify signup response payload structure
+export interface VerifySignupResponse {
+  id: number
+  name: string
+  token: string
+}
+
+// Sends a login request to the server
+export const login = async (data: LoginRequest): Promise<LoginApiResponse> => {
+  const response = await http.post<LoginResponse | LoginTwoFactorResponse>('/auth/login', data)
+
+  if (response.status === 200) {
+    return {
+      status: 200,
+      data: response.data as LoginResponse
+    }
+  }
+
+  if (response.status === 202) {
+    return {
+      status: 202,
+      data: response.data as LoginTwoFactorResponse
+    }
+  }
+
+  throw new Error(`Unexpected login response status: ${response.status}`)
+}
+
+export interface TwoFactorVerifyRequest {
+  code: string
+  type: 'totp' | 'recovery'
+}
+
+export interface TwoFactorVerifyResponse {
+  id: number
+  name: string
+  token: string
+}
+
+export const verifyTwoFactor = (data: TwoFactorVerifyRequest, tempToken: string) => {
+  return http.post<TwoFactorVerifyResponse>('/auth/2fa/verify', data, {
+    headers: {
+      'Temp-Token': tempToken
+    }
+  })
+}
+
+// Sends a signup request to the server
+export const signup = (data: SignupRequest) => {
+  return http.post<SignupResponse>('/auth/signup', data)
+}
+
+// Verifies the signup email with the verification code
+export const verifySignup = (data: VerifySignupRequest, tempToken: string) => {
+  console.log(tempToken)
+  return http.post<VerifySignupResponse>('/auth/verify', data, {
+    headers: {
+      'Temp-Token': tempToken
+    }
+  })
+}
+
+// Resends the verification code during signup
+export const resendSignupCode = (tempToken: string) => {
+  return http.post<{ message: string }>('/auth/signup/resend', {}, {
+    headers: {
+      'Temp-Token': tempToken
+    }
+  })
+}
+
+// Reset password request payload structure
+export interface ResetPasswordRequest {
+  email: string
+}
+
+// Reset password response payload structure
+export interface ResetPasswordResponse {
+  temp_token: string
+}
+
+// Verify reset password request payload structure
+export interface VerifyResetPasswordRequest {
+  code: string
+  newPassword: string
+}
+
+// Verify reset password response payload structure
+export interface VerifyResetPasswordResponse {
+  message: string
+}
+
+// Resend reset password code response structure
+export interface ResendResetPasswordResponse {
+  message: string
+}
+
+// Sends a password reset request to the server
+export const resetPassword = (data: ResetPasswordRequest) => {
+  return http.post<ResetPasswordResponse>('/auth/reset', data)
+}
+
+// Verifies the password reset with OTP code and sets new password
+export const verifyResetPassword = (data: VerifyResetPasswordRequest, tempToken: string) => {
+  return http.post<VerifyResetPasswordResponse>('/auth/reset/verify', data, {
+    headers: {
+      'Temp-Token': tempToken
+    }
+  })
+}
+
+// Resends the verification code during password reset
+export const resendResetPasswordCode = (tempToken: string) => {
+  return http.post<ResendResetPasswordResponse>('/auth/reset/resend', {}, {
+    headers: {
+      'Temp-Token': tempToken
+    }
+  })
+}
+
+export interface PersonalInfo {
+  birthday: string
+  gender: string
+  name: string
+  [property: string]: any
+}
+
+export interface Education {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export interface Academic {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export interface Test {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export interface Internship {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export interface Project {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export interface Campus {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export interface Award {
+  data: Record<string, any>[]
+  [property: string]: any
+}
+
+export type OtherProfileField =
+  | 'education'
+  | 'academic'
+  | 'test'
+  | 'internship'
+  | 'project'
+  | 'campus'
+  | 'award'
+
+export interface FullProfile {
+  education: Education
+  academic: Academic
+  test: Test
+  internship: Internship
+  personalInfo: PersonalInfo
+  project: Project
+  campus: Campus
+  award: Award
+  [property: string]: any
+}
+
+type ProfileFieldDataMap = {
+  education: Education['data']
+  academic: Academic['data']
+  test: Test['data']
+  internship: Internship['data']
+  project: Project['data']
+  campus: Campus['data']
+  award: Award['data']
+}
+
+const authHeaders = (token: string) => ({
+  Authorization: `Bearer ${token}`
+})
+
+export const getPersonalInfo = (token: string) => {
+  return http.get<PersonalInfo>('/profile/personal', {
+    headers: authHeaders(token)
+  })
+}
+
+export const updatePersonalInfo = (data: PersonalInfo, token: string) => {
+  return http.put<PersonalInfo>('/profile/personal', data, {
+    headers: authHeaders(token)
+  })
+}
+
+export const getProfileArrayField = <TField extends OtherProfileField>(field: TField, token: string) => {
+  return http.get<ProfileFieldDataMap[TField]>(`/profile/array/${field}`, {
+    headers: authHeaders(token)
+  })
+}
+
+export const updateProfileArrayField = <TField extends OtherProfileField>(
+  field: TField,
+  data: ProfileFieldDataMap[TField],
+  token: string
+) => {
+  return http.put<{ message: string }>(`/profile/array/${field}`, data, {
+    headers: authHeaders(token)
+  })
+}
+
+export const getFullProfile = (token: string) => {
+  return http.get<FullProfile>('/profile', {
+    headers: authHeaders(token)
+  })
+}
+
+export const updateFullProfile = (data: FullProfile, token: string) => {
+  return http.put<FullProfile>('/profile', data, {
+    headers: authHeaders(token)
+  })
+}
+
+// Logs out the current user; JWT token is attached automatically by the request interceptor
+export const logoutUser = () => {
+  return http.post<{ message: string }>('/auth/logout')
+}
+
+// ==================== Two-Factor Authentication APIs ====================
+
+// 2FA Status Response
+export interface TwoFAStatusResponse {
+  is_2fa_enabled: boolean
+  backup_codes_remaining: number
+}
+
+// Setup 2FA Response
+export interface Setup2FAResponse {
+  totp_uri: string
+  qr_code_base64: string
+  backup_codes: string[]
+}
+
+// Confirm 2FA Request
+export interface Confirm2FARequest {
+  code: string
+}
+
+// Confirm 2FA Response
+export interface Confirm2FAResponse {
+  message: string
+}
+
+// Disable 2FA Request
+export interface Disable2FARequest {
+  password: string
+}
+
+// Disable 2FA Response
+export interface Disable2FAResponse {
+  message: string
+}
+
+// Regenerate Backup Codes Request
+export interface RegenerateBackupCodesRequest {
+  code: string
+}
+
+// Regenerate Backup Codes Response
+export interface RegenerateBackupCodesResponse {
+  backup_codes: string[]
+}
+
+// Get 2FA status for the current user
+export const get2FAStatus = () => {
+  return http.get<TwoFAStatusResponse>('/auth/2fa/status')
+}
+
+// Setup 2FA - Generate TOTP secret and QR code
+export const setup2FA = () => {
+  return http.post<Setup2FAResponse>('/auth/2fa/setup')
+}
+
+// Confirm 2FA binding - Verify initial TOTP code
+export const confirm2FA = (data: Confirm2FARequest) => {
+  return http.post<Confirm2FAResponse>('/auth/2fa/confirm', data)
+}
+
+// Disable 2FA
+export const disable2FA = (data: Disable2FARequest) => {
+  return http.post<Disable2FAResponse>('/auth/2fa/disable', data)
+}
+
+// Regenerate backup recovery codes
+export const regenerateBackupCodes = (data: RegenerateBackupCodesRequest) => {
+  return http.post<RegenerateBackupCodesResponse>('/auth/2fa/backup-codes/regenerate', data)
+}
+
+// ==================== User Settings APIs ====================
+
+// User Info Response
+export interface UserInfoResponse {
+  name: string
+  email: string
+  user_type: number
+}
+
+// Get current user information
+export const getUserInfo = () => {
+  return http.get<UserInfoResponse>('/auth/settings/info')
+}
+
+// ==================== Device Session Management APIs ====================
+
+// Device type categories returned by the server
+export type DeviceType = 'PC' | 'Mobile' | 'Tablet' | 'Bot' | 'Unknown'
+
+// A single active login session / device record
+export interface Device {
+  session_id: number
+  browser: string
+  os: string
+  device_type: DeviceType
+  created_at: string   // ISO 8601 date-time string
+  is_current: boolean
+}
+
+// Response from GET /auth/settings/devices
+export interface DevicesResponse {
+  devices: Device[]
+  total: number
+}
+
+// Response from POST /auth/settings/logout-all
+export interface LogoutAllDevicesResponse {
+  message: string
+  revoked_count: number
+}
+
+// Response from DELETE /auth/settings/devices/{session_id}
+export interface LogoutDeviceResponse {
+  message: string
+}
+
+// Fetch all active login sessions for the current user
+export const getDevices = () => {
+  return http.get<DevicesResponse>('/auth/settings/devices')
+}
+
+// Log out a specific device session by its session_id
+// Note: cannot be used to log out the current session
+export const logoutDevice = (sessionId: number) => {
+  return http.delete<LogoutDeviceResponse>(`/auth/settings/devices/${sessionId}`)
+}
+
+// Log out all devices (including the current one); client should redirect to login after calling this
+export const logoutAllDevices = () => {
+  return http.post<LogoutAllDevicesResponse>('/auth/settings/logout-all')
+}

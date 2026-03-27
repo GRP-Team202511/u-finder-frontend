@@ -1,0 +1,734 @@
+{
+    "common": {
+        "errors": {
+            "sessionExpired": "工作階段已過期，請重新登入。"
+        }
+    },
+    "cover": {
+        "title": "U-Finder",
+        "description": "使用我們的智慧尋找工具，發現您完美的大学匹配。",
+        "login": "登入",
+        "signup": "註冊"
+    },
+    "login": {
+        "title": "登入",
+        "welcome": "歡迎回來！請輸入你的電子郵箱。",
+        "email": "電子郵箱",
+        "password": "密碼",
+        "forgot": "忘記密碼？",
+        "submit": "登入",
+        "twoFactorRequired": "需要兩步驟驗證",
+        "unprocessable": "登入資訊無效，請檢查後重試。",
+        "no account": "沒有帳號？",
+        "signup": "註冊帳戶",
+        "unauth": "密碼不正確",
+        "not_found": "該帳戶不存在",
+        "forbidden": "您的帳戶已被封鎖，請聯繫客服或管理員。",
+        "error": "登入失敗，請稍後重試。",
+        "reset": {
+            "title": "重置密碼",
+            "description": "使用您的電子郵箱重置密碼",
+            "sendCode": "發送驗證碼",
+            "send": "重置密碼",
+            "otp": "驗證碼",
+            "otpPlaceholder": "請輸入6位驗證碼",
+            "newPassword": "新密碼",
+            "confirmPassword": "確認密碼",
+            "codeDescription": "驗證碼已發送至您的郵箱。",
+            "step1Desc": "輸入電子郵箱以接收驗證碼",
+            "step2Desc": "輸入驗證碼並設定新密碼",
+            "step1Hint": "驗證碼將發送到此電子郵件地址",
+            "emailPlaceholder": "your@email.com",
+            "back": "返回",
+            "resendCode": "重發",
+            "errors": {
+                "emailRequired": "請輸入電子郵箱",
+                "emailNotFound": "未找到該郵箱對應的帳戶",
+                "invalidEmail": "郵箱格式不正確",
+                "sendFailed": "發送驗證碼失敗",
+                "tokenMissing": "請先請求驗證碼",
+                "tokenExpired": "驗證令牌已過期，請重新請求驗證碼。",
+                "rateLimited": "請求過於頻繁，請等待 {seconds} 秒。",
+                "resendFailed": "重新發送驗證碼失敗",
+                "sendCodeFirst": "請先發送驗證碼",
+                "fieldsRequired": "所有欄位都是必填的",
+                "wrongCode": "驗證碼不正確",
+                "unauthorized": "您的工作階段已過期，請重新請求驗證碼。",
+                "invalidInput": "請檢查輸入內容後重試。",
+                "passwordMismatch": "兩次輸入的密碼不一致",
+                "resetFailed": "重置密碼失敗，請重試。"
+            },
+            "success": {
+                "codeSent": "驗證碼已發送至您的郵箱",
+                "codeResent": "驗證碼已重新發送",
+                "passwordReset": "密碼重置成功！正在跳轉到登入頁面..."
+            }
+        }
+    },
+    "twofa": {
+        "title": "兩步驟驗證",
+        "description": "請輸入驗證碼以繼續。",
+        "totpLabel": "驗證器代碼",
+        "recoveryLabel": "恢復代碼",
+        "totpHint": "請輸入驗證器應用程式中的 6 位數代碼。",
+        "recoveryHint": "請輸入您的 8 位恢復代碼。",
+        "verify": "驗證",
+        "switchToRecovery": "使用恢復代碼",
+        "switchToTotp": "使用驗證器代碼",
+        "invalid": "驗證碼無效",
+        "failed": "驗證失敗",
+        "success": "驗證成功"
+    },
+    "signup":{
+        "title": "註冊帳戶",
+        "description": "請填寫以下資料以建立您的帳戶。",
+        "username": "使用者名稱",
+        "email": "電子郵箱",
+        "password": "密碼",
+        "confirmPassword": "確認密碼",
+        "button": "註冊",
+        "haveAccount": "已有帳戶？",
+        "login": "登入",
+        "continue": "點擊「註冊」即代表您同意本服務的",
+        "termOfUse": "使用條款",
+        "and": "與",
+        "privacy": "隱私權政策",
+        "occupied": "該電子郵件已被註冊。",
+        "unprocessable": "註冊資訊無效，請檢查後重試。",
+        "error": "註冊過程中出現問題，請檢查網路連線後重試。",
+        "codeSent": "驗證碼已發送",
+        "passwordError": "密碼必須為8-20個字元，至少包含一個字母和一個數字。",
+        "passwordMismatch": "兩次輸入的密碼不一致",
+        "confirmPasswordRequired": "請確認您的密碼",
+        "verification": {
+            "enter": "輸入驗證碼",
+            "sent": "我們已將 6 位驗證碼發送至您的電子郵件。",
+            "enter2": "請輸入發送至您電子郵件的 6 位驗證碼。",
+            "receive": "沒有收到驗證碼？",
+            "verify": "驗證",
+            "resend": "重新發送",
+            "resending": "發送中...",
+            "incorrect": "驗證碼不正確。",
+            "success": "驗證成功！",
+            "error": "驗證失敗，請重試。",
+            "notFound": "驗證工作階段未找到。",
+            "resent": "驗證碼已重新發送！",
+            "tokenExpired": "驗證工作階段已過期，請重新註冊。",
+            "tooMany": "請求過於頻繁，請等待 {seconds} 秒後再試。",
+            "resendError": "重發驗證碼失敗，請重試。"
+        }
+    },
+    "sidebar": {
+        "appName": "U-Finder",
+        "newChat": "新對話",        "newConversation": "新對話",        "conversations": "對話列表",
+        "noConversations": "暫無對話",
+        "loadMore": "載入更多...",
+        "loading": "載入中...",
+        "favourite": "收藏",
+        "profile": "個人資料",
+        "settings": "設定",
+        "language": "語言",
+        "logout": "登出",
+        "logoutUnauthorized": "您的工作階段已過期，已自動登出。",
+        "logoutServerError": "登出時伺服器出錯，本機工作階段已清除。",
+        "logoutFailed": "登出失敗，請重試。",
+        "deleteConversation": "刪除對話",
+        "deleteConfirm": "確定要刪除此對話嗎？此操作無法撤銷。",
+        "renameConversation": "編輯對話名稱",
+        "conversationName": "輸入對話名稱",
+        "cancel": "取消",
+        "delete": "刪除",
+        "rename": "重新命名",
+        "save": "儲存",
+        "confirm": "確認",
+        "renameSuccess": "重新命名成功",
+        "renameFailed": "重新命名失敗",
+        "deleteSuccess": "刪除成功",
+        "deleteFailed": "刪除失敗"
+    },
+    "profile": {
+        "title": "個人資料",
+        "edit": "編輯",
+        "save": "儲存",
+        "saveAll": "全部儲存",
+        "savingAll": "儲存中…",
+        "cancelAll": "全部取消",
+        "cancel": "取消",
+        "add": "新增",
+        "remove": "刪除",
+        "retry": "重試",
+        "cvParser": {
+            "button": "匯入履歷",
+            "title": "匯入履歷",
+            "description": "上傳您的履歷，自動填入個人資料。",
+            "uploadPrompt": "將履歷拖放到此處，或點擊選擇檔案",
+            "supportedFormats": "支援格式：PDF、DOCX、DOC",
+            "maxSize": "最大檔案大小：10MB",
+            "uploading": "正在上傳...",
+            "parsing": "正在解析履歷...",
+            "parsingHint": "複雜文件最長可能需要 1 分鐘，請耐心等待。",
+            "parseSuccess": "履歷解析成功！",
+            "selectData": "選擇要匯入的資料",
+            "reviewTitle": "查看解析結果",
+            "reviewDescription": "選擇要匯入到個人資料的部分。",
+            "selectAll": "全選",
+            "noData": "未找到資料",
+            "item": "項",
+            "items": "項",
+            "more": "更多...",
+            "confirmImport": "確認匯入",
+            "importSuccess": "履歷資料匯入成功！",
+            "importFailed": "匯入履歷資料失敗",
+            "actions": {
+                "overwrite": "覆蓋",
+                "append": "追加"
+            },
+            "errors": {
+                "invalidFormat": "檔案格式無效。僅支援 PDF、DOCX 和 DOC 格式。",
+                "fileTooLarge": "檔案大小超過 10MB 限制。",
+                "uploadFailed": "上傳履歷失敗。請重試。",
+                "noFile": "未上傳檔案或檔案為空。",
+                "unauthorized": "您未獲授權。請重新登入。",
+                "parseFailed": "無法從上傳的檔案中提取資訊。請檢查檔案格式後重試。",
+                "serviceUnavailable": "AI 服務暫時不可用。請稍後重試。",
+                "serverError": "伺服器內部錯誤。請重試。",
+                "timeout": "解析逾時，檔案可能過於複雜，請重試。"
+            }
+        },
+        "errors": {
+            "loadFailed": "哎呀，出錯啦……",
+            "loadFailedDescription": "無法載入您的個人資料，請嘗試重新整理頁面。"
+        },
+        "toast": {
+            "loadFailed": "載入個人資料失敗",
+            "information": {
+                "saveSuccess": "個人資訊儲存成功",
+                "saveFailed": "個人資訊儲存失敗"
+            },
+            "education": {
+                "saveSuccess": "教育背景儲存成功",
+                "saveFailed": "教育背景儲存失敗"
+            },
+            "academic": {
+                "saveSuccess": "學術成果儲存成功",
+                "saveFailed": "學術成果儲存失敗"
+            },
+            "test": {
+                "saveSuccess": "標準化考試儲存成功",
+                "saveFailed": "標準化考試儲存失敗"
+            },
+            "internship": {
+                "saveSuccess": "實習經歷儲存成功",
+                "saveFailed": "實習經歷儲存失敗"
+            },
+            "project": {
+                "saveSuccess": "專案經歷儲存成功",
+                "saveFailed": "專案經歷儲存失敗"
+            },
+            "campusExp": {
+                "saveSuccess": "校園經歷儲存成功",
+                "saveFailed": "校園經歷儲存失敗"
+            },
+            "award": {
+                "saveSuccess": "獎項儲存成功",
+                "saveFailed": "獎項儲存失敗"
+            }
+        }
+    },
+    "info": {
+        "title": "基本資訊",
+        "name": "姓名",
+        "gender": {
+            "title": "性別",
+            "male": "男",
+            "female": "女",
+            "other": "其他"
+        },
+        "birthday": "生日",
+        "placeholders": {
+            "name": "姓名",
+            "gender": "性別"
+        },
+        "empty": "目前無資訊記錄",
+        "add": "新增資訊",
+        "errors": {
+            "notLoggedIn": "您尚未登入。",
+            "saveFailed": "儲存個人資訊失敗。",
+            "loadFailed": "載入個人資訊失敗。",
+            "unauthorized": "您的工作階段已過期，請重新登入。",
+            "notFound": "未找到使用者。",
+            "serverError": "伺服器內部錯誤。",
+            "nameRequired": "姓名為必填項。",
+            "genderRequired": "性別為必填項。",
+            "birthdayRequired": "生日為必填項。"
+        }
+    },
+    "edu": {
+        "title": "教育背景",
+        "type": "類型",
+        "institution": "學校",
+        "time": {
+            "start": "開始日期",
+            "end": "結束日期"
+        },
+        "major": "專業",
+        "ranking": "排名",
+        "GPA": "GPA",
+        "GPA-base": "GPA 滿分",
+        "empty": "目前無教育記錄",
+        "add": "新增教育經歷",
+        "placeholders": {
+            "type": "選擇教育類型",
+            "institution": "學校名稱",
+            "major": "電腦科學",
+            "ranking": "例如：5/200",
+            "gpa": "3.8",
+            "gpaBase": "4.0"
+        },
+        "types": {
+            "highSchool": "高中",
+            "undergraduate": "大學",
+            "master": "碩士",
+            "doctoral": "博士"
+        },
+        "validation": {
+            "typeRequired": "教育經歷 #{index}：類型為必填項",
+            "nameRequired": "教育經歷 #{index}：學校名稱為必填項",
+            "startRequired": "教育經歷 #{index}：開始日期為必填項",
+            "dateRangeInvalid": "教育經歷 #{index}：開始日期不能晚於結束日期",
+            "rankingFormat": "教育經歷 #{index}：排名格式必須為 X/Y，例如 5/200",
+            "rankingRange": "教育經歷 #{index}：排名必須為正整數，且 X <= Y",
+            "gpaBaseInvalid": "教育經歷 #{index}：GPA 滿分必須為正數",
+            "gpaBaseMin": "教育經歷 #{index}：GPA 滿分必須大於 0",
+            "gpaBaseMax": "教育經歷 #{index}：GPA 滿分不能大於 100",
+            "gpaInvalid": "教育經歷 #{index}：GPA 必須為正數",
+            "gpaNegative": "教育經歷 #{index}：GPA 不能為負數",
+            "gpaExceedsBase": "教育經歷 #{index}：GPA 不能大於 GPA 滿分"
+        }
+    },
+    "academic": {
+        "title": "學術成果",
+        "selectType": "選擇類型",
+        "selectTypeHint": "選擇類型以輸入詳細資訊。",
+        "empty": "目前無學術成果",
+        "add": "新增學術成果",        "paper": "論文",
+        "patent": "專利",        "type": {
+            "title": "類型",
+            "researchPaper": "研究論文",
+            "patent": "專利"
+        },
+        "researchPaper": {
+            "title": "標題",
+            "titlePlaceholder": "論文標題",
+            "doi": "DOI",
+            "doiPlaceholder": "DOI",
+            "abstract": "摘要",
+            "abstractPlaceholder": "摘要"
+        },
+        "patent": {
+            "title": "標題",
+            "titlePlaceholder": "專利標題",
+            "number": "專利號",
+            "numberPlaceholder": "專利號",
+            "region": "地區",
+            "regionPlaceholder": "地區",
+            "description": "描述",
+            "descriptionPlaceholder": "描述"
+        },
+        "validation": {
+            "typeRequired": "學術成果 #{index}：類型為必填項",
+            "titleRequired": "學術成果 #{index}：標題為必填項"
+        }
+    },
+    "test": {
+        "title": "標準化考試",
+        "type": "類型",
+        "selectType": "選擇考試類型",
+        "selectTypeHint": "選擇類型以輸入詳細資訊。",
+        "empty": "目前無標準化考試記錄",
+        "add": "新增標準化考試",
+        "testDate": "考試日期",
+        "registrationNumber": "註冊號",
+        "examSession": "考試場次",
+        "overallPredicted": "預估總分",
+        "examYear": "考試年份",
+        "month": "考試月份",
+        "subjects": "科目",
+        "subject": "科目",
+        "grade": "成績",
+        "score": "分數",
+        "cefrLevel": "CEFR 等級",
+        "types": {
+            "ielts": "雅思 (IELTS)",
+            "toeflIbt": "托福 (TOEFL iBT)",
+            "duolingo": "多鄰國英語測試 (Duolingo)",
+            "gre": "GRE",
+            "gmat": "GMAT",
+            "sat": "SAT",
+            "act": "ACT",
+            "aLevel": "A-Level",
+            "ap": "AP",
+            "ibDiploma": "IB 文憑 (IB Diploma)",
+            "cae": "劍橋英語 C1 高級 (CAE)"
+        },
+        "scores": {
+            "title": "分數",
+            "overall": "總分 (Overall)",
+            "listening": "聽力 (Listening)",
+            "reading": "閱讀 (Reading)",
+            "writing": "寫作 (Writing)",
+            "speaking": "口語 (Speaking)",
+            "literacy": "Literacy",
+            "comprehension": "Comprehension",
+            "conversation": "Conversation",
+            "production": "Production",
+            "verbal": "Verbal Reasoning",
+            "quantitative": "Quantitative Reasoning",
+            "analyticalWriting": "Analytical Writing",
+            "total": "總分 (Total)",
+            "integratedReasoning": "Integrated Reasoning",
+            "math": "數學 (Math)",
+            "ebrw": "Evidence-Based Reading and Writing",
+            "essayOptional": "Essay（可選）",
+            "composite": "Composite",
+            "english": "English",
+            "science": "Science",
+            "writingOptional": "Writing（可選）",
+            "corePoints": "Core Points",
+            "extendedEssay": "Extended Essay",
+            "tok": "TOK",
+            "readingUseOfEnglish": "Reading & Use of English"
+        },
+        "validation": {
+            "typeRequired": "考試 #{index}：類型為必填項",
+            "subjectRequired": "考試 #{index}：至少需要填寫一個科目"
+        }
+    },
+    "internship": {
+        "title": "實習經歷",
+        "company": "公司",
+        "role": "職位",
+        "description": "描述",
+        "time": {
+            "start": "開始日期",
+            "end": "結束日期",
+            "till now": "至今"
+        },
+        "empty": "目前無實習經歷",
+        "add": "新增實習經歷",
+        "placeholders": {
+            "company": "公司名稱",
+            "role": "職位 / 角色",
+            "description": "描述"
+        },
+        "validation": {
+            "companyRequired": "實習經歷 #{index}：公司名稱為必填項",
+            "roleRequired": "實習經歷 #{index}：職位為必填項",
+            "dateRangeInvalid": "實習經歷 #{index}：開始日期不能晚於結束日期"
+        }
+    },
+    "project": {
+        "title": "專案經歷",
+        "name": "專案名稱",
+        "role": "角色",
+        "time": {
+            "start": "開始日期",
+            "end": "結束日期",
+            "till now": "至今"
+        },
+        "description": "描述",
+        "empty": "目前無專案經歷",
+        "add": "新增專案經歷",
+        "placeholders": {
+            "name": "專案名稱",
+            "role": "角色",
+            "description": "描述"
+        },
+        "validation": {
+            "nameRequired": "專案 #{index}：名稱為必填項",
+            "dateRangeInvalid": "專案 #{index}：開始日期不能晚於結束日期"
+        }
+    },
+    "campusExp": {
+        "title": "校園經歷",
+        "name": "名稱",
+        "description": "描述",
+        "empty": "目前無校園經歷",
+        "add": "新增校園經歷",
+        "placeholders": {
+            "name": "校園經歷",
+            "description": "描述"
+        },
+        "validation": {
+            "nameRequired": "校園經歷 #{index}：名稱為必填項"
+        }
+    },
+    "award": {
+        "title": "獎項",
+        "name": "名稱",
+        "description": "描述",
+        "empty": "目前無獎項",
+        "add": "新增獎項",
+        "placeholders": {
+            "name": "獎項名稱",
+            "description": "描述"
+        },
+        "validation": {
+            "nameRequired": "獎項 #{index}：名稱為必填項"
+        }
+    },
+    "date": {
+        "pickDate": "選擇日期",
+        "pickStart": "選擇開始日期",
+        "pickEnd": "選擇結束日期"
+    },
+    "chat": {
+        "title": "U-Finder",
+        "tagline": "發現最適合你的大學。",
+        "stopped": "已停止產生回覆。",
+        "input": {
+            "label": "訊息",
+            "placeholder": "與 U-Finder 聊天...",
+            "stop": "停止產生",
+            "newlineHint": "Shift + Enter 換行",
+            "send": "傳送",
+            "disclaimer": "U-Finder 可能會出錯。請核實重要資訊。"
+        },
+        "errors": {
+            "streamFailed": "無法完成該請求，請重試。",
+            "stopFailed": "停止產生失敗，請重試。",
+            "loadHistoryFailed": "載入對話歷史失敗，請重試。"
+        },
+        "card": {
+            "loadingAria": "大學資訊載入中",
+            "locationNotSpecified": "未指定地點",
+            "tuitionNotSpecified": "未指定學費",
+            "notSpecified": "未指定",
+            "program": "項目",
+            "programDetails": "項目詳情",
+            "admissions": "錄取要求",
+            "tuition": "學費",
+            "careerOutcomes": "就業前景",
+            "linksTitle": "相關連結",
+            "verified": "已驗證",
+            "tabs": {
+                "program": "項目",
+                "admission": "錄取 + 學費",
+                "career": "就業 + 連結"
+            },
+            "labels": {
+                "degree": "學位",
+                "field": "領域",
+                "track": "方向",
+                "type": "類型",
+                "duration": "學制",
+                "language": "授課語言",
+                "faculty": "學院",
+                "deadline": "申請截止日期",
+                "languageReqs": "語言要求",
+                "academicRequirements": "學術要求",
+                "otherRequirements": "其他要求",
+                "cost": "費用"
+            },
+            "links": {
+                "officialProgram": "官方項目頁面",
+                "universitySite": "大學官網",
+                "facultySite": "學院官網"
+            }
+        }
+    },
+    "favourites": {
+        "title": "收藏的大學",
+        "subtitle": "保存您想要再次查看的大學。",
+        "empty": {
+            "title": "尚無收藏",
+            "description": "在 AI 對話中新增大學即可在此查看。"
+        },
+        "toast": {
+            "addSuccess": "已將大學加入收藏",
+            "addFailed": "將大學加入收藏失敗",
+            "removeSuccess": "已從收藏中移除大學",
+            "removeFailed": "從收藏中移除大學失敗",
+            "loadFailed": "載入收藏清單失敗"
+        },
+        "errors": {
+            "loadFailed": "載入收藏清單失敗",
+            "loadFailedDescription": "無法載入您的收藏清單，請嘗試重新整理頁面。"
+        },
+        "actions": {
+            "showDetails": "查看詳情",
+            "remove": "移除",
+            "add": "加入收藏",
+            "close": "關閉",
+            "retry": "重試"
+        }
+    },
+    "settings": {
+        "title": "設定",
+        "tabs": {
+            "account": "帳戶",
+            "general": "通用",
+            "about": "關於"
+        },
+        "account": {
+            "accountInformation": "帳戶資訊",
+            "username": "使用者名稱",
+            "email": "電子郵件",
+            "plan": "計劃",
+            "changeAvatar": "更換頭像",
+            "avatarDialog": {
+                "title": "更換頭像",
+                "descriptionSelect": "拖曳圖片至此處，或點擊選擇檔案。",
+                "descriptionCrop": "拖動裁剪框選擇要使用的區域。",
+                "dropPrompt": "拖曳圖片至此處，或點擊選擇",
+                "supportedFormats": "支援格式：JPEG、PNG、WebP",
+                "maxSize": "最大檔案大小：2 MB",
+                "selectImage": "選擇圖片",
+                "reselect": "重新選擇",
+                "uploadAndSave": "上傳並儲存",
+                "cancel": "取消",
+                "uploading": "上傳中…",
+                "uploadSuccess": "頭像更新成功",
+                "uploadError": "頭像上傳失敗",
+                "fileTooLarge": "檔案大小不能超過 2 MB",
+                "invalidFileType": "僅支援 JPEG、PNG 和 WebP 格式"
+            },
+            "fetchUserInfoError": "獲取使用者資訊失敗",
+            "plans": {
+                "free": "免費計劃"
+            },
+            "security": "安全",
+            "resetPassword": "重設密碼",
+            "resetPasswordDesc": "透過電子郵件驗證重設密碼",
+            "resetPasswordDialog": {
+                "title": "重設密碼",
+                "step1Desc": "確認您的電子郵件地址以接收驗證碼",
+                "step2Desc": "輸入發送到您電子郵件的驗證碼並設定新密碼",
+                "emailConfirmHint": "驗證碼將發送到此電子郵件地址",
+                "confirmPassword": "確認新密碼",
+                "passwordMismatch": "密碼不符合",
+                "passwordTooShort": "密碼長度至少為8個字元",
+                "success": "密碼重設成功",
+                "warning": "重設密碼後您將登出，需要使用新密碼重新登入"
+            },
+            "twoFactor": {
+                "title": "兩步驟驗證",
+                "description": "為您的帳戶添加額外的安全保護",
+                "enabled": "已啟用",
+                "disabled": "已停用",
+                "backupCodes": "剩餘備用碼",
+                "enable": "啟用",
+                "disableButton": "停用",
+                "regenerateButton": "重新產生備用碼",
+                "fetchError": "獲取兩步驟驗證狀態失敗",
+                "setup": {
+                    "step1Title": "掃描 QR 碼",
+                    "step1Desc": "使用 Google Authenticator 或任何 TOTP 應用程式掃描此 QR 碼",
+                    "step2Title": "儲存備用碼",
+                    "step2Desc": "將這些備用碼儲存在安全的地方。每個代碼只能使用一次。",
+                    "step3Title": "驗證",
+                    "step3Desc": "輸入您的驗證應用程式中的6位數代碼",
+                    "manualEntry": "或在您的應用程式中手動輸入此代碼：",
+                    "backupCodesWarning": "重要：請妥善儲存這些備用碼！",
+                    "backupCodesWarning2": "如果您無法存取驗證裝置，這些代碼是恢復帳戶的唯一方法。",
+                    "enterCode": "輸入驗證碼",
+                    "codeFromApp": "輸入您的驗證應用程式中的6位數代碼",
+                    "copyAll": "全部複製",
+                    "copied": "已複製！",
+                    "copiedCodes": "備用碼已複製到剪貼簿",
+                    "back": "返回",
+                    "next": "下一步",
+                    "cancel": "取消",
+                    "done": "完成",
+                    "success": "兩步驟驗證啟用成功！",
+                    "error": "設定兩步驟驗證失敗",
+                    "alreadyEnabled": "兩步驟驗證已啟用",
+                    "setupExpired": "兩步驟驗證設定已過期，請重試",
+                    "invalidCode": "請輸入6位數代碼",
+                    "wrongCode": "驗證碼無效",
+                    "verifyError": "驗證失敗，請重試。"
+                },
+                "disable": {
+                    "title": "停用兩步驟驗證",
+                    "description": "停用兩步驟驗證將降低您的帳戶安全性",
+                    "warning": "警告：安全風險",
+                    "warningDesc": "停用兩步驟驗證將使您的帳戶安全性降低。",
+                    "enterPassword": "輸入您的密碼以確認",
+                    "passwordPlaceholder": "您的密碼",
+                    "passwordRequired": "密碼為必填項",
+                    "cancel": "取消",
+                    "confirm": "停用",
+                    "success": "兩步驟驗證已成功停用",
+                    "wrongPassword": "密碼錯誤",
+                    "notEnabled": "兩步驟驗證未啟用",
+                    "error": "停用兩步驟驗證失敗"
+                },
+                "regenerate": {
+                    "verifyTitle": "驗證身分",
+                    "verifyDesc": "輸入您目前的 TOTP 代碼以重新產生備用碼",
+                    "newCodesTitle": "新備用碼",
+                    "newCodesDesc": "您的舊備用碼現已失效。請妥善儲存這些新代碼。",
+                    "enterCode": "輸入 TOTP 代碼",
+                    "codeFromApp": "輸入您的驗證應用程式中的6位數代碼",
+                    "warning": "所有之前的備用碼現已失效",
+                    "warningDesc": "請確保儲存這些新備用碼。您的舊代碼將不再有效。",
+                    "copyAll": "全部複製",
+                    "copied": "已複製！",
+                    "copiedCodes": "備用碼已複製到剪貼簿",
+                    "cancel": "取消",
+                    "verify": "驗證",
+                    "done": "完成",
+                    "invalidCode": "請輸入6位數代碼",
+                    "wrongCode": "TOTP 代碼無效",
+                    "notEnabled": "兩步驟驗證未啟用",
+                    "error": "重新產生備用碼失敗"
+                }
+            },
+            "devices": {
+                "title": "登入裝置",
+                "description": "管理目前已登入您帳戶的所有裝置",
+                "currentDevice": "目前裝置",
+                "logoutButton": "登出",
+                "logoutAllButton": "登出所有裝置",
+                "loginTime": "登入時間",
+                "fetchError": "獲取裝置清單失敗",
+                "logoutSuccess": "裝置已成功登出",
+                "logoutError": "登出該裝置失敗",
+                "logoutAllSuccess": "所有裝置已登出",
+                "logoutAllError": "登出所有裝置失敗",
+                "deviceTypes": {
+                    "PC": "電腦",
+                    "Mobile": "手機",
+                    "Tablet": "平板",
+                    "Bot": "機器人",
+                    "Unknown": "未知"
+                }
+            }
+        },
+        "general": {
+            "appearance": "外觀",
+            "appearanceDesc": "自訂 U-Finder 在您裝置上的外觀",
+            "theme": "主題",
+            "themeDesc": "選擇您偏好的主題",
+            "system": "跟隨系統",
+            "light": "淺色",
+            "dark": "深色",
+            "language": "語言",
+            "languageDesc": "選擇您偏好的語言"
+        },
+        "about": {
+            "title": "關於 U-Finder",
+            "description": "由 AI 驅動的智慧大學查找工具。本專案以 Apache 2.0 授權條款開源，是寧波諾丁漢大學 COMP2043 GRP 課程的小組作業。",
+            "version": "版本",
+            "license": "授權條款",
+            "course": "課程",
+            "team": "團隊",
+            "university": "大學",
+            "github": "GitHub 儲存庫",
+            "terms": "服務條款",
+            "privacy": "隱私政策",
+            "footer": "由 U-Finder 團隊用 ❤️ 製作"
+        }
+    }
+
+}

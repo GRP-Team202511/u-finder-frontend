@@ -1,0 +1,735 @@
+{
+    "common": {
+        "errors": {
+            "sessionExpired": "会话已过期，请重新登录。"
+        }
+    },
+    "cover": {
+        "title": "U-Finder",
+        "description": "使用我们的智能查找工具，发现您完美的大学匹配。",
+        "login": "登录",
+        "signup": "注册"
+    },
+    "login": {
+        "title": "登录",
+        "welcome": "欢迎回来！请输入你的电子邮箱。",
+        "email": "电子邮箱",
+        "password": "密码",
+        "forgot": "忘记密码？",
+        "submit": "登录",
+        "twoFactorRequired": "需要两步验证",
+        "unprocessable": "登录信息无效，请检查后重试。",
+        "no account": "没有帐号？",
+        "signup": "注册账户",
+        "unauth": "密码不正确",
+        "not_found": "该账户不存在",
+        "forbidden": "您的账户已被封禁，请联系客服或管理员。",
+        "error": "登录失败，请稍后重试。",
+        "reset": {
+            "title": "重置密码",
+            "description": "使用您的电子邮箱重置密码",
+            "sendCode": "发送验证码",
+            "send": "重置密码",
+            "otp": "验证码",
+            "otpPlaceholder": "请输入6位验证码",
+            "newPassword": "新密码",
+            "confirmPassword": "确认密码",
+            "codeDescription": "验证码已发送至您的邮箱。",
+            "step1Desc": "输入邮箱以接收验证码",
+            "step2Desc": "输入验证码并设置新密码",
+            "step1Hint": "验证码将发送到此邮箱地址",
+            "emailPlaceholder": "your@email.com",
+            "back": "返回",
+            "resendCode": "重发",
+            "errors": {
+                "emailRequired": "请输入电子邮箱",
+                "emailNotFound": "未找到该邮箱对应的账户",
+                "invalidEmail": "邮箱格式不正确",
+                "sendFailed": "发送验证码失败",
+                "tokenMissing": "请先请求验证码",
+                "tokenExpired": "验证令牌已过期，请重新请求验证码。",
+                "rateLimited": "请求过于频繁，请等待 {seconds} 秒。",
+                "resendFailed": "重新发送验证码失败",
+                "sendCodeFirst": "请先发送验证码",
+                "fieldsRequired": "所有字段都是必填的",
+                "wrongCode": "验证码不正确",
+                "unauthorized": "您的会话已过期，请重新请求验证码。",
+                "invalidInput": "请检查输入内容后重试。",
+                "passwordMismatch": "两次输入的密码不一致",
+                "resetFailed": "重置密码失败，请重试。"
+            },
+            "success": {
+                "codeSent": "验证码已发送至您的邮箱",
+                "codeResent": "验证码已重新发送",
+                "passwordReset": "密码重置成功！正在跳转到登录页面..."
+            }
+        }
+    },
+    "twofa": {
+        "title": "两步验证",
+        "description": "请输入验证码以继续。",
+        "totpLabel": "验证器代码",
+        "recoveryLabel": "恢复代码",
+        "totpHint": "请输入验证器应用中的 6 位数代码。",
+        "recoveryHint": "请输入您的 8 位恢复代码。",
+        "verify": "验证",
+        "switchToRecovery": "使用恢复代码",
+        "switchToTotp": "使用验证器代码",
+        "invalid": "验证码无效",
+        "failed": "验证失败",
+        "success": "验证成功"
+    },
+    "signup":{
+        "title": "注册账户",
+        "description": "请填写以下资料以创建您的账户",
+        "username": "用户名",
+        "email": "电子邮箱",
+        "password": "密码",
+        "confirmPassword": "确认密码",
+        "button": "注册",
+        "haveAccount": "已有账户？",
+        "login": "登录",
+        "continue": "点击“注册”即表示您同意我们的",
+        "termOfUse": "服务条款",
+        "and": "和",
+        "privacy": "隐私政策",
+        "occupied": "该邮箱已被注册。",
+        "unprocessable": "注册信息无效，请检查后重试。",
+        "error": "注册过程中出现问题，请检查网络连接后重试。",
+        "codeSent": "验证码已发送",
+        "passwordError": "密码必须为8-20个字符，至少包含一个字母和一个数字。",
+        "passwordMismatch": "两次输入的密码不一致",
+        "confirmPasswordRequired": "请确认您的密码",
+        "verification": {
+            "enter": "输入验证码",
+            "sent": "我们已将 6 位验证码发送至您的邮箱。",
+            "enter2": "请输入发送至您邮箱的 6 位验证码。",
+            "receive": "没有收到验证码？",
+            "verify": "验证",
+            "resend": "重新发送",
+            "resending": "发送中...",
+            "incorrect": "验证码不正确。",
+            "success": "验证成功！",
+            "error": "验证失败，请重试。",
+            "notFound": "验证会话未找到。",
+            "resent": "验证码已重新发送！",
+            "tokenExpired": "验证会话已过期，请重新注册。",
+            "tooMany": "请求过于频繁，请等待 {seconds} 秒后再试。",
+            "resendError": "重发验证码失败，请重试。"
+        }
+    },
+    "sidebar": {
+        "appName": "U-Finder",
+        "newChat": "新对话",        "newConversation": "新对话",        "conversations": "对话列表",
+        "noConversations": "暂无对话",
+        "loadMore": "加载更多...",
+        "loading": "加载中...",
+        "favourite": "收藏",
+        "profile": "个人资料",
+        "settings": "设置",
+        "language": "语言",
+        "logout": "登出",
+        "logoutUnauthorized": "您的会话已过期，已自动登出。",
+        "logoutServerError": "登出时服务器出错，本地会话已清除。",
+        "logoutFailed": "登出失败，请重试。",
+        "deleteConversation": "删除对话",
+        "deleteConfirm": "确定要删除此对话吗？此操作无法撤销。",
+        "renameConversation": "编辑对话名称",
+        "conversationName": "输入对话名称",
+        "cancel": "取消",
+        "delete": "删除",
+        "rename": "重命名",
+        "save": "保存",
+        "confirm": "确认",
+        "renameSuccess": "重命名成功",
+        "renameFailed": "重命名失败",
+        "deleteSuccess": "删除成功",
+        "deleteFailed": "删除失败"
+    },
+    "profile": {
+        "title": "个人资料",
+        "edit": "编辑",
+        "save": "保存",
+        "saveAll": "全部保存",
+        "savingAll": "保存中…",
+        "cancelAll": "全部取消",
+        "cancel": "取消",
+        "add": "添加",
+        "remove": "删除",
+        "retry": "重试",
+        "cvParser": {
+            "button": "导入简历",
+            "title": "导入简历",
+            "description": "上传您的简历，自动填充个人资料信息。",
+            "uploadPrompt": "将简历拖放到此处，或点击选择文件",
+            "supportedFormats": "支持的格式：PDF、DOCX、DOC",
+            "maxSize": "最大文件大小：10MB",
+            "uploading": "正在上传...",
+            "parsing": "正在解析简历...",
+            "parsingHint": "复杂文档最长可能需要 1 分钟，请耐心等待。",
+            "parseSuccess": "简历解析成功！",
+            "selectData": "选择要导入的数据",
+            "reviewTitle": "查看解析结果",
+            "reviewDescription": "选择要导入到个人资料的部分。",
+            "selectAll": "全选",
+            "noData": "未找到数据",
+            "item": "项",
+            "items": "项",
+            "more": "更多...",
+            "confirmImport": "确认导入",
+            "importSuccess": "简历数据导入成功！",
+            "importFailed": "导入简历数据失败",
+            "actions": {
+                "overwrite": "覆盖",
+                "append": "追加"
+            },
+            "errors": {
+                "invalidFormat": "文件格式无效。仅支持 PDF、DOCX 和 DOC 格式。",
+                "fileTooLarge": "文件大小超过 10MB 限制。",
+                "uploadFailed": "上传简历失败。请重试。",
+                "noFile": "未上传文件或文件为空。",
+                "unauthorized": "您未获授权。请重新登录。",
+                "parseFailed": "无法从上传的文件中提取信息。请检查文件格式后重试。",
+                "serviceUnavailable": "AI 服务暂时不可用。请稍后重试。",
+                "serverError": "服务器内部错误。请重试。",
+                "timeout": "解析超时，文件可能过于复杂，请重试。"
+            }
+        },
+        "errors": {
+            "loadFailed": "哎呀，出错了……",
+            "loadFailedDescription": "无法加载您的个人资料数据，请尝试刷新页面。"
+        },
+        "toast": {
+            "loadFailed": "加载个人资料数据失败",
+            "information": {
+                "saveSuccess": "个人信息保存成功",
+                "saveFailed": "个人信息保存失败"
+            },
+            "education": {
+                "saveSuccess": "教育背景保存成功",
+                "saveFailed": "教育背景保存失败"
+            },
+            "academic": {
+                "saveSuccess": "学术成果保存成功",
+                "saveFailed": "学术成果保存失败"
+            },
+            "test": {
+                "saveSuccess": "标准化考试保存成功",
+                "saveFailed": "标准化考试保存失败"
+            },
+            "internship": {
+                "saveSuccess": "实习经历保存成功",
+                "saveFailed": "实习经历保存失败"
+            },
+            "project": {
+                "saveSuccess": "项目经历保存成功",
+                "saveFailed": "项目经历保存失败"
+            },
+            "campusExp": {
+                "saveSuccess": "校园经历保存成功",
+                "saveFailed": "校园经历保存失败"
+            },
+            "award": {
+                "saveSuccess": "奖项保存成功",
+                "saveFailed": "奖项保存失败"
+            }
+        }
+    },
+    "info": {
+        "title": "基本信息",
+        "name": "姓名",
+        "gender": {
+            "title": "性别",
+            "male": "男",
+            "female": "女",
+            "other": "其他"
+        },
+        "birthday": "生日",
+        "placeholders": {
+            "name": "姓名",
+            "gender": "性别"
+        },
+        "empty": "暂无信息记录",
+        "add": "添加信息",
+        "errors": {
+            "notLoggedIn": "您尚未登录。",
+            "saveFailed": "保存个人信息失败。",
+            "loadFailed": "加载个人信息失败。",
+            "unauthorized": "您的会话已过期，请重新登录。",
+            "notFound": "未找到用户。",
+            "serverError": "服务器内部错误。",
+            "nameRequired": "姓名为必填项。",
+            "genderRequired": "性别为必填项。",
+            "birthdayRequired": "生日为必填项。"
+        }
+    },
+    "edu": {
+        "title": "教育背景",
+        "type": "类型",
+        "institution": "学校",
+        "time": {
+            "start": "开始日期",
+            "end": "结束日期"
+        },
+        "major": "专业",
+        "ranking": "排名",
+        "GPA": "GPA",
+        "GPA-base": "GPA 满分",
+        "empty": "暂无教育记录",
+        "add": "添加教育经历",
+        "placeholders": {
+            "type": "选择教育类型",
+            "institution": "学校名称",
+            "major": "计算机科学",
+            "ranking": "例如：5/200",
+            "gpa": "3.8",
+            "gpaBase": "4.0"
+        },
+        "types": {
+            "highSchool": "高中",
+            "undergraduate": "本科",
+            "master": "硕士",
+            "doctoral": "博士"
+        },
+        "validation": {
+            "typeRequired": "教育经历 #{index}：类型为必填项",
+            "nameRequired": "教育经历 #{index}：学校名称为必填项",
+            "startRequired": "教育经历 #{index}：开始日期为必填项",
+            "dateRangeInvalid": "教育经历 #{index}：开始日期不能晚于结束日期",
+            "rankingFormat": "教育经历 #{index}：排名格式必须为 X/Y，例如 5/200",
+            "rankingRange": "教育经历 #{index}：排名必须为正整数，且 X <= Y",
+            "gpaBaseInvalid": "教育经历 #{index}：GPA 满分必须为正数",
+            "gpaBaseMin": "教育经历 #{index}：GPA 满分必须大于 0",
+            "gpaBaseMax": "教育经历 #{index}：GPA 满分不能大于 100",
+            "gpaInvalid": "教育经历 #{index}：GPA 必须为正数",
+            "gpaNegative": "教育经历 #{index}：GPA 不能为负数",
+            "gpaExceedsBase": "教育经历 #{index}：GPA 不能大于 GPA 满分"
+        }
+    },
+    "academic": {
+        "title": "学术成果",
+        "selectType": "选择类型",
+        "selectTypeHint": "选择类型以输入详细信息。",
+        "empty": "暂无学术成果",
+        "add": "添加学术成果",        "paper": "论文",
+        "patent": "专利",        "type": {
+            "title": "类型",
+            "researchPaper": "研究论文",
+            "patent": "专利"
+        },
+        "researchPaper": {
+            "title": "标题",
+            "titlePlaceholder": "论文标题",
+            "doi": "DOI",
+            "doiPlaceholder": "DOI",
+            "abstract": "摘要",
+            "abstractPlaceholder": "摘要"
+        },
+        "patent": {
+            "title": "标题",
+            "titlePlaceholder": "专利标题",
+            "number": "专利号",
+            "numberPlaceholder": "专利号",
+            "region": "地区",
+            "regionPlaceholder": "地区",
+            "description": "描述",
+            "descriptionPlaceholder": "描述"
+        },
+        "validation": {
+            "typeRequired": "学术成果 #{index}：类型为必填项",
+            "titleRequired": "学术成果 #{index}：标题为必填项"
+        }
+    },
+    "test": {
+        "title": "标准化考试",
+        "type": "类型",
+        "selectType": "选择考试类型",
+        "selectTypeHint": "选择类型以输入详细信息。",
+        "empty": "暂无标准化考试记录",
+        "add": "添加标准化考试",
+        "testDate": "考试日期",
+        "registrationNumber": "注册号",
+        "examSession": "考试场次",
+        "overallPredicted": "预估总分",
+        "examYear": "考试年份",
+        "month": "考试月份",
+        "subjects": "科目",
+        "subject": "科目",
+        "grade": "成绩",
+        "score": "分数",
+        "cefrLevel": "CEFR 等级",
+        "types": {
+            "ielts": "雅思 (IELTS)",
+            "toeflIbt": "托福 (TOEFL iBT)",
+            "duolingo": "多邻国英语测试 (Duolingo)",
+            "gre": "GRE",
+            "gmat": "GMAT",
+            "sat": "SAT",
+            "act": "ACT",
+            "aLevel": "A-Level",
+            "ap": "AP",
+            "ibDiploma": "IB 文凭 (IB Diploma)",
+            "cae": "剑桥英语 C1 高级 (CAE)"
+        },
+        "scores": {
+            "title": "分数",
+            "overall": "总分 (Overall)",
+            "listening": "听力 (Listening)",
+            "reading": "阅读 (Reading)",
+            "writing": "写作 (Writing)",
+            "speaking": "口语 (Speaking)",
+            "literacy": "Literacy",
+            "comprehension": "Comprehension",
+            "conversation": "Conversation",
+            "production": "Production",
+            "verbal": "Verbal Reasoning",
+            "quantitative": "Quantitative Reasoning",
+            "analyticalWriting": "Analytical Writing",
+            "total": "总分 (Total)",
+            "integratedReasoning": "Integrated Reasoning",
+            "math": "数学 (Math)",
+            "ebrw": "Evidence-Based Reading and Writing",
+            "essayOptional": "Essay（可选）",
+            "composite": "Composite",
+            "english": "English",
+            "science": "Science",
+            "writingOptional": "Writing（可选）",
+            "corePoints": "Core Points",
+            "extendedEssay": "Extended Essay",
+            "tok": "TOK",
+            "readingUseOfEnglish": "Reading & Use of English"
+        },
+        "validation": {
+            "typeRequired": "考试 #{index}：类型为必填项",
+            "subjectRequired": "考试 #{index}：至少需要填写一个科目"
+        }
+    },
+    "internship": {
+        "title": "实习经历",
+        "company": "公司",
+        "role": "职位",
+        "description": "描述",
+        "time": {
+            "start": "开始日期",
+            "end": "结束日期",
+            "till now": "至今"
+        },
+        "empty": "暂无实习经历",
+        "add": "添加实习经历",
+        "placeholders": {
+            "company": "公司名称",
+            "role": "职位 / 角色",
+            "description": "描述"
+        },
+        "validation": {
+            "companyRequired": "实习经历 #{index}：公司名称为必填项",
+            "roleRequired": "实习经历 #{index}：职位为必填项",
+            "dateRangeInvalid": "实习经历 #{index}：开始日期不能晚于结束日期"
+        }
+    },
+    "project": {
+        "title": "项目经历",
+        "name": "项目名称",
+        "role": "角色",
+        "time": {
+            "start": "开始日期",
+            "end": "结束日期",
+            "till now": "至今"
+        },
+        "description": "描述",
+        "empty": "暂无项目经历",
+        "add": "添加项目经历",
+        "placeholders": {
+            "name": "项目名称",
+            "role": "角色",
+            "description": "描述"
+        },
+        "validation": {
+            "nameRequired": "项目 #{index}：名称为必填项",
+            "dateRangeInvalid": "项目 #{index}：开始日期不能晚于结束日期"
+        }
+    },
+    "campusExp": {
+        "title": "校园经历",
+        "name": "名称",
+        "description": "描述",
+        "empty": "暂无校园经历",
+        "add": "添加校园经历",
+        "placeholders": {
+            "name": "校园经历",
+            "description": "描述"
+        },
+        "validation": {
+            "nameRequired": "校园经历 #{index}：名称为必填项"
+        }
+    },
+    "award": {
+        "title": "奖项",
+        "name": "名称",
+        "description": "描述",
+        "empty": "暂无奖项",
+        "add": "添加奖项",
+        "placeholders": {
+            "name": "奖项名称",
+            "description": "描述"
+        },
+        "validation": {
+            "nameRequired": "奖项 #{index}：名称为必填项"
+        }
+    },
+    "date": {
+        "pickDate": "选择日期",
+        "pickStart": "选择开始日期",
+        "pickEnd": "选择结束日期"
+    },
+    "chat": {
+        "title": "U-Finder",
+        "tagline": "发现最适合你的大学。",
+        "stopped": "已停止生成回复。",
+        "input": {
+            "label": "消息",
+            "placeholder": "与 U-Finder 聊天...",
+            "stop": "停止生成",
+            "newlineHint": "Shift + Enter 换行",
+            "send": "发送",
+            "disclaimer": "U-Finder 可能会出错。请核实重要信息。"
+        },
+        "errors": {
+            "streamFailed": "无法完成该请求，请重试。",
+            "stopFailed": "停止生成失败，请重试。",
+            "loadHistoryFailed": "加载对话历史失败，请重试。"
+        },
+        "card": {
+            "loadingAria": "大学信息加载中",
+            "locationNotSpecified": "未指定地点",
+            "tuitionNotSpecified": "未指定学费",
+            "notSpecified": "未指定",
+            "program": "项目",
+            "programDetails": "项目详情",
+            "admissions": "录取要求",
+            "tuition": "学费",
+            "careerOutcomes": "就业前景",
+            "linksTitle": "相关链接",
+            "verified": "已验证",
+            "tabs": {
+                "program": "项目",
+                "admission": "录取 + 学费",
+                "career": "就业 + 链接"
+            },
+            "labels": {
+                "degree": "学位",
+                "field": "领域",
+                "track": "方向",
+                "type": "类型",
+                "duration": "学制",
+                "language": "授课语言",
+                "faculty": "学院",
+                "deadline": "申请截止日期",
+                "languageReqs": "语言要求",
+                "academicRequirements": "学术要求",
+                "otherRequirements": "其他要求",
+                "cost": "费用"
+            },
+            "links": {
+                "officialProgram": "官方项目页面",
+                "universitySite": "大学官网",
+                "facultySite": "学院官网"
+            }
+        }
+    },
+    "favourites": {
+        "title": "收藏的大学",
+        "subtitle": "保存您想要再次查看的大学。",
+        "empty": {
+            "title": "暂无收藏",
+            "description": "在 AI 对话中添加大学即可在此查看。"
+        },
+        "toast": {
+            "addSuccess": "已添加大学到收藏",
+            "addFailed": "添加大学到收藏失败",
+            "removeSuccess": "已从收藏中移除大学",
+            "removeFailed": "从收藏中移除大学失败",
+            "loadFailed": "加载收藏列表失败"
+        },
+        "errors": {
+            "loadFailed": "加载收藏列表失败",
+            "loadFailedDescription": "无法加载您的收藏列表，请尝试刷新页面。"
+
+        },
+        "actions": {
+            "showDetails": "查看详情",
+            "remove": "移除",
+            "add": "添加到收藏",
+            "close": "关闭",
+            "retry": "重试"
+        }
+    },
+    "settings": {
+        "title": "设置",
+        "tabs": {
+            "account": "账户",
+            "general": "通用",
+            "about": "关于"
+        },
+        "account": {
+            "accountInformation": "账户信息",
+            "username": "用户名",
+            "email": "邮箱",
+            "plan": "计划",
+            "changeAvatar": "更换头像",
+            "avatarDialog": {
+                "title": "更换头像",
+                "descriptionSelect": "拖拽图片到此处，或点击选择文件。",
+                "descriptionCrop": "拖动裁剪框选择你要使用的区域。",
+                "dropPrompt": "拖拽图片到此处，或点击选择",
+                "supportedFormats": "支持格式：JPEG、PNG、WebP",
+                "maxSize": "最大文件大小：2 MB",
+                "selectImage": "选择图片",
+                "reselect": "重新选择",
+                "uploadAndSave": "上传并保存",
+                "cancel": "取消",
+                "uploading": "上传中…",
+                "uploadSuccess": "头像更新成功",
+                "uploadError": "头像上传失败",
+                "fileTooLarge": "文件大小不能超过 2 MB",
+                "invalidFileType": "仅支持 JPEG、PNG 和 WebP 格式"
+            },
+            "fetchUserInfoError": "获取用户信息失败",
+            "plans": {
+                "free": "免费计划"
+            },
+            "security": "安全",
+            "resetPassword": "重置密码",
+            "resetPasswordDesc": "通过邮箱验证重置密码",
+            "resetPasswordDialog": {
+                "title": "重置密码",
+                "step1Desc": "确认您的邮箱地址以接收验证码",
+                "step2Desc": "输入发送到您邮箱的验证码并设置新密码",
+                "emailConfirmHint": "验证码将发送到此邮箱地址",
+                "confirmPassword": "确认新密码",
+                "passwordMismatch": "密码不匹配",
+                "passwordTooShort": "密码长度至少为8个字符",
+                "success": "密码重置成功",
+                "warning": "重置密码后您将退出登录，需要使用新密码重新登录"
+            },
+            "twoFactor": {
+                "title": "两步验证",
+                "description": "为您的账户添加额外的安全保护",
+                "enabled": "已启用",
+                "disabled": "已禁用",
+                "backupCodes": "剩余备用码",
+                "enable": "启用",
+                "disableButton": "禁用",
+                "regenerateButton": "重新生成备用码",
+                "fetchError": "获取两步验证状态失败",
+                "setup": {
+                    "step1Title": "扫描二维码",
+                    "step1Desc": "使用 Google Authenticator 或任何 TOTP 应用扫描此二维码",
+                    "step2Title": "保存备用码",
+                    "step2Desc": "将这些备用码保存在安全的地方。每个代码只能使用一次。",
+                    "step3Title": "验证",
+                    "step3Desc": "输入您的认证应用中的6位数代码",
+                    "manualEntry": "或在您的应用中手动输入此代码：",
+                    "backupCodesWarning": "重要：请妥善保存这些备用码！",
+                    "backupCodesWarning2": "如果您无法访问认证设备，这些代码是恢复账户的唯一方法。",
+                    "enterCode": "输入验证码",
+                    "codeFromApp": "输入您的认证应用中的6位数代码",
+                    "copyAll": "全部复制",
+                    "copied": "已复制！",
+                    "copiedCodes": "备用码已复制到剪贴板",
+                    "back": "返回",
+                    "next": "下一步",
+                    "cancel": "取消",
+                    "done": "完成",
+                    "success": "两步验证启用成功！",
+                    "error": "设置两步验证失败",
+                    "alreadyEnabled": "两步验证已启用",
+                    "setupExpired": "两步验证设置已过期，请重试",
+                    "invalidCode": "请输入6位数代码",
+                    "wrongCode": "验证码无效",
+                    "verifyError": "验证失败，请重试。"
+                },
+                "disable": {
+                    "title": "禁用两步验证",
+                    "description": "禁用两步验证将降低您的账户安全性",
+                    "warning": "警告：安全风险",
+                    "warningDesc": "禁用两步验证将使您的账户安全性降低。",
+                    "enterPassword": "输入您的密码以确认",
+                    "passwordPlaceholder": "您的密码",
+                    "passwordRequired": "密码为必填项",
+                    "cancel": "取消",
+                    "confirm": "禁用",
+                    "success": "两步验证已成功禁用",
+                    "wrongPassword": "密码错误",
+                    "notEnabled": "两步验证未启用",
+                    "error": "禁用两步验证失败"
+                },
+                "regenerate": {
+                    "verifyTitle": "验证身份",
+                    "verifyDesc": "输入您当前的 TOTP 代码以重新生成备用码",
+                    "newCodesTitle": "新备用码",
+                    "newCodesDesc": "您的旧备用码现已失效。请妥善保存这些新代码。",
+                    "enterCode": "输入 TOTP 代码",
+                    "codeFromApp": "输入您的认证应用中的6位数代码",
+                    "warning": "所有之前的备用码现已失效",
+                    "warningDesc": "请确保保存这些新备用码。您的旧代码将不再有效。",
+                    "copyAll": "全部复制",
+                    "copied": "已复制！",
+                    "copiedCodes": "备用码已复制到剪贴板",
+                    "cancel": "取消",
+                    "verify": "验证",
+                    "done": "完成",
+                    "invalidCode": "请输入6位数代码",
+                    "wrongCode": "TOTP 代码无效",
+                    "notEnabled": "两步验证未启用",
+                    "error": "重新生成备用码失败"
+                }
+            },
+            "devices": {
+                "title": "登录设备",
+                "description": "管理当前已登录您账户的所有设备",
+                "currentDevice": "当前设备",
+                "logoutButton": "退出登录",
+                "logoutAllButton": "退出所有设备",
+                "loginTime": "登录时间",
+                "fetchError": "获取设备列表失败",
+                "logoutSuccess": "设备已成功退出登录",
+                "logoutError": "退出该设备失败",
+                "logoutAllSuccess": "所有设备已退出登录",
+                "logoutAllError": "退出所有设备失败",
+                "deviceTypes": {
+                    "PC": "电脑",
+                    "Mobile": "手机",
+                    "Tablet": "平板",
+                    "Bot": "机器人",
+                    "Unknown": "未知"
+                }
+            }
+        },
+        "general": {
+            "appearance": "外观",
+            "appearanceDesc": "自定义 U-Finder 在您设备上的外观",
+            "theme": "主题",
+            "themeDesc": "选择您偏好的主题",
+            "system": "跟随系统",
+            "light": "浅色",
+            "dark": "深色",
+            "language": "语言",
+            "languageDesc": "选择您偏好的语言"
+        },
+        "about": {
+            "title": "关于 U-Finder",
+            "description": "由 AI 驱动的智能大学查找工具。本项目以 Apache 2.0 许可证开源，是宁波诺丁汉大学 COMP2043 GRP 课程的小组作业。",
+            "version": "版本",
+            "license": "许可证",
+            "course": "课程",
+            "team": "团队",
+            "university": "大学",
+            "github": "GitHub 仓库",
+            "terms": "服务条款",
+            "privacy": "隐私政策",
+            "footer": "由 U-Finder 团队用 ❤️ 制作"
+        }
+    }
+
+}

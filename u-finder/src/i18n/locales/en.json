@@ -1,0 +1,858 @@
+{
+    "common": {
+        "errors": {
+            "sessionExpired": "Session expired. Please log in again."
+        }
+    },
+    "cover": {
+        "title": "U-Finder",
+        "description": "Discover your perfect university match with our intelligent finder tool.",
+        "login": "Log In",
+        "signup": "Sign Up"
+    },
+    "login": {
+        "title": "Log In",
+        "welcome": "Welcome back! Please enter your email.",
+        "email": "Email",
+        "password": "Password",
+        "forgot": "Forgot your password?",
+        "submit": "Log In",
+        "twoFactorRequired": "Two-factor verification required",
+        "no account": "Don't have an account?",
+        "signup": "Sign up",
+        "unauth": "The password is incorrect",
+        "not_found": "The account doesn't exist",
+        "unprocessable": "Invalid login input.",
+        "forbidden": "Your account has been blocked. Please contact support or an administrator.",
+        "error": "Login failed. Please try again later.",
+        "reset": {
+            "title": "Reset Password",
+            "description": "Reset password with your email",
+            "sendCode": "Send Code",
+            "send": "Reset Password",
+            "otp": "Verification Code",
+            "otpPlaceholder": "Enter 6-digit code",
+            "newPassword": "New Password",
+            "confirmPassword": "Confirm Password",
+            "codeDescription": "Code sent to your email.",
+            "step1Desc": "Enter your email to receive a verification code",
+            "step2Desc": "Enter the verification code and your new password",
+            "step1Hint": "A verification code will be sent to this email address",
+            "emailPlaceholder": "your@email.com",
+            "back": "Back",
+            "resendCode": "Resend",
+            "errors": {
+                "emailRequired": "Email is required",
+                "emailNotFound": "No account found with this email",
+                "invalidEmail": "Invalid email format",
+                "sendFailed": "Failed to send verification code",
+                "tokenMissing": "Please request a verification code first",
+                "tokenExpired": "Verification token expired. Please request a new code.",
+                "rateLimited": "Too many requests. Please wait {seconds} seconds.",
+                "resendFailed": "Failed to resend verification code",
+                "sendCodeFirst": "Please send verification code first",
+                "fieldsRequired": "All fields are required",
+                "wrongCode": "Incorrect verification code",
+                "unauthorized": "Your session has expired. Please request a new verification code.",
+                "invalidInput": "Please check your input and try again.",
+                "passwordMismatch": "Passwords do not match",
+                "resetFailed": "Failed to reset password. Please try again."
+            },
+            "success": {
+                "codeSent": "Verification code sent to your email",
+                "codeResent": "Verification code resent successfully",
+                "passwordReset": "Password reset successfully! Redirecting to login..."
+            }
+        }
+    },
+    "twofa": {
+        "title": "Two-factor Authentication",
+        "description": "Enter your verification code to continue.",
+        "totpLabel": "Authenticator code",
+        "recoveryLabel": "Recovery code",
+        "totpHint": "Enter the 6-digit code from your authentication app.",
+        "recoveryHint": "Enter your 8-character recovery code.",
+        "verify": "Verify",
+        "switchToRecovery": "Use recovery code",
+        "switchToTotp": "Use authenticator code",
+        "invalid": "Invalid verification code",
+        "failed": "Verification failed",
+        "success": "Verification successful"
+    },
+    "signup":{
+        "title": "Sign Up",
+        "description": "Fill in the form to create your account.",
+        "username": "Username",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "button": "Sign Up",
+        "haveAccount": "Already have an account?",
+        "login": "Log In",
+        "continue": "By clicking \"Sign Up\", you agree to our ",
+        "termOfUse": "Terms of Service",
+        "and": " and ",
+        "privacy": "Privacy Policy",
+        "occupied": "This email has been registered.",
+        "unprocessable": "Please check your information and try again.",
+        "error": "Something went wrong during signup. Please check your connection and try again.",
+        "codeSent": "The verification code has been sent",
+        "passwordError": "Password must be 8-20 characters, with at least one letter and one digit.",
+        "passwordMismatch": "Passwords do not match",
+        "confirmPasswordRequired": "Please confirm your password",
+        "verification": {
+            "enter": "Enter verification code",
+            "sent": "We sent a 6-digit code to your email.",
+            "enter2": "Enter the 6-digit code sent to your email.",
+            "receive": "Didn't receive the code?",
+            "verify": "Verify",
+            "resend": "Resend",
+            "resending": "Resending...",
+            "incorrect": "The OTP code is incorrect.",
+            "success": "Verification successful!",
+            "error": "Verification failed. Please try again.",
+            "notFound": "Verification session not found.",
+            "resent": "Verification code has been resent!",
+            "tokenExpired": "Verification session expired. Please sign up again.",
+            "tooMany": "Too many requests. Please wait {seconds} seconds before trying again.",
+            "resendError": "Failed to resend code. Please try again."
+        }
+    },
+    "legal": {
+        "lastUpdatedLabel": "Last Updated:",
+        "lastUpdatedValue": "March 2026",
+        "terms": {
+            "title": "Terms of Service",
+            "switchToPrivacy": "View Privacy Policy",
+            "intro": "Welcome to the University Finder System. By accessing or using this platform, you agree to be bound by the following Terms of Service. If you do not agree with these terms, please do not use the platform.",
+            "sections": {
+                "descriptionOfService": {
+                    "title": "1. Description of Service",
+                    "body": "The University Finder System is a platform designed to help users explore and discover universities based on their academic background, interests, and preferences. The platform includes an AI-powered recommendation system that provides university suggestions and informational responses through an interactive chat interface."
+                },
+                "userAccounts": {
+                    "title": "2. User Accounts",
+                    "body": "To access certain features of the platform, users may be required to create an account. Users are responsible for maintaining the confidentiality of their login credentials and for all activities that occur under their account."
+                },
+                "userInformation": {
+                    "title": "3. User Information",
+                    "body": "Users may provide personal and academic information including educational background, academic achievements, internship experience, project experience, and other relevant details. This information is used to generate personalized university recommendations."
+                },
+                "aiRecommendations": {
+                    "title": "4. AI Recommendations",
+                    "body": "The platform uses Artificial Intelligence (AI) to provide recommendations and suggestions for universities. These recommendations are intended for informational purposes only and should not be considered official admission advice or guarantees of acceptance."
+                },
+                "cvUploadAndParsing": {
+                    "title": "5. CV Upload and Parsing",
+                    "body": "Users may upload their curriculum vitae (CV) for automated analysis. The system may extract relevant information such as education, skills, projects, and experience in order to populate the user's profile and improve recommendation accuracy."
+                },
+                "acceptableUse": {
+                    "title": "6. Acceptable Use",
+                    "body": "Users agree not to misuse the platform. Prohibited activities include:",
+                    "items": {
+                        "unauthorizedAccess": "Attempting to gain unauthorized access to the system",
+                        "maliciousContent": "Uploading malicious files or harmful content",
+                        "unlawfulUse": "Using the platform for unlawful purposes",
+                        "systemDisruption": "Attempting to disrupt or damage the system"
+                    }
+                },
+                "savedUniversities": {
+                    "title": "7. Saved Universities",
+                    "body": "Users may save recommended universities as favorites for future reference. These saved items are stored within the user's account and can be managed through the user dashboard."
+                },
+                "limitationOfLiability": {
+                    "title": "8. Limitation of Liability",
+                    "body": "The University Finder System is provided for educational and informational purposes. The platform does not guarantee the accuracy, completeness, or suitability of recommendations. The developers are not responsible for any decisions made based on the information provided by the system."
+                },
+                "changesToService": {
+                    "title": "9. Changes to the Service",
+                    "body": "The system developers may update or modify the platform and its features at any time without prior notice."
+                },
+                "contact": {
+                    "title": "10. Contact",
+                    "body": "If you have any questions about these Terms of Service, please contact the system administrators or development team."
+                }
+            }
+        },
+        "privacy": {
+            "title": "Privacy Policy",
+            "switchToTerms": "View Terms of Service",
+            "intro": "This Privacy Policy explains how the University Finder System collects, uses, and protects user information when using the platform.",
+            "sections": {
+                "informationWeCollect": {
+                    "title": "1. Information We Collect",
+                    "body": "The system may collect the following information:",
+                    "items": {
+                        "account": "Email address and account credentials",
+                        "profile": "Personal profile information",
+                        "education": "Educational background",
+                        "academic": "Academic results and achievements",
+                        "internshipAndProject": "Internship and project experience",
+                        "cv": "Uploaded curriculum vitae (CV)",
+                        "favorites": "Saved universities and preferences",
+                        "chat": "Interactions with the AI chat system"
+                    }
+                },
+                "howWeUse": {
+                    "title": "2. How We Use Your Information",
+                    "body": "The collected information is used to:",
+                    "items": {
+                        "recommendations": "Provide personalized university recommendations",
+                        "aiImprovement": "Improve the accuracy of the AI recommendation system",
+                        "profileManagement": "Allow users to manage their profiles",
+                        "cvParsing": "Enable CV parsing and automatic profile population",
+                        "platformImprovement": "Improve the overall functionality of the platform"
+                    }
+                },
+                "aiProcessing": {
+                    "title": "3. AI Processing",
+                    "body": "Information provided by users, including profile data and uploaded CV documents, may be processed by Artificial Intelligence models to generate recommendations and suggestions. These models analyze user information to provide more relevant university options."
+                },
+                "dataStorage": {
+                    "title": "4. Data Storage",
+                    "body": "User information is stored within the system database and is used solely for the operation of the University Finder System."
+                },
+                "dataSecurity": {
+                    "title": "5. Data Security",
+                    "body": "Reasonable technical and organizational measures are implemented to protect user data from unauthorized access, misuse, or disclosure."
+                },
+                "dataSharing": {
+                    "title": "6. Data Sharing",
+                    "body": "The University Finder System does not sell, trade, or rent users' personal information to third parties. Data is used only within the platform to provide services and recommendations."
+                },
+                "userControl": {
+                    "title": "7. User Control",
+                    "body": "Users may update or modify their profile information through the account settings page. Users may also remove saved universities from their favorites list."
+                },
+                "uploadedDocuments": {
+                    "title": "8. Uploaded Documents",
+                    "body": "When a user uploads a CV, the document may be processed by the system to extract relevant information such as education, experience, and skills. This information may be added to the user's profile automatically."
+                },
+                "changesToPolicy": {
+                    "title": "9. Changes to This Policy",
+                    "body": "This Privacy Policy may be updated periodically to reflect changes in system functionality or data practices."
+                },
+                "contact": {
+                    "title": "10. Contact",
+                    "body": "If you have any questions about this Privacy Policy or how your data is handled, please contact the system administrators."
+                }
+            }
+        }
+    },
+    "sidebar": {
+        "appName": "U-Finder",
+        "newChat": "New Chat",
+        "newConversation": "New Conversation",
+        "conversations": "Conversations",
+        "noConversations": "No conversations yet",
+        "loadMore": "Load more...",
+        "loading": "Loading...",
+        "favourite": "Favourite",
+        "profile": "Profile",
+        "settings": "Settings",
+        "language": "Language",
+        "logout": "Log out",
+        "logoutUnauthorized": "Your session has expired. You have been logged out.",
+        "logoutServerError": "Server error while logging out. Local session was cleared.",
+        "logoutFailed": "Logout failed. Please try again.",
+        "deleteConversation": "Delete Conversation",
+        "deleteConfirm": "Are you sure you want to delete this conversation? This action cannot be undone.",
+        "renameConversation": "Edit conversation name",
+        "conversationName": "Enter conversation name",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "rename": "Rename",
+        "save": "Save",
+        "confirm": "Confirm",
+        "renameSuccess": "Conversation renamed successfully",
+        "renameFailed": "Failed to rename conversation",
+        "deleteSuccess": "Conversation deleted successfully",
+        "deleteFailed": "Failed to delete conversation"
+    },
+    "profile": {
+        "title": "Profile",
+        "edit": "Edit",
+        "save": "Save",
+        "saveAll": "Save All",
+        "savingAll": "Saving…",
+        "cancelAll": "Cancel All",
+        "cancel": "Cancel",
+        "add": "Add",
+        "remove": "Remove",
+        "retry": "Retry",
+        "cvParser": {
+            "button": "Import from CV",
+            "title": "Import from CV",
+            "description": "Upload your CV to automatically fill in your profile information.",
+            "uploadPrompt": "Drag and drop your CV here, or click to select a file",
+            "supportedFormats": "Supported formats: PDF, DOCX, DOC",
+            "maxSize": "Maximum file size: 10MB",
+            "uploading": "Uploading...",
+            "parsing": "Parsing your CV...",
+            "parsingHint": "This may take up to 1 minute for complex documents.",
+            "parseSuccess": "CV parsed successfully!",
+            "selectData": "Select the data you want to import",
+            "reviewTitle": "Review Parsed Data",
+            "reviewDescription": "Select the sections you want to import to your profile.",
+            "selectAll": "Select All",
+            "noData": "No data found",
+            "item": "item",
+            "items": "items",
+            "more": "more...",
+            "confirmImport": "Confirm Import",
+            "importSuccess": "CV data imported successfully!",
+            "importFailed": "Failed to import CV data",
+            "actions": {
+                "overwrite": "Overwrite",
+                "append": "Append"
+            },
+            "errors": {
+                "invalidFormat": "Invalid file format. Only PDF, DOCX, and DOC are supported.",
+                "fileTooLarge": "File size exceeds 10MB limit.",
+                "uploadFailed": "Failed to upload CV. Please try again.",
+                "noFile": "No file uploaded or file is empty.",
+                "unauthorized": "You are not authorized. Please login again.",
+                "parseFailed": "Failed to extract information from the uploaded file. Please check the file format and try again.",
+                "serviceUnavailable": "AI service is temporarily unavailable. Please try again later.",
+                "serverError": "Internal server error. Please try again.",
+                "timeout": "Parsing timed out. The file may be too complex — please try again."
+            }
+        },
+        "errors": {
+            "loadFailed": "Something went wrong",
+            "loadFailedDescription": "Unable to load your profile data. Please try refreshing the page."
+        },
+        "toast": {
+            "loadFailed": "Failed to load profile data",
+            "information": {
+                "saveSuccess": "Personal information saved successfully",
+                "saveFailed": "Failed to save personal information"
+            },
+            "education": {
+                "saveSuccess": "Education background saved successfully",
+                "saveFailed": "Failed to save education background"
+            },
+            "academic": {
+                "saveSuccess": "Academic outcomes saved successfully",
+                "saveFailed": "Failed to save academic outcomes"
+            },
+            "test": {
+                "saveSuccess": "Standardized tests saved successfully",
+                "saveFailed": "Failed to save standardized tests"
+            },
+            "internship": {
+                "saveSuccess": "Internship experience saved successfully",
+                "saveFailed": "Failed to save internship experience"
+            },
+            "project": {
+                "saveSuccess": "Project experience saved successfully",
+                "saveFailed": "Failed to save project experience"
+            },
+            "campusExp": {
+                "saveSuccess": "Campus experience saved successfully",
+                "saveFailed": "Failed to save campus experience"
+            },
+            "award": {
+                "saveSuccess": "Awards saved successfully",
+                "saveFailed": "Failed to save awards"
+            }
+        }
+    },
+    "info": {
+        "title": "Personal Information",
+        "name": "Name",
+        "gender": {
+            "title": "Gender",
+            "male": "Male",
+            "female": "Female",
+            "other": "Other"
+        },
+        "birthday": "Birthday",
+        "placeholders": {
+            "name": "Name",
+            "gender": "Gender"
+        },
+        "empty": "No information records",
+        "add": "Add information",
+        "errors": {
+            "notLoggedIn": "You are not logged in.",
+            "saveFailed": "Failed to save personal information.",
+            "loadFailed": "Failed to load personal information.",
+            "unauthorized": "Your session has expired. Please log in again.",
+            "notFound": "User not found.",
+            "serverError": "Internal server error.",
+            "nameRequired": "Name is required.",
+            "genderRequired": "Gender is required.",
+            "birthdayRequired": "Birthday is required."
+        }
+    },
+    "edu": {
+        "title": "Education Background",
+        "type": "Type",
+        "institution": "Institution",
+        "time": {
+            "start": "Start Date",
+            "end": "End Date"
+        },
+        "major": "Major",
+        "ranking": "Ranking",
+        "GPA": "GPA",
+        "GPA-base": "GPA Base",
+        "empty": "No education records",
+        "add": "Add education",
+        "placeholders": {
+            "type": "Select education type",
+            "institution": "University name",
+            "major": "Computer Science",
+            "ranking": "e.g. 5/200",
+            "gpa": "3.8",
+            "gpaBase": "4.0"
+        },
+        "types": {
+            "highSchool": "High School",
+            "undergraduate": "Undergraduate",
+            "master": "Master",
+            "doctoral": "Doctoral"
+        },
+        "validation": {
+            "typeRequired": "Education #{index}: Type is required",
+            "nameRequired": "Education #{index}: Institution name is required",
+            "startRequired": "Education #{index}: Start date is required",
+            "dateRangeInvalid": "Education #{index}: Start date must not be after end date",
+            "rankingFormat": "Education #{index}: Ranking must use format X/Y, e.g. 5/200",
+            "rankingRange": "Education #{index}: Ranking must be positive integers with X <= Y",
+            "gpaBaseInvalid": "Education #{index}: GPA base must be a positive number",
+            "gpaBaseMin": "Education #{index}: GPA base must be greater than 0",
+            "gpaBaseMax": "Education #{index}: GPA base must be 100 or below",
+            "gpaInvalid": "Education #{index}: GPA must be a positive number",
+            "gpaNegative": "Education #{index}: GPA cannot be negative",
+            "gpaExceedsBase": "Education #{index}: GPA cannot be greater than GPA base"
+        }
+    },
+    "academic": {
+        "title": "Academic Outcome",
+        "selectType": "Select type",
+        "selectTypeHint": "Select a type to enter details.",
+        "empty": "No academic outcomes",
+        "add": "Add academic outcome",
+        "paper": "Paper",
+        "patent": "Patent",
+        "type": {
+            "title": "Type",
+            "researchPaper": "Research Paper",
+            "patent": "Patent"
+        },
+        "researchPaper": {
+            "title": "Title",
+            "titlePlaceholder": "Paper title",
+            "doi": "DOI",
+            "doiPlaceholder": "DOI",
+            "abstract": "Abstract",
+            "abstractPlaceholder": "Abstract"
+        },
+        "patent": {
+            "title": "Title",
+            "titlePlaceholder": "Patent title",
+            "number": "Patent number",
+            "numberPlaceholder": "Patent number",
+            "region": "Region",
+            "regionPlaceholder": "Region",
+            "description": "Description",
+            "descriptionPlaceholder": "Description"
+        },
+        "validation": {
+            "typeRequired": "Academic outcome #{index}: Type is required",
+            "titleRequired": "Academic outcome #{index}: Title is required"
+        }
+    },
+    "test": {
+        "title": "Standardized Test",
+        "type": "Type",
+        "selectType": "Select test type",
+        "selectTypeHint": "Select a type to enter details.",
+        "empty": "No standardized tests",
+        "add": "Add standardized test",
+        "testDate": "Test Date",
+        "registrationNumber": "Registration Number",
+        "examSession": "Exam Session",
+        "overallPredicted": "Overall Predicted",
+        "examYear": "Exam Year",
+        "month": "Exam month",
+        "subjects": "Subjects",
+        "subject": "Subject",
+        "grade": "Grade",
+        "score": "Score",
+        "cefrLevel": "CEFR Level",
+        "types": {
+            "ielts": "IELTS",
+            "toeflIbt": "TOEFL iBT",
+            "duolingo": "Duolingo English Test",
+            "gre": "GRE",
+            "gmat": "GMAT",
+            "sat": "SAT",
+            "act": "ACT",
+            "aLevel": "A-Level",
+            "ap": "AP",
+            "ibDiploma": "IB Diploma",
+            "cae": "Cambridge English C1 Advanced (CAE)"
+        },
+        "scores": {
+            "title": "Scores",
+            "overall": "Overall",
+            "listening": "Listening",
+            "reading": "Reading",
+            "writing": "Writing",
+            "speaking": "Speaking",
+            "literacy": "Literacy",
+            "comprehension": "Comprehension",
+            "conversation": "Conversation",
+            "production": "Production",
+            "verbal": "Verbal",
+            "quantitative": "Quantitative",
+            "analyticalWriting": "Analytical Writing",
+            "total": "Total",
+            "integratedReasoning": "Integrated Reasoning",
+            "math": "Math",
+            "ebrw": "Evidence-Based Reading And Writing",
+            "essayOptional": "Essay (Optional)",
+            "composite": "Composite",
+            "english": "English",
+            "science": "Science",
+            "writingOptional": "Writing (Optional)",
+            "corePoints": "Core Points",
+            "extendedEssay": "Extended Essay Grade",
+            "tok": "TOK Grade",
+            "readingUseOfEnglish": "Reading & Use Of English"
+        },
+        "validation": {
+            "typeRequired": "Test #{index}: Type is required",
+            "subjectRequired": "Test #{index}: At least one subject is required"
+        }
+    },
+    "internship": {
+        "title": "Internship",
+        "company": "Company",
+        "role": "Role",
+        "description": "Description",
+        "time": {
+            "start": "Start Date",
+            "end": "End Date",
+            "till now": "Till now"
+        },
+        "empty": "No internships",
+        "add": "Add internship",
+        "placeholders": {
+            "company": "Company name",
+            "role": "Position / Role",
+            "description": "Description"
+        },
+        "validation": {
+            "companyRequired": "Internship #{index}: Company name is required",
+            "roleRequired": "Internship #{index}: Role is required",
+            "dateRangeInvalid": "Internship #{index}: Start date must not be after end date"
+        }
+    },
+    "project": {
+        "title": "Project",
+        "name": "Name",
+        "role": "Role",
+        "time": {
+            "start": "Start Date",
+            "end": "End Date",
+            "till now": "Till now"
+        },
+        "description": "Description",
+        "empty": "No projects",
+        "add": "Add project",
+        "placeholders": {
+            "name": "Project name",
+            "role": "Role",
+            "description": "Description"
+        },
+        "validation": {
+            "nameRequired": "Project #{index}: Name is required",
+            "dateRangeInvalid": "Project #{index}: Start date must not be after end date"
+        }
+    },
+    "campusExp": {
+        "title": "Campus Experience",
+        "name": "Name",
+        "description": "Description",
+        "empty": "No campus experiences",
+        "add": "Add campus experience",
+        "placeholders": {
+            "name": "Campus experience",
+            "description": "Description"
+        },
+        "validation": {
+            "nameRequired": "Campus experience #{index}: Name is required"
+        }
+    },
+    "award": {
+        "title": "Award",
+        "name": "Name",
+        "description": "Description",
+        "empty": "No awards",
+        "add": "Add award",
+        "placeholders": {
+            "name": "Award name",
+            "description": "Description"
+        },
+        "validation": {
+            "nameRequired": "Award #{index}: Name is required"
+        }
+    },
+    "date": {
+        "pickDate": "Pick date",
+        "pickStart": "Pick start",
+        "pickEnd": "Pick end"
+    },
+    "chat": {
+        "title": "U-Finder",
+        "tagline": "Find your best-fit university — powered by AI.",
+        "stopped": "Response generation stopped.",
+        "input": {
+            "label": "Message",
+            "placeholder": "Chat with U-Finder...",
+            "stop": "Stop generating",
+            "newlineHint": "Shift + Enter for new line",
+            "send": "Send",
+            "disclaimer": "U-Finder can make mistakes. Check important info."
+        },
+        "errors": {
+            "streamFailed": "We couldn't complete that request. Please try again.",
+            "stopFailed": "Failed to stop response generation. Please try again.",
+            "loadHistoryFailed": "Failed to load conversation history. Please try again."
+        },
+        "card": {
+            "loadingAria": "University information loading",
+            "locationNotSpecified": "Location not specified",
+            "tuitionNotSpecified": "Tuition not specified",
+            "notSpecified": "Not specified",
+            "program": "Program",
+            "programDetails": "Program details",
+            "admissions": "Admissions",
+            "tuition": "Tuition",
+            "careerOutcomes": "Career outcomes",
+            "linksTitle": "Links",
+            "verified": "Verified",
+            "tabs": {
+                "program": "Program",
+                "admission": "Admission + Tuition",
+                "career": "Career + URLs"
+            },
+            "labels": {
+                "degree": "Degree",
+                "field": "Field",
+                "track": "Track",
+                "type": "Type",
+                "duration": "Duration",
+                "language": "Language",
+                "faculty": "Faculty",
+                "deadline": "Deadline",
+                "languageReqs": "Language requirements",
+                "academicRequirements": "Academic requirements",
+                "otherRequirements": "Other requirements",
+                "cost": "Cost"
+            },
+            "links": {
+                "officialProgram": "Official program page",
+                "universitySite": "University site",
+                "facultySite": "Faculty site"
+            }
+        }
+    },
+    "favourites": {
+        "title": "Favourite Universities",
+        "subtitle": "Keep the university you want to revisit.",
+        "empty": {
+            "title": "No favourites yet",
+            "description": "Add a university from AI Chat to see it here."
+        },
+        "toast": {
+            "addSuccess": "Added university to favourites",
+            "addFailed": "Failed to add university to favourites",
+            "removeSuccess": "Removed university from favourites",
+            "removeFailed": "Failed to remove university from favourites",
+            "loadFailed": "Failed to load favourites"
+        },
+        "errors": {
+            "loadFailed": "Failed to load favourites",
+            "loadFailedDescription": "Unable to load your favourites. Please try refreshing the page."
+        },
+        "actions": {
+            "showDetails": "Show details",
+            "remove": "Remove",
+            "add": "Add to favourites",
+            "close": "Close",
+            "retry": "Retry"
+        }
+    },
+    "settings": {
+        "title": "Settings",
+        "tabs": {
+            "account": "Account",
+            "general": "General",
+            "about": "About"
+        },
+        "account": {
+            "accountInformation": "Account Information",
+            "username": "Username",
+            "email": "Email",
+            "plan": "Plan",
+            "changeAvatar": "Change Avatar",
+            "avatarDialog": {
+                "title": "Change Avatar",
+                "descriptionSelect": "Drag and drop an image here, or click to select a file.",
+                "descriptionCrop": "Drag the crop box to select the area you want to use.",
+                "dropPrompt": "Drag and drop your image here, or click to select",
+                "supportedFormats": "Supported formats: JPEG, PNG, WebP",
+                "maxSize": "Maximum file size: 2 MB",
+                "selectImage": "Select Image",
+                "reselect": "Reselect",
+                "uploadAndSave": "Upload & Save",
+                "cancel": "Cancel",
+                "uploading": "Uploading...",
+                "uploadSuccess": "Avatar updated successfully",
+                "uploadError": "Failed to upload avatar",
+                "fileTooLarge": "File size must not exceed 2 MB",
+                "invalidFileType": "Only JPEG, PNG, and WebP images are accepted"
+            },
+            "fetchUserInfoError": "Failed to fetch user information",
+            "plans": {
+                "free": "Free Plan"
+            },
+            "security": "Security",
+            "resetPassword": "Reset Password",
+            "resetPasswordDesc": "Reset your password via email verification",
+            "resetPasswordDialog": {
+                "title": "Reset Password",
+                "step1Desc": "Confirm your email address to receive a verification code",
+                "step2Desc": "Enter the verification code sent to your email and set your new password",
+                "emailConfirmHint": "A verification code will be sent to this email address",
+                "confirmPassword": "Confirm New Password",
+                "passwordMismatch": "Passwords do not match",
+                "passwordTooShort": "Password must be at least 8 characters",
+                "success": "Password reset successfully",
+                "warning": "You will be logged out after resetting your password and need to log in again with your new password"
+            },
+            "twoFactor": {
+                "title": "Two-Factor Authentication",
+                "description": "Add an extra layer of security to your account",
+                "enabled": "Enabled",
+                "disabled": "Disabled",
+                "backupCodes": "Backup codes remaining",
+                "enable": "Enable",
+                "disableButton": "Disable",
+                "regenerateButton": "Regenerate Backup Codes",
+                "fetchError": "Failed to fetch 2FA status",
+                "setup": {
+                    "step1Title": "Scan QR Code",
+                    "step1Desc": "Scan this QR code with Google Authenticator or any TOTP app",
+                    "step2Title": "Save Backup Codes",
+                    "step2Desc": "Save these backup codes in a secure place. Each code can only be used once.",
+                    "step3Title": "Verify",
+                    "step3Desc": "Enter the 6-digit code from your authenticator app",
+                    "manualEntry": "Or enter this code manually in your app:",
+                    "backupCodesWarning": "Important: Save these backup codes securely!",
+                    "backupCodesWarning2": "If you lose access to your authenticator device, these codes are the only way to recover your account.",
+                    "enterCode": "Enter verification code",
+                    "codeFromApp": "Enter the 6-digit code from your authenticator app",
+                    "copyAll": "Copy All",
+                    "copied": "Copied!",
+                    "copiedCodes": "Backup codes copied to clipboard",
+                    "back": "Back",
+                    "next": "Next",
+                    "cancel": "Cancel",
+                    "done": "Done",
+                    "success": "2FA enabled successfully!",
+                    "error": "Failed to setup 2FA",
+                    "alreadyEnabled": "2FA is already enabled",
+                    "setupExpired": "2FA setup expired, please try again",
+                    "invalidCode": "Please enter a 6-digit code",
+                    "wrongCode": "Invalid verification code",
+                    "verifyError": "Failed to verify code. Please try again."
+                },
+                "disable": {
+                    "title": "Disable Two-Factor Authentication",
+                    "description": "Disabling 2FA will reduce the security of your account",
+                    "warning": "Warning: Security Risk",
+                    "warningDesc": "Disabling two-factor authentication will make your account less secure.",
+                    "enterPassword": "Enter your password to confirm",
+                    "passwordPlaceholder": "Your password",
+                    "passwordRequired": "Password is required",
+                    "cancel": "Cancel",
+                    "confirm": "Disable",
+                    "success": "2FA disabled successfully",
+                    "wrongPassword": "Incorrect password",
+                    "notEnabled": "2FA is not enabled",
+                    "error": "Failed to disable 2FA"
+                },
+                "regenerate": {
+                    "verifyTitle": "Verify Identity",
+                    "verifyDesc": "Enter your current TOTP code to regenerate backup codes",
+                    "newCodesTitle": "New Backup Codes",
+                    "newCodesDesc": "Your old backup codes are now invalid. Save these new codes securely.",
+                    "enterCode": "Enter TOTP code",
+                    "codeFromApp": "Enter the 6-digit code from your authenticator app",
+                    "warning": "All previous backup codes are now invalid",
+                    "warningDesc": "Make sure to save these new backup codes. Your old codes will no longer work.",
+                    "copyAll": "Copy All",
+                    "copied": "Copied!",
+                    "copiedCodes": "Backup codes copied to clipboard",
+                    "cancel": "Cancel",
+                    "verify": "Verify",
+                    "done": "Done",
+                    "invalidCode": "Please enter a 6-digit code",
+                    "wrongCode": "Invalid TOTP code",
+                    "notEnabled": "2FA is not enabled",
+                    "error": "Failed to regenerate backup codes"
+                }
+            },
+            "devices": {
+                "title": "Login Devices",
+                "description": "Manage all devices currently logged into your account",
+                "currentDevice": "Current Device",
+                "logoutButton": "Log Out",
+                "logoutAllButton": "Log Out All Devices",
+                "loginTime": "Logged in at",
+                "fetchError": "Failed to fetch device list",
+                "logoutSuccess": "Device logged out successfully",
+                "logoutError": "Failed to log out device",
+                "logoutAllSuccess": "All devices have been logged out",
+                "logoutAllError": "Failed to log out all devices",
+                "deviceTypes": {
+                    "PC": "PC",
+                    "Mobile": "Mobile",
+                    "Tablet": "Tablet",
+                    "Bot": "Bot",
+                    "Unknown": "Unknown"
+                }
+            }
+        },
+        "general": {
+            "appearance": "Appearance",
+            "appearanceDesc": "Customize how U-Finder looks on your device",
+            "theme": "Theme",
+            "themeDesc": "Choose your preferred theme",
+            "system": "System",
+            "light": "Light",
+            "dark": "Dark",
+            "language": "Language",
+            "languageDesc": "Choose your preferred language"
+        },
+        "about": {
+            "title": "About U-Finder",
+            "description": "An intelligent university finder tool powered by AI. This project is open-sourced under the Apache 2.0 License as a group project for COMP2043 GRP at University of Nottingham Ningbo China.",
+            "version": "Version",
+            "license": "License",
+            "course": "Course",
+            "team": "Team",
+            "university": "University",
+            "github": "GitHub Repository",
+            "terms": "Terms of Service",
+            "privacy": "Privacy Policy",
+            "footer": "Made with ❤️ by the U-Finder Team"
+        }
+    }
+}
