@@ -41,6 +41,7 @@ const isOpen = ref(props.open)
 const isDragging = ref(false)
 const isUploading = ref(false)
 const isParsing = ref(false)
+const isParseSuccess = ref(false)
 const selectedFile = ref<File | null>(null)
 const fileInputRef = ref<HTMLInputElement | null>(null)
 // Holds the controller for the current in-flight upload so we can abort it on demand
@@ -85,6 +86,7 @@ function resetState() {
   selectedFile.value = null
   isUploading.value = false
   isParsing.value = false
+  isParseSuccess.value = false
   isDragging.value = false
   abortController.value = null
   stopParsingProgress(false)
@@ -103,7 +105,7 @@ function startParsingProgress() {
       parseProgress.value = Math.min(85, current + 0.5)
     } else if (current < 95) {
       // Phase 3: very slow crawl (85 → 95 in ~40 s) — nearly stalls to hint at completion
-      parseProgress.value = Math.min(95, current + 0.1)
+      parseProgress.value = Math.min(95, current + 0.2)
     }
   }, 200)
 }
@@ -199,18 +201,17 @@ async function uploadFile(file: File) {
 
     const response = await uploadCV(file, abortController.value.signal)
 
-    // Success — jump progress to 100% then close
+    // Success — jump progress bar to 100% and trigger the checkmark animation
     stopParsingProgress(true)
     isParsing.value = false
+    isParseSuccess.value = true
+
+    // Wait for the success animation to finish (circle ~0.5 s + check ~0.4 s + hold) before navigating
+    await new Promise<void>(resolve => setTimeout(resolve, 1400))
+
     toast.success(t('profile.cvParser.parseSuccess'))
-
-    // Emit parse complete event with data
     emit('parse-complete', response.data)
-
-    // Close dialog after success
-    setTimeout(() => {
-      isOpen.value = false
-    }, 500)
+    isOpen.value = false
 
   } catch (error: any) {
     isUploading.value = false
@@ -283,7 +284,7 @@ function formatFileSize(bytes: number): string {
       </DialogHeader>
 
       <!-- Upload State -->
-      <div v-if="!isUploading && !isParsing" class="py-8">
+      <div v-if="!isUploading && !isParsing && !isParseSuccess" class="py-8">
         <!-- File Drop Zone -->
         <div
           class="border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer"
@@ -343,7 +344,7 @@ function formatFileSize(bytes: number): string {
       </div>
 
       <!-- Parsing State -->
-      <div v-else-if="isParsing" class="py-8 text-center">
+      <div v-else-if="isParsing && !isParseSuccess" class="py-8 text-center">
         <p class="text-sm font-medium mb-4">
           {{ t('profile.cvParser.parsing') }}
         </p>
@@ -358,12 +359,39 @@ function formatFileSize(bytes: number): string {
         </p>
       </div>
 
+      <!-- Success Animation State: shown after server responds, before navigating to results -->
+      <div v-else-if="isParseSuccess" class="py-10 text-center">
+        <svg class="mx-auto h-16 w-16 text-primary" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+          <!-- Circle draws itself over 0.5 s -->
+          <circle
+            cx="26" cy="26" r="24"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-dasharray="151"
+            class="success-circle"
+          />
+          <!-- Checkmark draws after the circle, with 0.4 s delay -->
+          <path
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M14 27l8 8 16-16"
+            stroke-dasharray="36"
+            class="success-check"
+          />
+        </svg>
+        <p class="mt-4 text-sm font-medium text-primary">
+          {{ t('profile.cvParser.parseSuccess') }}
+        </p>
+      </div>
+
       <DialogFooter>
         <!-- During parsing the button cancels the in-flight request instead of just closing -->
         <Button
           variant="outline"
-          @click="isParsing || isUploading ? cancelUpload() : closeDialog()"
-          :disabled="false"
+          @click="isParseSuccess ? undefined : (isParsing || isUploading ? cancelUpload() : closeDialog())"
+          :disabled="isParseSuccess"
         >
           {{ t('profile.cancel') }}
         </Button>
@@ -371,3 +399,27 @@ function formatFileSize(bytes: number): string {
     </DialogContent>
   </Dialog>
 </template>
+
+<style scoped>
+/* Circle traces itself from stroke-dashoffset 151 (hidden) down to 0 (fully drawn) */
+@keyframes circle-draw {
+  from { stroke-dashoffset: 151; }
+  to   { stroke-dashoffset: 0; }
+}
+
+/* Checkmark traces itself from stroke-dashoffset 36 down to 0, starting after the circle */
+@keyframes check-draw {
+  from { stroke-dashoffset: 36; }
+  to   { stroke-dashoffset: 0; }
+}
+
+.success-circle {
+  /* 'both' fill-mode: apply from-state before start, keep to-state after end */
+  animation: circle-draw 0.5s ease-out both;
+}
+
+.success-check {
+  /* Delay matches the circle duration so the check starts right as the circle finishes */
+  animation: check-draw 0.4s ease-out 0.45s both;
+}
+</style>
