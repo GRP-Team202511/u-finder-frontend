@@ -29,6 +29,7 @@
             <SelectItem value="name">{{ t('dashboard.filters.sortOptions.name') }}</SelectItem>
             <SelectItem value="role">{{ t('dashboard.filters.sortOptions.plan') }}</SelectItem>
             <SelectItem value="status">{{ t('dashboard.filters.sortOptions.status') }}</SelectItem>
+            <SelectItem value="createdAt">{{ t('dashboard.filters.sortOptions.created') }}</SelectItem>
             <SelectItem value="id">{{ t('dashboard.filters.sortOptions.id') }}</SelectItem>
           </SelectContent>
         </Select>
@@ -72,11 +73,11 @@
             </TableCell>
 
             <TableCell class="align-middle border-b border-[#eeeeee] px-[14px] py-[11px]">
-              <span class="inline-flex min-w-[78px] items-center justify-center rounded-full border border-[#dddddd] bg-[#f8f8f8] px-2.5 py-[5px] text-xs text-[#222222]">{{ user.role }}</span>
+              <span class="inline-flex min-w-[78px] items-center justify-center rounded-full border border-[#dddddd] bg-[#f8f8f8] px-2.5 py-[5px] text-xs text-[#222222]">{{ getRoleText(user.roleType) }}</span>
             </TableCell>
 
             <TableCell class="align-middle border-b border-[#eeeeee] px-[14px] py-[11px]">
-              <span class="inline-flex min-w-[78px] items-center justify-center rounded-full border border-[#dddddd] bg-[#f8f8f8] px-2.5 py-[5px] text-xs text-[#222222]">{{ user.status }}</span>
+              <span class="inline-flex min-w-[78px] items-center justify-center rounded-full border border-[#dddddd] bg-[#f8f8f8] px-2.5 py-[5px] text-xs text-[#222222]">{{ getStatusText(user.statusKey) }}</span>
             </TableCell>
 
             <TableCell class="align-middle border-b border-[#eeeeee] px-[14px] py-[11px] text-[13px] leading-[1.3] text-[#555555]">
@@ -169,7 +170,7 @@ import { extractErrorMessage } from '@/api/http'
 import { useAdminStore } from '@/stores/adminStore'
 
 const adminStore = useAdminStore()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const ROLE_PRIORITY: Record<string, number> = {
   '4': 0,
@@ -178,13 +179,28 @@ const ROLE_PRIORITY: Record<string, number> = {
   '1': 3,
 }
 
+function getRoleText(type: string) {
+  const key = `dashboard.recentUsers.roles.${type}`
+  const translated = t(key)
+  return translated === key ? (USER_TYPE_MAP[type] ?? 'Unknown') : translated
+}
+
+function getStatusText(status: string) {
+  const normalized = status.toLowerCase()
+  const key = `dashboard.recentUsers.statuses.${normalized}`
+  const translated = t(key)
+  if (translated !== key) return translated
+
+  const fallback = normalized.charAt(0).toUpperCase() + normalized.slice(1)
+  return fallback || 'Unknown'
+}
+
 interface UserRow {
   id: number
   name: string
   email: string
   roleType: string
-  role: string
-  status: string
+  statusKey: string
   createdAt: string
   availableActions: string[]
 }
@@ -196,8 +212,7 @@ function mapUser(u: AdminUser): UserRow {
     name: u.name,
     email: u.email,
     roleType: u.type,
-    role: t(`dashboard.recentUsers.roles.${u.type}`, t('dashboard.recentUsers.roles.unknown')),
-    status: t(`dashboard.recentUsers.statuses.${u.status.toLowerCase()}`, t('dashboard.recentUsers.statuses.unknown')),
+    statusKey: u.status,
     createdAt: new Date(u.created_at).toLocaleDateString(),
     availableActions: isSelf
       ? u.available_actions.filter(a => a !== 'block' && a !== 'delete')
@@ -266,7 +281,7 @@ onMounted(() => {
 })
 
 const searchQuery = ref('')
-const sortKey = ref<'name' | 'role' | 'status' | 'id'>('name')
+const sortKey = ref<'name' | 'role' | 'status' | 'createdAt' | 'id'>('name')
 const sortOrder = ref<'asc' | 'desc'>('asc')
 const currentPage = ref(1)
 const rowsPerPage = ref(5)
@@ -276,6 +291,7 @@ const sortKeyLabel = computed(() => {
     name: t('dashboard.filters.sortOptions.name'),
     role: t('dashboard.filters.sortOptions.plan'),
     status: t('dashboard.filters.sortOptions.status'),
+    createdAt: t('dashboard.filters.sortOptions.created'),
     id: t('dashboard.filters.sortOptions.id'),
   }
   return labelMap[sortKey.value]
@@ -288,18 +304,29 @@ const sortOrderLabel = computed(() => {
 })
 
 const filteredUsers = computed(() => {
+  const _locale = locale.value
   const query = searchQuery.value.trim().toLowerCase()
   if (!query) return users.value
+
   return users.value.filter((u) =>
     u.name.toLowerCase().includes(query) ||
     u.email.toLowerCase().includes(query) ||
-    u.role.toLowerCase().includes(query) ||
-    u.status.toLowerCase().includes(query) ||
+    getRoleText(u.roleType).toLowerCase().includes(query) ||
+    getStatusText(u.statusKey).toLowerCase().includes(query) ||
     String(u.id).includes(query)
   )
 })
 
+function getSortValue(user: UserRow, key: 'name' | 'role' | 'status' | 'createdAt' | 'id') {
+  if (key === 'role') return getRoleText(user.roleType)
+  if (key === 'status') return getStatusText(user.statusKey)
+  if (key === 'createdAt') return user.createdAt
+  if (key === 'id') return user.id
+  return user.name
+}
+
 const sortedUsers = computed(() => {
+  const _locale = locale.value
   const copied = [...filteredUsers.value]
   copied.sort((a, b) => {
     const key = sortKey.value
@@ -319,10 +346,12 @@ const sortedUsers = computed(() => {
       return 0
     }
 
-    const aVal = a[key]
-    const bVal = b[key]
+    const aVal = getSortValue(a, key)
+    const bVal = getSortValue(b, key)
+
     if (typeof aVal === 'number' && typeof bVal === 'number')
       return sortOrder.value === 'asc' ? aVal - bVal : bVal - aVal
+
     const aS = String(aVal).toLowerCase(), bS = String(bVal).toLowerCase()
     if (aS < bS) return sortOrder.value === 'asc' ? -1 : 1
     if (aS > bS) return sortOrder.value === 'asc' ? 1 : -1
