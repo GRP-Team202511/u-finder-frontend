@@ -7,7 +7,7 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     redirect: () => {
       const userStore = useUserStore()
-      return userStore.isLoggedIn ? { name: 'UserProfile' } : { name: 'Cover' }
+      return userStore.isLoggedIn ? { name: 'AIChat', query: { new: '1' } } : { name: 'Cover' }
     }
   },
   {
@@ -104,8 +104,8 @@ router.beforeEach((to, _from, next) => {
     // Redirect to cover page if not authenticated
     next({ name: 'Cover' })
   } else if (guestOnly && userStore.isLoggedIn) {
-    // Redirect to home if already logged in and trying to access guest-only pages
-    next({ name: 'UserProfile' })
+    // Redirect to AI Chat if already logged in and trying to access guest-only pages
+    next({ name: 'AIChat', query: { new: '1' } })
   } else {
     next()
   }

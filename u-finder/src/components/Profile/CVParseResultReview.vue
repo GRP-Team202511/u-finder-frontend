@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Info } from 'lucide-vue-next'
+import { Info, CircleHelp } from 'lucide-vue-next'
 import {
   Dialog,
   DialogContent,
@@ -26,7 +26,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import type { CVParseResponse } from '@/types/profileTypes'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import type { CVParseResponse, CVImportSelections, ImportMode } from '@/types/profileTypes'
 
 const { t } = useI18n()
 
@@ -44,36 +50,18 @@ const props = withDefaults(defineProps<Props>(), {
 // Emits
 interface Emits {
   (e: 'update:open', value: boolean): void
-  (e: 'confirm', selections: FieldSelections): void
+  (e: 'confirm', selections: CVImportSelections): void
   (e: 'cancel'): void
 }
 
 const emit = defineEmits<Emits>()
 
-// Types
-interface FieldSelections {
-  personalInfo: boolean
-  education: boolean
-  academic: boolean
-  test: boolean
-  internship: boolean
-  project: boolean
-  campus: boolean
-  award: boolean
-}
-
 // Local state
 const isOpen = ref(props.open)
-const selections = ref<FieldSelections>({
-  personalInfo: false,
-  education: false,
-  academic: false,
-  test: false,
-  internship: false,
-  project: false,
-  campus: false,
-  award: false,
-})
+// itemSelections[sectionKey] = array of selected item indices within that section
+const itemSelections = ref<Record<string, number[]>>({})
+// importModes[sectionKey] = user-chosen import mode ('append' or 'overwrite') for each array section
+const importModes = ref<Record<string, ImportMode>>({})
 
 // Watch for prop changes
 watch(() => props.open, (newVal) => {
@@ -89,21 +77,68 @@ watch(isOpen, (newVal) => {
   emit('update:open', newVal)
 })
 
-// Initialize selections based on available data
+// Initialize item-level selections: pre-select all items in sections that have data
 function initializeSelections() {
   if (!props.data) return
-  
-  selections.value = {
-    personalInfo: hasPersonalInfo(),
-    education: props.data.education.data.length > 0,
-    academic: props.data.academic.data.length > 0,
-    test: props.data.test.data.length > 0,
-    internship: props.data.internship.data.length > 0,
-    project: props.data.project.data.length > 0,
-    campus: props.data.campus.data.length > 0,
-    award: props.data.award.data.length > 0,
+  const d = props.data
+  const newSel: Record<string, number[]> = {}
+
+  // personalInfo is a single object — treat as a one-element array internally
+  newSel['personalInfo'] = hasPersonalInfo() ? [0] : []
+
+  // Array-typed sections: pre-select every parsed item and default to 'append' mode
+  const arraySections = ['education', 'academic', 'test', 'internship', 'project', 'campus', 'award'] as const
+  const newModes: Record<string, ImportMode> = {}
+  arraySections.forEach(key => {
+    const count = d[key].data.length
+    newSel[key] = Array.from({ length: count }, (_, i) => i)
+    newModes[key] = 'append'
+  })
+
+  itemSelections.value = newSel
+  importModes.value = newModes
+}
+
+// ─── Per-item selection helpers ──────────────────────────────────────────────
+
+// Returns true if item at `idx` within `sectionKey` is currently selected
+function isItemSelected(sectionKey: string, idx: number): boolean {
+  return itemSelections.value[sectionKey]?.includes(idx) ?? false
+}
+
+// Returns tri-state check value for a section-level header checkbox
+function getSectionCheckState(sectionKey: string): boolean | 'indeterminate' {
+  const arr = itemSelections.value[sectionKey]
+  const section = sectionsData.value.find(s => s.key === sectionKey)
+  if (!arr || !section || section.items.length === 0) return false
+  if (arr.length === 0) return false
+  if (arr.length === section.items.length) return true
+  return 'indeterminate'
+}
+
+// Toggle a single item on or off
+function toggleItem(sectionKey: string, idx: number) {
+  const arr = itemSelections.value[sectionKey]
+  if (!arr) return
+  const pos = arr.indexOf(idx)
+  if (pos >= 0) {
+    arr.splice(pos, 1)
+  } else {
+    arr.push(idx)
   }
 }
+
+// Select or deselect all items in a section at once
+function toggleSection(sectionKey: string, checked: boolean | 'indeterminate') {
+  const section = sectionsData.value.find(s => s.key === sectionKey)
+  if (!section) return
+  itemSelections.value[sectionKey] = checked === true
+    ? section.items.map((_, i) => i)
+    : []
+}
+
+// Toggle the expand / collapse state of a section's item list — kept for potential future use
+// (currently replaced by scroll; left as dead code guard)
 
 // Check if personal info has data
 function hasPersonalInfo(): boolean {
@@ -191,24 +226,23 @@ const sectionsData = computed(() => {
   ]
 })
 
-const selectableSectionKeys = computed<(keyof FieldSelections)[]>(() => {
-  return sectionsData.value
-    .filter(section => section.hasData)
-    .map(section => section.key as keyof FieldSelections)
-})
+// ─── Global select-all state ──────────────────────────────────────────────────
 
-const allSelected = computed(() => {
-  if (selectableSectionKeys.value.length === 0) return false
-  return selectableSectionKeys.value.every(key => selections.value[key])
-})
+const allSelected = computed(() =>
+  sectionsData.value
+    .filter(s => s.hasData)
+    .every(s => getSectionCheckState(s.key) === true)
+)
 
-const someSelected = computed(() => {
-  return selectableSectionKeys.value.some(key => selections.value[key])
-})
+const someItemSelected = computed(() =>
+  sectionsData.value
+    .filter(s => s.hasData)
+    .some(s => (itemSelections.value[s.key]?.length ?? 0) > 0)
+)
 
 const selectAllChecked = computed<boolean | 'indeterminate'>(() => {
   if (allSelected.value) return true
-  if (someSelected.value) return 'indeterminate'
+  if (someItemSelected.value) return 'indeterminate'
   return false
 })
 
@@ -272,17 +306,50 @@ function formatAward(): string[] {
   return props.data.award.data.map(item => item.name)
 }
 
-// Toggle all selections
+// Toggle every selectable item across all sections
 function toggleAll(checked: boolean | 'indeterminate') {
-  const newValue = checked === true
-  selectableSectionKeys.value.forEach(sectionKey => {
-    selections.value[sectionKey] = newValue
+  sectionsData.value
+    .filter(s => s.hasData)
+    .forEach(s => toggleSection(s.key, checked))
+}
+
+// Set all array sections (excluding personalInfo) to the same import mode at once
+function setAllModes(mode: ImportMode) {
+  const arraySections = ['education', 'academic', 'test', 'internship', 'project', 'campus', 'award'] as const
+  arraySections.forEach(key => {
+    importModes.value[key] = mode
   })
 }
 
-// Confirm selection
+// Reflects whether all array sections currently share a single mode, or are mixed
+const globalModeState = computed<ImportMode | 'mixed'>(() => {
+  const arraySections = ['education', 'academic', 'test', 'internship', 'project', 'campus', 'award']
+  const modes = arraySections.map(k => importModes.value[k] ?? 'append')
+  if (modes.every(m => m === 'append')) return 'append'
+  if (modes.every(m => m === 'overwrite')) return 'overwrite'
+  return 'mixed'
+})
+
+// Build CVImportSelections from current item-level selections and emit
 function confirmSelection() {
-  emit('confirm', { ...selections.value })
+  if (!props.data) return
+  const d = props.data
+  const sel = itemSelections.value
+
+  const result: CVImportSelections = {
+    personalInfo: (sel['personalInfo']?.length ?? 0) > 0,
+    // Indices are always valid (set from initializeSelections / toggleItem), so undefined is impossible;
+    // the filter removes the undefined from the type so TypeScript is satisfied.
+    education:  { mode: importModes.value['education']  ?? 'append', items: (sel['education']  || []).map(i => d.education.data[i]).filter((x): x is NonNullable<typeof x> => x !== undefined) },
+    academic:   { mode: importModes.value['academic']   ?? 'append', items: (sel['academic']   || []).map(i => d.academic.data[i]).filter((x): x is NonNullable<typeof x> => x !== undefined) },
+    test:       { mode: importModes.value['test']       ?? 'append', items: (sel['test']       || []).map(i => d.test.data[i]).filter((x): x is NonNullable<typeof x> => x !== undefined) },
+    internship: { mode: importModes.value['internship'] ?? 'append', items: (sel['internship'] || []).map(i => d.internship.data[i]).filter((x): x is NonNullable<typeof x> => x !== undefined) },
+    project:    { mode: importModes.value['project']    ?? 'append', items: (sel['project']    || []).map(i => d.project.data[i]).filter((x): x is NonNullable<typeof x> => x !== undefined) },
+    campus:     { mode: importModes.value['campus']     ?? 'append', items: (sel['campus']     || []).map(i => d.campus.data[i]).filter((x): x is NonNullable<typeof x> => x !== undefined) },
+    award:      { mode: importModes.value['award']      ?? 'append', items: (sel['award']      || []).map(i => d.award.data[i]).filter((x): x is NonNullable<typeof x> => x !== undefined) },
+  }
+
+  emit('confirm', result)
   isOpen.value = false
 }
 
@@ -369,19 +436,61 @@ function formatItemDetails(item: any, sectionKey: string): { label: string; valu
       </DialogHeader>
 
       <div class="flex-1 overflow-y-auto py-4">
-        <!-- Select All Checkbox -->
-        <div class="flex items-center space-x-2 mb-4 pb-4 border-b">
-          <Checkbox
-            :id="'select-all'"
-            :model-value="selectAllChecked"
-            @update:model-value="toggleAll"
-          />
-          <Label
-            :for="'select-all'"
-            class="text-sm font-medium cursor-pointer"
-          >
-            {{ t('profile.cvParser.selectAll') }}
-          </Label>
+        <!-- Select All Checkbox + global import-mode toggle -->
+        <div class="flex items-center justify-between gap-4 mb-4 pb-4 border-b">
+          <div class="flex items-center space-x-2">
+            <Checkbox
+              :id="'select-all'"
+              :model-value="selectAllChecked"
+              @update:model-value="toggleAll"
+            />
+            <Label
+              :for="'select-all'"
+              class="text-sm font-medium cursor-pointer"
+            >
+              {{ t('profile.cvParser.selectAll') }}
+            </Label>
+          </div>
+          <!-- Global mode toggle: sets all array sections to append or overwrite at once -->
+          <div class="flex shrink-0 items-center gap-2">
+            <span class="text-xs text-muted-foreground">{{ t('profile.cvParser.allSections') }}:</span>
+            <!-- Help tooltip: explains what append and overwrite mean -->
+            <TooltipProvider :delay-duration="100">
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <button type="button" class="text-muted-foreground hover:text-foreground transition-colors" tabindex="-1">
+                    <CircleHelp class="h-3.5 w-3.5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" class="max-w-56 text-xs leading-relaxed">
+                  <p><strong>{{ t('profile.cvParser.importModeAppend') }}</strong>: {{ t('profile.cvParser.importModeAppendDesc') }}</p>
+                  <p class="mt-1"><strong>{{ t('profile.cvParser.importModeOverwrite') }}</strong>: {{ t('profile.cvParser.importModeOverwriteDesc') }}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <div class="flex rounded-md border overflow-hidden text-xs">
+              <button
+                type="button"
+                class="px-2.5 py-1 transition-colors"
+                :class="globalModeState === 'append'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'hover:bg-muted text-muted-foreground'"
+                @click="setAllModes('append')"
+              >
+                {{ t('profile.cvParser.importModeAppend') }}
+              </button>
+              <button
+                type="button"
+                class="px-2.5 py-1 transition-colors border-l"
+                :class="globalModeState === 'overwrite'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'hover:bg-muted text-muted-foreground'"
+                @click="setAllModes('overwrite')"
+              >
+                {{ t('profile.cvParser.importModeOverwrite') }}
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Carousel for sections -->
@@ -400,12 +509,13 @@ function formatItemDetails(item: any, sectionKey: string): { label: string; valu
               >
                 <CardHeader class="pb-4">
                   <div class="flex items-start justify-between gap-2">
-                    <div class="flex items-center space-x-2 flex-1">
+                    <div class="flex items-center space-x-2 flex-1 min-w-0">
                       <Checkbox
                         :id="`select-${section.key}`"
-                        v-model="selections[section.key as keyof FieldSelections]"
+                        :model-value="getSectionCheckState(section.key)"
                         :disabled="!section.hasData"
-                        class="mt-0.5"
+                        class="mt-0.5 shrink-0"
+                        @update:model-value="(v) => toggleSection(section.key, v)"
                       />
                       <div class="flex-1 min-w-0">
                         <Label
@@ -415,54 +525,93 @@ function formatItemDetails(item: any, sectionKey: string): { label: string; valu
                           {{ section.title }}
                         </Label>
                         <div class="flex items-center gap-2 mt-1.5">
-                          <!-- <span
-                            class="text-xs px-2 py-0.5 rounded font-medium"
-                            :class="section.key === 'personalInfo' 
-                              ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
-                              : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'"
-                          >
-                            {{ section.action }}
-                          </span> -->
                           <span class="text-sm text-muted-foreground">
                             {{ section.count }} {{ section.count === 1 ? t('profile.cvParser.item') : t('profile.cvParser.items') }}
                           </span>
                         </div>
                       </div>
                     </div>
+                    <!-- Import mode toggle: only shown for array sections (personalInfo is always overwrite) -->
+                    <div
+                      v-if="section.key !== 'personalInfo' && section.hasData"
+                      class="flex shrink-0 rounded-md border overflow-hidden text-xs"
+                    >
+                      <button
+                        type="button"
+                        class="px-2 py-1 transition-colors"
+                        :class="(importModes[section.key] ?? 'append') === 'append'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'hover:bg-muted text-muted-foreground'"
+                        @click="importModes[section.key] = 'append'"
+                      >
+                        {{ t('profile.cvParser.importModeAppend') }}
+                      </button>
+                      <button
+                        type="button"
+                        class="px-2 py-1 transition-colors border-l"
+                        :class="importModes[section.key] === 'overwrite'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'hover:bg-muted text-muted-foreground'"
+                        @click="importModes[section.key] = 'overwrite'"
+                      >
+                        {{ t('profile.cvParser.importModeOverwrite') }}
+                      </button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent class="pt-0">
-                  <div v-if="section.hasData" class="space-y-2">
-                    <Popover
-                      v-for="(item, idx) in section.items.slice(0, 3)"
-                      :key="idx"
+                  <div v-if="section.hasData">
+                    <!-- Scrollable item list: fixed height shows ~3 rows; excess items are reachable by scrolling -->
+                    <div
+                      class="space-y-1 overflow-y-auto"
+                      :class="section.items.length > 3 ? 'max-h-34' : ''"
                     >
-                      <PopoverTrigger class="w-full">
-                        <div class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer p-2 rounded-md hover:bg-accent">
-                          <Info class="h-4 w-4 shrink-0" />
-                          <span class="truncate text-left flex-1">
-                            {{ section.preview[idx] }}
-                          </span>
-                        </div>
-                      </PopoverTrigger>
-                      <PopoverContent class="w-80 max-h-96 overflow-y-auto">
-                        <div class="space-y-3">
-                          <div
-                            v-for="(detail, detailIdx) in formatItemDetails(item, section.key)"
-                            :key="detailIdx"
-                            class="space-y-1"
-                          >
-                            <div class="text-xs font-medium text-muted-foreground">{{ detail.label }}</div>
-                            <div class="text-sm">{{ detail.value }}</div>
-                          </div>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
+                      <!-- One row per item: individual checkbox + summary text + detail popover -->
+                      <div
+                        v-for="(item, idx) in section.items"
+                        :key="idx"
+                        class="flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-accent/50 transition-colors"
+                      >
+                        <Checkbox
+                          :id="`item-${section.key}-${idx}`"
+                          :model-value="isItemSelected(section.key, idx)"
+                          class="shrink-0"
+                          @update:model-value="() => toggleItem(section.key, idx)"
+                        />
+                        <span class="truncate flex-1 text-sm text-muted-foreground select-none">
+                          {{ section.preview[idx] }}
+                        </span>
+                        <!-- Detail popover: click the info icon to inspect the full item -->
+                        <Popover>
+                          <PopoverTrigger as-child>
+                            <button
+                              type="button"
+                              class="shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                              <Info class="h-3.5 w-3.5" />
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent class="w-80 max-h-96 overflow-y-auto">
+                            <div class="space-y-3">
+                              <div
+                                v-for="(detail, detailIdx) in formatItemDetails(item, section.key)"
+                                :key="detailIdx"
+                                class="space-y-1"
+                              >
+                                <div class="text-xs font-medium text-muted-foreground">{{ detail.label }}</div>
+                                <div class="text-sm">{{ detail.value }}</div>
+                              </div>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
+                    <!-- Scroll hint shown only when there are more than 3 items -->
                     <p
                       v-if="section.items.length > 3"
-                      class="text-sm text-muted-foreground italic pl-2"
+                      class="mt-1.5 text-center text-xs text-muted-foreground/70 italic"
                     >
-                      +{{ section.items.length - 3 }} {{ t('profile.cvParser.more') }}
+                      {{ t('profile.cvParser.scrollHint') }}
                     </p>
                   </div>
                   <p v-else class="text-sm text-muted-foreground italic">
@@ -485,7 +634,7 @@ function formatItemDetails(item: any, sectionKey: string): { label: string; valu
         </Button>
         <Button 
           @click="confirmSelection"
-          :disabled="!someSelected"
+          :disabled="!someItemSelected"
         >
           {{ t('profile.cvParser.confirmImport') }}
         </Button>

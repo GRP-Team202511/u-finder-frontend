@@ -11,8 +11,8 @@ import { Moon, Sun, Monitor, FileText, Shield, Scale, ExternalLink, Info, Github
 const { t } = useI18n()
 const router = useRouter()
 
-// Theme mode: 'system' | 'light' | 'dark'
-const themeMode = ref<'system' | 'light' | 'dark'>('light')
+// Theme mode: 'system' | 'light' | 'dark' — defaults to system
+const themeMode = ref<'system' | 'light' | 'dark'>('system')
 
 import { version } from '../../../package.json'
 
@@ -44,7 +44,8 @@ onMounted(() => {
   } else if (savedTheme === 'light') {
     themeMode.value = 'light'
   } else {
-    themeMode.value = 'light'
+    // No saved preference — follow the system color scheme
+    themeMode.value = 'system'
   }
   
   applyTheme(themeMode.value)
