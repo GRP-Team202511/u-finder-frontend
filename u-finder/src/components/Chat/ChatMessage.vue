@@ -8,7 +8,7 @@ const props = defineProps<{ message: ChatMessageData; isLoading?: boolean }>();
 
 const roleClass = computed(() =>
 	props.message.role === "user"
-		? "self-end text-right"
+		? "self-end text-left"
 		: "self-start text-left"
 );
 
