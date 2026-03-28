@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 
+const TURNSTILE_SCRIPT_URL = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
+const LOAD_TIMEOUT_MS = 10_000
+
 declare global {
   interface Window {
     turnstile?: {
@@ -29,7 +32,7 @@ const emit = defineEmits<{
 
 const container = ref<HTMLElement>()
 let widgetId: string | undefined
-let pollTimer: ReturnType<typeof setInterval> | undefined
+let timeoutId: ReturnType<typeof setTimeout> | undefined
 
 const renderWidget = () => {
   if (!window.turnstile || !container.value) return
@@ -43,24 +46,52 @@ const renderWidget = () => {
   })
 }
 
-onMounted(() => {
+function loadTurnstileScript(): Promise<void> {
+  const existing = document.querySelector<HTMLScriptElement>(`script[src^="${TURNSTILE_SCRIPT_URL}"]`)
+  if (existing) {
+    return window.turnstile
+      ? Promise.resolve()
+      : new Promise((resolve, reject) => {
+          existing.addEventListener('load', () => resolve(), { once: true })
+          existing.addEventListener('error', () => reject(new Error('Turnstile script failed to load')), { once: true })
+          timeoutId = setTimeout(() => reject(new Error('Turnstile script load timed out')), LOAD_TIMEOUT_MS)
+        })
+  }
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script')
+    script.src = TURNSTILE_SCRIPT_URL
+    script.async = true
+    script.addEventListener('load', () => resolve(), { once: true })
+    script.addEventListener('error', () => reject(new Error('Turnstile script failed to load')), { once: true })
+    timeoutId = setTimeout(() => reject(new Error('Turnstile script load timed out')), LOAD_TIMEOUT_MS)
+    document.head.appendChild(script)
+  })
+}
+
+onMounted(async () => {
   if (!props.siteKey) return
 
   if (window.turnstile) {
     renderWidget()
-  } else {
-    pollTimer = setInterval(() => {
-      if (window.turnstile) {
-        clearInterval(pollTimer!)
-        pollTimer = undefined
-        renderWidget()
-      }
-    }, 100)
+    return
+  }
+
+  try {
+    await loadTurnstileScript()
+    renderWidget()
+  } catch {
+    emit('error')
+  } finally {
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      timeoutId = undefined
+    }
   }
 })
 
 onUnmounted(() => {
-  if (pollTimer) clearInterval(pollTimer)
+  if (timeoutId) clearTimeout(timeoutId)
   if (widgetId !== undefined && window.turnstile) {
     window.turnstile.remove(widgetId)
   }
