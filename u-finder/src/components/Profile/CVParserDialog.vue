@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import axios from 'axios'
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
+import { Progress } from '@/components/ui/progress'
 import { uploadCV } from '@/api/profileApi'
 import type { CVParseResponse } from '@/types/profileTypes'
 
@@ -40,10 +41,23 @@ const isOpen = ref(props.open)
 const isDragging = ref(false)
 const isUploading = ref(false)
 const isParsing = ref(false)
+const isParseSuccess = ref(false)
 const selectedFile = ref<File | null>(null)
 const fileInputRef = ref<HTMLInputElement | null>(null)
 // Holds the controller for the current in-flight upload so we can abort it on demand
 const abortController = ref<AbortController | null>(null)
+
+// Simulated parsing progress (0-100)
+const parseProgress = ref(0)
+// Interval timer driving the fake progress animation
+let progressTimer: ReturnType<typeof setInterval> | null = null
+
+// Maps the current progress value to a phase-specific hint i18n key
+const parsingHintKey = computed(() => {
+  if (parseProgress.value < 30) return 'profile.cvParser.parsingStep1'
+  if (parseProgress.value < 70) return 'profile.cvParser.parsingStep2'
+  return 'profile.cvParser.parsingStep3'
+})
 
 // Accepted file types
 const ACCEPTED_TYPES = [
@@ -72,8 +86,37 @@ function resetState() {
   selectedFile.value = null
   isUploading.value = false
   isParsing.value = false
+  isParseSuccess.value = false
   isDragging.value = false
   abortController.value = null
+  stopParsingProgress(false)
+}
+
+// Start the simulated progress animation when parsing begins
+function startParsingProgress() {
+  parseProgress.value = 0
+  progressTimer = setInterval(() => {
+    const current = parseProgress.value
+    if (current < 30) {
+      // Phase 1: fast ramp-up (0 → 30 in ~3 s at 200 ms interval)
+      parseProgress.value = Math.min(30, current + 2)
+    } else if (current < 85) {
+      // Phase 2: slow creep (30 → 85 in ~22 s)
+      parseProgress.value = Math.min(85, current + 0.5)
+    } else if (current < 95) {
+      // Phase 3: very slow crawl (85 → 95 in ~40 s) — nearly stalls to hint at completion
+      parseProgress.value = Math.min(95, current + 0.2)
+    }
+  }, 200)
+}
+
+// Stop the progress animation; jump to 100 on success or reset to 0 on failure
+function stopParsingProgress(success: boolean) {
+  if (progressTimer) {
+    clearInterval(progressTimer)
+    progressTimer = null
+  }
+  parseProgress.value = success ? 100 : 0
 }
 
 // Abort the in-flight request and return to the file-selection state
@@ -154,20 +197,21 @@ async function uploadFile(file: File) {
     // File is already in the browser — transition straight to the AI-parsing wait state
     isUploading.value = false
     isParsing.value = true
+    startParsingProgress()
 
     const response = await uploadCV(file, abortController.value.signal)
 
-    // Success
+    // Success — jump progress bar to 100% and trigger the checkmark animation
+    stopParsingProgress(true)
     isParsing.value = false
+    isParseSuccess.value = true
+
+    // Wait for the success animation to finish (circle ~0.5 s + check ~0.4 s + hold) before navigating
+    await new Promise<void>(resolve => setTimeout(resolve, 1400))
+
     toast.success(t('profile.cvParser.parseSuccess'))
-
-    // Emit parse complete event with data
     emit('parse-complete', response.data)
-
-    // Close dialog after success
-    setTimeout(() => {
-      isOpen.value = false
-    }, 500)
+    isOpen.value = false
 
   } catch (error: any) {
     isUploading.value = false
@@ -240,7 +284,7 @@ function formatFileSize(bytes: number): string {
       </DialogHeader>
 
       <!-- Upload State -->
-      <div v-if="!isUploading && !isParsing" class="py-8">
+      <div v-if="!isUploading && !isParsing && !isParseSuccess" class="py-8">
         <!-- File Drop Zone -->
         <div
           class="border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer"
@@ -300,13 +344,45 @@ function formatFileSize(bytes: number): string {
       </div>
 
       <!-- Parsing State -->
-      <div v-else-if="isParsing" class="py-12 text-center">
-        <Spinner class="mx-auto h-12 w-12 text-primary" />
-        <p class="mt-4 text-sm font-medium">
+      <div v-else-if="isParsing && !isParseSuccess" class="py-8 text-center">
+        <p class="text-sm font-medium mb-4">
           {{ t('profile.cvParser.parsing') }}
         </p>
-        <p class="mt-2 text-xs text-muted-foreground">
+        <!-- Simulated progress bar: animates from 0 to 85% while waiting, then jumps to 100% on success -->
+        <Progress :model-value="parseProgress" class="h-2 mb-2" />
+        <div class="flex justify-between items-center mt-1 mb-3">
+          <span class="text-xs text-muted-foreground">{{ t(parsingHintKey) }}</span>
+          <span class="text-xs text-muted-foreground">{{ Math.round(parseProgress) }}%</span>
+        </div>
+        <p class="text-xs text-muted-foreground">
           {{ t('profile.cvParser.parsingHint') }}
+        </p>
+      </div>
+
+      <!-- Success Animation State: shown after server responds, before navigating to results -->
+      <div v-else-if="isParseSuccess" class="py-10 text-center">
+        <svg class="mx-auto h-16 w-16 text-primary" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+          <!-- Circle draws itself over 0.5 s -->
+          <circle
+            cx="26" cy="26" r="24"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-dasharray="151"
+            class="success-circle"
+          />
+          <!-- Checkmark draws after the circle, with 0.4 s delay -->
+          <path
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M14 27l8 8 16-16"
+            stroke-dasharray="36"
+            class="success-check"
+          />
+        </svg>
+        <p class="mt-4 text-sm font-medium text-primary">
+          {{ t('profile.cvParser.parseSuccess') }}
         </p>
       </div>
 
@@ -314,8 +390,8 @@ function formatFileSize(bytes: number): string {
         <!-- During parsing the button cancels the in-flight request instead of just closing -->
         <Button
           variant="outline"
-          @click="isParsing || isUploading ? cancelUpload() : closeDialog()"
-          :disabled="false"
+          @click="isParseSuccess ? undefined : (isParsing || isUploading ? cancelUpload() : closeDialog())"
+          :disabled="isParseSuccess"
         >
           {{ t('profile.cancel') }}
         </Button>
@@ -323,3 +399,27 @@ function formatFileSize(bytes: number): string {
     </DialogContent>
   </Dialog>
 </template>
+
+<style scoped>
+/* Circle traces itself from stroke-dashoffset 151 (hidden) down to 0 (fully drawn) */
+@keyframes circle-draw {
+  from { stroke-dashoffset: 151; }
+  to   { stroke-dashoffset: 0; }
+}
+
+/* Checkmark traces itself from stroke-dashoffset 36 down to 0, starting after the circle */
+@keyframes check-draw {
+  from { stroke-dashoffset: 36; }
+  to   { stroke-dashoffset: 0; }
+}
+
+.success-circle {
+  /* 'both' fill-mode: apply from-state before start, keep to-state after end */
+  animation: circle-draw 0.5s ease-out both;
+}
+
+.success-check {
+  /* Delay matches the circle duration so the check starts right as the circle finishes */
+  animation: check-draw 0.4s ease-out 0.45s both;
+}
+</style>

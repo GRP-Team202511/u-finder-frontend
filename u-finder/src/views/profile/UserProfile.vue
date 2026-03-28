@@ -18,7 +18,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { getAllProfile, updateProfileField, updatePersonalInfo } from '@/api/profileApi'
-import type { PersonalInfo, CVParseResponse } from '@/types/profileTypes'
+import type { PersonalInfo, CVParseResponse, CVImportSelections, ImportMode } from '@/types/profileTypes'
 import type { EditorRegistration, ProfileEditor } from '@/types/profileEditor'
 import { useUserStore } from '@/stores/userStore'
 import { useSidebar } from '@/components/ui/sidebar'
@@ -298,13 +298,13 @@ function handleCVParseComplete(data: CVParseResponse) {
 }
 
 // Handle CV result confirmation
-async function handleCVResultConfirm(selections: any) {
+async function handleCVResultConfirm(selections: CVImportSelections) {
 	if (!cvParseResult.value) return
 	
 	const promises: Promise<any>[] = []
 	
 	try {
-		// Update personal info (overwrite)
+		// Update personal info (overwrite) — personalInfo is a single object so still read from cvParseResult
 		if (selections.personalInfo) {
 			const promise = updatePersonalInfo(cvParseResult.value.personalInfo)
 				.then(() => {
@@ -318,9 +318,11 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update education (append)
-		if (selections.education && cvParseResult.value.education.data.length > 0) {
-			const newData = [...(educationData.value || []), ...cvParseResult.value.education.data]
+		// Append only the user-selected education items
+		if (selections.education.items.length > 0) {
+			const newData = selections.education.mode === 'overwrite'
+				? selections.education.items
+				: [...(educationData.value || []), ...selections.education.items]
 			const promise = updateProfileField('education', newData)
 				.then(() => {
 					educationData.value = newData
@@ -333,9 +335,11 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update academic (append)
-		if (selections.academic && cvParseResult.value.academic.data.length > 0) {
-			const newData = [...(academicOutcomeData.value || []), ...cvParseResult.value.academic.data]
+		// Append only the user-selected academic items
+		if (selections.academic.items.length > 0) {
+			const newData = selections.academic.mode === 'overwrite'
+				? selections.academic.items
+				: [...(academicOutcomeData.value || []), ...selections.academic.items]
 			const promise = updateProfileField('academic', newData)
 				.then(() => {
 					academicOutcomeData.value = newData
@@ -348,9 +352,11 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update test (append)
-		if (selections.test && cvParseResult.value.test.data.length > 0) {
-			const newData = [...(standardizedTestData.value || []), ...cvParseResult.value.test.data]
+		// Append only the user-selected test items
+		if (selections.test.items.length > 0) {
+			const newData = selections.test.mode === 'overwrite'
+				? selections.test.items
+				: [...(standardizedTestData.value || []), ...selections.test.items]
 			const promise = updateProfileField('test', newData)
 				.then(() => {
 					standardizedTestData.value = newData
@@ -363,9 +369,11 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update internship (append)
-		if (selections.internship && cvParseResult.value.internship.data.length > 0) {
-			const newData = [...(internshipData.value || []), ...cvParseResult.value.internship.data]
+		// Append only the user-selected internship items
+		if (selections.internship.items.length > 0) {
+			const newData = selections.internship.mode === 'overwrite'
+				? selections.internship.items
+				: [...(internshipData.value || []), ...selections.internship.items]
 			const promise = updateProfileField('internship', newData)
 				.then(() => {
 					internshipData.value = newData
@@ -378,9 +386,11 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update project (append)
-		if (selections.project && cvParseResult.value.project.data.length > 0) {
-			const newData = [...(projectData.value || []), ...cvParseResult.value.project.data]
+		// Append only the user-selected project items
+		if (selections.project.items.length > 0) {
+			const newData = selections.project.mode === 'overwrite'
+				? selections.project.items
+				: [...(projectData.value || []), ...selections.project.items]
 			const promise = updateProfileField('project', newData)
 				.then(() => {
 					projectData.value = newData
@@ -393,9 +403,11 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update campus (append)
-		if (selections.campus && cvParseResult.value.campus.data.length > 0) {
-			const newData = [...(campusExpData.value || []), ...cvParseResult.value.campus.data]
+		// Append only the user-selected campus items
+		if (selections.campus.items.length > 0) {
+			const newData = selections.campus.mode === 'overwrite'
+				? selections.campus.items
+				: [...(campusExpData.value || []), ...selections.campus.items]
 			const promise = updateProfileField('campus', newData)
 				.then(() => {
 					campusExpData.value = newData
@@ -408,9 +420,11 @@ async function handleCVResultConfirm(selections: any) {
 			promises.push(promise)
 		}
 		
-		// Update award (append)
-		if (selections.award && cvParseResult.value.award.data.length > 0) {
-			const newData = [...(awardData.value || []), ...cvParseResult.value.award.data]
+		// Append only the user-selected award items
+		if (selections.award.items.length > 0) {
+			const newData = selections.award.mode === 'overwrite'
+				? selections.award.items
+				: [...(awardData.value || []), ...selections.award.items]
 			const promise = updateProfileField('award', newData)
 				.then(() => {
 					awardData.value = newData
@@ -447,7 +461,7 @@ function handleCVResultCancel() {
 </script>
 
 <template>
-	<div class="p-3 sm:p-4">
+	<div class="mx-auto w-full max-w-5xl p-3 sm:p-4">
 		<div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 			<h1 class="text-2xl font-bold sm:text-3xl">{{ t('profile.title') }}</h1>
 			<Button @click="showCVParserDialog = true">
@@ -531,6 +545,9 @@ function handleCVResultCancel() {
 				:modelValue="awardData"
 				@save="onAwardSave"
 			/>
+
+			<!-- Spacer to prevent the fixed Save All/Cancel All toolbar from overlapping the last card -->
+			<div v-if="hasEditingEditors" class="h-24 shrink-0 sm:h-16" aria-hidden="true" />
 		</div>
 
 		<!-- Save All / Cancel All dock -->
@@ -540,7 +557,7 @@ function handleCVResultCancel() {
 		>
 			<div
 				v-if="hasEditingEditors"
-				class="fixed bottom-0 right-0 z-50 flex w-full flex-wrap items-center justify-center gap-2 border-t bg-background px-3 py-3 transition-[left,translate] duration-200 ease-linear sm:gap-3 sm:px-4"
+				class="fixed bottom-0 right-0 z-50 flex flex-wrap items-center justify-center gap-2 border-t bg-background px-3 py-3 transition-[left,translate] duration-200 ease-linear sm:gap-3 sm:px-4"
 				:style="{ left: !isMobile && sidebarOpen ? 'var(--sidebar-width, 16rem)' : '0' }"
 			>
 				<Button
