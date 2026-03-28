@@ -79,9 +79,14 @@ const onConversationChanged = (event: CustomEvent) => {
 }
 
 watch(
-  () => route.name,
-  (name) => {
+  () => [route.name, route.query.new] as const,
+  ([name, isNew]) => {
     if (name !== 'AIChat') {
+      activeConversationId.value = null
+      return
+    }
+
+    if (isNew === '1') {
       activeConversationId.value = null
       return
     }
