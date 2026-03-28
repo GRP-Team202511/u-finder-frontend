@@ -160,83 +160,86 @@ watch(
 </script>
 
 <template>
-	<section class="relative flex min-h-0 flex-1 flex-col gap-4 py-4 sm:gap-6 sm:py-6">
-		<header class="flex items-start justify-between gap-4 pt-6">
-			<div class="space-y-1">
-				<h1 class="text-2xl font-bold sm:text-3xl">{{ t("favourites.title") }}</h1>
-				<p class="text-sm text-muted-foreground">
-					<template v-if="isCompareMode">{{ t("favourites.compare.headerHint") }}</template>
-					<template v-else>{{ t("favourites.subtitle") }}</template>
-				</p>
+	<!-- Root fills the router-view slot (flex-1). Scrolling is handled by the
+	     parent SidebarLayout container so the scrollbar stays flush with the
+	     screen edge. The action bar uses sticky to stay at the bottom. -->
+	<div class="flex min-h-0 flex-1 flex-col">
+		<section class="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 py-4 sm:gap-6 sm:py-6">
+			<header class="flex items-start justify-between gap-4 pt-6">
+				<div class="space-y-1">
+					<h1 class="text-2xl font-bold sm:text-3xl">{{ t("favourites.title") }}</h1>
+					<p class="text-sm text-muted-foreground">
+						<template v-if="isCompareMode">{{ t("favourites.compare.headerHint") }}</template>
+						<template v-else>{{ t("favourites.subtitle") }}</template>
+					</p>
+				</div>
+				<!-- Show compare toggle button only when there are programmes to compare -->
+				<Button
+					v-if="favouriteStore.programs.length >= 2"
+					size="sm"
+					:variant="isCompareMode ? 'destructive' : 'outline'"
+					@click="toggleCompareMode"
+				>
+					{{ isCompareMode ? t("favourites.compare.cancelCompare") : t("favourites.compare.startCompare") }}
+				</Button>
+			</header>
+
+			<div v-if="isLoading" class="flex flex-1 items-center justify-center">
+				<Spinner class="h-8 w-8" />
 			</div>
-			<!-- Show compare toggle button only when there are programmes to compare -->
-			<Button
-				v-if="favouriteStore.programs.length >= 2"
-				size="sm"
-				:variant="isCompareMode ? 'destructive' : 'outline'"
-				@click="toggleCompareMode"
+
+			<div v-else-if="loadError" class="flex flex-1 flex-col items-center justify-center py-12">
+				<Card class="w-full max-w-2xl">
+					<CardHeader>
+						<CardTitle class="text-center text-destructive text-xl">
+							{{ t("favourites.errors.loadFailed") }}
+						</CardTitle>
+					</CardHeader>
+					<CardContent class="text-center text-muted-foreground">
+						<p class="mb-4">{{ t("favourites.errors.loadFailedDescription") }}</p>
+						<button
+							class="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90"
+							@click="loadFavourites"
+						>
+							{{ t("favourites.actions.retry") }}
+						</button>
+					</CardContent>
+				</Card>
+			</div>
+
+			<div
+				v-else-if="!favouriteStore.programs.length"
+				class="flex min-h-[60vh] flex-1 items-center justify-center"
 			>
-				{{ isCompareMode ? t("favourites.compare.cancelCompare") : t("favourites.compare.startCompare") }}
-			</Button>
-		</header>
-
-		<div v-if="isLoading" class="flex flex-1 items-center justify-center">
-			<Spinner class="h-8 w-8" />
-		</div>
-
-		<div v-else-if="loadError" class="flex flex-1 flex-col items-center justify-center py-12">
-			<Card class="w-full max-w-2xl">
-				<CardHeader>
-					<CardTitle class="text-center text-destructive text-xl">
-						{{ t("favourites.errors.loadFailed") }}
-					</CardTitle>
-				</CardHeader>
-				<CardContent class="text-center text-muted-foreground">
-					<p class="mb-4">{{ t("favourites.errors.loadFailedDescription") }}</p>
-					<button
-						class="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90"
-						@click="loadFavourites"
-					>
-						{{ t("favourites.actions.retry") }}
-					</button>
-				</CardContent>
-			</Card>
-		</div>
-
-		<div
-			v-else-if="!favouriteStore.programs.length"
-			class="flex min-h-[60vh] flex-1 items-center justify-center"
-		>
-			<div class="max-w-md px-4 text-center text-muted-foreground">
-				<p class="text-base font-semibold text-foreground">{{ t("favourites.empty.title") }}</p>
-				<p class="mt-2 text-sm">{{ t("favourites.empty.description") }}</p>
+				<div class="max-w-md px-4 text-center text-muted-foreground">
+					<p class="text-base font-semibold text-foreground">{{ t("favourites.empty.title") }}</p>
+					<p class="mt-2 text-sm">{{ t("favourites.empty.description") }}</p>
+				</div>
 			</div>
-		</div>
 
-		<div v-else class="grid gap-4 pb-28 lg:grid-cols-2">
-			<CompactUniversityCard
-				v-for="program in favouriteStore.programs"
-				:key="program.official_program_url || `${program.university.name}-${program.degree_program.name}`"
-				:program="program"
-				:selectable="isCompareMode"
-				:selected="selectedKeys.has(programKey(program))"
-				@show-details="openDetails"
-				@remove="handleRemove"
-				@toggle-select="handleToggleSelect"
-			/>
-		</div>
+			<div v-else class="grid gap-4 lg:grid-cols-2">
+				<CompactUniversityCard
+					v-for="program in favouriteStore.programs"
+					:key="program.official_program_url || `${program.university.name}-${program.degree_program.name}`"
+					:program="program"
+					:selectable="isCompareMode"
+					:selected="selectedKeys.has(programKey(program))"
+					@show-details="openDetails"
+					@remove="handleRemove"
+					@toggle-select="handleToggleSelect"
+				/>
+			</div>
 
-		<UniversityDetailDialog :open="dialogOpen" :program="selectedProgram" @close="closeDetails" />
+			<UniversityDetailDialog :open="dialogOpen" :program="selectedProgram" @close="closeDetails" />
+		</section>
 
-		<!-- Floating action bar: visible only in compare mode.
-		     Uses sticky instead of fixed so it stays within the SidebarInset
-		     scroll area and does not overlap the sidebar. Negative margins
-		     cancel out the parent container's padding so the bar appears
-		     full-width within the content column. -->
+		<!-- Sticky action bar: lives outside the max-w section so it stretches
+		     full-width. Negative margins cancel the parent container padding
+		     from SidebarLayout (px-3 sm:px-4 lg:px-8). -->
 		<Transition name="slide-up">
 			<div
 				v-if="isCompareMode"
-				class="sticky bottom-0 z-40 -mx-3 flex items-center justify-between gap-4 border-t bg-background/95 px-4 py-3 shadow-lg backdrop-blur-sm sm:-mx-4 sm:px-6 lg:-mx-8"
+				class="sticky bottom-0 z-40 -mx-3 flex shrink-0 items-center justify-between gap-4 border-t bg-background/95 px-4 py-3 shadow-lg backdrop-blur-sm sm:-mx-4 sm:px-6 lg:-mx-8"
 			>
 				<p class="text-sm text-muted-foreground">
 					<span class="font-semibold text-foreground">{{ selectedPrograms.length }}</span>
@@ -256,7 +259,7 @@ watch(
 				</div>
 			</div>
 		</Transition>
-	</section>
+	</div>
 </template>
 
 <style scoped>
