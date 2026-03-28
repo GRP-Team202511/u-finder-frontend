@@ -14,7 +14,8 @@ const activeTab = ref('account')
 </script>
 
 <template>
-  <div class="flex h-full min-w-0 flex-col gap-4 overflow-x-hidden p-3 sm:gap-6 sm:p-4 lg:p-6">
+  <div class="flex min-w-0 flex-col gap-4 p-3 sm:gap-6 sm:p-4 lg:p-6">
+    <div class="mx-auto w-full max-w-5xl flex flex-col gap-4 sm:gap-6 flex-1">
     <!-- Page Header -->
     <div class="flex items-center gap-3">
       <SettingsIcon class="size-8 text-primary" />
@@ -44,5 +45,6 @@ const activeTab = ref('account')
         <GeneralSettings />
       </TabsContent>
     </Tabs>
+    </div>
   </div>
 </template>
