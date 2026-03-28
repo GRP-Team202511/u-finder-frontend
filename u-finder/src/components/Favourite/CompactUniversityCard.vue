@@ -93,10 +93,10 @@ const tuitionLabel = computed(() => {
 			</CardContent>
 		</Card>
 
-		<!-- Checkbox indicator shown in the top-left corner during compare mode -->
+		<!-- Checkbox indicator shown in the bottom-right corner during compare mode -->
 		<div
 			v-if="selectable"
-			class="pointer-events-none absolute left-3 top-3 flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors"
+			class="pointer-events-none absolute right-3 bottom-3 flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors"
 			:class="selected ? 'border-primary bg-primary' : 'border-muted-foreground bg-background'"
 			aria-hidden="true"
 		>
