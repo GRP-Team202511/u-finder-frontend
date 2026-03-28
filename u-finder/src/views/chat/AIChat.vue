@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, inject } from "vue";
+import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { toast } from 'vue-sonner';
 import ChatWindow from "@/components/Chat/ChatWindow.vue";
@@ -22,6 +23,7 @@ const activeTaskId = ref<string | null>(null);
 const isStopping = ref(false);
 const { t } = useI18n();
 const addNewConversation = inject<((conversationId: string) => void) | undefined>('addNewConversation');
+const route = useRoute();
 const hasRefreshedConversations = ref(false);
 let messageCounter = 1;
 const programCardStart = "<<__CARD__>>";
@@ -626,10 +628,15 @@ onMounted(() => {
 		// so that handleSend can push messages into the already-mounted ChatWindow.
 		setTimeout(() => handleSend(pendingPrompt), 0);
 	} else {
-		// Read current conversation from sessionStorage
-		const savedConvId = sessionStorage.getItem('currentConversationId');
-		if (savedConvId) {
-			handleConversationChange(savedConvId);
+		// Read current conversation from sessionStorage, unless a new conversation was requested
+		const isNewConversation = route.query.new === '1';
+		if (isNewConversation) {
+			sessionStorage.removeItem('currentConversationId');
+		} else {
+			const savedConvId = sessionStorage.getItem('currentConversationId');
+			if (savedConvId) {
+				handleConversationChange(savedConvId);
+			}
 		}
 	}
 
