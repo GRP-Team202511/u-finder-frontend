@@ -617,12 +617,22 @@ const onConversationChanged = (event: CustomEvent) => {
 };
 
 onMounted(() => {
-	// Read current conversation from sessionStorage
-	const savedConvId = sessionStorage.getItem('currentConversationId');
-	if (savedConvId) {
-		handleConversationChange(savedConvId);
+	// Check for a pending comparison prompt injected by the Favourite page.
+	// It takes priority over any saved conversation so a fresh chat is started.
+	const pendingPrompt = sessionStorage.getItem('pendingComparisonPrompt');
+	if (pendingPrompt) {
+		sessionStorage.removeItem('pendingComparisonPrompt');
+		// Use nextTick-equivalent: defer until the component is fully rendered
+		// so that handleSend can push messages into the already-mounted ChatWindow.
+		setTimeout(() => handleSend(pendingPrompt), 0);
+	} else {
+		// Read current conversation from sessionStorage
+		const savedConvId = sessionStorage.getItem('currentConversationId');
+		if (savedConvId) {
+			handleConversationChange(savedConvId);
+		}
 	}
-	
+
 	// Listen to conversation change events
 	window.addEventListener('conversation-changed', onConversationChanged as EventListener);
 });

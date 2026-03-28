@@ -570,6 +570,21 @@
             "add": "加入收藏",
             "close": "關閉",
             "retry": "重試"
+        },
+        "compare": {
+            "startCompare": "比較學校",
+            "cancelCompare": "取消比較",
+            "headerHint": "請選擇 2–5 個項目進行 AI 比較。",
+            "selectedCount": "已選擇（最多 {max} 個）",
+            "compareNow": "開始 AI 比較",
+            "maxReached": "最多只能同時選擇 {max} 個項目。",
+            "promptIntro": "請比較以下我正在考慮申請的項目：",
+            "promptOutro": "請從項目優勢、錄取要求、學費及生活成本、就業前景等方面進行詳細比較，並提供任何其他相關建議。",
+            "degreeLevel": "學位層次",
+            "field": "專業領域",
+            "location": "地點",
+            "tuition": "學費",
+            "admissionReq": "錄取要求"
         }
     },
     "settings": {

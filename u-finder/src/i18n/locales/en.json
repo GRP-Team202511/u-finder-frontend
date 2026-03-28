@@ -695,6 +695,21 @@
             "add": "Add to favourites",
             "close": "Close",
             "retry": "Retry"
+        },
+        "compare": {
+            "startCompare": "Compare",
+            "cancelCompare": "Cancel",
+            "headerHint": "Select 2–5 programs to compare with AI.",
+            "selectedCount": "selected (max {max})",
+            "compareNow": "Compare with AI",
+            "maxReached": "You can only select up to {max} programs at a time.",
+            "promptIntro": "Please compare the following programs I am considering applying to:",
+            "promptOutro": "Please provide a detailed comparison covering program strengths, admission requirements, tuition and cost of living, career prospects, and any other relevant insights.",
+            "degreeLevel": "Degree level",
+            "field": "Field",
+            "location": "Location",
+            "tuition": "Tuition",
+            "admissionReq": "Admission requirements"
         }
     },
     "settings": {
