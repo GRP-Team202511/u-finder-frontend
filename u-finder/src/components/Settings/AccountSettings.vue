@@ -163,7 +163,7 @@ function handle2FASuccess() {
               <Label class="text-sm font-medium">{{ t('settings.account.username') }}</Label>
               <div
                 v-if="!isLoadingUserInfo"
-                class="h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm text-black dark:bg-white dark:text-black flex items-center"
+                class="h-9 w-full rounded-md border border-input bg-muted px-3 py-1 text-sm text-foreground flex items-center"
               >
                 {{ userName }}
               </div>
@@ -173,7 +173,7 @@ function handle2FASuccess() {
               <Label class="text-sm font-medium">{{ t('settings.account.email') }}</Label>
               <div
                 v-if="!isLoadingUserInfo"
-                class="h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm text-black dark:bg-white dark:text-black flex items-center"
+                class="h-9 w-full rounded-md border border-input bg-muted px-3 py-1 text-sm text-foreground flex items-center"
               >
                 {{ userEmail }}
               </div>
@@ -183,7 +183,7 @@ function handle2FASuccess() {
               <Label class="text-sm font-medium">{{ t('settings.account.plan') }}</Label>
               <div
                 v-if="!isLoadingUserInfo"
-                class="h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm text-black dark:bg-white dark:text-black flex items-center"
+                class="h-9 w-full rounded-md border border-input bg-muted px-3 py-1 text-sm text-foreground flex items-center"
               >
                 {{ userPlanDisplay }}
               </div>
