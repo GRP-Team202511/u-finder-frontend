@@ -24,6 +24,7 @@ import { toast } from 'vue-sonner'
 import { login } from "@/api/userApi"
 import { useUserStore } from "@/stores/userStore"
 import { useRouter } from "vue-router"
+import TurnstileWidget from "@/components/auth/TurnstileWidget.vue"
 
 const { t } = useI18n()
 const userStore = useUserStore()
@@ -39,6 +40,8 @@ const emit = defineEmits<{
 const logging = ref(false)
 const unauth = ref(false)
 const notFound = ref(false)
+const turnstileToken = ref('')
+const turnstileRef = ref<InstanceType<typeof TurnstileWidget>>()
 
 const form = ref({
   email: '',
@@ -57,7 +60,10 @@ const handleLogin = async() => {
   notFound.value = false
 
   try {
-    const response = await login(form.value)
+    const response = await login({
+      ...form.value,
+      turnstile_token: turnstileToken.value,
+    })
     if (response.status === 200) {
       userStore.setUser(response.data)
       router.push({ name: 'UserProfile' })
@@ -83,6 +89,10 @@ const handleLogin = async() => {
       toast.error(t("login.not_found"))
     } else if (error.response?.status === 403 || error.response?.status === 423) {
       toast.error(t("login.forbidden"))
+    } else if (error.response?.status === 400) {
+      toast.error(t("turnstile.verifyFailed"))
+    } else if (error.response?.status === 503) {
+      toast.error(t("turnstile.serviceUnavailable"))
     } else if (error.response?.status === 422) {
       const details = error?.response?.data?.detail as ValidationDetail[] | undefined
       if (Array.isArray(details)) {
@@ -103,6 +113,8 @@ const handleLogin = async() => {
     }
   } finally {
     logging.value = false
+    turnstileToken.value = ''
+    turnstileRef.value?.reset()
   }
 }
 </script>
@@ -155,6 +167,12 @@ const handleLogin = async() => {
                 @focus="unauth = false"
               />
             </Field>
+            <TurnstileWidget
+              ref="turnstileRef"
+              @verify="(token: string) => turnstileToken = token"
+              @expire="turnstileToken = ''"
+              @error="turnstileToken = ''"
+            />
             <FieldSeparator />
             <Field>
               <Button type="submit" v-if="!logging">

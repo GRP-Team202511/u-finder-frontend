@@ -118,6 +118,10 @@
             "resendError": "Failed to resend code. Please try again."
         }
     },
+    "turnstile": {
+        "verifyFailed": "Human verification failed. Please try again.",
+        "serviceUnavailable": "Verification service is temporarily unavailable. Please try again later."
+    },
     "legal": {
         "lastUpdatedLabel": "Last Updated:",
         "lastUpdatedValue": "March 2026",

@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input"
 import { toast } from 'vue-sonner'
 import { resetPassword, verifyResetPassword, resendResetPasswordCode } from "@/api/userApi"
 import { useRouter } from "vue-router"
+import TurnstileWidget from "@/components/auth/TurnstileWidget.vue"
 
 const { t } = useI18n()
 const router = useRouter()
@@ -43,6 +44,8 @@ const currentStep = ref(1) // 1 = Enter email & send code, 2 = Enter OTP & new p
 const countdown = ref(0)
 let countdownTimer: number | null = null
 const otpValid = computed(() => /^\d{6}$/.test(otpCode.value))
+const turnstileToken = ref('')
+const turnstileRef = ref<InstanceType<typeof TurnstileWidget>>()
 
 watch(otpCode, (newValue) => {
   const digitsOnly = newValue.replace(/\D/g, '').slice(0, 6)
@@ -75,7 +78,7 @@ const sendOTP = async() => {
 
   isSendingCode.value = true
   try {
-    const response = await resetPassword({ email: email.value })
+    const response = await resetPassword({ email: email.value, turnstile_token: turnstileToken.value })
     tempToken.value = response.data.temp_token
     currentStep.value = 2
     startCountdown(60)
@@ -84,12 +87,16 @@ const sendOTP = async() => {
     if (error.response?.status === 404) {
       toast.error(t('login.reset.errors.emailNotFound'))
     } else if (error.response?.status === 422) {
-      toast.error(t('login.reset.errors.invalidEmail'))
-    } else {
+      toast.error(t('login.reset.errors.invalidEmail'))    } else if (error.response?.status === 400) {
+      toast.error(t('turnstile.verifyFailed'))
+    } else if (error.response?.status === 503) {
+      toast.error(t('turnstile.serviceUnavailable'))    } else {
       toast.error(t('login.reset.errors.sendFailed'))
     }
   } finally {
     isSendingCode.value = false
+    turnstileToken.value = ''
+    turnstileRef.value?.reset()
   }
 }
 
@@ -247,6 +254,12 @@ const resendButtonText = computed(() =>
                 {{ t("login.reset.step1Hint") }}
               </FieldDescription>
             </Field>
+            <TurnstileWidget
+              ref="turnstileRef"
+              @verify="(token: string) => turnstileToken = token"
+              @expire="turnstileToken = ''"
+              @error="turnstileToken = ''"
+            />
             <FieldSeparator />
             <Field>
               <Button

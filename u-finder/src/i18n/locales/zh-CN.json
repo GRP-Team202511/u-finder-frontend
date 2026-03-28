@@ -118,6 +118,10 @@
             "resendError": "重发验证码失败，请重试。"
         }
     },
+    "turnstile": {
+        "verifyFailed": "人机验证失败，请重试。",
+        "serviceUnavailable": "验证服务暂时不可用，请稍后重试。"
+    },
     "sidebar": {
         "appName": "U-Finder",
         "newChat": "新对话",        "newConversation": "新对话",        "conversations": "对话列表",
