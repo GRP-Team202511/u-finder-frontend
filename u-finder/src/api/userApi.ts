@@ -4,6 +4,7 @@ import http from './http'
 export interface LoginRequest {
   email: string
   password: string
+  turnstile_token?: string
 }
 
 // Login response payload structure
@@ -32,6 +33,7 @@ export interface SignupRequest {
   name: string
   email: string
   password: string
+  turnstile_token?: string
 }
 
 // Signup response payload structure
@@ -118,6 +120,7 @@ export const resendSignupCode = (tempToken: string) => {
 // Reset password request payload structure
 export interface ResetPasswordRequest {
   email: string
+  turnstile_token?: string
 }
 
 // Reset password response payload structure

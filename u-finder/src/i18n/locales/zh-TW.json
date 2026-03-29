@@ -118,6 +118,10 @@
             "resendError": "重發驗證碼失敗，請重試。"
         }
     },
+    "turnstile": {
+        "verifyFailed": "人機驗證失敗，請重試。",
+        "serviceUnavailable": "驗證服務暫時無法使用，請稍後重試。"
+    },
     "sidebar": {
         "appName": "U-Finder",
         "newChat": "新對話",        "newConversation": "新對話",        "conversations": "對話列表",
