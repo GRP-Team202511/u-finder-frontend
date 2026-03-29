@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/field"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { toast } from 'vue-sonner'
-import { ref, reactive, inject, onBeforeUnmount, onMounted, watch } from 'vue'
+import { ref, reactive, inject, onBeforeUnmount, onMounted, watch, computed } from 'vue'
 import type { Ref } from 'vue'
 import PatentFields from "./PatentFields.vue"
 import ResearchPaperFields from "./ResearchPaperFields.vue"
@@ -128,6 +128,18 @@ function typeLabel(type: AcademicEntry["type"]) {
   return '-'
 }
 
+const hasFilledAcademicOutcomes = computed(() =>
+  academicOutcomes.value.some((outcome) =>
+    !isBlankValue(outcome?.type) ||
+    !isBlankValue(outcome?.title) ||
+    !isBlankValue(outcome?.doi) ||
+    !isBlankValue(outcome?.abstract) ||
+    !isBlankValue(outcome?.patentNumber) ||
+    !isBlankValue(outcome?.region) ||
+    !isBlankValue(outcome?.description)
+  )
+)
+
 function addEntry() {
   academicOutcomes.value.push(createEntryForType(''))
   validationErrors.type.push(false)
@@ -227,10 +239,10 @@ onMounted(() => {
           <CardTitle class="text-2xl font-bold sm:text-3xl">
             {{ t('academic.title') }}
           </CardTitle>
-          <div v-if="!localEditing" class="flex justify-end">
+          <div v-if="!localEditing && hasFilledAcademicOutcomes" class="flex justify-end">
             <Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
           </div>
-          <div v-else class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+          <div v-else-if="localEditing" class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
             <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
             <Button type="button" @click="save">{{ t('profile.save') }}</Button>
           </div>
