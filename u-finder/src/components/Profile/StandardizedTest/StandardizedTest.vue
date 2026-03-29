@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/field"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { toast } from 'vue-sonner'
-import { ref, reactive, inject, onBeforeUnmount, onMounted, watch } from 'vue'
+import { ref, reactive, inject, onBeforeUnmount, onMounted, watch, computed } from 'vue'
 import type { Ref } from 'vue'
 import IELTSFields from "./IELTSFields.vue"
 import TOEFLFields from "./TOEFLFields.vue"
@@ -175,6 +175,28 @@ function typeLabel(type: StandardizedType) {
 	return '-'
 }
 
+const hasFilledStandardizedTests = computed(() =>
+	standardizedTests.value.some((test) => {
+		if (!test) return false
+		const hasScores = !!test.scores && Object.values(test.scores).some(v => !isBlankValue(v))
+		const hasSubjects =
+			!!test.subjects &&
+			test.subjects.some(s => !isBlankValue(s.subject) || !isBlankValue(s.grade) || !isBlankValue(s.score))
+
+		return (
+			!isBlankValue(test.type) ||
+			!isBlankValue(test.test_date) ||
+			!isBlankValue(test.registration_number) ||
+			!isBlankValue(test.CEFR_level) ||
+			!isBlankValue(test.exam_session) ||
+			!isBlankValue(test.exam_year) ||
+			!isBlankValue(test.overall_predicted) ||
+			hasScores ||
+			hasSubjects
+		)
+	})
+)
+
 function addEntry() {
 	standardizedTests.value.push(createEntryForType(''))
 	validationErrors.type.push(false)
@@ -292,10 +314,10 @@ onMounted(() => {
 					<CardTitle class="text-2xl font-bold sm:text-3xl">
 						{{ t('test.title') }}
 					</CardTitle>
-					<div v-if="!localEditing" class="flex justify-end">
+					<div v-if="!localEditing && hasFilledStandardizedTests" class="flex justify-end">
 						<Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
 					</div>
-					<div v-else class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+					<div v-else-if="localEditing" class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
 						<Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
 						<Button type="button" @click="save">{{ t('profile.save') }}</Button>
 					</div>
