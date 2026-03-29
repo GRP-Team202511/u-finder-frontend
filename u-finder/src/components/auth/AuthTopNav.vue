@@ -4,16 +4,36 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import LanguageSelector from '@/components/LanguageSelector.vue'
 
+type AuthNavName = 'Cover' | 'Login' | 'Signup'
+
+const props = withDefaults(defineProps<{
+  activeOverride?: AuthNavName | 'none' | 'auto'
+}>(), {
+  activeOverride: 'auto',
+})
+
+const emit = defineEmits<{
+  (event: 'navigate', target: AuthNavName): void
+}>()
+
 const route = useRoute()
 const { t } = useI18n()
 
-const activeName = computed(() => route.name)
+const activeName = computed(() => {
+  if (props.activeOverride === 'none') return null
+  if (props.activeOverride !== 'auto') return props.activeOverride
+  return route.name as AuthNavName | null
+})
 
 const navItems = computed(() => [
   { name: 'Cover', label: t('cover.home') },
   { name: 'Login', label: t('cover.login') },
   { name: 'Signup', label: t('cover.signup') },
 ])
+
+function handleNavClick(target: AuthNavName) {
+  emit('navigate', target)
+}
 </script>
 
 <template>
@@ -24,6 +44,7 @@ const navItems = computed(() => [
           v-for="item in navItems"
           :key="item.name"
           :to="{ name: item.name }"
+          @click="handleNavClick(item.name as AuthNavName)"
           :class="[
             'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
             activeName === item.name

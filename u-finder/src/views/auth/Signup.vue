@@ -6,6 +6,8 @@ import { Toaster, toast } from 'vue-sonner'
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+type AuthNavName = 'Cover' | 'Login' | 'Signup'
+
 const { t } = useI18n()
 const codeSent = ref(false)
 
@@ -25,12 +27,19 @@ const handleSignupSuccess = (token: string) => {
   tempToken.value = token
   codeSent.value = true
 }
+
+const handleNav = (target: AuthNavName) => {
+  if (target === 'Signup') {
+    codeSent.value = false
+    tempToken.value = ''
+  }
+}
 </script>
 
 <template>
   <Toaster />
   <div class="min-h-dvh flex flex-col">
-    <AuthTopNav />
+    <AuthTopNav :active-override="codeSent ? 'none' : 'auto'" @navigate="handleNav" />
     <div class="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8">
       <div class="flex w-full max-w-sm flex-col gap-6">
         <SignupForm v-if="!codeSent" @signup="handleSignupSubmit" @signup-success="handleSignupSuccess" />
