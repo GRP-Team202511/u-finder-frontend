@@ -44,7 +44,7 @@ function handleNavClick(target: AuthNavName) {
           v-for="item in navItems"
           :key="item.name"
           :to="{ name: item.name }"
-          @click="handleNavClick(item.name as AuthNavName)"
+          @click.exact="handleNavClick(item.name as AuthNavName)"
           :class="[
             'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
             activeName === item.name
