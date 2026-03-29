@@ -7,6 +7,7 @@
     "cover": {
         "title": "U-Finder",
         "description": "Discover your perfect university match with our intelligent finder tool.",
+        "home": "Home",
         "login": "Log In",
         "signup": "Sign Up"
     },
