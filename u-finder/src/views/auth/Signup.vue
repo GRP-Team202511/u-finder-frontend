@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import OTPForm from "@/components/auth/Signup/OTPForm.vue";
 import SignupForm from "@/components/auth/Signup/SignupForm.vue"
-import LanguageSelector from "@/components/LanguageSelector.vue"
+import AuthTopNav from "@/components/auth/AuthTopNav.vue"
 import { Toaster, toast } from 'vue-sonner'
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -29,15 +29,13 @@ const handleSignupSuccess = (token: string) => {
 
 <template>
   <Toaster />
-  <div class='flex justify-end px-3 py-3 sm:px-4 sm:py-4 lg:px-8'>
-    <header>
-      <LanguageSelector />
-    </header>
-  </div>
-  <div class="flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-    <div class="flex w-full max-w-sm flex-col gap-6">
-      <SignupForm v-if="!codeSent" @signup="handleSignupSubmit" @signup-success="handleSignupSuccess" />
-      <OTPForm v-if="codeSent" :temp-token="tempToken" />
+  <div class="min-h-dvh flex flex-col">
+    <AuthTopNav />
+    <div class="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8">
+      <div class="flex w-full max-w-sm flex-col gap-6">
+        <SignupForm v-if="!codeSent" @signup="handleSignupSubmit" @signup-success="handleSignupSuccess" />
+        <OTPForm v-if="codeSent" :temp-token="tempToken" />
+      </div>
     </div>
   </div>
 </template>
