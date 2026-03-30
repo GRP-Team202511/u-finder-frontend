@@ -860,6 +860,32 @@
                     "Bot": "Bot",
                     "Unknown": "Unknown"
                 }
+            },
+            "deleteAccount": {
+                "title": "Delete Account",
+                "description": "Permanently delete your account and all associated data.",
+                "warningTitle": "This action is irreversible",
+                "warningDesc": "Deleting your account will permanently remove your profile, sessions, saved universities, and all other data. This cannot be undone.",
+                "confirmButton": "Delete My Account",
+                "cancel": "Cancel",
+                "verify2faTitle": "Verify Identity (2FA)",
+                "verify2faDesc": "Enter your 6-digit TOTP code or 8-character backup code to confirm account deletion.",
+                "verifyEmailTitle": "Verify Identity (Email)",
+                "verifyEmailDesc": "A 6-digit verification code has been sent to your registered email. Enter it below to confirm account deletion.",
+                "codeLabel": "Verification Code",
+                "code2faPlaceholder": "TOTP or backup code",
+                "codeEmailPlaceholder": "6-digit email code",
+                "verifyButton": "Confirm Deletion",
+                "success": "Your account has been permanently deleted.",
+                "errors": {
+                    "unauthorized": "Session expired. Please log in again.",
+                    "initiateFailed": "Failed to initiate account deletion. Please try again.",
+                    "codeRequired": "Please enter the verification code.",
+                    "invalidToken": "Verification token expired or code is incorrect. Please restart the process.",
+                    "invalidCode": "Invalid verification code. Please check and try again.",
+                    "totpAlreadyUsed": "This TOTP code has already been used. Please wait for a new code.",
+                    "verifyFailed": "Account deletion failed. Please try again."
+                }
             }
         },
         "general": {
