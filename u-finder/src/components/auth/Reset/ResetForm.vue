@@ -216,6 +216,14 @@ const goBack = () => {
   }
 }
 
+const handleHeaderBack = () => {
+  if (currentStep.value === 2) {
+    goBack()
+    return
+  }
+  router.push('/login')
+}
+
 const canResend = computed(() => countdown.value === 0 && !isSendingCode.value)
 const resendButtonText = computed(() =>
   countdown.value > 0 ? `${countdown.value}s` : t('login.reset.resendCode')
@@ -226,6 +234,9 @@ const resendButtonText = computed(() =>
   <div :class="cn('flex flex-col gap-6', props.class)">
     <Card>
       <CardHeader class="text-center">
+        <Button type="button" variant="outline" size="sm" class="w-fit mb-4" @click="handleHeaderBack">
+          {{ t("login.reset.back") }}
+        </Button>
         <CardTitle class="text-3xl font-bold">
           {{ t("login.reset.title") }}
         </CardTitle>
@@ -326,14 +337,6 @@ const resendButtonText = computed(() =>
             </Field>
             <FieldSeparator />
             <Field class="flex flex-col gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                :disabled="isLoading"
-                @click="goBack"
-              >
-                {{ t("login.reset.back") }}
-              </Button>
               <Button
                 type="submit"
                 class="w-full"

@@ -31,6 +31,10 @@ const props = defineProps<{
   tempToken: string
 }>();
 
+const emit = defineEmits<{
+  (e: 'back'): void
+}>();
+
 const { t } = useI18n();
 const userStore = useUserStore();
 const router = useRouter();
@@ -104,6 +108,9 @@ const toggleMode = () => {
 <template>
   <Card>
     <CardHeader class="text-center">
+      <Button type="button" variant="outline" size="sm" class="w-fit mb-4" @click="emit('back')">
+        {{ t("twofa.back") }}
+      </Button>
       <CardTitle class="text-3xl font-bold">{{ t("twofa.title") }}</CardTitle>
       <CardDescription>{{ t("twofa.description") }}</CardDescription>
     </CardHeader>

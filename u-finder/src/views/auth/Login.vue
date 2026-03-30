@@ -12,6 +12,10 @@ const handleTwoFactor = (token: string) => {
   tempToken.value = token;
 };
 
+const handleBackFromTwoFactor = () => {
+  tempToken.value = "";
+};
+
 const handleNav = (target: AuthNavName) => {
   if (target === 'Login') {
     tempToken.value = ''
@@ -26,7 +30,7 @@ const handleNav = (target: AuthNavName) => {
     <div class="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8">
       <div class="flex w-full max-w-sm flex-col gap-6">
         <LoginForm v-if="!tempToken" @two-factor="handleTwoFactor" />
-        <TwoFactorForm v-else :temp-token="tempToken" />
+        <TwoFactorForm v-else :temp-token="tempToken" @back="handleBackFromTwoFactor" />
       </div>
     </div>
   </div>
