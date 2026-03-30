@@ -69,6 +69,7 @@
     "twofa": {
         "title": "两步验证",
         "description": "请输入验证码以继续。",
+        "back": "返回",
         "totpLabel": "验证器代码",
         "recoveryLabel": "恢复代码",
         "totpHint": "请输入验证器应用中的 6 位数代码。",
@@ -104,7 +105,9 @@
         "verification": {
             "enter": "输入验证码",
             "sent": "我们已将 6 位验证码发送至您的邮箱。",
+            "sentWithEmail": "我们已将 6 位验证码发送至 {email}。",
             "enter2": "请输入发送至您邮箱的 6 位验证码。",
+            "back": "返回",
             "receive": "没有收到验证码？",
             "verify": "验证",
             "resend": "重新发送",

@@ -28,6 +28,11 @@ const handleSignupSuccess = (token: string) => {
   codeSent.value = true
 }
 
+const handleBackFromOTP = () => {
+  codeSent.value = false
+  tempToken.value = ''
+}
+
 const handleNav = (target: AuthNavName) => {
   if (target === 'Signup') {
     codeSent.value = false
@@ -43,7 +48,12 @@ const handleNav = (target: AuthNavName) => {
     <div class="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8">
       <div class="flex w-full max-w-sm flex-col gap-6">
         <SignupForm v-if="!codeSent" @signup="handleSignupSubmit" @signup-success="handleSignupSuccess" />
-        <OTPForm v-if="codeSent" :temp-token="tempToken" />
+        <OTPForm
+          v-if="codeSent"
+          :temp-token="tempToken"
+          :email="signupInfo.email"
+          @back="handleBackFromOTP"
+        />
       </div>
     </div>
   </div>
