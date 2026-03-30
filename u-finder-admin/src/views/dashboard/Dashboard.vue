@@ -70,7 +70,7 @@ const initialLoading = computed(() => loading.value && !dashboardData.value)
 
 const formattedCost = computed(() => {
   const cost = dashboardData.value?.summary.llmCostToday ?? 0
-  return `$${cost.toFixed(2)}`
+  return `¥${cost.toFixed(2)}`
 })
 
 async function loadDashboard() {
@@ -96,7 +96,7 @@ function handleLogFilterChange(params: {
   loadDashboard()
 }
 
-function handleCostFilterChange(params: { cost_model?: string; cost_time_range?: string }) {
+function handleCostFilterChange(params: { cost_model?: string; cost_date?: string }) {
   filters.value = { ...filters.value, ...params }
   loadDashboard()
 }

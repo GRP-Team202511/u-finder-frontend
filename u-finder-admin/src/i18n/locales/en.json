@@ -221,7 +221,7 @@
     },
     "summary": {
       "totalUsers": "Total Users",
-      "llmCostToday": "LLM Cost (Today)"
+      "llmCostToday": "LLM Cost (This Month)"
     },
     "filters": {
       "sortBy": "Sort by",
@@ -291,7 +291,7 @@
     },
     "modelCost": {
       "title": "Model Cost Snapshot",
-      "badge": "Today",
+      "badge": "Delayed 24h",
       "totalRequests": "Total Requests",
       "avgLatency": "avg latency",
       "estimatedCost": "Estimated Cost",
@@ -299,11 +299,6 @@
       "models": {
         "chat": "Chat",
         "cvParsing": "CV Parsing"
-      },
-      "timeRanges": {
-        "last24h": "24 hours",
-        "last7d": "7 days",
-        "last30d": "30 days"
       }
     },
     "systemLogs": {
