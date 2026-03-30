@@ -311,3 +311,34 @@ export const uploadAvatar = (file: File) => {
 export const deleteAvatar = () => {
 	return http.delete<AvatarDeleteResponse>('/api/admin/auth/settings/avatar')
 }
+
+// ──────── Account Deletion ────────
+
+export interface DeleteAccountResponse {
+	temp_token: string
+	verification: '2fa' | 'email'
+}
+
+export interface VerifyDeleteRequest {
+	code: string
+}
+
+export interface DeleteVerifyResponse {
+	message: string
+}
+
+export const deleteAccount = () => {
+	return http.delete<DeleteAccountResponse>('/auth/delete')
+}
+
+export const verifyDeleteWith2FA = (data: VerifyDeleteRequest, tempToken: string) => {
+	return http.post<DeleteVerifyResponse>('/auth/delete/2fa', data, {
+		headers: { 'Temp-Token': tempToken },
+	})
+}
+
+export const verifyDeleteWithEmail = (data: VerifyDeleteRequest, tempToken: string) => {
+	return http.post<DeleteVerifyResponse>('/auth/delete/email', data, {
+		headers: { 'Temp-Token': tempToken },
+	})
+}

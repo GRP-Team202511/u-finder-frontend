@@ -187,6 +187,32 @@
           "Bot": "机器人",
           "Unknown": "未知"
         }
+      },
+      "deleteAccount": {
+        "title": "删除账户",
+        "description": "永久删除您的账户及所有相关数据。",
+        "warningTitle": "此操作不可撤销",
+        "warningDesc": "删除账户将永久移除您的个人资料、登录设备、保存的数据及所有其他信息，且无法恢复。",
+        "confirmButton": "删除我的账户",
+        "cancel": "取消",
+        "verify2faTitle": "验证身份（两步验证）",
+        "verify2faDesc": "请输入验证器应用中的 6 位 TOTP 码或 8 位备用码，以确认删除账户。",
+        "verifyEmailTitle": "验证身份（邮件验证）",
+        "verifyEmailDesc": "一封包含 6 位验证码的邮件已发送至您注册的邮箱，请输入以确认删除账户。",
+        "codeLabel": "验证码",
+        "code2faPlaceholder": "TOTP 码或备用码",
+        "codeEmailPlaceholder": "6 位邮件验证码",
+        "verifyButton": "确认删除",
+        "success": "您的账户已被永久删除。",
+        "errors": {
+          "unauthorized": "会话已过期，请重新登录。",
+          "initiateFailed": "发起账户删除失败，请重试。",
+          "codeRequired": "请输入验证码。",
+          "invalidToken": "验证令牌已过期或验证码错误，请重新操作。",
+          "invalidCode": "验证码无效，请检查后重试。",
+          "totpAlreadyUsed": "该 TOTP 码已被使用，请等待新的验证码。",
+          "verifyFailed": "账户删除失败，请重试。"
+        }
       }
     },
     "general": {
