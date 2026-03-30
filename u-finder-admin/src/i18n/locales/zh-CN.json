@@ -221,7 +221,7 @@
     },
     "summary": {
       "totalUsers": "总用户数",
-      "llmCostToday": "LLM 成本（本月）"
+      "llmCostToday": "LLM 成本（今日）"
     },
     "filters": {
       "sortBy": "排序依据",
@@ -291,7 +291,7 @@
     },
     "modelCost": {
       "title": "模型成本快照",
-      "badge": "延迟 24 小时",
+      "badge": "今天",
       "totalRequests": "总请求数",
       "avgLatency": "平均延迟",
       "estimatedCost": "预估成本",
@@ -299,6 +299,11 @@
       "models": {
         "chat": "聊天",
         "cvParsing": "简历解析"
+      },
+      "timeRanges": {
+        "last24h": "24 小时",
+        "last7d": "7 天",
+        "last30d": "30 天"
       }
     },
     "systemLogs": {

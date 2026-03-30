@@ -115,7 +115,7 @@ function mapRawToDashboard(raw: BackendDashboardSummary): DashboardResponse {
       llmCostToday: raw.llm_cost_today?.amount ?? 0,
       llmCostSubtitle:
         raw.llm_cost_today?.budget_per_day != null
-          ? `budget: ¥${raw.llm_cost_today.budget_per_day}/day`
+          ? `budget: $${raw.llm_cost_today.budget_per_day}/day`
           : '',
     },
     recentUsers: (raw.recent_users ?? []).map((u) => {
@@ -166,7 +166,7 @@ export interface DashboardFetchParams {
   logs_page?: number
   logs_per_page?: number
   cost_model?: string
-  cost_date?: string
+  cost_time_range?: string
 }
 
 export async function fetchDashboard(params?: DashboardFetchParams): Promise<DashboardResponse> {
