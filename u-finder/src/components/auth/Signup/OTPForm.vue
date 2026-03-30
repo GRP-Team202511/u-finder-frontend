@@ -36,10 +36,21 @@ const resending = ref(false)
 
 const props = defineProps<{
   tempToken: string
+  email?: string
+}>()
+
+const emit = defineEmits<{
+  (e: 'back'): void
 }>()
 
 const otpValue = ref("")
 const otpValid = computed(() => /^\d{6}$/.test(otpValue.value))
+const sentDescription = computed(() => {
+  if (props.email) {
+    return t("signup.verification.sentWithEmail", { email: props.email })
+  }
+  return t("signup.verification.sent")
+})
 
 watch(otpValue, (newValue) => {
   const digitsOnly = newValue.replace(/\D/g, "").slice(0, 6)
@@ -104,9 +115,12 @@ const handleResend = async() => {
 
 <template>
   <Card>
-    <CardHeader>
-      <CardTitle>{{ t("signup.verification.enter") }}</CardTitle>
-      <CardDescription>{{ t("signup.verification.sent") }}</CardDescription>
+    <CardHeader class="text-center">
+      <Button type="button" variant="outline" size="sm" class="w-fit mb-6" @click="emit('back')">
+        {{ t("signup.verification.back") }}
+      </Button>
+      <CardTitle class="text-2xl font-bold">{{ t("signup.verification.enter") }}</CardTitle>
+      <CardDescription>{{ sentDescription }}</CardDescription>
     </CardHeader>
     <CardContent>
       <form @submit.prevent="handleOTP">

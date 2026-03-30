@@ -69,6 +69,7 @@
     "twofa": {
         "title": "兩步驟驗證",
         "description": "請輸入驗證碼以繼續。",
+        "back": "返回",
         "totpLabel": "驗證器代碼",
         "recoveryLabel": "恢復代碼",
         "totpHint": "請輸入驗證器應用程式中的 6 位數代碼。",
@@ -104,7 +105,9 @@
         "verification": {
             "enter": "輸入驗證碼",
             "sent": "我們已將 6 位驗證碼發送至您的電子郵件。",
+            "sentWithEmail": "我們已將 6 位驗證碼發送至 {email}。",
             "enter2": "請輸入發送至您電子郵件的 6 位驗證碼。",
+            "back": "返回",
             "receive": "沒有收到驗證碼？",
             "verify": "驗證",
             "resend": "重新發送",

@@ -69,6 +69,7 @@
     "twofa": {
         "title": "Two-factor Authentication",
         "description": "Enter your verification code to continue.",
+        "back": "Back",
         "totpLabel": "Authenticator code",
         "recoveryLabel": "Recovery code",
         "totpHint": "Enter the 6-digit code from your authentication app.",
@@ -104,7 +105,9 @@
         "verification": {
             "enter": "Enter verification code",
             "sent": "We sent a 6-digit code to your email.",
+            "sentWithEmail": "We sent a 6-digit code to {email}.",
             "enter2": "Enter the 6-digit code sent to your email.",
+            "back": "Back",
             "receive": "Didn't receive the code?",
             "verify": "Verify",
             "resend": "Resend",

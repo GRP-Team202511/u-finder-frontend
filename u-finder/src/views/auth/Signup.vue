@@ -51,6 +51,7 @@ const handleNav = (target: AuthNavName) => {
         <OTPForm
           v-if="codeSent"
           :temp-token="tempToken"
+          :email="signupInfo.email"
           @back="handleBackFromOTP"
         />
       </div>
