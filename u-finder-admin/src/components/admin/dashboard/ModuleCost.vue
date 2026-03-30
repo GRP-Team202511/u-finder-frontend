@@ -20,17 +20,17 @@
       </div>
 
       <div class="flex flex-col gap-[7px]">
-        <label class="text-[13px] font-medium text-[#6b6b6b] dark:text-muted-foreground">{{ t('dashboard.filters.timeRange') }}</label>
-        <Select :model-value="selectedRange" @update:model-value="handleRangeChange">
-          <SelectTrigger class="h-[42px] w-full min-w-0 text-[13px]">
-            <SelectValue>{{ selectedRangeLabel }}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="last_24h">{{ t('dashboard.modelCost.timeRanges.last24h') }}</SelectItem>
-            <SelectItem value="last_7d">{{ t('dashboard.modelCost.timeRanges.last7d') }}</SelectItem>
-            <SelectItem value="last_1m">{{ t('dashboard.modelCost.timeRanges.last30d') }}</SelectItem>
-          </SelectContent>
-        </Select>
+        <label class="text-[13px] font-medium text-[#6b6b6b] dark:text-muted-foreground">{{ t('dashboard.filters.date') }}</label>
+        <DropdownMenu v-model:open="isDateMenuOpen">
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline" class="h-[42px] w-full min-w-0 justify-start rounded-[14px] border border-[#d5d5d5] dark:border-border bg-white dark:bg-muted px-[14px] text-[13px] text-[#111111] dark:text-foreground">
+              {{ selectedDate }}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" class="w-auto p-0">
+            <Calendar :model-value="selectedDateValue" @update:model-value="handleCalendarChange" />
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
 
@@ -52,10 +52,14 @@
 </template>
 
 <script setup lang="ts">
+import { parseDate } from '@internationalized/date'
 import type { AcceptableValue } from 'reka-ui'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Calendar } from '@/components/ui/calendar'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 const { t } = useI18n()
@@ -74,21 +78,20 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'filter-change', params: { cost_model?: string; cost_time_range?: string }): void
+  (e: 'filter-change', params: { cost_model?: string; cost_date?: string }): void
 }>()
 
 const selectedModel = ref('chat')
-const selectedRange = ref('last_24h')
+
+// Default to yesterday (billing data is delayed ~24 h)
+const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
+const selectedDate = ref(yesterday)
+const selectedDateValue = ref<any>(parseDate(selectedDate.value))
+const isDateMenuOpen = ref(false)
 
 const selectedModelLabel = computed(() => {
   if (selectedModel.value === 'cv_parsing') return t('dashboard.modelCost.models.cvParsing')
   return t('dashboard.modelCost.models.chat')
-})
-
-const selectedRangeLabel = computed(() => {
-  if (selectedRange.value === 'last_7d') return t('dashboard.modelCost.timeRanges.last7d')
-  if (selectedRange.value === 'last_1m') return t('dashboard.modelCost.timeRanges.last30d')
-  return t('dashboard.modelCost.timeRanges.last24h')
 })
 
 const formattedRequests = computed(() => {
@@ -98,7 +101,7 @@ const formattedRequests = computed(() => {
 
 const formattedCost = computed(() => {
   const cost = props.modelCost?.estimatedCost ?? 0
-  return `$${cost.toFixed(2)}`
+  return `¥${cost.toFixed(2)}`
 })
 
 function handleModelChange(value: AcceptableValue) {
@@ -107,16 +110,18 @@ function handleModelChange(value: AcceptableValue) {
   emitFilters()
 }
 
-function handleRangeChange(value: AcceptableValue) {
-  if (typeof value !== 'string') return
-  selectedRange.value = value
+function handleCalendarChange(value: any) {
+  if (!value) return
+  selectedDateValue.value = value
+  selectedDate.value = value.toString()
+  isDateMenuOpen.value = false
   emitFilters()
 }
 
 function emitFilters() {
   emit('filter-change', {
     cost_model: selectedModel.value,
-    cost_time_range: selectedRange.value,
+    cost_date: selectedDate.value,
   })
 }
 </script>
