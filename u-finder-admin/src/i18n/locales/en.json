@@ -221,7 +221,7 @@
     },
     "summary": {
       "totalUsers": "Total Users",
-      "llmCostToday": "LLM Cost (Today)"
+      "llmCostToday": "LLM Cost (Yesterday)"
     },
     "filters": {
       "sortBy": "Sort by",
@@ -291,7 +291,7 @@
     },
     "modelCost": {
       "title": "Model Cost Snapshot",
-      "badge": "Today",
+      "badge": "Delayed 24h",
       "totalRequests": "Total Requests",
       "avgLatency": "avg latency",
       "estimatedCost": "Estimated Cost",

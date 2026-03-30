@@ -221,7 +221,7 @@
     },
     "summary": {
       "totalUsers": "总用户数",
-      "llmCostToday": "LLM 成本（今日）"
+      "llmCostToday": "LLM 成本（昨日）"
     },
     "filters": {
       "sortBy": "排序依据",
@@ -291,7 +291,7 @@
     },
     "modelCost": {
       "title": "模型成本快照",
-      "badge": "今天",
+      "badge": "延迟 24 小时",
       "totalRequests": "总请求数",
       "avgLatency": "平均延迟",
       "estimatedCost": "预估成本",
