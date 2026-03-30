@@ -735,6 +735,32 @@
                     "Bot": "機器人",
                     "Unknown": "未知"
                 }
+            },
+            "deleteAccount": {
+                "title": "刪除帳戶",
+                "description": "永久刪除您的帳戶及所有相關資料。",
+                "warningTitle": "此操作無法撤銷",
+                "warningDesc": "刪除帳戶將永久移除您的個人資料、登入裝置、收藏的大學及所有其他資料，且無法復原。",
+                "confirmButton": "刪除我的帳戶",
+                "cancel": "取消",
+                "verify2faTitle": "驗證身份（兩步驟驗證）",
+                "verify2faDesc": "請輸入驗證器應用程式中的 6 位 TOTP 碼或 8 位備用碼，以確認刪除帳戶。",
+                "verifyEmailTitle": "驗證身份（電子郵件驗證）",
+                "verifyEmailDesc": "一封包含 6 位驗證碼的電子郵件已發送至您的註冊信箱，請輸入以確認刪除帳戶。",
+                "codeLabel": "驗證碼",
+                "code2faPlaceholder": "TOTP 碼或備用碼",
+                "codeEmailPlaceholder": "6 位電子郵件驗證碼",
+                "verifyButton": "確認刪除",
+                "success": "您的帳戶已被永久刪除。",
+                "errors": {
+                    "unauthorized": "工作階段已過期，請重新登入。",
+                    "initiateFailed": "發起帳戶刪除失敗，請重試。",
+                    "codeRequired": "請輸入驗證碼。",
+                    "invalidToken": "驗證令牌已過期或驗證碼錯誤，請重新操作。",
+                    "invalidCode": "驗證碼無效，請檢查後重試。",
+                    "totpAlreadyUsed": "該 TOTP 碼已被使用，請等待新的驗證碼。",
+                    "verifyFailed": "帳戶刪除失敗，請重試。"
+                }
             }
         },
         "general": {
