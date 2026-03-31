@@ -39,8 +39,8 @@ U-Finder Frontend is a modern, responsive web application built with Vue.js 3 an
 - 📄 **CV Parser** - AI-powered CV parsing to automatically populate your profile
 - 💬 **AI Chat** - LLM-powered conversational interface for personalized university recommendations
 - ❤️ **Favourites Management** - Save, view, and manage favourite universities
-- ⚙️ **Account Settings** - Manage account preferences, security settings, and connected devices
-- 🌍 **Multi-language Support** - Available in English, Simplified Chinese, and Traditional Chinese
+- ⚙️ **Account Settings** - Manage account preferences, security settings, and connected devices- 🗑️ **Delete Account** - Self-service account deletion with email confirmation
+- 🛡️ **Admin Panel** - Separate admin application with dashboard, user management (block/unblock/delete), LLM cost monitoring, and system logs- 🌍 **Multi-language Support** - Available in English, Simplified Chinese, and Traditional Chinese
 - 🎨 **Modern UI/UX** - Clean and responsive design with Tailwind CSS
 - 📱 **Mobile Responsive** - Optimized for all device sizes
 - 🔄 **State Management** - Persistent state management with Pinia
@@ -130,45 +130,69 @@ frontend/
 ├── docs/               # Documentation in multiple languages
 │   ├── zh-cn/         # Simplified Chinese docs
 │   └── zh-tw/         # Traditional Chinese docs
-└── u-finder/          # Main Vue.js application
+├── u-finder/          # Main Vue.js application
+│   ├── public/              # Static assets
+│   ├── src/
+│   │   ├── api/            # API integration layer
+│   │   │   ├── chatApi.ts       # Chat & conversation API
+│   │   │   ├── favouriteApi.ts  # Favourites API
+│   │   │   ├── http.ts          # HTTP client configuration
+│   │   │   ├── profileApi.ts    # User profile API
+│   │   │   └── userApi.ts       # User authentication API
+│   │   ├── assets/         # Images, fonts, etc.
+│   │   ├── components/     # Reusable Vue components
+│   │   │   ├── Chat/           # Chat interface components
+│   │   │   ├── Favourite/      # Favourites list components
+│   │   │   ├── Profile/        # Profile management components
+│   │   │   │   ├── AcademicOutcome/    # Research papers & patents
+│   │   │   │   └── StandardizedTest/  # Test score fields (TOEFL, IELTS, GRE, etc.)
+│   │   │   ├── Settings/       # Account settings components
+│   │   │   ├── Sidebar/        # Navigation sidebar components
+│   │   │   └── ui/             # Base UI component library (shadcn-vue)
+│   │   ├── i18n/           # Internationalization
+│   │   │   └── locales/    # Translation files (en, zh-CN, zh-TW)
+│   │   ├── lib/            # Utility functions
+│   │   ├── router/         # Vue Router configuration
+│   │   ├── stores/         # Pinia state management
+│   │   │   ├── favouriteStore.ts  # Favourites state
+│   │   │   └── userStore.ts      # User authentication state
+│   │   ├── types/          # TypeScript type definitions
+│   │   ├── views/          # Page components
+│   │   │   ├── auth/       # Login, Signup, Password Reset
+│   │   │   ├── chat/       # AI chat page
+│   │   │   ├── favourite/  # Saved universities page
+│   │   │   ├── legal/      # Privacy Policy & Terms of Service
+│   │   │   ├── profile/    # User profile page
+│   │   │   ├── settings/   # Account settings page
+│   │   │   ├── Cover.vue        # Landing / cover page
+│   │   │   └── SidebarLayout.vue # Main application layout
+│   │   ├── App.vue         # Root component
+│   │   ├── main.ts         # Application entry point
+│   │   └── style.css       # Global styles
+│   ├── index.html          # HTML entry point
+│   ├── package.json        # Project dependencies
+│   ├── tsconfig.json       # TypeScript configuration
+│   └── vite.config.ts      # Vite configuration
+└── u-finder-admin/    # Admin panel application
     ├── public/              # Static assets
     ├── src/
-    │   ├── api/            # API integration layer
-    │   │   ├── chatApi.ts       # Chat & conversation API
-    │   │   ├── favouriteApi.ts  # Favourites API
-    │   │   ├── http.ts          # HTTP client configuration
-    │   │   ├── profileApi.ts    # User profile API
-    │   │   └── userApi.ts       # User authentication API
-    │   ├── assets/         # Images, fonts, etc.
-    │   ├── components/     # Reusable Vue components
-    │   │   ├── Chat/           # Chat interface components
-    │   │   ├── Favourite/      # Favourites list components
-    │   │   ├── Profile/        # Profile management components
-    │   │   │   ├── AcademicOutcome/    # Research papers & patents
-    │   │   │   └── StandardizedTest/  # Test score fields (TOEFL, IELTS, GRE, etc.)
-    │   │   ├── Settings/       # Account settings components
-    │   │   ├── Sidebar/        # Navigation sidebar components
+    │   ├── api/            # Admin API integration
+    │   │   ├── adminApi.ts      # Admin management API
+    │   │   ├── dashboard.ts     # Dashboard data API
+    │   │   └── http.ts          # HTTP client configuration
+    │   ├── components/     # Admin Vue components
+    │   │   ├── admin/          # Dashboard components
+    │   │   ├── auth/           # Admin auth components
+    │   │   ├── Settings/       # Admin settings components
+    │   │   ├── Sidebar/        # Admin sidebar navigation
     │   │   └── ui/             # Base UI component library (shadcn-vue)
     │   ├── i18n/           # Internationalization
-    │   │   └── locales/    # Translation files (en, zh-CN, zh-TW)
-    │   ├── lib/            # Utility functions
     │   ├── router/         # Vue Router configuration
     │   ├── stores/         # Pinia state management
-    │   │   ├── favouriteStore.ts  # Favourites state
-    │   │   └── userStore.ts      # User authentication state
-    │   ├── types/          # TypeScript type definitions
-    │   ├── views/          # Page components
-    │   │   ├── auth/       # Login, Signup, Password Reset
-    │   │   ├── chat/       # AI chat page
-    │   │   ├── favourite/  # Saved universities page
-    │   │   ├── legal/      # Privacy Policy & Terms of Service
-    │   │   ├── profile/    # User profile page
-    │   │   ├── settings/   # Account settings page
-    │   │   ├── Cover.vue        # Landing / cover page
-    │   │   └── SidebarLayout.vue # Main application layout
-    │   ├── App.vue         # Root component
-    │   ├── main.ts         # Application entry point
-    │   └── style.css       # Global styles
+    │   └── views/          # Admin page components
+    │       ├── auth/       # Admin login & password reset
+    │       ├── dashboard/  # Admin dashboard
+    │       └── settings/   # Admin settings
     ├── index.html          # HTML entry point
     ├── package.json        # Project dependencies
     ├── tsconfig.json       # TypeScript configuration

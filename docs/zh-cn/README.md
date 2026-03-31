@@ -39,8 +39,8 @@ U-Finder 前端是一个使用 Vue.js 3 和 TypeScript 构建的现代化、响�
 - 📄 **CV 解析** - AI 驱动的简历解析，自动填充个人资料
 - 💬 **AI 对话** - 基于大语言模型的对话界面，提供个性化大学推荐
 - ❤️ **收藏管理** - 保存、查看和管理收藏的大学
-- ⚙️ **账户设置** - 管理账户偏好、安全设置及已连接设备
-- 🌍 **多语言支持** - 支持英语、简体中文和繁体中文
+- ⚙️ **账户设置** - 管理账户偏好、安全设置及已连接设备- 🗑️ **删除账户** - 自助删除账户，支持邮箱确认
+- 🛡️ **管理员面板** - 独立的管理员应用，包含仪表盘、用户管理（封禁/解封/删除）、LLM 成本监控和系统日志- 🌍 **多语言支持** - 支持英语、简体中文和繁体中文
 - 🎨 **现代化 UI/UX** - 使用 Tailwind CSS 打造简洁且响应式的设计
 - 📱 **移动端响应式** - 针对所有设备尺寸进行优化
 - 🔄 **状态管理** - 使用 Pinia 进行持久化状态管理
@@ -130,45 +130,69 @@ frontend/
 ├── docs/               # 多语言文档
 │   ├── zh-cn/         # 简体中文文档
 │   └── zh-tw/         # 繁体中文文档
-└── u-finder/          # 主 Vue.js 应用程序
+├── u-finder/          # 主 Vue.js 应用程序
+│   ├── public/              # 静态资源
+│   ├── src/
+│   │   ├── api/            # API 集成层
+│   │   │   ├── chatApi.ts       # 对话与会话 API
+│   │   │   ├── favouriteApi.ts  # 收藏功能 API
+│   │   │   ├── http.ts          # HTTP 客户端配置
+│   │   │   ├── profileApi.ts    # 用户资料 API
+│   │   │   └── userApi.ts       # 用户认证 API
+│   │   ├── assets/         # 图片、字体等
+│   │   ├── components/     # 可复用的 Vue 组件
+│   │   │   ├── Chat/           # 对话界面组件
+│   │   │   ├── Favourite/      # 收藏列表组件
+│   │   │   ├── Profile/        # 资料管理组件
+│   │   │   │   ├── AcademicOutcome/    # 学术成果（论文、专利）
+│   │   │   │   └── StandardizedTest/  # 标准化考试分数字段（TOEFL、IELTS、GRE 等）
+│   │   │   ├── Settings/       # 账户设置组件
+│   │   │   ├── Sidebar/        # 导航侧边栏组件
+│   │   │   └── ui/             # 基础 UI 组件库（shadcn-vue）
+│   │   ├── i18n/           # 国际化
+│   │   │   └── locales/    # 翻译文件（en、zh-CN、zh-TW）
+│   │   ├── lib/            # 工具函数
+│   │   ├── router/         # Vue Router 配置
+│   │   ├── stores/         # Pinia 状态管理
+│   │   │   ├── favouriteStore.ts  # 收藏状态
+│   │   │   └── userStore.ts      # 用户认证状态
+│   │   ├── types/          # TypeScript 类型定义
+│   │   ├── views/          # 页面组件
+│   │   │   ├── auth/       # 登录、注册、密码重置
+│   │   │   ├── chat/       # AI 对话页面
+│   │   │   ├── favourite/  # 已收藏大学页面
+│   │   │   ├── legal/      # 隐私政策与服务条款
+│   │   │   ├── profile/    # 用户资料页面
+│   │   │   ├── settings/   # 账户设置页面
+│   │   │   ├── Cover.vue        # 首页 / 封面页
+│   │   │   └── SidebarLayout.vue # 主应用布局
+│   │   ├── App.vue         # 根组件
+│   │   ├── main.ts         # 应用程序入口
+│   │   └── style.css       # 全局样式
+│   ├── index.html          # HTML 入口
+│   ├── package.json        # 项目依赖
+│   ├── tsconfig.json       # TypeScript 配置
+│   └── vite.config.ts      # Vite 配置
+└── u-finder-admin/    # 管理员面板应用
     ├── public/              # 静态资源
     ├── src/
-    │   ├── api/            # API 集成层
-    │   │   ├── chatApi.ts       # 对话与会话 API
-    │   │   ├── favouriteApi.ts  # 收藏功能 API
-    │   │   ├── http.ts          # HTTP 客户端配置
-    │   │   ├── profileApi.ts    # 用户资料 API
-    │   │   └── userApi.ts       # 用户认证 API
-    │   ├── assets/         # 图片、字体等
-    │   ├── components/     # 可复用的 Vue 组件
-    │   │   ├── Chat/           # 对话界面组件
-    │   │   ├── Favourite/      # 收藏列表组件
-    │   │   ├── Profile/        # 资料管理组件
-    │   │   │   ├── AcademicOutcome/    # 学术成果（论文、专利）
-    │   │   │   └── StandardizedTest/  # 标准化考试分数字段（TOEFL、IELTS、GRE 等）
-    │   │   ├── Settings/       # 账户设置组件
-    │   │   ├── Sidebar/        # 导航侧边栏组件
+    │   ├── api/            # 管理员 API 集成
+    │   │   ├── adminApi.ts      # 管理员管理 API
+    │   │   ├── dashboard.ts     # 仪表盘数据 API
+    │   │   └── http.ts          # HTTP 客户端配置
+    │   ├── components/     # 管理员 Vue 组件
+    │   │   ├── admin/          # 仪表盘组件
+    │   │   ├── auth/           # 管理员认证组件
+    │   │   ├── Settings/       # 管理员设置组件
+    │   │   ├── Sidebar/        # 管理员侧边栏导航
     │   │   └── ui/             # 基础 UI 组件库（shadcn-vue）
     │   ├── i18n/           # 国际化
-    │   │   └── locales/    # 翻译文件（en、zh-CN、zh-TW）
-    │   ├── lib/            # 工具函数
     │   ├── router/         # Vue Router 配置
     │   ├── stores/         # Pinia 状态管理
-    │   │   ├── favouriteStore.ts  # 收藏状态
-    │   │   └── userStore.ts      # 用户认证状态
-    │   ├── types/          # TypeScript 类型定义
-    │   ├── views/          # 页面组件
-    │   │   ├── auth/       # 登录、注册、密码重置
-    │   │   ├── chat/       # AI 对话页面
-    │   │   ├── favourite/  # 已收藏大学页面
-    │   │   ├── legal/      # 隐私政策与服务条款
-    │   │   ├── profile/    # 用户资料页面
-    │   │   ├── settings/   # 账户设置页面
-    │   │   ├── Cover.vue        # 首页 / 封面页
-    │   │   └── SidebarLayout.vue # 主应用布局
-    │   ├── App.vue         # 根组件
-    │   ├── main.ts         # 应用程序入口
-    │   └── style.css       # 全局样式
+    │   └── views/          # 管理员页面组件
+    │       ├── auth/       # 管理员登录与密码重置
+    │       ├── dashboard/  # 管理员仪表盘
+    │       └── settings/   # 管理员设置
     ├── index.html          # HTML 入口
     ├── package.json        # 项目依赖
     ├── tsconfig.json       # TypeScript 配置
