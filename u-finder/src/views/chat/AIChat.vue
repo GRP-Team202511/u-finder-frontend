@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n";
 import { toast } from 'vue-sonner';
 import ChatWindow from "@/components/Chat/ChatWindow.vue";
 import MessageInput from "@/components/Chat/InputMessage.vue";
+import { Spinner } from "@/components/ui/spinner";
 import { streamChat, getConversationMessages, stopChat } from "@/api/chatApi";
 import { useUserStore } from "@/stores/userStore";
 import type { ChatMessageData } from "@/types/chat";
@@ -21,6 +22,7 @@ const conversationId = ref<string | null>(null);
 const activeMessageId = ref<string | null>(null);
 const activeTaskId = ref<string | null>(null);
 const isStopping = ref(false);
+const isLoadingHistory = ref(false);
 const { t } = useI18n();
 const addNewConversation = inject<((conversationId: string) => void) | undefined>('addNewConversation');
 const route = useRoute();
@@ -509,6 +511,7 @@ const startStream = async (prompt: string, messageId: string) => {
 };
 
 const loadHistoryMessages = async (convId: string) => {
+	isLoadingHistory.value = true;
 	try {
 		const response = await getConversationMessages({
 			conversationId: convId,
@@ -588,6 +591,8 @@ const loadHistoryMessages = async (convId: string) => {
 	} catch (error) {
 		console.error('Failed to load conversation history:', error);
 		toast.error(t('chat.errors.loadHistoryFailed'));
+	} finally {
+		isLoadingHistory.value = false;
 	}
 };
 
@@ -679,7 +684,10 @@ onBeforeUnmount(() => {
 	<div class="relative flex h-full w-full min-h-0 min-w-0 flex-col">
 		<div class="flex min-h-0 w-full min-w-0 flex-1 flex-col">
 			<!-- Empty chat: only a flex spacer so the composer stays at the bottom -->
-			<div v-if="!messages.length" class="min-h-0 min-w-0 flex-1" />
+			<div v-if="isLoadingHistory" class="flex min-h-0 min-w-0 flex-1 items-center justify-center">
+				<Spinner class="size-8 text-muted-foreground" />
+			</div>
+			<div v-else-if="!messages.length" class="min-h-0 min-w-0 flex-1" />
 
 			<!-- Full-width scroll; fade strip lives on the footer so it aligns with the composer top (no flex gap / pt offset). -->
 			<div
