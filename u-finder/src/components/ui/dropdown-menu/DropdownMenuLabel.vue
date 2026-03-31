@@ -1,3 +1,8 @@
+<!-- 
+Derived from shadcn-vue.
+Source: https://github.com/unovue/shadcn-vue
+License: MIT
+-->
 <script setup lang="ts">
 import type { DropdownMenuLabelProps } from "reka-ui"
 import type { HTMLAttributes } from "vue"

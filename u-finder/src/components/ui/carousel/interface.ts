@@ -1,3 +1,6 @@
+// Derived from shadcn-vue.
+// Source: https://github.com/unovue/shadcn-vue
+// License: MIT
 import type useEmblaCarousel from "embla-carousel-vue"
 import type {
   EmblaCarouselVueType,

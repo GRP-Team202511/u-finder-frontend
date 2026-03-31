@@ -1,3 +1,6 @@
+// Derived from shadcn-vue.
+// Source: https://github.com/unovue/shadcn-vue
+// License: MIT
 export { default as Sheet } from "./Sheet.vue"
 export { default as SheetClose } from "./SheetClose.vue"
 export { default as SheetContent } from "./SheetContent.vue"

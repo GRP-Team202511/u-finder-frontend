@@ -1,3 +1,8 @@
+<!-- 
+Derived from shadcn-vue.
+Source: https://github.com/unovue/shadcn-vue
+License: MIT
+-->
 <script setup lang="ts">
 import type { SelectValueProps } from "reka-ui"
 import { SelectValue } from "reka-ui"

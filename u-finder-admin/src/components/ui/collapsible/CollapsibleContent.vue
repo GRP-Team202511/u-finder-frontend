@@ -1,3 +1,8 @@
+<!-- 
+Derived from shadcn-vue.
+Source: https://github.com/unovue/shadcn-vue
+License: MIT
+-->
 <script setup lang="ts">
 import type { CollapsibleContentProps } from "reka-ui"
 import { CollapsibleContent } from "reka-ui"

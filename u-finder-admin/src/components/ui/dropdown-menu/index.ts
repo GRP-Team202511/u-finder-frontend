@@ -1,3 +1,6 @@
+// Derived from shadcn-vue.
+// Source: https://github.com/unovue/shadcn-vue
+// License: MIT
 export { default as DropdownMenu } from "./DropdownMenu.vue"
 
 export { default as DropdownMenuCheckboxItem } from "./DropdownMenuCheckboxItem.vue"

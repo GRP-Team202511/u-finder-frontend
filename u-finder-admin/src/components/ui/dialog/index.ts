@@ -1,3 +1,6 @@
+// Derived from shadcn-vue.
+// Source: https://github.com/unovue/shadcn-vue
+// License: MIT
 export { default as Dialog } from "./Dialog.vue"
 export { default as DialogClose } from "./DialogClose.vue"
 export { default as DialogContent } from "./DialogContent.vue"

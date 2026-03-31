@@ -1,3 +1,6 @@
+// Derived from shadcn-vue.
+// Source: https://github.com/unovue/shadcn-vue
+// License: MIT
 export { default as Table } from "./Table.vue"
 export { default as TableBody } from "./TableBody.vue"
 export { default as TableCaption } from "./TableCaption.vue"
