@@ -516,6 +516,14 @@
             "stopFailed": "停止生成失败，请重试。",
             "loadHistoryFailed": "加载对话历史失败，请重试。"
         },
+        "feedback": {
+            "copy": "复制",
+            "copied": "已复制",
+            "like": "点赞",
+            "dislike": "点踩",
+            "submitError": "提交反馈失败，请重试。",
+            "copyError": "复制失败，请重试。"
+        },
         "card": {
             "loadingAria": "大学信息加载中",
             "locationNotSpecified": "未指定地点",

@@ -516,6 +516,14 @@
             "stopFailed": "停止產生失敗，請重試。",
             "loadHistoryFailed": "載入對話歷史失敗，請重試。"
         },
+        "feedback": {
+            "copy": "複製",
+            "copied": "已複製",
+            "like": "按讚",
+            "dislike": "倒讚",
+            "submitError": "提交評價失敗，請重試。",
+            "copyError": "複製失敗，請重試。"
+        },
         "card": {
             "loadingAria": "大學資訊載入中",
             "locationNotSpecified": "未指定地點",
