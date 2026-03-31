@@ -15,7 +15,7 @@
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" class="w-auto p-0">
-            <Calendar :model-value="selectedDateValue" @update:model-value="handleCalendarChange" />
+            <Calendar :model-value="selectedDateValue" :max-value="today(getLocalTimeZone())" @update:model-value="handleCalendarChange" />
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -91,7 +91,7 @@
 </template>
 
 <script setup lang="ts">
-import { parseDate } from '@internationalized/date'
+import { parseDate, today, getLocalTimeZone } from '@internationalized/date'
 import type { AcceptableValue } from 'reka-ui'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
