@@ -1,0 +1,342 @@
+{
+  "common": {
+    "errors": {
+      "sessionExpired": "Session expired. Please log in again."
+    }
+  },
+  "login": {
+    "title": "Log In",
+    "welcome": "Welcome back! Please enter your email.",
+    "email": "Email",
+    "password": "Password",
+    "forgot": "Forgot your password?",
+    "submit": "Log In",
+    "twoFactorRequired": "Two-factor verification required",
+    "unauth": "The password is incorrect",
+    "not_found": "The account doesn't exist",
+    "invalid_credentials": "Invalid email or password",
+    "blocked": "Your account has been blocked",
+    "unprocessable": "Invalid login input.",
+    "reset": {
+      "title": "Reset Password",
+      "description": "Reset password with your email",
+      "sendCode": "Send Code",
+      "send": "Reset Password",
+      "otp": "Verification Code",
+      "newPassword": "New Password",
+      "resendCode": "Resend",
+      "errors": {
+        "emailRequired": "Email is required",
+        "emailNotFound": "No account found with this email",
+        "invalidEmail": "Invalid email format",
+        "sendFailed": "Failed to send verification code",
+        "tokenMissing": "Please request a verification code first",
+        "tokenExpired": "Verification token expired. Please request a new code.",
+        "rateLimited": "Too many requests. Please wait {seconds} seconds.",
+        "resendFailed": "Failed to resend verification code",
+        "sendCodeFirst": "Please send verification code first",
+        "fieldsRequired": "All fields are required",
+        "wrongCode": "Incorrect verification code",
+        "unauthorized": "Unauthorized request",
+        "invalidInput": "Invalid input provided",
+        "resetFailed": "Failed to reset password. Please try again."
+      },
+      "success": {
+        "codeSent": "Verification code sent to your email",
+        "codeResent": "Verification code resent successfully",
+        "passwordReset": "Password reset successfully! Redirecting to login..."
+      }
+    }
+  },
+  "twofa": {
+    "title": "Two-factor Authentication",
+    "description": "Enter your verification code to continue.",
+    "totpLabel": "Authenticator code",
+    "recoveryLabel": "Recovery code",
+    "totpHint": "Enter the 6-digit code from your authentication app.",
+    "recoveryHint": "Enter your 8-character recovery code.",
+    "verify": "Verify",
+    "switchToRecovery": "Use recovery code",
+    "switchToTotp": "Use authenticator code",
+    "invalid": "Invalid verification code",
+    "failed": "Verification failed",
+    "success": "Verification successful"
+  },
+  "sidebar": {
+    "settings": "Settings",
+    "language": "Language",
+    "logout": "Log out",
+    "logoutUnauthorized": "Your session has expired. You have been logged out.",
+    "logoutServerError": "Server error while logging out. Local session was cleared.",
+    "logoutFailed": "Logout failed. Please try again.",
+    "dashboard": "Dashboard"
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "account": "Account",
+      "general": "General"
+    },
+    "account": {
+      "accountInformation": "Account Information",
+      "username": "Username",
+      "email": "Email",
+      "plan": "Plan",
+      "changeAvatar": "Change Avatar",
+      "avatarUploadSuccess": "Avatar uploaded successfully",
+      "avatarUploadError": "Failed to upload avatar",
+      "fetchUserInfoError": "Failed to fetch user information",
+      "plans": {
+        "free": "Free Plan"
+      },
+      "security": "Security",
+      "resetPassword": "Reset Password",
+      "resetPasswordDesc": "Reset your password via email verification",
+      "resetPasswordDialog": {
+        "title": "Reset Password",
+        "step1Desc": "Confirm your email address to receive a verification code",
+        "step2Desc": "Enter the verification code sent to your email and set your new password",
+        "emailConfirmHint": "A verification code will be sent to this email address",
+        "confirmPassword": "Confirm New Password",
+        "passwordMismatch": "Passwords do not match",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "success": "Password reset successfully",
+        "warning": "You will be logged out after resetting your password and need to log in again with your new password"
+      },
+      "twoFactor": {
+        "title": "Two-Factor Authentication",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "backupCodes": "Backup codes remaining",
+        "enable": "Enable",
+        "disableButton": "Disable",
+        "regenerateButton": "Regenerate Backup Codes",
+        "fetchError": "Failed to fetch 2FA status",
+        "setup": {
+          "step1Title": "Scan QR Code",
+          "step2Title": "Save Backup Codes",
+          "manualEntry": "Or enter this code manually in your app:",
+          "backupCodesWarning": "Important: Save these backup codes securely!",
+          "backupCodesWarning2": "If you lose access to your authenticator device, these codes are the only way to recover your account.",
+          "enterCode": "Enter verification code",
+          "codeFromApp": "Enter the 6-digit code from your authenticator app",
+          "copyAll": "Copy All",
+          "copied": "Copied!",
+          "copiedCodes": "Backup codes copied to clipboard",
+          "back": "Back",
+          "next": "Next",
+          "cancel": "Cancel",
+          "done": "Done",
+          "success": "2FA enabled successfully!",
+          "error": "Failed to setup 2FA",
+          "alreadyEnabled": "2FA is already enabled",
+          "setupExpired": "2FA setup expired, please try again",
+          "invalidCode": "Please enter a 6-digit code",
+          "wrongCode": "Invalid verification code",
+          "verifyError": "Failed to verify code. Please try again."
+        },
+        "disable": {
+          "title": "Disable Two-Factor Authentication",
+          "warning": "Warning: Security Risk",
+          "warningDesc": "Disabling two-factor authentication will make your account less secure.",
+          "enterPassword": "Enter your password to confirm",
+          "passwordPlaceholder": "Your password",
+          "passwordRequired": "Password is required",
+          "cancel": "Cancel",
+          "confirm": "Disable",
+          "success": "2FA disabled successfully",
+          "wrongPassword": "Incorrect password",
+          "notEnabled": "2FA is not enabled",
+          "error": "Failed to disable 2FA"
+        },
+        "regenerate": {
+          "verifyTitle": "Verify Identity",
+          "newCodesTitle": "New Backup Codes",
+          "enterCode": "Enter TOTP code",
+          "codeFromApp": "Enter the 6-digit code from your authenticator app",
+          "warning": "All previous backup codes are now invalid",
+          "warningDesc": "Make sure to save these new backup codes. Your old codes will no longer work.",
+          "copyAll": "Copy All",
+          "copied": "Copied!",
+          "copiedCodes": "Backup codes copied to clipboard",
+          "cancel": "Cancel",
+          "verify": "Verify",
+          "done": "Done",
+          "invalidCode": "Please enter a 6-digit code",
+          "wrongCode": "Invalid TOTP code",
+          "notEnabled": "2FA is not enabled",
+          "error": "Failed to regenerate backup codes"
+        }
+      },
+      "devices": {
+        "title": "Login Devices",
+        "description": "Manage all devices currently logged into your account",
+        "currentDevice": "Current Device",
+        "logoutButton": "Log Out",
+        "logoutAllButton": "Log Out All Devices",
+        "loginTime": "Logged in at",
+        "fetchError": "Failed to fetch device list",
+        "logoutSuccess": "Device logged out successfully",
+        "logoutError": "Failed to log out device",
+        "logoutAllSuccess": "All devices have been logged out",
+        "logoutAllError": "Failed to log out all devices",
+        "deviceTypes": {
+          "PC": "PC",
+          "Mobile": "Mobile",
+          "Tablet": "Tablet",
+          "Bot": "Bot",
+          "Unknown": "Unknown"
+        }
+      },
+      "deleteAccount": {
+        "title": "Delete Account",
+        "description": "Permanently delete your account and all associated data.",
+        "warningTitle": "This action is irreversible",
+        "warningDesc": "Deleting your account will permanently remove your profile, sessions, saved data, and all other information. This cannot be undone.",
+        "confirmButton": "Delete My Account",
+        "cancel": "Cancel",
+        "verify2faTitle": "Verify Identity (2FA)",
+        "verify2faDesc": "Enter your 6-digit TOTP code or 8-character backup code to confirm account deletion.",
+        "verifyEmailTitle": "Verify Identity (Email)",
+        "verifyEmailDesc": "A 6-digit verification code has been sent to your registered email. Enter it below to confirm account deletion.",
+        "codeLabel": "Verification Code",
+        "code2faPlaceholder": "TOTP or backup code",
+        "codeEmailPlaceholder": "6-digit email code",
+        "verifyButton": "Confirm Deletion",
+        "success": "Your account has been permanently deleted.",
+        "errors": {
+          "unauthorized": "Session expired. Please log in again.",
+          "initiateFailed": "Failed to initiate account deletion. Please try again.",
+          "codeRequired": "Please enter the verification code.",
+          "invalidToken": "Verification token expired or code is incorrect. Please restart the process.",
+          "invalidCode": "Invalid verification code. Please check and try again.",
+          "totpAlreadyUsed": "This TOTP code has already been used. Please wait for a new code.",
+          "verifyFailed": "Account deletion failed. Please try again."
+        }
+      }
+    },
+    "general": {
+      "appearance": "Appearance",
+      "theme": "Theme",
+      "themeDesc": "Choose your preferred theme",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "about": {
+      "title": "About U-Finder",
+      "description": "An intelligent university finder tool powered by AI. This project is open-sourced under the Apache 2.0 License as a group project for COMP2043 GRP at University of Nottingham Ningbo China.",
+      "version": "Version",
+      "license": "License",
+      "course": "Course",
+      "team": "Team",
+      "university": "University",
+      "github": "GitHub Repository",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "page": {
+      "title": "Dashboard",
+      "subtitle": "Overview of users, sessions, cost usage, and system activity.",
+      "refresh": "Refresh",
+      "loading": "Loading dashboard...",
+      "loadError": "Failed to load dashboard"
+    },
+    "summary": {
+      "totalUsers": "Total Users",
+      "llmCostToday": "LLM Cost (This Month)"
+    },
+    "filters": {
+      "sortBy": "Sort by",
+      "model": "Model",
+      "timeRange": "Time Range",
+      "date": "Date",
+      "level": "Level",
+      "sortOptions": {
+        "name": "Name",
+        "plan": "Plan",
+        "status": "Status",
+        "created": "Created",
+        "id": "ID"
+      },
+      "orderOptions": {
+        "asc": "Ascending",
+        "desc": "Descending"
+      }
+    },
+    "pagination": {
+      "rowsPerPage": "Rows per page",
+      "pageOf": "Page {page} of {total}"
+    },
+    "recentUsers": {
+      "title": "Recent Users",
+      "subtitle": "Quick view for checking user pages, status, and last active time.",
+      "searchPlaceholder": "Search users...",
+      "empty": "No matching users found.",
+      "confirmDelete": "Are you sure you want to permanently delete this user?",
+      "table": {
+        "user": "User",
+        "plan": "Plan",
+        "status": "Status",
+        "created": "Created",
+        "actions": "Actions"
+      },
+      "actions": {
+        "block": "Block",
+        "unblock": "Unblock",
+        "delete": "Delete",
+        "promote": "Set as Admin",
+        "demote": "Set as User"
+      },
+      "roles": {
+        "1": "User",
+        "2": "Pro User",
+        "3": "Admin",
+        "4": "Super Admin",
+        "unknown": "Unknown"
+      },
+      "statuses": {
+        "active": "Active",
+        "blocked": "Blocked",
+        "unknown": "Unknown"
+      },
+      "toasts": {
+        "loadFailed": "Failed to load users",
+        "userBlocked": "User blocked",
+        "blockFailed": "Failed to block user",
+        "userUnblocked": "User unblocked",
+        "unblockFailed": "Failed to unblock user",
+        "userDeleted": "User deleted",
+        "deleteFailed": "Failed to delete user",
+        "roleChanged": "User role updated",
+        "roleChangeFailed": "Failed to update user role"
+      }
+    },
+    "modelCost": {
+      "title": "Model Cost Snapshot",
+      "badge": "Delayed 24h",
+      "totalRequests": "Total Requests",
+      "avgLatency": "avg latency",
+      "estimatedCost": "Estimated Cost",
+      "tokens": "tokens",
+      "models": {
+        "chat": "Chat",
+        "cvParsing": "CV Parsing"
+      }
+    },
+    "systemLogs": {
+      "title": "System Logs Preview",
+      "badge": "Live",
+      "empty": "No logs found.",
+      "levels": {
+        "all": "ALL",
+        "info": "INFO",
+        "warn": "WARN",
+        "error": "ERROR"
+      }
+    }
+  }
+}
