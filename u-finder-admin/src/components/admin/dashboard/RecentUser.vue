@@ -180,6 +180,7 @@ import {
   deleteUser,
   changeUserRole,
   type AdminUser,
+  USER_TYPE_MAP,
 } from '@/api/dashboard'
 import { extractErrorMessage } from '@/api/http'
 import { useAdminStore } from '@/stores/adminStore'
