@@ -1,3 +1,8 @@
+<!-- 
+Derived from shadcn-vue.
+Source: https://github.com/unovue/shadcn-vue
+License: MIT
+-->
 <script setup lang="ts">
 import type { HoverCardRootEmits, HoverCardRootProps } from "reka-ui"
 import { HoverCardRoot, useForwardPropsEmits } from "reka-ui"

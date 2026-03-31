@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'

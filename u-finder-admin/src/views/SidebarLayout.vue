@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script lang="ts">
 export const description
   = "A sidebar that collapses to icons."

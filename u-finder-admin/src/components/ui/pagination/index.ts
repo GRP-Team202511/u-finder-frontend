@@ -1,3 +1,6 @@
+// Derived from shadcn-vue.
+// Source: https://github.com/unovue/shadcn-vue
+// License: MIT
 export { default as Pagination } from "./Pagination.vue"
 export { default as PaginationContent } from "./PaginationContent.vue"
 export { default as PaginationEllipsis } from "./PaginationEllipsis.vue"

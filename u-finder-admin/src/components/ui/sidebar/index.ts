@@ -1,3 +1,6 @@
+// Derived from shadcn-vue.
+// Source: https://github.com/unovue/shadcn-vue
+// License: MIT
 import type { VariantProps } from "class-variance-authority"
 import type { HTMLAttributes } from "vue"
 import { cva } from "class-variance-authority"

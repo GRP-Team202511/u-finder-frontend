@@ -1,3 +1,8 @@
+<!-- 
+Derived from shadcn-vue.
+Source: https://github.com/unovue/shadcn-vue
+License: MIT
+-->
 <script lang="ts" setup>
 import type { CalendarRootEmits, CalendarRootProps, DateValue } from "reka-ui"
 import type { HTMLAttributes, Ref } from "vue"

@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <template>
   <div class="min-h-screen w-full box-border px-6 pb-8 pt-6 max-md:px-[18px]">
     <div class="mb-[18px] flex items-start justify-between gap-[18px] max-lg:flex-col">

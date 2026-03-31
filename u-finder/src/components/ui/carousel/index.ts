@@ -1,3 +1,6 @@
+// Derived from shadcn-vue.
+// Source: https://github.com/unovue/shadcn-vue
+// License: MIT
 export { default as Carousel } from "./Carousel.vue"
 export { default as CarouselContent } from "./CarouselContent.vue"
 export { default as CarouselItem } from "./CarouselItem.vue"

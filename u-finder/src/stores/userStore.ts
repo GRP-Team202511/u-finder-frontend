@@ -1,3 +1,4 @@
+// This code was completed by GRP Team 2025.11.
 import { defineStore } from 'pinia'
 
 // Define the structure of a User object

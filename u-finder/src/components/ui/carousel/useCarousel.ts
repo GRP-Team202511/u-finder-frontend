@@ -1,3 +1,6 @@
+// Derived from shadcn-vue.
+// Source: https://github.com/unovue/shadcn-vue
+// License: MIT
 import type { UnwrapRefCarouselApi as CarouselApi, CarouselEmits, CarouselProps } from "./interface"
 import { createInjectionState } from "@vueuse/core"
 import emblaCarouselVue from "embla-carousel-vue"

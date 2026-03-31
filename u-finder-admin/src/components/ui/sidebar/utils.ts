@@ -1,3 +1,6 @@
+// Derived from shadcn-vue.
+// Source: https://github.com/unovue/shadcn-vue
+// License: MIT
 import type { ComputedRef, Ref } from "vue"
 import { createContext } from "reka-ui"
 

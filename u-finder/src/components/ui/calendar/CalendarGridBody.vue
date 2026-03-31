@@ -1,3 +1,8 @@
+<!-- 
+Derived from shadcn-vue.
+Source: https://github.com/unovue/shadcn-vue
+License: MIT
+-->
 <script lang="ts" setup>
 import type { CalendarGridBodyProps } from "reka-ui"
 import { CalendarGridBody } from "reka-ui"

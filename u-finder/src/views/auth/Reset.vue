@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
 import ResetForm from "@/components/auth/Reset/ResetForm.vue";
 import AuthTopNav from "@/components/auth/AuthTopNav.vue"
