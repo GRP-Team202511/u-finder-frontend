@@ -23,8 +23,24 @@ const { t } = useI18n()
 // Current feedback state, initialised from prop
 const rating = ref<"like" | "dislike" | null>(props.initialFeedback ?? null)
 
-// When the parent swaps in a different message (same component instance reused due to
-// identical synthetic key after conversation switch), reset local state to match the new prop
+// When the underlying message changes (component reused with a different Dify message due
+// to identical synthetic Vue key after conversation switch), reset ALL local state.
+// Watching messageId catches the case where both old and new initialFeedback are null
+// but the local rating was changed by a user click.
+watch(
+  () => props.messageId,
+  () => {
+    rating.value = props.initialFeedback ?? null
+    isSubmitting.value = false
+    copied.value = false
+    if (copyResetTimer) {
+      clearTimeout(copyResetTimer)
+      copyResetTimer = null
+    }
+  }
+)
+
+// Also sync when only the feedback prop changes (e.g. same message, prop updated externally)
 watch(
   () => props.initialFeedback,
   (newVal) => {
