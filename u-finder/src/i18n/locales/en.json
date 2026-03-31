@@ -641,6 +641,14 @@
             "stopFailed": "Failed to stop response generation. Please try again.",
             "loadHistoryFailed": "Failed to load conversation history. Please try again."
         },
+        "feedback": {
+            "copy": "Copy",
+            "copied": "Copied",
+            "like": "Like",
+            "dislike": "Dislike",
+            "submitError": "Failed to submit feedback. Please try again.",
+            "copyError": "Failed to copy. Please try again."
+        },
         "card": {
             "loadingAria": "University information loading",
             "locationNotSpecified": "Location not specified",

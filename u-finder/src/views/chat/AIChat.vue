@@ -404,7 +404,17 @@ const handleSsePayload = (messageId: string, payload: string) => {
 	if (parsed.event === "message_end" || parsed.done === true) {
 		endedByServerMessages.add(messageId);
 		flushMessageBuffer(messageId);
-		updateMessage(messageId, { isUniversityCardLoading: false });
+		// Extract the Dify message UUID carried in message_end so the feedback bar can use it
+		const difyId =
+			typeof parsed.id === "string"
+				? parsed.id
+				: typeof parsed.message_id === "string"
+					? parsed.message_id
+					: null;
+		updateMessage(messageId, {
+			isUniversityCardLoading: false,
+			...(difyId ? { difyMessageId: difyId } : {}),
+		});
 		if (activeMessageId.value === messageId) {
 			streamController.value?.abort();
 		}
@@ -412,6 +422,16 @@ const handleSsePayload = (messageId: string, payload: string) => {
 	}
 
 	if (parsed.event === "agent_message" && typeof parsed.answer === "string") {
+		// Capture Dify message UUID from agent_message events as early as possible
+		const difyIdFromAgent =
+			typeof parsed.id === "string"
+				? parsed.id
+				: typeof parsed.message_id === "string"
+					? parsed.message_id
+					: null;
+		if (difyIdFromAgent) {
+			updateMessage(messageId, { difyMessageId: difyIdFromAgent });
+		}
 		appendToMessage(messageId, parsed.answer);
 		return;
 	}
@@ -514,6 +534,10 @@ const loadHistoryMessages = async (convId: string) => {
 				role: "ai",
 				type: "text",
 				content: "",
+				// Carry the Dify message UUID so the feedback bar can call the API
+				difyMessageId: msg.id,
+				// Restore existing feedback state when re-loading a conversation
+				feedback: (msg.feedback?.rating as "like" | "dislike" | null) ?? null,
 			};
 			
 			// Get AI reply content: prefer `answer`; if empty, fall back to `agent_thoughts`
