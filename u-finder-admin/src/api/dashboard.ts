@@ -80,7 +80,7 @@ export interface DashboardResponse {
 
 // ── Mapping helpers ─────────────────────────────────────────────────
 
-const USER_TYPE_MAP: Record<string, string> = {
+export const USER_TYPE_MAP: Record<string, string> = {
   '1': 'User',
   '2': 'Pro User',
   '3': 'Admin',
