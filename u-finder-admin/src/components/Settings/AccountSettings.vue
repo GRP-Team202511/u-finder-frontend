@@ -25,6 +25,7 @@ const userName = ref(adminStore.admin?.name ?? '')
 const userEmail = ref(adminStore.admin?.email ?? '')
 const userType = ref<number | string>(0)
 const userAvatar = ref(adminStore.avatarUrl || '') // Synced with store
+const isSuperAdmin = computed(() => Number(userType.value) === 4)
 const isLoadingUserInfo = ref(false)
 const avatarInputRef = ref<HTMLInputElement | null>(null)
 
@@ -316,7 +317,7 @@ function handle2FASuccess() {
     </Card>
 
     <!-- Danger Zone: Delete Account -->
-    <Card>
+    <Card v-if="!isSuperAdmin">
       <CardContent class="pt-6">
         <div class="rounded-lg border border-red-200 dark:border-red-800 p-4">
           <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -355,6 +356,7 @@ function handle2FASuccess() {
       @success="handle2FASuccess"
     />
     <DeleteAccountDialog
+      v-if="!isSuperAdmin"
       v-model:open="showDeleteAccountDialog"
     />
   </div>
