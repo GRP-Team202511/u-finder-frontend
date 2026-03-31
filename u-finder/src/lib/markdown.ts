@@ -1,3 +1,4 @@
+// This code was completed by GRP Team 2025.11.
 import MarkdownIt from "markdown-it"
 import hljs from "highlight.js"
 import DOMPurify from "dompurify"

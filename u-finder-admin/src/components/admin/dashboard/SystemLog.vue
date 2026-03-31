@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <template>
   <Card class="box-border rounded-[28px] border border-[#dddddd] dark:border-border bg-white dark:bg-card p-5">
     <div class="mb-[14px] flex items-center justify-between">

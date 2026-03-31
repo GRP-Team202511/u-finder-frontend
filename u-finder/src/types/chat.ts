@@ -1,3 +1,4 @@
+// This code was completed by GRP Team 2025.11.
 export type ProgramCardData = {
 	university: {
 		name: string;

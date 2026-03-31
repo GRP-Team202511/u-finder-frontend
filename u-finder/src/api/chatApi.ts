@@ -1,3 +1,4 @@
+// This code was completed by GRP Team 2025.11.
 import type { ConversationsResponse, ConversationMessagesResponse, DeleteConversationResponse, RenameConversationResponse } from '@/types/chat'
 import http from './http'
 

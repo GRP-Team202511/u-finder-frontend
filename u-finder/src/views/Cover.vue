@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
 import AuthTopNav from '@/components/auth/AuthTopNav.vue'
 import { useI18n } from 'vue-i18n'

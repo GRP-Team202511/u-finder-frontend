@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, inject } from "vue";
 import { useRoute } from "vue-router";

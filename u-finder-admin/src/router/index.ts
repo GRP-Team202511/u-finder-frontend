@@ -1,3 +1,4 @@
+// This code was completed by GRP Team 2025.11.
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { useAdminStore } from '@/stores/adminStore'

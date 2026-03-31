@@ -1,3 +1,4 @@
+// This code was completed by GRP Team 2025.11.
 import { createI18n } from 'vue-i18n'
 import en from './locales/en.json'
 import zhCN from './locales/zh-CN.json'
