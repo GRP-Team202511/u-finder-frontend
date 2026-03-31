@@ -39,8 +39,8 @@ U-Finder 前端是一個使用 Vue.js 3 和 TypeScript 建置的現代化、響�
 - 📄 **CV 解析** - AI 驅動的履歷解析，自動填入個人資料
 - 💬 **AI 對話** - 基於大型語言模型的對話介面，提供個人化大學推薦
 - ❤️ **收藏管理** - 儲存、查看和管理收藏的大學
-- ⚙️ **帳戶設定** - 管理帳戶偏好、安全性設定及已連線裝置
-- 🌍 **多語言支援** - 支援英語、簡體中文和繁體中文
+- ⚙️ **帳戶設定** - 管理帳戶偏好、安全性設定及已連線裝置- 🗑️ **刪除帳戶** - 自助刪除帳戶，支援電子郵件確認
+- 🛡️ **管理員面板** - 獨立的管理員應用，包含儀表板、使用者管理（封鎖/解除封鎖/刪除）、LLM 成本監控和系統日誌- 🌍 **多語言支援** - 支援英語、簡體中文和繁體中文
 - 🎨 **現代化 UI/UX** - 使用 Tailwind CSS 打造簡潔且響應式的設計
 - 📱 **行動端響應式** - 針對所有裝置尺寸進行最佳化
 - 🔄 **狀態管理** - 使用 Pinia 進行持久化狀態管理
@@ -130,45 +130,69 @@ frontend/
 ├── docs/               # 多語言文件
 │   ├── zh-cn/         # 簡體中文文件
 │   └── zh-tw/         # 繁體中文文件
-└── u-finder/          # 主 Vue.js 應用程式
+├── u-finder/          # 主 Vue.js 應用程式
+│   ├── public/              # 靜態資源
+│   ├── src/
+│   │   ├── api/            # API 整合層
+│   │   │   ├── chatApi.ts       # 對話與會話 API
+│   │   │   ├── favouriteApi.ts  # 收藏功能 API
+│   │   │   ├── http.ts          # HTTP 用戶端配置
+│   │   │   ├── profileApi.ts    # 使用者資料 API
+│   │   │   └── userApi.ts       # 使用者認證 API
+│   │   ├── assets/         # 圖片、字型等
+│   │   ├── components/     # 可複用的 Vue 元件
+│   │   │   ├── Chat/           # 對話介面元件
+│   │   │   ├── Favourite/      # 收藏清單元件
+│   │   │   ├── Profile/        # 資料管理元件
+│   │   │   │   ├── AcademicOutcome/    # 學術成果（論文、專利）
+│   │   │   │   └── StandardizedTest/  # 標準化考試分數欄位（TOEFL、IELTS、GRE 等）
+│   │   │   ├── Settings/       # 帳戶設定元件
+│   │   │   ├── Sidebar/        # 導覽側邊欄元件
+│   │   │   └── ui/             # 基礎 UI 元件庫（shadcn-vue）
+│   │   ├── i18n/           # 國際化
+│   │   │   └── locales/    # 翻譯檔案（en、zh-CN、zh-TW）
+│   │   ├── lib/            # 工具函式
+│   │   ├── router/         # Vue Router 配置
+│   │   ├── stores/         # Pinia 狀態管理
+│   │   │   ├── favouriteStore.ts  # 收藏狀態
+│   │   │   └── userStore.ts      # 使用者認證狀態
+│   │   ├── types/          # TypeScript 型別定義
+│   │   ├── views/          # 頁面元件
+│   │   │   ├── auth/       # 登入、註冊、密碼重設
+│   │   │   ├── chat/       # AI 對話頁面
+│   │   │   ├── favourite/  # 已收藏大學頁面
+│   │   │   ├── legal/      # 隱私權政策與服務條款
+│   │   │   ├── profile/    # 使用者資料頁面
+│   │   │   ├── settings/   # 帳戶設定頁面
+│   │   │   ├── Cover.vue        # 首頁 / 封面頁
+│   │   │   └── SidebarLayout.vue # 主應用程式版面
+│   │   ├── App.vue         # 根元件
+│   │   ├── main.ts         # 應用程式進入點
+│   │   └── style.css       # 全域樣式
+│   ├── index.html          # HTML 進入點
+│   ├── package.json        # 專案相依套件
+│   ├── tsconfig.json       # TypeScript 配置
+│   └── vite.config.ts      # Vite 配置
+└── u-finder-admin/    # 管理員面板應用
     ├── public/              # 靜態資源
     ├── src/
-    │   ├── api/            # API 整合層
-    │   │   ├── chatApi.ts       # 對話與會話 API
-    │   │   ├── favouriteApi.ts  # 收藏功能 API
-    │   │   ├── http.ts          # HTTP 用戶端配置
-    │   │   ├── profileApi.ts    # 使用者資料 API
-    │   │   └── userApi.ts       # 使用者認證 API
-    │   ├── assets/         # 圖片、字型等
-    │   ├── components/     # 可複用的 Vue 元件
-    │   │   ├── Chat/           # 對話介面元件
-    │   │   ├── Favourite/      # 收藏清單元件
-    │   │   ├── Profile/        # 資料管理元件
-    │   │   │   ├── AcademicOutcome/    # 學術成果（論文、專利）
-    │   │   │   └── StandardizedTest/  # 標準化考試分數欄位（TOEFL、IELTS、GRE 等）
-    │   │   ├── Settings/       # 帳戶設定元件
-    │   │   ├── Sidebar/        # 導覽側邊欄元件
+    │   ├── api/            # 管理員 API 整合
+    │   │   ├── adminApi.ts      # 管理員管理 API
+    │   │   ├── dashboard.ts     # 儀表板資料 API
+    │   │   └── http.ts          # HTTP 用戶端配置
+    │   ├── components/     # 管理員 Vue 元件
+    │   │   ├── admin/          # 儀表板元件
+    │   │   ├── auth/           # 管理員認證元件
+    │   │   ├── Settings/       # 管理員設定元件
+    │   │   ├── Sidebar/        # 管理員側邊欄導覽
     │   │   └── ui/             # 基礎 UI 元件庫（shadcn-vue）
     │   ├── i18n/           # 國際化
-    │   │   └── locales/    # 翻譯檔案（en、zh-CN、zh-TW）
-    │   ├── lib/            # 工具函式
     │   ├── router/         # Vue Router 配置
     │   ├── stores/         # Pinia 狀態管理
-    │   │   ├── favouriteStore.ts  # 收藏狀態
-    │   │   └── userStore.ts      # 使用者認證狀態
-    │   ├── types/          # TypeScript 型別定義
-    │   ├── views/          # 頁面元件
-    │   │   ├── auth/       # 登入、註冊、密碼重設
-    │   │   ├── chat/       # AI 對話頁面
-    │   │   ├── favourite/  # 已收藏大學頁面
-    │   │   ├── legal/      # 隱私權政策與服務條款
-    │   │   ├── profile/    # 使用者資料頁面
-    │   │   ├── settings/   # 帳戶設定頁面
-    │   │   ├── Cover.vue        # 首頁 / 封面頁
-    │   │   └── SidebarLayout.vue # 主應用程式版面
-    │   ├── App.vue         # 根元件
-    │   ├── main.ts         # 應用程式進入點
-    │   └── style.css       # 全域樣式
+    │   └── views/          # 管理員頁面元件
+    │       ├── auth/       # 管理員登入與密碼重設
+    │       ├── dashboard/  # 管理員儀表板
+    │       └── settings/   # 管理員設定
     ├── index.html          # HTML 進入點
     ├── package.json        # 專案相依套件
     ├── tsconfig.json       # TypeScript 配置
