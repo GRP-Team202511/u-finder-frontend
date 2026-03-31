@@ -128,8 +128,8 @@ const emit = defineEmits<{
   }): void
 }>()
 
-const today = new Date().toISOString().slice(0, 10)
-const selectedDate = ref(today)
+const todayStr = new Date().toISOString().slice(0, 10)
+const selectedDate = ref(todayStr)
 const selectedDateValue = ref<any>(parseDate(selectedDate.value))
 const isDateMenuOpen = ref(false)
 const selectedLevel = ref<'ALL' | 'INFO' | 'WARN' | 'ERROR'>('ALL')
