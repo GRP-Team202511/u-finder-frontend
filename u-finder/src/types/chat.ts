@@ -43,6 +43,10 @@ export type ChatMessageData = {
 	cards?: ProgramCardData[];
 	isLoading?: boolean;
 	isUniversityCardLoading?: boolean;
+	/** Dify message UUID used for feedback API calls (distinct from the synthetic Vue key `id`) */
+	difyMessageId?: string;
+	/** Current feedback state for this message; null means no feedback or revoked */
+	feedback?: "like" | "dislike" | null;
 };
 
 // Conversation types for history feature
