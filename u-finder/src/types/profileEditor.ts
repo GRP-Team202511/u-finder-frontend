@@ -1,3 +1,4 @@
+// This code was completed by GRP Team 2025.11.
 import type { Ref } from 'vue'
 
 export interface EditorRegistration {

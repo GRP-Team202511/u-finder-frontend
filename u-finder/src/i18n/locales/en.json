@@ -7,6 +7,7 @@
     "cover": {
         "title": "U-Finder",
         "description": "Discover your perfect university match with our intelligent finder tool.",
+        "home": "Home",
         "login": "Log In",
         "signup": "Sign Up"
     },
@@ -68,6 +69,7 @@
     "twofa": {
         "title": "Two-factor Authentication",
         "description": "Enter your verification code to continue.",
+        "back": "Back",
         "totpLabel": "Authenticator code",
         "recoveryLabel": "Recovery code",
         "totpHint": "Enter the 6-digit code from your authentication app.",
@@ -103,7 +105,9 @@
         "verification": {
             "enter": "Enter verification code",
             "sent": "We sent a 6-digit code to your email.",
+            "sentWithEmail": "We sent a 6-digit code to {email}.",
             "enter2": "Enter the 6-digit code sent to your email.",
+            "back": "Back",
             "receive": "Didn't receive the code?",
             "verify": "Verify",
             "resend": "Resend",
@@ -117,6 +121,10 @@
             "tooMany": "Too many requests. Please wait {seconds} seconds before trying again.",
             "resendError": "Failed to resend code. Please try again."
         }
+    },
+    "turnstile": {
+        "verifyFailed": "Human verification failed. Please try again.",
+        "serviceUnavailable": "Verification service is temporarily unavailable. Please try again later."
     },
     "legal": {
         "lastUpdatedLabel": "Last Updated:",
@@ -633,6 +641,14 @@
             "stopFailed": "Failed to stop response generation. Please try again.",
             "loadHistoryFailed": "Failed to load conversation history. Please try again."
         },
+        "feedback": {
+            "copy": "Copy",
+            "copied": "Copied",
+            "like": "Like",
+            "dislike": "Dislike",
+            "submitError": "Failed to submit feedback. Please try again.",
+            "copyError": "Failed to copy. Please try again."
+        },
         "card": {
             "loadingAria": "University information loading",
             "locationNotSpecified": "Location not specified",
@@ -851,6 +867,32 @@
                     "Tablet": "Tablet",
                     "Bot": "Bot",
                     "Unknown": "Unknown"
+                }
+            },
+            "deleteAccount": {
+                "title": "Delete Account",
+                "description": "Permanently delete your account and all associated data.",
+                "warningTitle": "This action is irreversible",
+                "warningDesc": "Deleting your account will permanently remove your profile, sessions, saved universities, and all other data. This cannot be undone.",
+                "confirmButton": "Delete My Account",
+                "cancel": "Cancel",
+                "verify2faTitle": "Verify Identity (2FA)",
+                "verify2faDesc": "Enter your 6-digit TOTP code or 8-character backup code to confirm account deletion.",
+                "verifyEmailTitle": "Verify Identity (Email)",
+                "verifyEmailDesc": "A 6-digit verification code has been sent to your registered email. Enter it below to confirm account deletion.",
+                "codeLabel": "Verification Code",
+                "code2faPlaceholder": "TOTP or backup code",
+                "codeEmailPlaceholder": "6-digit email code",
+                "verifyButton": "Confirm Deletion",
+                "success": "Your account has been permanently deleted.",
+                "errors": {
+                    "unauthorized": "Session expired. Please log in again.",
+                    "initiateFailed": "Failed to initiate account deletion. Please try again.",
+                    "codeRequired": "Please enter the verification code.",
+                    "invalidToken": "Verification token expired or code is incorrect. Please restart the process.",
+                    "invalidCode": "Invalid verification code. Please check and try again.",
+                    "totpAlreadyUsed": "This TOTP code has already been used. Please wait for a new code.",
+                    "verifyFailed": "Account deletion failed. Please try again."
                 }
             }
         },

@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
@@ -29,6 +30,10 @@ import { useUserStore } from "@/stores/userStore";
 
 const props = defineProps<{
   tempToken: string
+}>();
+
+const emit = defineEmits<{
+  (e: 'back'): void
 }>();
 
 const { t } = useI18n();
@@ -104,6 +109,9 @@ const toggleMode = () => {
 <template>
   <Card>
     <CardHeader class="text-center">
+      <Button type="button" variant="outline" size="sm" class="w-fit mb-4" @click="emit('back')">
+        {{ t("twofa.back") }}
+      </Button>
       <CardTitle class="text-3xl font-bold">{{ t("twofa.title") }}</CardTitle>
       <CardDescription>{{ t("twofa.description") }}</CardDescription>
     </CardHeader>

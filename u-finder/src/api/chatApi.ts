@@ -1,3 +1,4 @@
+// This code was completed by GRP Team 2025.11.
 import type { ConversationsResponse, ConversationMessagesResponse, DeleteConversationResponse, RenameConversationResponse } from '@/types/chat'
 import http from './http'
 
@@ -129,5 +130,20 @@ export const renameConversation = async (params: {
 
 export const stopChat = async (taskId: string): Promise<{ result?: string}> => {
   const response = await http.post<{ result?: string}>(`/chat/${taskId}/stop`)
+  return response.data
+}
+
+export const submitMessageFeedback = async (params: {
+  messageId: string
+  rating: 'like' | 'dislike' | null
+  content?: string
+}): Promise<{ result: string }> => {
+  const response = await http.post<{ result: string }>(
+    `/chat/messages/${params.messageId}/feedbacks`,
+    {
+      rating: params.rating,
+      ...(params.content !== undefined ? { content: params.content } : {}),
+    }
+  )
   return response.data
 }

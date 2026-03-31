@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
@@ -126,7 +127,7 @@ onBeforeUnmount(() => {
 
         <Card>
           <CardHeader>
-            <div class="flex items-start justify-between gap-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div class="w-full space-y-2">
                 <Skeleton class="h-7 w-2/3" />
                 <Skeleton class="h-4 w-1/3" />
@@ -142,7 +143,7 @@ onBeforeUnmount(() => {
             </div>
 
             <div class="space-y-4 text-sm">
-              <div class="flex gap-2">
+              <div class="flex flex-wrap gap-2">
                 <Skeleton class="h-8 w-24 rounded-md" />
                 <Skeleton class="h-8 w-32 rounded-md" />
                 <Skeleton class="h-8 w-28 rounded-md" />
@@ -151,31 +152,31 @@ onBeforeUnmount(() => {
               <div class="mt-4 grid gap-2">
                 <Skeleton class="h-4 w-40" />
                 <div class="grid gap-2">
-                  <div class="flex items-center justify-between gap-4">
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <Skeleton class="h-4 w-20" />
                     <Skeleton class="h-4 w-28" />
                   </div>
-                  <div class="flex items-center justify-between gap-4">
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <Skeleton class="h-4 w-16" />
                     <Skeleton class="h-4 w-24" />
                   </div>
-                  <div class="flex items-center justify-between gap-4">
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <Skeleton class="h-4 w-14" />
                     <Skeleton class="h-4 w-32" />
                   </div>
-                  <div class="flex items-center justify-between gap-4">
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <Skeleton class="h-4 w-16" />
                     <Skeleton class="h-4 w-20" />
                   </div>
-                  <div class="flex items-center justify-between gap-4">
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <Skeleton class="h-4 w-20" />
                     <Skeleton class="h-4 w-28" />
                   </div>
-                  <div class="flex items-center justify-between gap-4">
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <Skeleton class="h-4 w-20" />
                     <Skeleton class="h-4 w-24" />
                   </div>
-                  <div class="flex items-center justify-between gap-4">
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <Skeleton class="h-4 w-16" />
                     <Skeleton class="h-4 w-24" />
                   </div>

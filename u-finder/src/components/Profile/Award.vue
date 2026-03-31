@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
 import { cn, isBlankValue } from "@/lib/utils"
@@ -17,7 +18,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { toast } from 'vue-sonner'
-import { ref, reactive, inject, onBeforeUnmount, onMounted } from 'vue'
+import { ref, reactive, inject, onBeforeUnmount, onMounted, computed } from 'vue'
 import type { Ref } from 'vue'
 
 type AwardEntry = {
@@ -70,6 +71,12 @@ const validationErrors = reactive<{
 function clearError(index: number, field: 'name') {
   validationErrors[field][index] = false
 }
+
+const hasFilledAwards = computed(() =>
+  awards.value.some((award) =>
+    !isBlankValue(award?.name) || !isBlankValue(award?.description)
+  )
+)
 
 
 // when parent provides new modelValue, sync into local draft when not editing
@@ -172,10 +179,10 @@ onMounted(() => {
           <CardTitle class="text-2xl font-bold sm:text-3xl">
             {{ t('award.title') }}
           </CardTitle>
-          <div v-if="!localEditing" class="flex justify-end">
+          <div v-if="!localEditing && hasFilledAwards" class="flex justify-end">
             <Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
           </div>
-          <div v-else class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+          <div v-else-if="localEditing" class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
             <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
             <Button type="button" @click="save">{{ t('profile.save') }}</Button>
           </div>

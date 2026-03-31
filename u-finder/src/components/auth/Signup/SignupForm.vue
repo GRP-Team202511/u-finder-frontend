@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
 import { ref, computed } from "vue"
@@ -22,6 +23,7 @@ import { Spinner } from "@/components/ui/spinner"
 import { Input } from "@/components/ui/input"
 import { toast } from 'vue-sonner'
 import { signup } from "@/api/userApi"
+import TurnstileWidget from "@/components/auth/TurnstileWidget.vue"
 
 
 const { t } = useI18n()
@@ -31,6 +33,9 @@ const signing = ref(false)
 const occupied = ref(false)
 
 const passwordTouched = ref(false)
+
+const turnstileToken = ref('')
+const turnstileRef = ref<InstanceType<typeof TurnstileWidget>>()
 
 const props = defineProps<{
   class?: HTMLAttributes["class"]
@@ -93,7 +98,10 @@ const handleSignup = async() => {
   }
 
   try {
-    const response = await signup(formData.value)
+    const response = await signup({
+      ...formData.value,
+      turnstile_token: turnstileToken.value,
+    })
     emit("signup", { name: formData.value.name, email: formData.value.email })
     emit("signup-success", response.data.temp_token)
     formData.value.password = ""
@@ -114,12 +122,18 @@ const handleSignup = async() => {
         }
       }
       toast.error(t('signup.unprocessable'))
+    } else if (error.response?.status === 400) {
+      toast.error(t('turnstile.verifyFailed'))
+    } else if (error.response?.status === 503) {
+      toast.error(t('turnstile.serviceUnavailable'))
     } else {
       console.error('Sign up error:', error)
       toast.error(t('signup.error'))
     }
   } finally {
     signing.value = false
+    turnstileToken.value = ''
+    turnstileRef.value?.reset()
   }
 }
 </script>
@@ -169,6 +183,13 @@ const handleSignup = async() => {
               <FieldLabel for="confirm-password">{{ t("signup.confirmPassword") }}</FieldLabel>
               <Input v-model="repeatPassword" id="confirm-password" type="password" :class="{ 'border-red-500 ': formData.password != repeatPassword }" required />
             </Field>
+
+            <TurnstileWidget
+              ref="turnstileRef"
+              @verify="(token: string) => turnstileToken = token"
+              @expire="turnstileToken = ''"
+              @error="turnstileToken = ''"
+            />
 
             <Field>
               <Button type="submit" v-if="!signing">{{ t("signup.button") }}</Button>

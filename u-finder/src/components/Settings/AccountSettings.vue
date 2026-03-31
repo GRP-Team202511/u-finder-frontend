@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -16,6 +17,7 @@ import RegenerateBackupCodesDialog from './RegenerateBackupCodesDialog.vue'
 import ResetPasswordDialog from './ResetPasswordDialog.vue'
 import DeviceManagementDialog from './DeviceManagementDialog.vue'
 import AvatarCropDialog from './AvatarCropDialog.vue'
+import DeleteAccountDialog from './DeleteAccountDialog.vue'
 import { get2FAStatus, getUserInfo } from '@/api/userApi'
 import { getAvatar, buildAvatarUrl } from '@/api/profileApi'
 
@@ -42,6 +44,7 @@ const show2FASetupDialog = ref(false)
 const show2FADisableDialog = ref(false)
 const showRegenerateCodesDialog = ref(false)
 const showAvatarCropDialog = ref(false)
+const showDeleteAccountDialog = ref(false)
 
 // Fetch all account data on mount
 onMounted(async () => {
@@ -291,6 +294,22 @@ function handle2FASuccess() {
             </Button>
           </div>
         </div>
+
+        <!-- Danger Zone: Delete Account -->
+        <div class="rounded-lg border border-red-200 dark:border-red-800 p-4">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <Label class="text-base font-medium text-red-600 dark:text-red-500">
+              {{ t('settings.account.deleteAccount.title') }}
+            </Label>
+            <Button
+              variant="destructive"
+              class="w-full md:w-auto shrink-0"
+              @click="showDeleteAccountDialog = true"
+            >
+              {{ t('settings.account.deleteAccount.title') }}
+            </Button>
+          </div>
+        </div>
       </CardContent>
     </Card>
 
@@ -316,6 +335,9 @@ function handle2FASuccess() {
     <RegenerateBackupCodesDialog 
       v-model:open="showRegenerateCodesDialog"
       @success="handle2FASuccess"
+    />
+    <DeleteAccountDialog
+      v-model:open="showDeleteAccountDialog"
     />
   </div>
 </template>

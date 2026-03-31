@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -121,7 +122,7 @@ function removeSubject(index: number) {
 		<div class="rounded-md border p-4">
 			<div class="grid gap-2">
 				<div class="text-sm font-medium text-left">{{ t('test.subjects') }}</div>
-				<div v-for="(subject, sidx) in subjects" :key="sidx" class="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-2">
+				<div v-for="(subject, sidx) in subjects" :key="sidx" class="grid grid-cols-1 gap-4 pt-2 md:grid-cols-2">
 					<Field>
 						<FieldLabel :for="`alevel-subject-${props.index}-${sidx}`">{{ t('test.subject') }}</FieldLabel>
 						<Input
@@ -140,9 +141,11 @@ function removeSubject(index: number) {
 						/>
 						<div v-else class="text-sm text-left">{{ subject.grade || '-' }}</div>
 					</Field>
-					<div v-if="props.editable" class="col-span-2 flex justify-end gap-2">
-						<Button type="button" variant="secondary" @click="removeSubject(sidx)">{{ t('profile.remove') }}</Button>
-						<Button type="button" @click="addSubject">{{ t('profile.add') }}</Button>
+					<div v-if="props.editable" class="flex justify-end gap-2 md:col-span-2">
+						<Button type="button" variant="secondary" @click="removeSubject(sidx)">
+							{{ t('profile.remove') }}
+						</Button>
+						<Button v-if="sidx === subjects.length - 1" type="button" @click="addSubject">{{ t('profile.add') }}</Button>
 					</div>
 				</div>
 			</div>

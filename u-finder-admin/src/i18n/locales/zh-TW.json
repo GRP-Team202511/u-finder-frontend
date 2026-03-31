@@ -1,0 +1,342 @@
+{
+  "common": {
+    "errors": {
+      "sessionExpired": "工作階段已過期，請重新登入。"
+    }
+  },
+  "login": {
+    "title": "登入",
+    "welcome": "歡迎回來！請輸入你的電子郵箱。",
+    "email": "電子郵箱",
+    "password": "密碼",
+    "forgot": "忘記密碼？",
+    "submit": "登入",
+    "twoFactorRequired": "需要進行兩步驟驗證",
+    "unauth": "密碼不正確",
+    "not_found": "該帳戶不存在",
+    "invalid_credentials": "帳號或密碼錯誤",
+    "blocked": "你的帳戶已被封禁",
+    "unprocessable": "登入輸入無效。",
+    "reset": {
+      "title": "重置密碼",
+      "description": "使用您的電子郵箱重置密碼",
+      "sendCode": "發送驗證碼",
+      "send": "重置密碼",
+      "otp": "驗證碼",
+      "newPassword": "新密碼",
+      "resendCode": "重發",
+      "errors": {
+        "emailRequired": "請輸入電子郵箱",
+        "emailNotFound": "未找到該郵箱對應的帳戶",
+        "invalidEmail": "郵箱格式不正確",
+        "sendFailed": "發送驗證碼失敗",
+        "tokenMissing": "請先請求驗證碼",
+        "tokenExpired": "驗證令牌已過期，請重新請求驗證碼。",
+        "rateLimited": "請求過於頻繁，請等待 {seconds} 秒。",
+        "resendFailed": "重新發送驗證碼失敗",
+        "sendCodeFirst": "請先發送驗證碼",
+        "fieldsRequired": "所有欄位都是必填的",
+        "wrongCode": "驗證碼不正確",
+        "unauthorized": "未授權的請求",
+        "invalidInput": "輸入的資料無效",
+        "resetFailed": "重置密碼失敗，請重試。"
+      },
+      "success": {
+        "codeSent": "驗證碼已發送至您的郵箱",
+        "codeResent": "驗證碼已重新發送",
+        "passwordReset": "密碼重置成功！正在跳轉到登入頁面..."
+      }
+    }
+  },
+  "twofa": {
+    "title": "兩步驟驗證",
+    "description": "請輸入驗證碼以繼續。",
+    "totpLabel": "驗證器代碼",
+    "recoveryLabel": "備援代碼",
+    "totpHint": "請輸入驗證器應用程式中的 6 位數代碼。",
+    "recoveryHint": "請輸入 8 位數備援代碼。",
+    "verify": "驗證",
+    "switchToRecovery": "使用備援代碼",
+    "switchToTotp": "使用驗證器代碼",
+    "invalid": "驗證碼無效",
+    "failed": "驗證失敗",
+    "success": "驗證成功"
+  },
+  "sidebar": {
+    "settings": "設定",
+    "language": "語言",
+    "logout": "登出",
+    "logoutUnauthorized": "您的工作階段已過期，您已被登出。",
+    "logoutServerError": "登出時伺服器發生錯誤。本機工作階段已清除。",
+    "logoutFailed": "登出失敗，請重試。",
+    "dashboard": "數據看板"
+  },
+  "settings": {
+    "title": "設定",
+    "tabs": {
+      "account": "帳戶",
+      "general": "通用"
+    },
+    "account": {
+      "accountInformation": "帳戶資訊",
+      "username": "使用者名稱",
+      "email": "電子郵件",
+      "plan": "計劃",
+      "changeAvatar": "更換頭像",
+      "avatarUploadSuccess": "頭像上傳成功",
+      "avatarUploadError": "頭像上傳失敗",
+      "fetchUserInfoError": "獲取使用者資訊失敗",
+      "plans": {
+        "free": "免費計劃"
+      },
+      "security": "安全",
+      "resetPassword": "重設密碼",
+      "resetPasswordDesc": "透過電子郵件驗證重設密碼",
+      "resetPasswordDialog": {
+        "title": "重設密碼",
+        "step1Desc": "確認您的電子郵件地址以接收驗證碼",
+        "step2Desc": "輸入發送到您電子郵件的驗證碼並設定新密碼",
+        "emailConfirmHint": "驗證碼將發送到此電子郵件地址",
+        "confirmPassword": "確認新密碼",
+        "passwordMismatch": "密碼不符合",
+        "passwordTooShort": "密碼長度至少為8個字元",
+        "success": "密碼重設成功",
+        "warning": "重設密碼後您將登出，需要使用新密碼重新登入"
+      },
+      "twoFactor": {
+        "title": "兩步驟驗證",
+        "enabled": "已啟用",
+        "disabled": "已停用",
+        "backupCodes": "剩餘備用碼",
+        "enable": "啟用",
+        "disableButton": "停用",
+        "regenerateButton": "重新產生備用碼",
+        "fetchError": "獲取兩步驟驗證狀態失敗",
+        "setup": {
+          "step1Title": "掃描 QR 碼",
+          "step2Title": "儲存備用碼",
+          "manualEntry": "或在您的應用程式中手動輸入此代碼：",
+          "backupCodesWarning": "重要：請妥善儲存這些備用碼！",
+          "backupCodesWarning2": "如果您無法存取驗證裝置，這些代碼是恢復帳戶的唯一方法。",
+          "enterCode": "輸入驗證碼",
+          "codeFromApp": "輸入您的驗證應用程式中的6位數代碼",
+          "copyAll": "全部複製",
+          "copied": "已複製！",
+          "copiedCodes": "備用碼已複製到剪貼簿",
+          "back": "返回",
+          "next": "下一步",
+          "cancel": "取消",
+          "done": "完成",
+          "success": "兩步驟驗證啟用成功！",
+          "error": "設定兩步驟驗證失敗",
+          "alreadyEnabled": "兩步驟驗證已啟用",
+          "setupExpired": "兩步驟驗證設定已過期，請重試",
+          "invalidCode": "請輸入6位數代碼",
+          "wrongCode": "驗證碼無效",
+          "verifyError": "驗證失敗，請重試。"
+        },
+        "disable": {
+          "title": "停用兩步驟驗證",
+          "warning": "警告：安全風險",
+          "warningDesc": "停用兩步驟驗證將使您的帳戶安全性降低。",
+          "enterPassword": "輸入您的密碼以確認",
+          "passwordPlaceholder": "您的密碼",
+          "passwordRequired": "密碼為必填項",
+          "cancel": "取消",
+          "confirm": "停用",
+          "success": "兩步驟驗證已成功停用",
+          "wrongPassword": "密碼錯誤",
+          "notEnabled": "兩步驟驗證未啟用",
+          "error": "停用兩步驟驗證失敗"
+        },
+        "regenerate": {
+          "verifyTitle": "驗證身分",
+          "newCodesTitle": "新備用碼",
+          "enterCode": "輸入 TOTP 代碼",
+          "codeFromApp": "輸入您的驗證應用程式中的6位數代碼",
+          "warning": "所有之前的備用碼現已失效",
+          "warningDesc": "請確保儲存這些新備用碼。您的舊代碼將不再有效。",
+          "copyAll": "全部複製",
+          "copied": "已複製！",
+          "copiedCodes": "備用碼已複製到剪貼簿",
+          "cancel": "取消",
+          "verify": "驗證",
+          "done": "完成",
+          "invalidCode": "請輸入6位數代碼",
+          "wrongCode": "TOTP 代碼無效",
+          "notEnabled": "兩步驟驗證未啟用",
+          "error": "重新產生備用碼失敗"
+        }
+      },
+      "devices": {
+        "title": "登入裝置",
+        "description": "管理目前已登入您帳戶的所有裝置",
+        "currentDevice": "目前裝置",
+        "logoutButton": "登出",
+        "logoutAllButton": "登出所有裝置",
+        "loginTime": "登入時間",
+        "fetchError": "獲取裝置清單失敗",
+        "logoutSuccess": "裝置已成功登出",
+        "logoutError": "登出該裝置失敗",
+        "logoutAllSuccess": "所有裝置已登出",
+        "logoutAllError": "登出所有裝置失敗",
+        "deviceTypes": {
+          "PC": "電腦",
+          "Mobile": "手機",
+          "Tablet": "平板",
+          "Bot": "機器人",
+          "Unknown": "未知"
+        }
+      },
+      "deleteAccount": {
+        "title": "刪除帳戶",
+        "description": "永久刪除您的帳戶及所有相關資料。",
+        "warningTitle": "此操作無法撤銷",
+        "warningDesc": "刪除帳戶將永久移除您的個人資料、登入裝置、儲存的資料及所有其他資訊，且無法復原。",
+        "confirmButton": "刪除我的帳戶",
+        "cancel": "取消",
+        "verify2faTitle": "驗證身份（兩步驗證）",
+        "verify2faDesc": "請輸入驗證器應用程式中的 6 位 TOTP 碼或 8 位備用碼，以確認刪除帳戶。",
+        "verifyEmailTitle": "驗證身份（電子郵件驗證）",
+        "verifyEmailDesc": "一封包含 6 位驗證碼的電子郵件已發送至您的註冊信箱，請輸入以確認刪除帳戶。",
+        "codeLabel": "驗證碼",
+        "code2faPlaceholder": "TOTP 碼或備用碼",
+        "codeEmailPlaceholder": "6 位電子郵件驗證碼",
+        "verifyButton": "確認刪除",
+        "success": "您的帳戶已被永久刪除。",
+        "errors": {
+          "unauthorized": "工作階段已過期，請重新登入。",
+          "initiateFailed": "發起帳戶刪除失敗，請重試。",
+          "codeRequired": "請輸入驗證碼。",
+          "invalidToken": "驗證令牌已過期或驗證碼錯誤，請重新操作。",
+          "invalidCode": "驗證碼無效，請檢查後重試。",
+          "totpAlreadyUsed": "該 TOTP 碼已被使用，請等待新的驗證碼。",
+          "verifyFailed": "帳戶刪除失敗，請重試。"
+        }
+      }
+    },
+    "general": {
+      "appearance": "外觀",
+      "theme": "主題",
+      "themeDesc": "選擇您偏好的主題",
+      "system": "跟隨系統",
+      "light": "淺色",
+      "dark": "深色"
+    },
+    "about": {
+      "title": "關於 U-Finder",
+      "description": "由 AI 驅動的智慧大學查找工具。本專案以 Apache 2.0 授權條款開源，是寧波諾丁漢大學 COMP2043 GRP 課程的小組作業。",
+      "version": "版本",
+      "license": "授權條款",
+      "course": "課程",
+      "team": "團隊",
+      "university": "大學",
+      "github": "GitHub 儲存庫",
+      "terms": "服務條款",
+      "privacy": "隱私政策"
+    }
+  },
+  "dashboard": {
+    "title": "數據看板",
+    "page": {
+      "title": "數據看板",
+      "subtitle": "使用者、工作階段、成本使用與系統活動總覽。",
+      "refresh": "重新整理",
+      "loading": "正在載入看板...",
+      "loadError": "載入看板失敗"
+    },
+    "summary": {
+      "totalUsers": "總使用者數",
+      "llmCostToday": "LLM 成本（本月）"
+    },
+    "filters": {
+      "sortBy": "排序依據",
+      "model": "模型",
+      "timeRange": "時間範圍",
+      "date": "日期",
+      "level": "等級",
+      "sortOptions": {
+        "name": "名稱",
+        "plan": "方案",
+        "status": "狀態",
+        "created": "建立時間",
+        "id": "ID"
+      },
+      "orderOptions": {
+        "asc": "升冪",
+        "desc": "降冪"
+      }
+    },
+    "pagination": {
+      "rowsPerPage": "每頁列數",
+      "pageOf": "第 {page} 頁 / 共 {total} 頁"
+    },
+    "recentUsers": {
+      "title": "最近使用者",
+      "subtitle": "快速查看使用者頁面、狀態與最近活動時間。",
+      "searchPlaceholder": "搜尋使用者...",
+      "empty": "找不到符合條件的使用者。",
+      "confirmDelete": "你確定要永久刪除此使用者嗎？",
+      "table": {
+        "user": "使用者",
+        "plan": "方案",
+        "status": "狀態",
+        "created": "建立時間",
+        "actions": "操作"
+      },
+      "actions": {
+        "block": "封鎖",
+        "unblock": "解除封鎖",
+        "delete": "刪除",
+        "promote": "設為管理員",
+        "demote": "設為使用者"
+      },
+      "roles": {
+        "1": "使用者",
+        "2": "專業使用者",
+        "3": "管理員",
+        "4": "超級管理員",
+        "unknown": "未知"
+      },
+      "statuses": {
+        "active": "正常",
+        "blocked": "已封鎖",
+        "unknown": "未知"
+      },
+      "toasts": {
+        "loadFailed": "載入使用者失敗",
+        "userBlocked": "使用者已封鎖",
+        "blockFailed": "封鎖使用者失敗",
+        "userUnblocked": "使用者已解除封鎖",
+        "unblockFailed": "解除封鎖使用者失敗",
+        "userDeleted": "使用者已刪除",
+        "deleteFailed": "刪除使用者失敗",
+        "roleChanged": "使用者角色已更新",
+        "roleChangeFailed": "更新使用者角色失敗"
+      }
+    },
+    "modelCost": {
+      "title": "模型成本快照",
+      "badge": "延遲 24 小時",
+      "totalRequests": "總請求數",
+      "avgLatency": "平均延遲",
+      "estimatedCost": "預估成本",
+      "tokens": "tokens",
+      "models": {
+        "chat": "聊天",
+        "cvParsing": "履歷解析"
+      }
+    },
+    "systemLogs": {
+      "title": "系統日誌預覽",
+      "badge": "即時",
+      "empty": "暫無日誌。",
+      "levels": {
+        "all": "全部",
+        "info": "資訊",
+        "warn": "警告",
+        "error": "錯誤"
+      }
+    }
+  }
+}

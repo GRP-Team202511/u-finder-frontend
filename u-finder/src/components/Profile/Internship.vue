@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
 import { cn, isBlankValue } from "@/lib/utils"
@@ -18,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-vue-next'
-import { ref, reactive, inject, onBeforeUnmount, onMounted } from 'vue'
+import { ref, reactive, inject, onBeforeUnmount, onMounted, computed } from 'vue'
 import type { Ref } from 'vue'
 import { Calendar } from '@/components/ui/calendar'
 // (calendar value type will be treated as any to match calendar implementation)
@@ -181,6 +182,16 @@ watch(
 
 const defaultPlaceholder = today(getLocalTimeZone())
 const df = new DateFormatter('en-US', { dateStyle: 'medium' })
+
+const hasFilledInternships = computed(() =>
+  internships.value.some((intern) =>
+    !isBlankValue(intern?.company) ||
+    !isBlankValue(intern?.role) ||
+    !isBlankValue(intern?.time?.start) ||
+    !isBlankValue(intern?.time?.end) ||
+    !isBlankValue(intern?.description)
+  )
+)
 
 function addEntry() {
   internships.value.push({ company: '', role: '', time: { start: '', end: '' }, description: '' })
@@ -371,10 +382,10 @@ onMounted(() => {
           <CardTitle class="text-2xl font-bold sm:text-3xl">
             {{ t('internship.title') }}
           </CardTitle>
-          <div v-if="!localEditing" class="flex justify-end">
+          <div v-if="!localEditing && hasFilledInternships" class="flex justify-end">
             <Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
           </div>
-          <div v-else class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+          <div v-else-if="localEditing" class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
             <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
             <Button type="button" @click="save">{{ t('profile.save') }}</Button>
           </div>

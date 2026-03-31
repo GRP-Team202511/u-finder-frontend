@@ -1,5 +1,6 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -33,9 +34,14 @@ function applyTheme(mode: 'system' | 'light' | 'dark') {
     document.documentElement.classList.remove('dark')
     localStorage.setItem('theme', 'light')
   }
+
+  window.dispatchEvent(new CustomEvent('theme-change'))
 }
 
 // Initialize theme from localStorage or default to light
+let mediaQuery: MediaQueryList | null = null
+let handleChange: (() => void) | null = null
+
 onMounted(() => {
   const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
   
@@ -51,13 +57,19 @@ onMounted(() => {
   applyTheme(themeMode.value)
   
   // Listen for system theme changes when in system mode
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-  const handleChange = () => {
+  mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+  handleChange = () => {
     if (themeMode.value === 'system') {
       applyTheme('system')
     }
   }
   mediaQuery.addEventListener('change', handleChange)
+})
+
+onBeforeUnmount(() => {
+  if (mediaQuery && handleChange) {
+    mediaQuery.removeEventListener('change', handleChange)
+  }
 })
 
 // Watch for theme mode changes

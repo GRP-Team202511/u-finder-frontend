@@ -1,3 +1,4 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue"
 import { cn, isBlankValue } from "@/lib/utils"
@@ -19,7 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-vue-next'
-import { ref, reactive, inject, onBeforeUnmount, onMounted } from 'vue'
+import { ref, reactive, inject, onBeforeUnmount, onMounted, computed } from 'vue'
 import type { Ref } from 'vue'
 import { Calendar } from '@/components/ui/calendar'
 // (calendar value type will be treated as any to match calendar implementation)
@@ -191,6 +192,19 @@ watch(
 
 const defaultPlaceholder = today(getLocalTimeZone())
 const df = new DateFormatter('en-US', { dateStyle: 'medium' })
+
+const hasFilledEducation = computed(() =>
+  education.value.some((edu) =>
+    !isBlankValue(edu?.type) ||
+    !isBlankValue(edu?.name) ||
+    !isBlankValue(edu?.time?.start) ||
+    !isBlankValue(edu?.time?.end) ||
+    !isBlankValue(edu?.major) ||
+    !isBlankValue(edu?.ranking) ||
+    !isBlankValue(edu?.GPA) ||
+    !isBlankValue(edu?.GPA_base)
+  )
+)
 
 function addEntry() {
   education.value.push({ type: '', name: '', time: { start: '', end: '' }, major: '', ranking: '', GPA: '', GPA_base: '' })
@@ -487,10 +501,10 @@ onMounted(() => {
           <CardTitle class="text-2xl font-bold sm:text-3xl">
             {{ t("edu.title") }}
           </CardTitle>
-          <div v-if="!localEditing" class="flex justify-end">
+          <div v-if="!localEditing && hasFilledEducation" class="flex justify-end">
             <Button type="button" @click="startEdit">{{ t('profile.edit') }}</Button>
           </div>
-          <div v-else class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+          <div v-else-if="localEditing" class="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
             <Button type="button" variant="secondary" @click="cancel">{{ t('profile.cancel') }}</Button>
             <Button type="button" @click="save">{{ t('profile.save') }}</Button>
           </div>

@@ -1,5 +1,6 @@
+<!-- This code was completed by GRP Team 2025.11. -->
 <script setup lang="ts">
-import { nextTick, ref } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import {
 	Field,
@@ -30,6 +31,23 @@ const { t } = useI18n();
 
 const draft = ref("");
 const composing = ref(false);
+const isMobileInputMode = ref(false);
+
+const updateInputMode = () => {
+	if (typeof window === "undefined") return;
+	const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+	const narrowViewport = window.matchMedia("(max-width: 767px)").matches;
+	isMobileInputMode.value = coarsePointer || narrowViewport;
+};
+
+onMounted(() => {
+	updateInputMode();
+	window.addEventListener("resize", updateInputMode);
+});
+
+onBeforeUnmount(() => {
+	window.removeEventListener("resize", updateInputMode);
+});
 
 // Locate native <textarea> inside InputGroup for JS resize fallback
 const wrapperRef = ref<HTMLElement | null>(null);
@@ -61,18 +79,23 @@ const submit = () => {
 };
 
 const handleKeydown = (event: KeyboardEvent) => {
-	if (event.key === "Enter" && event.shiftKey) return;
+	if (event.key !== "Enter") return;
+	if (event.shiftKey) return;
+	if (event.isComposing || composing.value || event.keyCode === 229) return;
 
-	if (event.key === "Enter") {
-		if (event.isComposing || composing.value || event.keyCode === 229) return;
-		// While the model streams, Enter is a no-op (no send, no newline).
-		if (props.isSending) {
-			event.preventDefault();
-			return;
-		}
-		event.preventDefault();
-		submit();
+	// Mobile: Enter inserts newline, send via on-screen button only.
+	if (isMobileInputMode.value) {
+		return;
 	}
+
+	// Desktop: Enter sends, Shift+Enter inserts newline.
+	if (props.isSending) {
+		event.preventDefault();
+		return;
+	}
+
+	event.preventDefault();
+	submit();
 };
 
 const stop = () => {
@@ -105,7 +128,7 @@ const stop = () => {
 										:placeholder="placeholder"
 										:disabled="disabled"
 										rows="1"
-										enterkeyhint="send"
+										:enterkeyhint="isMobileInputMode ? 'enter' : 'send'"
 										class="min-h-12 max-h-[calc(6lh+1rem)] overflow-y-auto px-0 py-2 text-base md:text-base leading-snug placeholder:text-base focus-visible:border-transparent focus-visible:shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
 										@keydown="handleKeydown"
 										@compositionstart="() => (composing = true)"

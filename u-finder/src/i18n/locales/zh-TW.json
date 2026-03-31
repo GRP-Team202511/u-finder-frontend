@@ -7,6 +7,7 @@
     "cover": {
         "title": "U-Finder",
         "description": "使用我們的智慧尋找工具，發現您完美的大学匹配。",
+        "home": "首頁",
         "login": "登入",
         "signup": "註冊"
     },
@@ -68,6 +69,7 @@
     "twofa": {
         "title": "兩步驟驗證",
         "description": "請輸入驗證碼以繼續。",
+        "back": "返回",
         "totpLabel": "驗證器代碼",
         "recoveryLabel": "恢復代碼",
         "totpHint": "請輸入驗證器應用程式中的 6 位數代碼。",
@@ -103,7 +105,9 @@
         "verification": {
             "enter": "輸入驗證碼",
             "sent": "我們已將 6 位驗證碼發送至您的電子郵件。",
+            "sentWithEmail": "我們已將 6 位驗證碼發送至 {email}。",
             "enter2": "請輸入發送至您電子郵件的 6 位驗證碼。",
+            "back": "返回",
             "receive": "沒有收到驗證碼？",
             "verify": "驗證",
             "resend": "重新發送",
@@ -117,6 +121,10 @@
             "tooMany": "請求過於頻繁，請等待 {seconds} 秒後再試。",
             "resendError": "重發驗證碼失敗，請重試。"
         }
+    },
+    "turnstile": {
+        "verifyFailed": "人機驗證失敗，請重試。",
+        "serviceUnavailable": "驗證服務暫時無法使用，請稍後重試。"
     },
     "sidebar": {
         "appName": "U-Finder",
@@ -508,6 +516,14 @@
             "stopFailed": "停止產生失敗，請重試。",
             "loadHistoryFailed": "載入對話歷史失敗，請重試。"
         },
+        "feedback": {
+            "copy": "複製",
+            "copied": "已複製",
+            "like": "按讚",
+            "dislike": "倒讚",
+            "submitError": "提交評價失敗，請重試。",
+            "copyError": "複製失敗，請重試。"
+        },
         "card": {
             "loadingAria": "大學資訊載入中",
             "locationNotSpecified": "未指定地點",
@@ -726,6 +742,32 @@
                     "Tablet": "平板",
                     "Bot": "機器人",
                     "Unknown": "未知"
+                }
+            },
+            "deleteAccount": {
+                "title": "刪除帳戶",
+                "description": "永久刪除您的帳戶及所有相關資料。",
+                "warningTitle": "此操作無法撤銷",
+                "warningDesc": "刪除帳戶將永久移除您的個人資料、登入裝置、收藏的大學及所有其他資料，且無法復原。",
+                "confirmButton": "刪除我的帳戶",
+                "cancel": "取消",
+                "verify2faTitle": "驗證身份（兩步驟驗證）",
+                "verify2faDesc": "請輸入驗證器應用程式中的 6 位 TOTP 碼或 8 位備用碼，以確認刪除帳戶。",
+                "verifyEmailTitle": "驗證身份（電子郵件驗證）",
+                "verifyEmailDesc": "一封包含 6 位驗證碼的電子郵件已發送至您的註冊信箱，請輸入以確認刪除帳戶。",
+                "codeLabel": "驗證碼",
+                "code2faPlaceholder": "TOTP 碼或備用碼",
+                "codeEmailPlaceholder": "6 位電子郵件驗證碼",
+                "verifyButton": "確認刪除",
+                "success": "您的帳戶已被永久刪除。",
+                "errors": {
+                    "unauthorized": "工作階段已過期，請重新登入。",
+                    "initiateFailed": "發起帳戶刪除失敗，請重試。",
+                    "codeRequired": "請輸入驗證碼。",
+                    "invalidToken": "驗證令牌已過期或驗證碼錯誤，請重新操作。",
+                    "invalidCode": "驗證碼無效，請檢查後重試。",
+                    "totpAlreadyUsed": "該 TOTP 碼已被使用，請等待新的驗證碼。",
+                    "verifyFailed": "帳戶刪除失敗，請重試。"
                 }
             }
         },

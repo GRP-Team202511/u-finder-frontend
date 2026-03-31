@@ -1,3 +1,6 @@
+// Derived from shadcn-vue.
+// Source: https://github.com/unovue/shadcn-vue
+// License: MIT
 export { default as Popover } from "./Popover.vue"
 export { default as PopoverAnchor } from "./PopoverAnchor.vue"
 export { default as PopoverContent } from "./PopoverContent.vue"

@@ -1,9 +1,11 @@
+// This code was completed by GRP Team 2025.11.
 import http from './http'
 
 // Login request payload structure
 export interface LoginRequest {
   email: string
   password: string
+  turnstile_token?: string
 }
 
 // Login response payload structure
@@ -32,6 +34,7 @@ export interface SignupRequest {
   name: string
   email: string
   password: string
+  turnstile_token?: string
 }
 
 // Signup response payload structure
@@ -118,6 +121,7 @@ export const resendSignupCode = (tempToken: string) => {
 // Reset password request payload structure
 export interface ResetPasswordRequest {
   email: string
+  turnstile_token?: string
 }
 
 // Reset password response payload structure
@@ -416,4 +420,45 @@ export const logoutDevice = (sessionId: number) => {
 // Log out all devices (including the current one); client should redirect to login after calling this
 export const logoutAllDevices = () => {
   return http.post<LogoutAllDevicesResponse>('/auth/settings/logout-all')
+}
+
+// ==================== Account Deletion APIs ====================
+
+// Response from DELETE /auth/delete — indicates which verification method the client must use next
+export interface DeleteAccountResponse {
+  temp_token: string
+  verification: '2fa' | 'email'
+}
+
+// Request body for POST /auth/delete/2fa and POST /auth/delete/email
+export interface VerifyDeleteRequest {
+  code: string
+}
+
+// Response from POST /auth/delete/2fa and POST /auth/delete/email on success
+export interface DeleteVerifyResponse {
+  message: string
+}
+
+// Initiate account deletion; returns a temp_token and the required verification method
+export const deleteAccount = () => {
+  return http.delete<DeleteAccountResponse>('/auth/delete')
+}
+
+// Complete deletion by verifying a TOTP code or backup code (used when verification === '2fa')
+export const verifyDeleteWith2FA = (data: VerifyDeleteRequest, tempToken: string) => {
+  return http.post<DeleteVerifyResponse>('/auth/delete/2fa', data, {
+    headers: {
+      'Temp-Token': tempToken
+    }
+  })
+}
+
+// Complete deletion by verifying the 6-digit email code (used when verification === 'email')
+export const verifyDeleteWithEmail = (data: VerifyDeleteRequest, tempToken: string) => {
+  return http.post<DeleteVerifyResponse>('/auth/delete/email', data, {
+    headers: {
+      'Temp-Token': tempToken
+    }
+  })
 }
