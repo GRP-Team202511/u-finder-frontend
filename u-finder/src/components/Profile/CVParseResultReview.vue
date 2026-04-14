@@ -271,7 +271,7 @@ function formatAcademic(): string[] {
     if (item.type === 'research paper') {
       return `${t('academic.paper')}: ${item.title}`
     } else {
-      return `${t('academic.patent')}: ${item.title}`
+      return `${t('academic.patentWord')}: ${item.title}`
     }
   })
 }
