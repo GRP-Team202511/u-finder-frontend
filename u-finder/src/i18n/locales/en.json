@@ -39,7 +39,6 @@
             "step1Desc": "Enter your email to receive a verification code",
             "step2Desc": "Enter the verification code and your new password",
             "step1Hint": "A verification code will be sent to this email address",
-            "emailPlaceholder": "your@email.com",
             "back": "Back",
             "resendCode": "Resend",
             "errors": {
@@ -453,7 +452,7 @@
         "empty": "No academic outcomes",
         "add": "Add academic outcome",
         "paper": "Paper",
-        "patent": "Patent",
+        "patentWord": "Patent",
         "type": {
             "title": "Type",
             "researchPaper": "Research Paper",

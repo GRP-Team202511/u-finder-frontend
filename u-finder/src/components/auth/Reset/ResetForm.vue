@@ -260,7 +260,6 @@ const resendButtonText = computed(() =>
                 v-model="email"
                 type="email"
                 required
-                :placeholder="t('login.reset.emailPlaceholder')"
               />
               <FieldDescription class="text-muted-foreground text-sm mt-1">
                 {{ t("login.reset.step1Hint") }}
