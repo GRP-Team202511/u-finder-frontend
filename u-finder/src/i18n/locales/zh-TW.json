@@ -328,8 +328,10 @@
         "selectType": "選擇類型",
         "selectTypeHint": "選擇類型以輸入詳細資訊。",
         "empty": "目前無學術成果",
-        "add": "新增學術成果",        "paper": "論文",
-        "patent": "專利",        "type": {
+        "add": "新增學術成果",        
+        "paper": "論文",
+        "patentWord": "專利",
+        "type": {
             "title": "類型",
             "researchPaper": "研究論文",
             "patent": "專利"
