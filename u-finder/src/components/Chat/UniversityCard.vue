@@ -65,19 +65,6 @@ const formatLanguageRequirements = () => {
 	return requirements.trim() || t("chat.card.notSpecified");
 };
 
-const formatVerifiedDate = () => {
-	const rawDate = props.program.last_verified;
-	const parsed = new Date(rawDate);
-	if (Number.isNaN(parsed.getTime())) {
-		return rawDate || t("chat.card.notSpecified");
-	}
-	return new Intl.DateTimeFormat(locale.value, {
-		year: "numeric",
-		month: "short",
-		day: "2-digit",
-	}).format(parsed);
-};
-
 const handleToggleFavourite = async () => {
 	const wasFavourite = isFavourite.value;
 	try {
@@ -308,14 +295,6 @@ const handleToggleFavourite = async () => {
 					</TabsContent>
 				</div>
 			</Tabs>
-			<div class="mt-8 flex justify-end text-right">
-				<div class="text-xs text-muted-foreground/70">
-					<p>{{ t("chat.card.verified") }}</p>
-					<p :title="program.last_verified || undefined">
-						{{ formatVerifiedDate() }}
-					</p>
-				</div>
-			</div>
 		</CardContent>
 	</Card>
 </template>
