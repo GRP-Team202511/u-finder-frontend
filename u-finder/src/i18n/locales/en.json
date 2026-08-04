@@ -627,6 +627,10 @@
         "title": "U-Finder",
         "tagline": "Find your best-fit university — powered by AI.",
         "stopped": "Response generation stopped.",
+        "preAnswer": {
+            "show": "Show reasoning",
+            "hide": "Hide reasoning"
+        },
         "input": {
             "label": "Message",
             "placeholder": "Chat with U-Finder...",

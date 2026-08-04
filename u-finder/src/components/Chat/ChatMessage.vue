@@ -64,6 +64,7 @@ const cardToText = (card: NonNullable<ChatMessageData["cards"]>[number]): string
 // Plain text for the copy button: strip common markdown syntax and append university card data
 const plainTextContent = computed(() => {
 	const parts: string[] = [];
+	if (props.message.preAnswer) parts.push(stripControlMarkers(props.message.preAnswer));
 	if (props.message.content) parts.push(stripControlMarkers(props.message.content));
 
 	// Append each university card as a structured text block
@@ -101,6 +102,7 @@ const showFeedback = computed(() =>
 			<AIMessage
 				v-if="message.role === 'ai'"
 				:content="message.content"
+				:pre-answer="message.preAnswer"
 				:tail-content="message.tailContent"
 				:universities="message.cards"
 				:is-university-card-loading="Boolean(message.isUniversityCardLoading)"

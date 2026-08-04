@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
+import { ChevronRight } from "lucide-vue-next"
 import { renderMarkdown } from "@/lib/markdown"
 import UniversityCard from "./UniversityCard.vue"
 import {
@@ -14,6 +15,7 @@ import type { ProgramCardData } from "@/types/chat"
 
 const props = defineProps<{
   content?: string
+  preAnswer?: string
   tailContent?: string
   universities?: ProgramCardData[]
   isLoading?: boolean
@@ -32,6 +34,12 @@ const rendered = computed(() =>
 
 const renderedTail = computed(() =>
   props.tailContent ? renderMarkdown(stripControlMarkers(props.tailContent)) : ""
+)
+
+// Collapsed by default: content before the <<__ANS__>> final-answer marker.
+const showPreAnswer = ref(false)
+const renderedPreAnswer = computed(() =>
+  props.preAnswer ? renderMarkdown(stripControlMarkers(props.preAnswer)) : ""
 )
 
 const showUniversityCardSkeleton = computed(
@@ -60,15 +68,16 @@ const scheduleDots = () => {
 }
 
 watch(
-  () => [props.isLoading, props.isUniversityCardLoading, props.content, props.tailContent, props.universities?.length] as const,
+  () => [props.isLoading, props.isUniversityCardLoading, props.content, props.preAnswer, props.tailContent, props.universities?.length] as const,
   (
-    [isLoading, isUniversityCardLoading, content, tailContent, universitiesLength],
-    prev = [false, false, undefined, undefined, undefined] as const
+    [isLoading, isUniversityCardLoading, content, preAnswer, tailContent, universitiesLength],
+    prev = [false, false, undefined, undefined, undefined, undefined] as const
   ) => {
-    const [prevLoading, prevCardLoading, prevContent, prevTailContent, prevUniversitiesLength] = prev
+    const [prevLoading, prevCardLoading, prevContent, prevPreAnswer, prevTailContent, prevUniversitiesLength] = prev
     const isLoadingBool = Boolean(isLoading)
     const isCardLoading = Boolean(isUniversityCardLoading)
     const contentChanged = content !== prevContent
+    const preAnswerChanged = preAnswer !== prevPreAnswer
     const tailChanged = tailContent !== prevTailContent
     const cardsChanged = universitiesLength !== prevUniversitiesLength
     const cardLoadingChanged = isCardLoading !== Boolean(prevCardLoading)
@@ -82,7 +91,7 @@ watch(
       resetDots()
     }
 
-    if (contentChanged || tailChanged || cardsChanged || cardLoadingChanged) {
+    if (contentChanged || preAnswerChanged || tailChanged || cardsChanged || cardLoadingChanged) {
       resetDots()
     }
 
@@ -102,6 +111,30 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="space-y-4">
+    <!-- Collapsed content that appeared before the <<__ANS__>> final-answer marker -->
+    <div
+      v-if="preAnswer"
+      class="overflow-hidden rounded-md border bg-muted/50"
+    >
+      <button
+        type="button"
+        class="flex w-full items-center gap-1.5 px-3 py-2 text-xs font-medium text-muted-foreground transition hover:text-foreground"
+        :aria-expanded="showPreAnswer"
+        @click="showPreAnswer = !showPreAnswer"
+      >
+        <ChevronRight
+          class="h-3.5 w-3.5 shrink-0 transition-transform"
+          :class="{ 'rotate-90': showPreAnswer }"
+        />
+        <span>{{ showPreAnswer ? t("chat.preAnswer.hide") : t("chat.preAnswer.show") }}</span>
+      </button>
+      <div
+        v-if="showPreAnswer"
+        class="prose prose-sm max-w-none border-t px-3 py-2 dark:prose-invert"
+        v-html="renderedPreAnswer"
+      />
+    </div>
+
     <!-- Normal markdown content -->
     <div
       v-if="content"

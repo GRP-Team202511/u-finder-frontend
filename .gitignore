@@ -37,3 +37,5 @@ mock-backend/
 
 # Vite
 .vite/
+
+CLAUDE.md
