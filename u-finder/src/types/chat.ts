@@ -32,7 +32,8 @@ export type ProgramCardData = {
 	};
 	career_outcomes: string[] | null;
 	official_program_url: string;
-	last_verified: string;
+	/** Removed from the current program-card schema; kept optional for legacy stored data. */
+	last_verified?: string;
 };
 
 export type ChatMessageData = {
@@ -40,6 +41,8 @@ export type ChatMessageData = {
 	role: "user" | "ai";
 	type: "text" | "cards";
 	content?: string;
+	/** Content that appeared before the `<<__ANS__>>` final-answer marker; rendered collapsed. */
+	preAnswer?: string;
 	tailContent?: string;
 	cards?: ProgramCardData[];
 	isLoading?: boolean;

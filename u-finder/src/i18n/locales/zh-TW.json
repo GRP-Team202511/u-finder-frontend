@@ -505,6 +505,10 @@
         "title": "U-Finder",
         "tagline": "發現最適合你的大學。",
         "stopped": "已停止產生回覆。",
+        "preAnswer": {
+            "show": "顯示思考過程",
+            "hide": "收起思考過程"
+        },
         "input": {
             "label": "訊息",
             "placeholder": "與 U-Finder 聊天...",
