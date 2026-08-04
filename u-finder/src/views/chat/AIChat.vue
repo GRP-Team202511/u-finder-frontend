@@ -72,6 +72,27 @@ const isNullableString = (value: unknown): value is string | null =>
 const isNullableNumber = (value: unknown): value is number | null =>
 	value === null || typeof value === "number";
 
+/**
+ * Pull a candidate list of program-card objects out of a parsed payload.
+ *
+ * Supports the current `{ type: "program_card", payload: { programs: [...] } }`
+ * shape — where `programs` may be a single object or an array — as well as the
+ * legacy shapes `{ programs: [...] }`, `{ cards: [...] }`, `{ universities: [...] }`.
+ * Returns null when the payload does not look like a program-card carrier.
+ */
+const extractProgramCandidates = (parsed: unknown): unknown[] | null => {
+	if (!isRecord(parsed)) return null;
+	let programs: unknown;
+	if (parsed.type === "program_card" && isRecord(parsed.payload)) {
+		programs = parsed.payload.programs ?? parsed.payload;
+	} else {
+		programs = parsed.programs ?? parsed.cards ?? parsed.universities;
+	}
+	if (programs === undefined) return null;
+	const list = Array.isArray(programs) ? programs : [programs];
+	return list.filter(Boolean);
+};
+
 const parseCardPrograms = (rawPayload: string): ProgramCardData[] | null => {
 	const candidates: string[] = [];
 	const trimmed = rawPayload.trim();
@@ -99,23 +120,17 @@ const parseCardPrograms = (rawPayload: string): ProgramCardData[] | null => {
 	for (const candidate of candidates) {
 		try {
 			const parsed = JSON.parse(candidate);
-			const programs =
-				(parsed?.type === "program_card" && parsed?.payload?.programs) ||
-				parsed?.programs ||
-				parsed;
-			const list = Array.isArray(programs) ? programs : [programs];
-			if (list.length) return list as ProgramCardData[];
+			// `extractProgramCandidates` handles the `payload.programs` wrapper;
+			// fall back to treating the whole object as a single legacy card.
+			const programs = extractProgramCandidates(parsed) ?? [parsed];
+			if (programs.length) return programs as ProgramCardData[];
 		} catch {
 			// Retry with a minimal trailing-comma cleanup.
 			try {
 				const sanitized = candidate.replace(/,\s*([}\]])/g, "$1");
 				const parsed = JSON.parse(sanitized);
-				const programs =
-					(parsed?.type === "program_card" && parsed?.payload?.programs) ||
-					parsed?.programs ||
-					parsed;
-				const list = Array.isArray(programs) ? programs : [programs];
-				if (list.length) return list as ProgramCardData[];
+				const programs = extractProgramCandidates(parsed) ?? [parsed];
+				if (programs.length) return programs as ProgramCardData[];
 			} catch {
 				// Try next candidate.
 			}
@@ -168,7 +183,15 @@ const isProgramCardLike = (value: unknown): value is ProgramCardData => {
 	}
 
 	if (!isString(value.official_program_url)) return false;
-	if (!isString(value.last_verified)) return false;
+	// `last_verified` was removed from the current program-card schema; accept its
+	// absence, and keep accepting legacy cards that still carry it.
+	if (
+		value.last_verified !== undefined &&
+		value.last_verified !== null &&
+		!isString(value.last_verified)
+	) {
+		return false;
+	}
 
 	return true;
 };
@@ -439,18 +462,17 @@ const handleSsePayload = (messageId: string, payload: string) => {
 		return;
 	}
 
-	const cards =
-		(parsed.type === "program_card" && parsed.payload?.programs) ||
-		parsed.cards ||
-		parsed.universities;
-	if (Array.isArray(cards)) {
-		const validCards = normalizeProgramCards(cards as ProgramCardData[]);
-		updateMessage(messageId, {
-			type: "cards",
-			cards: validCards,
-			isUniversityCardLoading: false,
-		});
-		return;
+	const candidates = extractProgramCandidates(parsed);
+	if (candidates?.length) {
+		const validCards = normalizeProgramCards(candidates as ProgramCardData[]);
+		if (validCards.length) {
+			updateMessage(messageId, {
+				type: "cards",
+				cards: validCards,
+				isUniversityCardLoading: false,
+			});
+			return;
+		}
 	}
 
 	if (typeof parsed.text === "string") {
