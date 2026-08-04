@@ -34,6 +34,7 @@ const programCardEnd = "<<__END__>>";
 const messageBuffers = new Map<string, string>();
 const endedByServerMessages = new Set<string>();
 const searchingMarker = "<<__SEARCHING__>>";
+const ansMarker = "<<__ANS__>>";
 
 const ensureStoppedPlaceholder = (messageId: string) => {
 	const message = messages.value.find((item) => item.id === messageId);
@@ -41,7 +42,8 @@ const ensureStoppedPlaceholder = (messageId: string) => {
 	const hasContent =
 		Boolean(message.content?.trim()) ||
 		Boolean(message.tailContent?.trim()) ||
-		Boolean(message.cards?.length);
+		Boolean(message.cards?.length) ||
+		Boolean(message.preAnswer?.trim());
 	if (hasContent) return;
 	message.type = "text";
 	message.content = t("chat.stopped");
@@ -54,6 +56,16 @@ const findPartialStartSuffix = (value: string) => {
 	const max = Math.min(value.length, programCardStart.length - 1);
 	for (let size = max; size > 0; size -= 1) {
 		if (programCardStart.startsWith(value.slice(-size))) {
+			return size;
+		}
+	}
+	return 0;
+};
+
+const findPartialAnsSuffix = (value: string) => {
+	const max = Math.min(value.length, ansMarker.length - 1);
+	for (let size = max; size > 0; size -= 1) {
+		if (ansMarker.startsWith(value.slice(-size))) {
 			return size;
 		}
 	}
@@ -265,14 +277,23 @@ const flushMessageBuffer = (messageId: string, options?: { discardIncompleteCard
 	const hasFullCardStart = remainder.includes(programCardStart);
 	const partialStartSuffixSize = findPartialStartSuffix(remainder);
 	const hasPartialCardStart = partialStartSuffixSize > 0;
+	const partialAnsSuffixSize = findPartialAnsSuffix(remainder);
+	const hasPartialAns = partialAnsSuffixSize > 0;
 	if (options?.discardIncompleteCards && (hasFullCardStart || hasPartialCardStart)) {
 		return;
 	}
+	// Drop any trailing partial control marker (a split card or <<__ANS__>> prefix)
+	// instead of rendering it as stray text.
 	const remainderWithoutPartialSuffix = hasPartialCardStart
 		? remainder.slice(0, -partialStartSuffixSize)
-		: remainder;
+		: hasPartialAns
+			? remainder.slice(0, -partialAnsSuffixSize)
+			: remainder;
 	const sanitizedRemainder = stripControlMarkers(
-		remainderWithoutPartialSuffix.split(programCardStart).join("").split(programCardEnd).join("")
+		remainderWithoutPartialSuffix
+			.split(programCardStart).join("")
+			.split(programCardEnd).join("")
+			.split(ansMarker).join("")
 	);
 	if (hasFullCardStart) {
 		if (!sanitizedRemainder.trim()) return;
@@ -337,19 +358,22 @@ const updateMessage = (
 	Object.assign(message, update);
 };
 
-const appendToMessage = (messageId: string, chunk: string) => {
-	const message = messages.value.find((item) => item.id === messageId);
-	if (!message) return;
-	const buffer = `${messageBuffers.get(messageId) ?? ""}${stripControlMarkers(chunk)}`;
-	const { preText, postText, cards, remainder } = extractProgramCards(buffer);
-	messageBuffers.set(messageId, remainder);
+/**
+ * Append streamed text to the final-answer part of a message (cards + text).
+ * Returns the unprocessed buffer remainder (e.g. a partial card marker).
+ */
+const processAnswerChunk = (
+	message: ChatMessageData,
+	messageId: string,
+	text: string
+): string => {
+	const { preText, postText, cards, remainder } = extractProgramCards(text);
 	const hasFullCardMarker = remainder.includes(programCardStart);
 	const hasPartialCardMarker = findPartialStartSuffix(remainder) > 0;
 	const isUniversityCardLoading = hasFullCardMarker || hasPartialCardMarker;
 	message.isUniversityCardLoading = isUniversityCardLoading;
 	const hasCardsAlready = Boolean(message.cards?.length);
-	const validCards = cards;
-	const cardsAdded = validCards.length > 0;
+	const cardsAdded = cards.length > 0;
 	if (preText) {
 		if (hasCardsAlready) {
 			message.tailContent = `${message.tailContent ?? ""}${preText}`;
@@ -370,9 +394,62 @@ const appendToMessage = (messageId: string, chunk: string) => {
 		const existing = message.cards ?? [];
 		updateMessage(messageId, {
 			type: "cards",
-			cards: [...existing, ...validCards],
+			cards: [...existing, ...cards],
 			isUniversityCardLoading,
 		});
+	}
+	return remainder;
+};
+
+/** Strip leftover control markers from a block of pre-answer text. */
+const cleanCollapsedText = (value: string) =>
+	stripControlMarkers(
+		value
+			.split(programCardStart).join("")
+			.split(programCardEnd).join("")
+			.split(ansMarker).join("")
+	).trim();
+
+/**
+ * Move text into the collapsible pre-answer region. Called once the
+ * `<<__ANS__>>` final-answer marker is fully received.
+ */
+const appendPreAnswer = (message: ChatMessageData, text: string) => {
+	const collapsed = cleanCollapsedText(text);
+	const prior = message.preAnswer ?? message.content ?? "";
+	message.preAnswer = cleanCollapsedText(`${prior}${prior ? "\n" : ""}${collapsed}`);
+	message.content = "";
+	message.type = "text";
+};
+
+const appendToMessage = (messageId: string, chunk: string) => {
+	const message = messages.value.find((item) => item.id === messageId);
+	if (!message) return;
+	const buffer = `${messageBuffers.get(messageId) ?? ""}${stripControlMarkers(chunk)}`;
+
+	const ansIndex = buffer.indexOf(ansMarker);
+	if (ansIndex !== -1) {
+		// Final-answer marker detected: anything before it becomes the collapsed
+		// pre-answer region; the rest keeps streaming as the visible answer.
+		appendPreAnswer(message, buffer.slice(0, ansIndex));
+		const remainder = processAnswerChunk(
+			message,
+			messageId,
+			buffer.slice(ansIndex + ansMarker.length)
+		);
+		messageBuffers.set(messageId, remainder);
+		return;
+	}
+
+	// No complete marker yet — hold a trailing partial marker (e.g. "<<__AN")
+	// so it isn't rendered as stray text.
+	const partial = findPartialAnsSuffix(buffer);
+	if (partial > 0) {
+		const remainder = processAnswerChunk(message, messageId, buffer.slice(0, -partial));
+		messageBuffers.set(messageId, `${remainder}${buffer.slice(-partial)}`);
+	} else {
+		const remainder = processAnswerChunk(message, messageId, buffer);
+		messageBuffers.set(messageId, remainder);
 	}
 };
 
@@ -588,9 +665,15 @@ const loadHistoryMessages = async (convId: string) => {
 				}
 			}
 			
-			// Parse program card
-			const { preText, postText, cards } = extractProgramCards(aiContent || '');
-			
+			// Parse program card, honouring the <<__ANS__>> final-answer marker:
+			// content before it goes to the collapsed pre-answer region, and only
+			// the content after it is scanned for cards.
+			const rawContent = aiContent || '';
+			const ansIndex = rawContent.indexOf(ansMarker);
+			const preAnswerText = ansIndex !== -1 ? rawContent.slice(0, ansIndex) : "";
+			const answerContent = ansIndex !== -1 ? rawContent.slice(ansIndex + ansMarker.length) : rawContent;
+			const { preText, postText, cards } = extractProgramCards(answerContent);
+
 			if (cards.length > 0) {
 				aiMessage.type = "cards";
 				aiMessage.cards = cards;
@@ -602,8 +685,11 @@ const loadHistoryMessages = async (convId: string) => {
 				}
 			} else {
 				aiMessage.type = "text";
-				const finalText = (preText || aiContent || '').trim();
+				const finalText = (preText || answerContent || '').trim();
 				aiMessage.content = finalText || t("chat.stopped");
+			}
+			if (preAnswerText.trim()) {
+				aiMessage.preAnswer = cleanCollapsedText(preAnswerText);
 			}
 			
 			messages.value.push(aiMessage);

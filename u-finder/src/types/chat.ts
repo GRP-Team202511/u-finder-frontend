@@ -41,6 +41,8 @@ export type ChatMessageData = {
 	role: "user" | "ai";
 	type: "text" | "cards";
 	content?: string;
+	/** Content that appeared before the `<<__ANS__>>` final-answer marker; rendered collapsed. */
+	preAnswer?: string;
 	tailContent?: string;
 	cards?: ProgramCardData[];
 	isLoading?: boolean;
